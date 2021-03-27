@@ -58,7 +58,7 @@ namespace SolsUnderground
         /// <summary>
         /// movement AI that will chase the player
         /// </summary>
-        public override void Move()
+        public void Move() //I got rid of your override for now - see DynamicObject for the reason
         {
             if(Math.Abs(position.X-Player.X) > Math.Abs(position.Y - Player.Y))
             {
