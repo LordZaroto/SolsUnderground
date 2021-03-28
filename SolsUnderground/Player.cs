@@ -106,21 +106,78 @@ namespace SolsUnderground
         /// </summary>
         public void Move(KeyboardState kbState)
         {
-            if (kbState.IsKeyDown(Keys.W))
+            bool test = false;
+            
+            if (kbState.IsKeyDown(Keys.W) || kbState.IsKeyDown(Keys.S))
             {
-                Y -= 2;
+                //The values adjustments are lower when traveling diagonally
+                //to accomadate for adjustments to both axis.
+                if(kbState.IsKeyDown(Keys.D))
+                {
+                    X += 2;
+                    
+                    //Two trues will make a false!
+                    if(test == true)
+                    {
+                        test = false;
+                    }
+                    else
+                    {
+                        test = true;
+                    }
+                }
+                if (kbState.IsKeyDown(Keys.A))
+                {
+                    X -= 2;
+
+                    if (test == true)
+                    {
+                        test = false;
+                    }
+                    else
+                    {
+                        test = true;
+                    }
+                }
+                //Determine the vertical displacement
+                if (test == true)
+                {
+                    if(kbState.IsKeyDown(Keys.W) && kbState.IsKeyDown(Keys.S))
+                    {
+                        Y += 0;
+                    }
+                    else if(kbState.IsKeyDown(Keys.W))
+                    {
+                        Y -= 2;
+                    }
+                    else if(kbState.IsKeyDown(Keys.S))
+                    {
+                        Y += 2;
+                    }
+                }
+                else
+                {
+                    if (kbState.IsKeyDown(Keys.W) && kbState.IsKeyDown(Keys.S))
+                    {
+                        Y += 0;
+                    }
+                    else if (kbState.IsKeyDown(Keys.W))
+                    {
+                        Y -= 4;
+                    }
+                    else if (kbState.IsKeyDown(Keys.S))
+                    {
+                        Y += 4;
+                    }
+                }
             }
-            if (kbState.IsKeyDown(Keys.A))
+            if (kbState.IsKeyDown(Keys.A) && test == false)
             {
-                X -= 2;
+                X -= 4;
             }
-            if (kbState.IsKeyDown(Keys.S))
+            if (kbState.IsKeyDown(Keys.D) && test == false)
             {
-                Y += 2;
-            }
-            if (kbState.IsKeyDown(Keys.D))
-            {
-                X += 2;
+                X += 4;
             }
         }
 

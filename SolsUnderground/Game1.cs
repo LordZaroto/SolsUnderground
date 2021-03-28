@@ -26,6 +26,11 @@ namespace SolsUnderground
         private SpriteFont buttonText;
         private SpriteFont text;
 
+        //Player
+        private Texture2D playerTexture;
+        private Rectangle playerRect;
+        private Player player;
+
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -35,19 +40,24 @@ namespace SolsUnderground
 
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
             currentState = GameState.Menu;
+
             base.Initialize();
         }
 
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
+            
+            //Text
             heading = Content.Load<SpriteFont>("Roboto175");
             buttonText = Content.Load<SpriteFont>("Roboto100");
             text = Content.Load<SpriteFont>("Roboto40");
 
-            // TODO: use this.Content to load your game content here
+            //Player
+            playerTexture = Content.Load<Texture2D>("tempPlayer");
+            playerRect = new Rectangle(0, 0, playerTexture.Width, playerTexture.Height);
+            player = new Player(playerTexture, playerRect);
         }
 
         protected override void Update(GameTime gameTime)
@@ -92,7 +102,7 @@ namespace SolsUnderground
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.Black);
             
             // TODO: Add your drawing code here
 
