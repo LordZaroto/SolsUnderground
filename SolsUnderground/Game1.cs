@@ -106,8 +106,7 @@ namespace SolsUnderground
             playerTextures = new Texture2D[]{playerForward, playerBack, playerLeft, playerRight};
 
             //Player
-            playerTexture = Content.Load<Texture2D>("tempPlayer");
-            playerRect = new Rectangle(0, 0, playerTexture.Width, playerTexture.Height);
+            playerRect = new Rectangle(0, 0, playerForward.Width, playerForward.Height);
             startWeaponTexture = Content.Load<Texture2D>("stick");
             startWeapon = new Weapon(
                 startWeaponTexture,
@@ -163,7 +162,7 @@ namespace SolsUnderground
                         currentState = GameState.Instructions;
                     break;
                 case GameState.Controls:
-                    if(SingleKeyPress(Keys.Escape) || MouseClick(button5.X, button5.Y, button5.Width, button5.Height) == true)
+                    if(SingleKeyPress(Keys.Escape, kb, prevKB) || MouseClick(button5.X, button5.Y, button5.Width, button5.Height) == true)
                     {
                         currentState = GameState.Menu;
                     }
@@ -173,7 +172,7 @@ namespace SolsUnderground
                         currentState = GameState.Menu;
                     break;
                 case GameState.Game:
-                    if (SingleKeyPress(Keys.Escape))
+                    if (SingleKeyPress(Keys.Escape,kb, prevKB))
                     {
                         currentState = GameState.Pause;
                     }
@@ -182,7 +181,7 @@ namespace SolsUnderground
                         currentState = GameState.GameOver;
                     break;
                 case GameState.Pause:
-                    if (SingleKeyPress(Keys.Escape) || MouseClick(button6.X, button6.Y, button6.Width, button6.Height) == true)
+                    if (SingleKeyPress(Keys.Escape, kb, prevKB) || MouseClick(button6.X, button6.Y, button6.Width, button6.Height) == true)
                     {
                         currentState = GameState.Game;
 
@@ -194,7 +193,7 @@ namespace SolsUnderground
                 case GameState.GameOver:
                     if (kb.IsKeyDown(Keys.Enter) || MouseClick(button10.X, button10.Y, button10.Width, button10.Height) == true)
                         currentState = GameState.Game;
-                    if (SingleKeyPress(Keys.Escape) || MouseClick(button11.X, button11.Y, button11.Width, button11.Height) == true)
+                    if (SingleKeyPress(Keys.Escape, kb, prevKB) || MouseClick(button11.X, button11.Y, button11.Width, button11.Height) == true)
                     {
                         currentState = GameState.Menu;
                     }
@@ -202,6 +201,7 @@ namespace SolsUnderground
 
             }
 
+            prevKB = kb;
             // TODO: Add your update logic here
 
             base.Update(gameTime);
@@ -252,7 +252,8 @@ namespace SolsUnderground
                     _spriteBatch.Draw(returnToMenu, button5, Color.White);
                     break;
                 case GameState.Game:
-                    
+                    player.Draw(_spriteBatch);
+                    player.PlayerMove(Keyboard.GetState());
                     break;
                 case GameState.Pause:
                     _spriteBatch.DrawString(
@@ -292,5 +293,20 @@ namespace SolsUnderground
                 return false;
         }
 
+        public bool SingleKeyPress(Keys key, KeyboardState kbState, KeyboardState previousKbState)
+        {
+            if (previousKbState.IsKeyDown(key) && kbState.IsKeyDown(key))
+            {
+                return false;
+            }
+            else if (kbState.IsKeyDown(key))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
     }
 }
