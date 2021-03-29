@@ -68,6 +68,9 @@ namespace SolsUnderground
         private Rectangle button10;
         private Rectangle button11;
 
+        //character textures
+        private Texture2D playerForward;
+
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -93,14 +96,17 @@ namespace SolsUnderground
             heading = Content.Load<SpriteFont>("Roboto175");
             text = Content.Load<SpriteFont>("Roboto40");
 
+            //character textures
+            playerForward = Content.Load<Texture2D>("playerForward");
+
             //Player
-            playerTexture = Content.Load<Texture2D>("tempPlayer");
-            playerRect = new Rectangle(0, 0, playerTexture.Width, playerTexture.Height);
+            //playerTexture = Content.Load<Texture2D>("tempPlayer");
+            playerRect = new Rectangle(0, 0, playerForward.Width, playerForward.Height);
             startWeaponTexture = Content.Load<Texture2D>("stick");
             startWeapon = new Weapon(
                 startWeaponTexture,
                 new Rectangle(0, 0, startWeaponTexture.Width, startWeaponTexture.Height));
-            player = new Player(playerTexture, playerRect, startWeapon);
+            player = new Player(playerForward, playerRect, startWeapon);
 
             //menu items
             startGame = Content.Load<Texture2D>("startGame");
@@ -131,6 +137,8 @@ namespace SolsUnderground
             newGame = Content.Load<Texture2D>("newGameGO");
             button10 = new Rectangle(263, 643, 914, 139);
             button11 = new Rectangle(263, 782, 914, 139);
+
+
         }
 
         protected override void Update(GameTime gameTime)
@@ -229,7 +237,8 @@ namespace SolsUnderground
                     _spriteBatch.Draw(returnToMenu, button5, Color.White);
                     break;
                 case GameState.Game:
-                    
+                    player.Draw(_spriteBatch);
+                    player.PlayerMove(Keyboard.GetState());
                     break;
                 case GameState.Pause:
                     _spriteBatch.DrawString(
