@@ -26,9 +26,13 @@ namespace SolsUnderground
         private SpriteFont text;
 
         //Player
-        private Texture2D playerTexture;
+        private Texture2D playerForward;
+        private Texture2D playerBack;
+        private Texture2D playerLeft;
+        private Texture2D playerRight;
         private Rectangle playerRect;
         private Player player;
+        private Texture2D[] playerTextures;
 
         //Weapons
         private Weapon startWeapon;
@@ -68,8 +72,6 @@ namespace SolsUnderground
         private Rectangle button10;
         private Rectangle button11;
 
-        //character textures
-        private Texture2D playerForward;
 
         public Game1()
         {
@@ -91,13 +93,17 @@ namespace SolsUnderground
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
-            
+
             //Text
             heading = Content.Load<SpriteFont>("Roboto175");
             text = Content.Load<SpriteFont>("Roboto40");
 
             //character textures
             playerForward = Content.Load<Texture2D>("playerForward");
+            playerBack = Content.Load<Texture2D>("playerBack");
+            playerLeft = Content.Load<Texture2D>("playerLeft");
+            playerRight = Content.Load<Texture2D>("playerRight");
+            playerTextures = new Texture2D[]{playerForward, playerBack, playerLeft, playerRight};
 
             //Player
             //playerTexture = Content.Load<Texture2D>("tempPlayer");
@@ -106,7 +112,7 @@ namespace SolsUnderground
             startWeapon = new Weapon(
                 startWeaponTexture,
                 new Rectangle(0, 0, startWeaponTexture.Width, startWeaponTexture.Height));
-            player = new Player(playerForward, playerRect, startWeapon);
+            player = new Player(playerTextures, playerRect, startWeapon);
 
             //menu items
             startGame = Content.Load<Texture2D>("startGame");
