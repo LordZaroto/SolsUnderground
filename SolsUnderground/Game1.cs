@@ -145,11 +145,12 @@ namespace SolsUnderground
                 case GameState.Menu:
                     if (kb.IsKeyDown(Keys.Enter) && MouseClick(button1.X, button1.Y, button1.Width, button1.Height) == true)
                         currentState = GameState.Game;
-                        break;
+                        
                     if (kb.IsKeyDown(Keys.C) && MouseClick(button3.X, button3.Y, button3.Width, button3.Height) == true)
                         currentState = GameState.Controls;
                     if (kb.IsKeyDown(Keys.I) && MouseClick(button4.X, button4.Y, button4.Width, button4.Height) == true)
                         currentState = GameState.Instructions;
+                    break;
                 case GameState.Controls:
                     if(kb.IsKeyDown(Keys.Escape) && MouseClick(button5.X, button5.Y, button5.Width, button5.Height) == true)
                         currentState = GameState.Menu;
