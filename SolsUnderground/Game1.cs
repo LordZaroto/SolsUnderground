@@ -31,6 +31,10 @@ namespace SolsUnderground
         private Rectangle playerRect;
         private Player player;
 
+        //Weapons
+        private Weapon startWeapon;
+        private Texture2D startWeaponTexture;
+
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -57,7 +61,11 @@ namespace SolsUnderground
             //Player
             playerTexture = Content.Load<Texture2D>("tempPlayer");
             playerRect = new Rectangle(0, 0, playerTexture.Width, playerTexture.Height);
-            player = new Player(playerTexture, playerRect);
+            startWeaponTexture = Content.Load<Texture2D>("stick");
+            startWeapon = new Weapon(
+                startWeaponTexture,
+                new Rectangle(0, 0, startWeaponTexture.Width, startWeaponTexture.Height));
+            player = new Player(playerTexture, playerRect, startWeapon);
         }
 
         protected override void Update(GameTime gameTime)

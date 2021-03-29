@@ -17,6 +17,8 @@ namespace SolsUnderground
         private int defense;
         private int hp;
         private int maxHp;
+        private Weapon weapon;
+        private float timeCounter;
         //-----------------------------
 
         //---------------------------------------------------------------------
@@ -86,12 +88,14 @@ namespace SolsUnderground
 
         //Constructor
         //----------------------------------------------------------
-        public Player(Texture2D texture, Rectangle positionRect)
+        public Player(Texture2D texture, Rectangle positionRect, Weapon startWeapon)
         {
             this.texture = texture;
             this.positionRect = positionRect;
             maxHp = 10;
             hp = maxHp;
+            weapon = startWeapon;
+            timeCounter = 0;
         }
         //----------------------------------------------------------
 
@@ -181,6 +185,23 @@ namespace SolsUnderground
             }
         }
 
+        public void BasicAttack(ButtonState lButton, ButtonState previousLeftBState, GameTime gameTime)
+        {
+            if(SingleLButtonPress(lButton, previousLeftBState))
+            {
+
+            }
+        }
+        
+        /// <summary>
+        /// Reads the user's input and executes the desired actions.
+        /// </summary>
+        /// <param name="kbState"></param>
+        public void Input(KeyboardState kbState)
+        {
+            Move(kbState);
+        }
+
         /// <summary>
         /// Returns true if the key was just pressed in the current frame
         /// </summary>
@@ -198,6 +219,29 @@ namespace SolsUnderground
             {
                 return false;
             }
+        }
+
+        /// <summary>
+        /// Returns true if the user just pressed the button
+        /// </summary>
+        /// <param name="lButton"></param>
+        /// <returns></returns>
+        public bool SingleLButtonPress(ButtonState lButton, ButtonState previousLeftBState)
+        {
+            MouseState mouseState = Mouse.GetState();
+
+            return lButton == ButtonState.Pressed && previousLeftBState == ButtonState.Released;
+        }
+        /// <summary>
+        /// Returns true if the user just pressed the button
+        /// </summary>
+        /// <param name="rButton"></param>
+        /// <returns></returns>
+        public bool SingleRButtonPress(ButtonState rButton, ButtonState previousRightBState)
+        {
+            MouseState mouseState = Mouse.GetState();
+
+            return rButton == ButtonState.Pressed && previousRightBState == ButtonState.Released;
         }
 
         /// <summary>
