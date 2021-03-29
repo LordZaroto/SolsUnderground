@@ -22,8 +22,8 @@ namespace SolsUnderground
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
         private GameState currentState;
-        //private SpriteFont heading;
-        //private SpriteFont text;
+        private SpriteFont heading;
+        private SpriteFont text;
 
         //Player
         private Texture2D playerTexture;
@@ -89,8 +89,8 @@ namespace SolsUnderground
             _spriteBatch = new SpriteBatch(GraphicsDevice);
             
             //Text
-            //heading = Content.Load<SpriteFont>("Roboto175");
-            //text = Content.Load<SpriteFont>("Roboto40");
+            heading = Content.Load<SpriteFont>("Roboto175");
+            text = Content.Load<SpriteFont>("Roboto40");
 
             //Player
             playerTexture = Content.Load<Texture2D>("tempPlayer");
@@ -136,23 +136,24 @@ namespace SolsUnderground
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
             KeyboardState kb = Keyboard.GetState();
+            
 
             switch(currentState)
             {
                 case GameState.Menu:
-                    if (kb.IsKeyDown(Keys.I))
-                        currentState = GameState.Instructions;
-                    if (kb.IsKeyDown(Keys.C))
-                        currentState = GameState.Controls;
-                    if (kb.IsKeyDown(Keys.Enter))
+                    if (kb.IsKeyDown(Keys.Enter) && MouseClick(button1.X, button1.Y, button1.Width, button1.Height) == true)
                         currentState = GameState.Game;
                         break;
+                    if (kb.IsKeyDown(Keys.C) && MouseClick(button3.X, button3.Y, button3.Width, button3.Height) == true)
+                        currentState = GameState.Controls;
+                    if (kb.IsKeyDown(Keys.I) && MouseClick(button4.X, button4.Y, button4.Width, button4.Height) == true)
+                        currentState = GameState.Instructions;
                 case GameState.Controls:
-                    if(kb.IsKeyDown(Keys.Escape))
+                    if(kb.IsKeyDown(Keys.Escape) && MouseClick(button5.X, button5.Y, button5.Width, button5.Height) == true)
                         currentState = GameState.Menu;
                     break;
                 case GameState.Instructions:
-                    if (kb.IsKeyDown(Keys.Escape))
+                    if (kb.IsKeyDown(Keys.Escape) && MouseClick(button5.X, button5.Y, button5.Width, button5.Height) == true)
                         currentState = GameState.Menu;
                     break;
                 case GameState.Game:
@@ -162,15 +163,15 @@ namespace SolsUnderground
                         currentState = GameState.GameOver;
                     break;
                 case GameState.Pause:
-                    if (kb.IsKeyDown(Keys.Escape))
+                    if (kb.IsKeyDown(Keys.Escape) && MouseClick(button6.X, button6.Y, button6.Width, button6.Height) == true)
                         currentState = GameState.Game;
-                    if (kb.IsKeyDown(Keys.Q))
+                    if (kb.IsKeyDown(Keys.Q) && MouseClick(button9.X, button9.Y, button9.Width, button9.Height) == true)
                         currentState = GameState.Menu;
                     break;
                 case GameState.GameOver:
-                    if (kb.IsKeyDown(Keys.Enter))
+                    if (kb.IsKeyDown(Keys.Enter) && MouseClick(button10.X, button10.Y, button10.Width, button10.Height) == true)
                         currentState = GameState.Game;
-                    if (kb.IsKeyDown(Keys.Escape))
+                    if (kb.IsKeyDown(Keys.Escape) && MouseClick(button11.X, button11.Y, button11.Width, button11.Height) == true)
                         currentState = GameState.Menu;
                     break;
 
@@ -189,18 +190,18 @@ namespace SolsUnderground
             switch (currentState)
             {
                 case GameState.Menu:
-                    /*_spriteBatch.DrawString(
+                    _spriteBatch.DrawString(
                         heading,
                         "Sols UnderGround",
                         new Vector2(0, 0),
-                        Color.White);*/
+                        Color.White);
                     _spriteBatch.Draw(startGame, button1, Color.White);
                     _spriteBatch.Draw(loadGame, button2, Color.White);
                     _spriteBatch.Draw(controls, button3, Color.White);
                     _spriteBatch.Draw(instructions, button4, Color.White);
                     break;
                 case GameState.Controls:
-                    /* _spriteBatch.DrawString(
+                     _spriteBatch.DrawString(
                         heading,
                         "Controls",
                         new Vector2(0, 0),
@@ -209,11 +210,11 @@ namespace SolsUnderground
                         text,
                         "*insert Instructions*",
                         new Vector2(0, 250),
-                        Color.White);*/
+                        Color.White);
                     _spriteBatch.Draw(returnToMenu, button5, Color.White);
                     break;
                 case GameState.Instructions:
-                   /* _spriteBatch.DrawString(
+                    _spriteBatch.DrawString(
                         heading,
                         "Instructions",
                         new Vector2(0, 0),
@@ -222,18 +223,18 @@ namespace SolsUnderground
                         heading,
                         "*insert Instructions*",
                         new Vector2(0, 250),
-                        Color.White);*/
+                        Color.White);
                     _spriteBatch.Draw(returnToMenu, button5, Color.White);
                     break;
                 case GameState.Game:
                     
                     break;
                 case GameState.Pause:
-                    /*_spriteBatch.DrawString(
+                    _spriteBatch.DrawString(
                         heading,
                         "Paused",
                         new Vector2(0, 60),
-                        Color.White);*/
+                        Color.White);
                     _spriteBatch.Draw(returnToGame, button6, Color.White);
                     _spriteBatch.Draw(saveGame, button7, Color.White);
                     _spriteBatch.Draw(loadGame2, button8, Color.White);
@@ -241,11 +242,11 @@ namespace SolsUnderground
 
                     break;
                 case GameState.GameOver:
-                    /*_spriteBatch.DrawString(
+                    _spriteBatch.DrawString(
                         heading,
                         "Game Over",
                         new Vector2(0, 60),
-                        Color.White);*/
+                        Color.White);
                     _spriteBatch.Draw(newGame, button10, Color.White);
                     _spriteBatch.Draw(exitToMenu, button11, Color.White);
                     break;
@@ -255,6 +256,14 @@ namespace SolsUnderground
 
 
             base.Draw(gameTime);
+        }
+        protected bool MouseClick(int x, int y, int width, int height)
+        {
+            MouseState mouse = Mouse.GetState();
+            if ((mouse.X >= x && mouse.X <= x + height) && (mouse.Y >= y && mouse.Y <= y + width) && mouse.LeftButton == ButtonState.Pressed)
+                return true;
+            else
+                return false;
         }
     }
 }
