@@ -306,9 +306,20 @@ namespace SolsUnderground
             return new Rectangle();
         }
 
-        public void MenuInput(KeyboardState kbState)
+        /// <summary>
+        /// The player can press 'P' to pause the game.
+        /// </summary>
+        /// <param name="kbState"></param>
+        /// <param name="gameState"></param>
+        /// <returns></returns>
+        public GameState MenuInput(KeyboardState kbState, GameState gameState)
         {
+            if(kbState.IsKeyDown(Keys.P))
+            {
+                gameState = GameState.Pause;
+            }
 
+            return gameState;
         }
         
         /// <summary>
@@ -316,7 +327,7 @@ namespace SolsUnderground
         /// Should be called every tick.
         /// </summary>
         /// <param name="kbState"></param>
-        public void Input(KeyboardState kbState, GameTime gameTime, ButtonState lButton, ButtonState previousLeftBState)
+        public void Input(KeyboardState kbState, GameTime gameTime, ButtonState lButton, ButtonState previousLeftBState, GameState gameState)
         {
             //Keep track of time passed
             basicCounter += gameTime.ElapsedGameTime.TotalSeconds;
@@ -324,6 +335,7 @@ namespace SolsUnderground
 
             PlayerMove(kbState);
             BasicAttack(lButton, previousLeftBState);
+            MenuInput(kbState, gameState)
         }
 
         /// <summary>
