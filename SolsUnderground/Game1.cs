@@ -24,7 +24,7 @@ namespace SolsUnderground
         private GameState currentState;
         private SpriteFont heading;
         private SpriteFont text;
-
+        KeyboardState prevKB;
         //Player
         private Texture2D playerForward;
         private Texture2D playerBack;
@@ -106,8 +106,8 @@ namespace SolsUnderground
             playerTextures = new Texture2D[]{playerForward, playerBack, playerLeft, playerRight};
 
             //Player
-            //playerTexture = Content.Load<Texture2D>("tempPlayer");
-            playerRect = new Rectangle(0, 0, playerForward.Width, playerForward.Height);
+            playerTexture = Content.Load<Texture2D>("tempPlayer");
+            playerRect = new Rectangle(0, 0, playerTexture.Width, playerTexture.Height);
             startWeaponTexture = Content.Load<Texture2D>("stick");
             startWeapon = new Weapon(
                 startWeaponTexture,
@@ -143,8 +143,6 @@ namespace SolsUnderground
             newGame = Content.Load<Texture2D>("newGameGO");
             button10 = new Rectangle(263, 643, 914, 139);
             button11 = new Rectangle(263, 782, 914, 139);
-
-
         }
 
         protected override void Update(GameTime gameTime)
@@ -165,30 +163,41 @@ namespace SolsUnderground
                         currentState = GameState.Instructions;
                     break;
                 case GameState.Controls:
-                    if(kb.IsKeyDown(Keys.Escape) || MouseClick(button5.X, button5.Y, button5.Width, button5.Height) == true)
+                    if(SingleKeyPress(Keys.Escape) || MouseClick(button5.X, button5.Y, button5.Width, button5.Height) == true)
+                    {
                         currentState = GameState.Menu;
+                    }
                     break;
                 case GameState.Instructions:
                     if (kb.IsKeyDown(Keys.Escape) || MouseClick(button5.X, button5.Y, button5.Width, button5.Height) == true)
                         currentState = GameState.Menu;
                     break;
                 case GameState.Game:
-                    if (kb.IsKeyDown(Keys.Escape))
+                    if (SingleKeyPress(Keys.Escape))
+                    {
                         currentState = GameState.Pause;
+                    }
+                        
                     if (player.Hp <= 0)
                         currentState = GameState.GameOver;
                     break;
                 case GameState.Pause:
-                    if (kb.IsKeyDown(Keys.Escape) || MouseClick(button6.X, button6.Y, button6.Width, button6.Height) == true)
+                    if (SingleKeyPress(Keys.Escape) || MouseClick(button6.X, button6.Y, button6.Width, button6.Height) == true)
+                    {
                         currentState = GameState.Game;
+
+                    }
+                        
                     if (kb.IsKeyDown(Keys.Q) || MouseClick(button9.X, button9.Y, button9.Width, button9.Height) == true)
                         currentState = GameState.Menu;
                     break;
                 case GameState.GameOver:
                     if (kb.IsKeyDown(Keys.Enter) || MouseClick(button10.X, button10.Y, button10.Width, button10.Height) == true)
                         currentState = GameState.Game;
-                    if (kb.IsKeyDown(Keys.Escape) || MouseClick(button11.X, button11.Y, button11.Width, button11.Height) == true)
+                    if (SingleKeyPress(Keys.Escape) || MouseClick(button11.X, button11.Y, button11.Width, button11.Height) == true)
+                    {
                         currentState = GameState.Menu;
+                    }
                     break;
 
             }
@@ -224,7 +233,7 @@ namespace SolsUnderground
                         Color.White);
                     _spriteBatch.DrawString(
                         text,
-                        "*insert Instructions*",
+                        "*insert Controls*",
                         new Vector2(0, 250),
                         Color.White);
                     _spriteBatch.Draw(returnToMenu, button5, Color.White);
@@ -243,8 +252,7 @@ namespace SolsUnderground
                     _spriteBatch.Draw(returnToMenu, button5, Color.White);
                     break;
                 case GameState.Game:
-                    player.Draw(_spriteBatch);
-                    player.PlayerMove(Keyboard.GetState());
+                    
                     break;
                 case GameState.Pause:
                     _spriteBatch.DrawString(
@@ -284,20 +292,5 @@ namespace SolsUnderground
                 return false;
         }
 
-        public bool SingleKeyPress(Keys key, KeyboardState kbState, KeyboardState previousKbState)
-        {
-            if (previousKbState.IsKeyDown(key) && kbState.IsKeyDown(key))
-            {
-                return false;
-            }
-            else if (kbState.IsKeyDown(key))
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
     }
 }
