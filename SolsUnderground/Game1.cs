@@ -281,9 +281,5 @@ namespace SolsUnderground
                 return false;
         }
 
-        private bool SingleKeyPress(Keys key)
-        {
-            return Keyboard.GetState().IsKeyDown(key) && prevKB.IsKeyUp(key);
-        }
     }
 }
