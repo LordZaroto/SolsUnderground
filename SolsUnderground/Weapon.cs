@@ -16,7 +16,7 @@ namespace SolsUnderground
         //Fields
         //-----------------------------
         private int attack;
-        private float basicCooldown;
+        private double basicCooldown;
         //-----------------------------
 
         //---------------------------------------------------------------------
@@ -64,7 +64,7 @@ namespace SolsUnderground
         /// <summary>
         /// Minimum time that must pass between each Basic Attack
         /// </summary>
-        public float BasicCooldown
+        public double BasicCooldown
         {
             get { return basicCooldown; }
         }
@@ -83,7 +83,7 @@ namespace SolsUnderground
             this.texture = texture;
             this.positionRect = positionRect;
             attack = 3;
-            basicCooldown = 0.6f;
+            basicCooldown = 0.6;
         }
         //----------------------------------------------------------
 

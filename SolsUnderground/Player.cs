@@ -7,6 +7,27 @@ using Microsoft.Xna.Framework.Input;
 
 namespace SolsUnderground
 {
+    public enum PlayerState
+    {
+        faceForward,
+        faceLeft,
+        faceBack,
+        faceRight,
+        moveForward,
+        moveLeft,
+        moveBack,
+        moveRight,
+        attackForward,
+        attackLeft,
+        attackBack,
+        attackRight,
+        specialForward,
+        specialLeft,
+        specialBack,
+        specialRight,
+        dead
+    }
+    
     /// <summary>
     /// User controlled, can move and use weapon attacks and abilities.
     /// </summary>
@@ -18,7 +39,9 @@ namespace SolsUnderground
         private int hp;
         private int maxHp;
         private Weapon weapon;
-        private float timeCounter;
+        private double specialCounter;
+        private double basicCounter;
+        private PlayerState playerState;
         //-----------------------------
 
         //---------------------------------------------------------------------
@@ -78,6 +101,13 @@ namespace SolsUnderground
             get { return maxHp; }
             set { maxHp = value; }
         }
+        /// <summary>
+        /// The basic attack damage value of the equiped weapon.
+        /// </summary>
+        public int Attack
+        {
+            get { return weapon.Attack; }
+        }
         //------------------------------
 
         //----------------------------------------
@@ -95,7 +125,9 @@ namespace SolsUnderground
             maxHp = 10;
             hp = maxHp;
             weapon = startWeapon;
-            timeCounter = 0;
+            basicCounter = 0;
+            specialCounter = 0;
+            playerState = PlayerState.faceBack;
         }
         //----------------------------------------------------------
 
@@ -111,6 +143,12 @@ namespace SolsUnderground
         public void Move(KeyboardState kbState)
         {
             bool test = false;
+            
+            //If the character does not move, end the method.
+            if(!(kbState.IsKeyDown(Keys.W) || kbState.IsKeyDown(Keys.A) || kbState.IsKeyDown(Keys.S) || kbState.IsKeyDown(Keys.D)))
+            {
+                return;
+            }
             
             if (kbState.IsKeyDown(Keys.W) || kbState.IsKeyDown(Keys.S))
             {
@@ -149,14 +187,26 @@ namespace SolsUnderground
                     if(kbState.IsKeyDown(Keys.W) && kbState.IsKeyDown(Keys.S))
                     {
                         Y += 0;
+
+                        //Is there horizontal movement? If so, change player state accordingly.
+                        if (kbState.IsKeyDown(Keys.A) && test == true)
+                        {
+                            playerState = PlayerState.moveLeft;
+                        }
+                        else if (kbState.IsKeyDown(Keys.D) && test == true)
+                        {
+                            playerState = PlayerState.moveRight;
+                        }
                     }
                     else if(kbState.IsKeyDown(Keys.W))
                     {
                         Y -= 2;
+                        playerState = PlayerState.moveForward;
                     }
                     else if(kbState.IsKeyDown(Keys.S))
                     {
                         Y += 2;
+                        playerState = PlayerState.moveBack;
                     }
                 }
                 else
@@ -164,41 +214,90 @@ namespace SolsUnderground
                     if (kbState.IsKeyDown(Keys.W) && kbState.IsKeyDown(Keys.S))
                     {
                         Y += 0;
+
+                        //Is there horizontal movement? If so, change player state accordingly.
+                        if (kbState.IsKeyDown(Keys.A) && test == true)
+                        {
+                            playerState = PlayerState.moveLeft;
+                        }
+                        else if (kbState.IsKeyDown(Keys.D) && test == true)
+                        {
+                            playerState = PlayerState.moveRight;
+                        }
                     }
                     else if (kbState.IsKeyDown(Keys.W))
                     {
                         Y -= 4;
+                        playerState = PlayerState.moveForward;
                     }
                     else if (kbState.IsKeyDown(Keys.S))
                     {
                         Y += 4;
+                        playerState = PlayerState.moveBack;
                     }
                 }
             }
             if (kbState.IsKeyDown(Keys.A) && test == false)
             {
                 X -= 4;
+                playerState = PlayerState.moveLeft;
             }
             if (kbState.IsKeyDown(Keys.D) && test == false)
             {
                 X += 4;
+                playerState = PlayerState.moveRight;
             }
         }
 
-        public void BasicAttack(ButtonState lButton, ButtonState previousLeftBState, GameTime gameTime)
+        /// <summary>
+        /// The character will unleash the basic attack of their weapon.
+        /// Has a short cooldown. Returns the hitbox of the attack.
+        /// </summary>
+        /// <param name="lButton"></param>
+        /// <param name="previousLeftBState"></param>
+        /// <param name="gameTime"></param>
+        public Rectangle BasicAttack(ButtonState lButton, ButtonState previousLeftBState, GameTime gameTime)
         {
             if(SingleLButtonPress(lButton, previousLeftBState))
             {
+                if(basicCounter >= weapon.BasicCooldown)
+                {
+                    //Reset the cooldown
+                    basicCounter = 0;
 
+                    //Create the attack hitbox in the direction the player is facing
+                    if(playerState == PlayerState.faceForward || playerState == PlayerState.moveForward)
+                    {
+                        return new Rectangle();
+                    }
+                    else if (playerState == PlayerState.faceLeft || playerState == PlayerState.moveLeft)
+                    {
+                        return new Rectangle();
+                    }
+                    else if (playerState == PlayerState.faceBack || playerState == PlayerState.moveBack)
+                    {
+                        return new Rectangle();
+                    }
+                    else if (playerState == PlayerState.faceRight || playerState == PlayerState.moveRight)
+                    {
+                        return new Rectangle();
+                    }
+                }
             }
+
+            return new Rectangle();
         }
         
         /// <summary>
         /// Reads the user's input and executes the desired actions.
         /// </summary>
         /// <param name="kbState"></param>
-        public void Input(KeyboardState kbState)
+        public void Input(KeyboardState kbState, GameTime gameTime)
         {
+            //Keep track of time passed
+            basicCounter += gameTime.ElapsedGameTime.TotalSeconds;
+            specialCounter += gameTime.ElapsedGameTime.TotalSeconds;
+
             Move(kbState);
         }
 
