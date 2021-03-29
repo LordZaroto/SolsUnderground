@@ -135,7 +135,7 @@ namespace SolsUnderground
 
         protected override void Update(GameTime gameTime)
         {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.End))
                 Exit();
             KeyboardState kb = Keyboard.GetState();
             
@@ -143,20 +143,19 @@ namespace SolsUnderground
             switch(currentState)
             {
                 case GameState.Menu:
-                    if (kb.IsKeyDown(Keys.Enter) && MouseClick(button1.X, button1.Y, button1.Width, button1.Height) == true)
+                    if (kb.IsKeyDown(Keys.Enter) || MouseClick(button1.X, button1.Y, button1.Width, button1.Height) == true)
                         currentState = GameState.Game;
-                        
-                    if (kb.IsKeyDown(Keys.C) && MouseClick(button3.X, button3.Y, button3.Width, button3.Height) == true)
+                    if (kb.IsKeyDown(Keys.C) || MouseClick(button3.X, button3.Y, button3.Width, button3.Height) == true)
                         currentState = GameState.Controls;
-                    if (kb.IsKeyDown(Keys.I) && MouseClick(button4.X, button4.Y, button4.Width, button4.Height) == true)
+                    if (kb.IsKeyDown(Keys.I) || MouseClick(button4.X, button4.Y, button4.Width, button4.Height) == true)
                         currentState = GameState.Instructions;
                     break;
                 case GameState.Controls:
-                    if(kb.IsKeyDown(Keys.Escape) && MouseClick(button5.X, button5.Y, button5.Width, button5.Height) == true)
+                    if(kb.IsKeyDown(Keys.Escape) || MouseClick(button5.X, button5.Y, button5.Width, button5.Height) == true)
                         currentState = GameState.Menu;
                     break;
                 case GameState.Instructions:
-                    if (kb.IsKeyDown(Keys.Escape) && MouseClick(button5.X, button5.Y, button5.Width, button5.Height) == true)
+                    if (kb.IsKeyDown(Keys.Escape) || MouseClick(button5.X, button5.Y, button5.Width, button5.Height) == true)
                         currentState = GameState.Menu;
                     break;
                 case GameState.Game:
@@ -166,15 +165,15 @@ namespace SolsUnderground
                         currentState = GameState.GameOver;
                     break;
                 case GameState.Pause:
-                    if (kb.IsKeyDown(Keys.Escape) && MouseClick(button6.X, button6.Y, button6.Width, button6.Height) == true)
+                    if (kb.IsKeyDown(Keys.Escape) || MouseClick(button6.X, button6.Y, button6.Width, button6.Height) == true)
                         currentState = GameState.Game;
-                    if (kb.IsKeyDown(Keys.Q) && MouseClick(button9.X, button9.Y, button9.Width, button9.Height) == true)
+                    if (kb.IsKeyDown(Keys.Q) || MouseClick(button9.X, button9.Y, button9.Width, button9.Height) == true)
                         currentState = GameState.Menu;
                     break;
                 case GameState.GameOver:
-                    if (kb.IsKeyDown(Keys.Enter) && MouseClick(button10.X, button10.Y, button10.Width, button10.Height) == true)
+                    if (kb.IsKeyDown(Keys.Enter) || MouseClick(button10.X, button10.Y, button10.Width, button10.Height) == true)
                         currentState = GameState.Game;
-                    if (kb.IsKeyDown(Keys.Escape) && MouseClick(button11.X, button11.Y, button11.Width, button11.Height) == true)
+                    if (kb.IsKeyDown(Keys.Escape) || MouseClick(button11.X, button11.Y, button11.Width, button11.Height) == true)
                         currentState = GameState.Menu;
                     break;
 
