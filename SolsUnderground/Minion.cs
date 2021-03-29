@@ -11,10 +11,12 @@ namespace SolsUnderground
     //implements all of the abstract methods and properties
     class Minion : Enemy
     {
+        Texture2D[] textures;
         //consructor: initializes the fields
-        public Minion(Texture2D texture, Rectangle positionRect, int health, int attack)
+        public Minion(Texture2D[] textures, Rectangle positionRect, int health, int attack)
         {
-            this.texture = texture;
+            this.textures = textures;
+            this.texture = textures[0];
             this.positionRect = positionRect;
             this.health = health;
             this.attack = attack;
@@ -76,20 +78,24 @@ namespace SolsUnderground
             {
                 if(positionRect.X > player.X)
                 {
+                    texture = textures[2];
                     positionRect.X--;
                 }
                 else
                 {
+                    texture = textures[3];
                     positionRect.X++;
                 }
             }else if (Math.Abs(positionRect.X - player.X) < Math.Abs(positionRect.Y - player.Y))
             {
                 if (positionRect.Y > player.Y)
                 {
+                    texture = textures[1];
                     positionRect.Y--;
                 }
                 else
                 {
+                    texture = textures[0];
                     positionRect.Y++;
                 }
             }

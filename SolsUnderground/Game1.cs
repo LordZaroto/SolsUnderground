@@ -35,6 +35,13 @@ namespace SolsUnderground
         private Player player;
         private Texture2D[] playerTextures;
 
+        //enemy
+        private Texture2D minionForward;
+        private Texture2D minionBack;
+        private Texture2D minionLeft;
+        private Texture2D minionRight;
+        private Texture2D[] minionTextures;
+
         //Weapons
         private Weapon startWeapon;
         private Texture2D startWeaponTexture;
@@ -107,6 +114,13 @@ namespace SolsUnderground
             playerLeft = Content.Load<Texture2D>("playerLeft");
             playerRight = Content.Load<Texture2D>("playerRight");
             playerTextures = new Texture2D[]{playerForward, playerBack, playerLeft, playerRight};
+
+            //enemy textures
+            minionForward = Content.Load<Texture2D>("minionForward");
+            minionBack = Content.Load<Texture2D>("minionBack");
+            minionLeft = Content.Load<Texture2D>("minionLeft");
+            minionRight = Content.Load<Texture2D>("minionRight");
+            minionTextures = new Texture2D[] { minionForward, minionBack, minionLeft, minionRight };
 
             //Player
             playerRect = new Rectangle(0, 0, playerForward.Width, playerForward.Height);
