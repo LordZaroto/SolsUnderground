@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
@@ -34,6 +35,8 @@ namespace SolsUnderground
         private Weapon startWeapon;
         private Texture2D startWeaponTexture;
 
+        // Managers
+        MapManager mapManager;
 
         //menu items
         private Texture2D startGame;
@@ -101,6 +104,14 @@ namespace SolsUnderground
                 startWeaponTexture,
                 new Rectangle(0, 0, startWeaponTexture.Width, startWeaponTexture.Height));
             player = new Player(playerTexture, playerRect, startWeapon);
+
+            // Tiles
+            List<Texture2D> tileTextures = new List<Texture2D>();
+            tileTextures.Add(Content.Load<Texture2D>("BrickSprite"));
+            tileTextures.Add(Content.Load<Texture2D>("BarrierSprite"));
+            mapManager = new MapManager(tileTextures, 
+                _graphics.PreferredBackBufferWidth,
+                _graphics.PreferredBackBufferHeight);
 
             //menu items
             startGame = Content.Load<Texture2D>("startGame");

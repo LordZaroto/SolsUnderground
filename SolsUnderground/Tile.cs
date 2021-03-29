@@ -29,7 +29,7 @@ namespace SolsUnderground
     // IDs used to assign textures to tiles while loading files
     public enum Tiles
     {
-        DefaultTile,
+        BrickTile,
         Barrier
     }
 

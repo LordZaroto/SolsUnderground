@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.Xna.Framework;
@@ -6,15 +7,15 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
 /// <summary>
-/// Alex Dale - 3/28/21
+/// Alex Dale - 3/29/21
 /// This class defines a MapManager that creates floors
 /// from a pool of Rooms and tracks the player's location
 /// within the dungeon.
 /// 
 /// NOTES:
-/// > MapManager needs a full list of loaded Rooms before being initialized
+/// > MapManager needs a full list of loaded tile textures
 /// 
-/// > Should MapManager be in charge of loading all Rooms?
+/// > MapManager is responsible for loading all Rooms
 /// 
 /// > NextRoom() automatically loads the next floor (and clears the current one)
 ///   when the currentRoom becomes higher than the number of rooms on the floor.
@@ -34,22 +35,42 @@ namespace SolsUnderground
         private List<Room> floor;
         private int currentFloor;
         private int currentRoom;
+        private int windowWidth;
+        private int windowHeight;
 
         // Constructor
-        public MapManager(List<Room> roomPool)
+        public MapManager(List<Texture2D> tileTextures, int windowWidth, int windowHeight)
         {
-            this.roomPool = roomPool;
+            this.roomPool = new List<Room>();
             this.floor = new List<Room>();
+            this.windowWidth = windowWidth;
+            this.windowHeight = windowHeight;
             currentRoom = 0;
             currentFloor = 0;
+
+            Load(tileTextures);
         }
 
         // Methods
+        
+        /// <summary>
+        /// Loads all tile textures and rooms from files.
+        /// </summary>
+        public void Load(List<Texture2D> tileTextures)
+        {
+            DirectoryInfo d = new DirectoryInfo(Environment.CurrentDirectory + "\\Rooms");
+
+            // Load in each Room from file
+            foreach (FileInfo f in d.GetFiles())
+            {
+                roomPool.Add(new Room("Rooms\\" + f.Name, windowWidth, windowHeight, tileTextures));
+            }
+        }
 
         /// <summary>
         /// Draws rooms from the room pool to build a floor of five rooms.
         /// </summary>
-        public void LoadNewFloor()
+        public void NewFloor()
         {
             // Clear previous floor
             floor.Clear();
@@ -95,7 +116,7 @@ namespace SolsUnderground
             {
                 currentRoom = 0;
                 currentFloor++;
-                LoadNewFloor();
+                NewFloor();
             }
 
             // Add a second list and random picker for Boss rooms
