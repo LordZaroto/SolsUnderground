@@ -42,6 +42,7 @@ namespace SolsUnderground
         private double specialCounter;
         private double basicCounter;
         private PlayerState playerState;
+        private Texture2D[] textures;
         //-----------------------------
 
         //---------------------------------------------------------------------
@@ -118,9 +119,10 @@ namespace SolsUnderground
 
         //Constructor
         //----------------------------------------------------------
-        public Player(Texture2D texture, Rectangle positionRect, Weapon startWeapon)
+        public Player(Texture2D[] textures, Rectangle positionRect, Weapon startWeapon)
         {
-            this.texture = texture;
+            this.textures = textures;
+            this.texture = textures[0];
             this.positionRect = positionRect;
             maxHp = 10;
             hp = maxHp;
@@ -146,22 +148,28 @@ namespace SolsUnderground
             
             //If the character does not move, change the playerState to the appropriate
             //idle direction. Then end the method.
+
+            //changes texture according to direction
             if(!(kbState.IsKeyDown(Keys.W) || kbState.IsKeyDown(Keys.A) || kbState.IsKeyDown(Keys.S) || kbState.IsKeyDown(Keys.D)))
             {
                 if(playerState == PlayerState.moveForward)
                 {
+                    texture = textures[1];
                     playerState = PlayerState.faceForward;
                 }
                 else if (playerState == PlayerState.moveLeft)
                 {
+                    texture = textures[2];
                     playerState = PlayerState.faceLeft;
                 }
                 else if (playerState == PlayerState.moveBack)
                 {
+                    texture = textures[0];
                     playerState = PlayerState.faceBack;
                 }
                 else if (playerState == PlayerState.moveRight)
                 {
+                    texture = textures[3];
                     playerState = PlayerState.faceRight;
                 }
 
@@ -209,20 +217,24 @@ namespace SolsUnderground
                         //Is there horizontal movement? If so, change player state accordingly.
                         if (kbState.IsKeyDown(Keys.A) && test == true)
                         {
+                            texture = textures[2];
                             playerState = PlayerState.moveLeft;
                         }
                         else if (kbState.IsKeyDown(Keys.D) && test == true)
                         {
+                            texture = textures[3];
                             playerState = PlayerState.moveRight;
                         }
                     }
                     else if(kbState.IsKeyDown(Keys.W))
                     {
+                        texture = textures[1];
                         Y -= 2;
                         playerState = PlayerState.moveForward;
                     }
                     else if(kbState.IsKeyDown(Keys.S))
                     {
+                        texture = textures[0];
                         Y += 2;
                         playerState = PlayerState.moveBack;
                     }
@@ -236,20 +248,24 @@ namespace SolsUnderground
                         //Is there horizontal movement? If so, change player state accordingly.
                         if (kbState.IsKeyDown(Keys.A) && test == true)
                         {
+                            texture = textures[2];
                             playerState = PlayerState.moveLeft;
                         }
                         else if (kbState.IsKeyDown(Keys.D) && test == true)
                         {
+                            texture = textures[3];
                             playerState = PlayerState.moveRight;
                         }
                     }
                     else if (kbState.IsKeyDown(Keys.W))
                     {
+                        texture = textures[1];
                         Y -= 4;
                         playerState = PlayerState.moveForward;
                     }
                     else if (kbState.IsKeyDown(Keys.S))
                     {
+                        texture = textures[0];
                         Y += 4;
                         playerState = PlayerState.moveBack;
                     }
@@ -257,11 +273,13 @@ namespace SolsUnderground
             }
             if (kbState.IsKeyDown(Keys.A) && test == false)
             {
+                texture = textures[2];
                 X -= 4;
                 playerState = PlayerState.moveLeft;
             }
             if (kbState.IsKeyDown(Keys.D) && test == false)
             {
+                texture = textures[3];
                 X += 4;
                 playerState = PlayerState.moveRight;
             }
@@ -335,7 +353,7 @@ namespace SolsUnderground
 
             PlayerMove(kbState);
             BasicAttack(lButton, previousLeftBState);
-            MenuInput(kbState, gameState)
+            MenuInput(kbState, gameState);
         }
 
         /// <summary>
@@ -387,6 +405,7 @@ namespace SolsUnderground
         public override void Draw(SpriteBatch sb)
         {
             sb.Draw(texture, positionRect, Color.White);
+
         }
     }
 }

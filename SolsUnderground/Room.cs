@@ -60,6 +60,7 @@ namespace SolsUnderground
         /// <param name="filepath">String path of file</param>
         public void Load(string filepath, List<Texture2D> tileTextures)
         {
+            
             StreamReader reader = new StreamReader(filepath);
 
             // Defines necessary variables for file reading
