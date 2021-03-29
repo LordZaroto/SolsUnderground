@@ -218,7 +218,6 @@ namespace SolsUnderground
                         Color.White);
                     _spriteBatch.Draw(returnToMenu, button5, Color.White);
                     break;
-                    break;
                 case GameState.Game:
                     
                     break;

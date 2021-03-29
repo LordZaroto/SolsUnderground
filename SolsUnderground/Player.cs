@@ -286,19 +286,19 @@ namespace SolsUnderground
                     //Create the attack hitbox in the direction the player is facing
                     if(playerState == PlayerState.faceForward || playerState == PlayerState.moveForward)
                     {
-                        return new Rectangle(); //Not implemented yet
+                        return new Rectangle(X - Width / 2, Y - Height / 2, Width * 2, Height);
                     }
                     else if (playerState == PlayerState.faceLeft || playerState == PlayerState.moveLeft)
                     {
-                        return new Rectangle();
+                        return new Rectangle(X - Width / 2, Y - Height / 2, Width, Height * 2);
                     }
                     else if (playerState == PlayerState.faceBack || playerState == PlayerState.moveBack)
                     {
-                        return new Rectangle();
+                        return new Rectangle(X + Width / 2, Y + Height / 2, Width * 2, Height);
                     }
                     else if (playerState == PlayerState.faceRight || playerState == PlayerState.moveRight)
                     {
-                        return new Rectangle();
+                        return new Rectangle(X + Width / 2, Y - Height / 2, Width, Height * 2);
                     }
                 }
             }
