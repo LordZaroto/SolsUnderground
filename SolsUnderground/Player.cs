@@ -335,7 +335,7 @@ namespace SolsUnderground
 
             PlayerMove(kbState);
             BasicAttack(lButton, previousLeftBState);
-            MenuInput(kbState, gameState)
+            MenuInput(kbState, gameState);
         }
 
         /// <summary>
