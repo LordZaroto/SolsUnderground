@@ -41,6 +41,9 @@ namespace SolsUnderground
         private List<Tile> tiles;
         private List<GameObject> contents;
 
+        private Texture2D defaultTile;
+        private Texture2D barrier;
+
         // Properties
         public int Width
         {
@@ -76,6 +79,7 @@ namespace SolsUnderground
         /// <param name="filepath">String path of file</param>
         public void Load(string filepath)
         {
+            
             StreamReader reader = new StreamReader(filepath);
         
             // First line holds width/height
@@ -98,7 +102,7 @@ namespace SolsUnderground
                     // Fill appropriately once textures are added      <<< ALSO HERE
 
                     case Tiles.DefaultTile:
-                        // texture = defaultTileTexture;
+                        //texture = defaultTile;
                         break;
 
                     case Tiles.Barrier:
