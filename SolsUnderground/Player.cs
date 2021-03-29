@@ -305,6 +305,11 @@ namespace SolsUnderground
 
             return new Rectangle();
         }
+
+        public void MenuInput(KeyboardState kbState)
+        {
+
+        }
         
         /// <summary>
         /// Reads the user's input and executes the desired actions.
