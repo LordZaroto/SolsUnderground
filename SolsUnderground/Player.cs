@@ -144,9 +144,27 @@ namespace SolsUnderground
         {
             bool test = false;
             
-            //If the character does not move, end the method.
+            //If the character does not move, change the playerState to the appropriate
+            //idle direction. Then end the method.
             if(!(kbState.IsKeyDown(Keys.W) || kbState.IsKeyDown(Keys.A) || kbState.IsKeyDown(Keys.S) || kbState.IsKeyDown(Keys.D)))
             {
+                if(playerState == PlayerState.moveForward)
+                {
+                    playerState = PlayerState.faceForward;
+                }
+                else if (playerState == PlayerState.moveLeft)
+                {
+                    playerState = PlayerState.faceLeft;
+                }
+                else if (playerState == PlayerState.moveBack)
+                {
+                    playerState = PlayerState.faceBack;
+                }
+                else if (playerState == PlayerState.moveRight)
+                {
+                    playerState = PlayerState.faceRight;
+                }
+
                 return;
             }
             
@@ -268,7 +286,7 @@ namespace SolsUnderground
                     //Create the attack hitbox in the direction the player is facing
                     if(playerState == PlayerState.faceForward || playerState == PlayerState.moveForward)
                     {
-                        return new Rectangle();
+                        return new Rectangle(); //Not implemented yet
                     }
                     else if (playerState == PlayerState.faceLeft || playerState == PlayerState.moveLeft)
                     {
