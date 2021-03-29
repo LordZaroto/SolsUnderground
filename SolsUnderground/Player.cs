@@ -140,7 +140,7 @@ namespace SolsUnderground
         /// <summary>
         /// Moves the player based on user input - W A S D
         /// </summary>
-        public void Move(KeyboardState kbState)
+        public void PlayerMove(KeyboardState kbState)
         {
             bool test = false;
             
@@ -274,7 +274,7 @@ namespace SolsUnderground
         /// <param name="lButton"></param>
         /// <param name="previousLeftBState"></param>
         /// <param name="gameTime"></param>
-        public Rectangle BasicAttack(ButtonState lButton, ButtonState previousLeftBState, GameTime gameTime)
+        public Rectangle BasicAttack(ButtonState lButton, ButtonState previousLeftBState)
         {
             if(SingleLButtonPress(lButton, previousLeftBState))
             {
@@ -286,19 +286,19 @@ namespace SolsUnderground
                     //Create the attack hitbox in the direction the player is facing
                     if(playerState == PlayerState.faceForward || playerState == PlayerState.moveForward)
                     {
-                        return new Rectangle(); //Not implemented yet
+                        return new Rectangle(X - Width / 2, Y - Height / 2, Width * 2, Height);
                     }
                     else if (playerState == PlayerState.faceLeft || playerState == PlayerState.moveLeft)
                     {
-                        return new Rectangle();
+                        return new Rectangle(X - Width / 2, Y - Height / 2, Width, Height * 2);
                     }
                     else if (playerState == PlayerState.faceBack || playerState == PlayerState.moveBack)
                     {
-                        return new Rectangle();
+                        return new Rectangle(X + Width / 2, Y + Height / 2, Width * 2, Height);
                     }
                     else if (playerState == PlayerState.faceRight || playerState == PlayerState.moveRight)
                     {
-                        return new Rectangle();
+                        return new Rectangle(X + Width / 2, Y - Height / 2, Width, Height * 2);
                     }
                 }
             }
@@ -308,15 +308,17 @@ namespace SolsUnderground
         
         /// <summary>
         /// Reads the user's input and executes the desired actions.
+        /// Should be called every tick.
         /// </summary>
         /// <param name="kbState"></param>
-        public void Input(KeyboardState kbState, GameTime gameTime)
+        public void Input(KeyboardState kbState, GameTime gameTime, ButtonState lButton, ButtonState previousLeftBState)
         {
             //Keep track of time passed
             basicCounter += gameTime.ElapsedGameTime.TotalSeconds;
             specialCounter += gameTime.ElapsedGameTime.TotalSeconds;
 
-            Move(kbState);
+            PlayerMove(kbState);
+            BasicAttack(lButton, previousLeftBState);
         }
 
         /// <summary>
