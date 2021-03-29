@@ -277,5 +277,21 @@ namespace SolsUnderground
             else
                 return false;
         }
+
+        public bool SingleKeyPress(Keys key, KeyboardState kbState, KeyboardState previousKbState)
+        {
+            if (previousKbState.IsKeyDown(key) && kbState.IsKeyDown(key))
+            {
+                return false;
+            }
+            else if (kbState.IsKeyDown(key))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
     }
 }
