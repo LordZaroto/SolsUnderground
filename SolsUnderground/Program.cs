@@ -4,6 +4,8 @@ namespace SolsUnderground
 {
     public static class Program
     {
+        public static Random rng = new Random();
+
         [STAThread]
         static void Main()
         {

@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
 /// <summary>
-/// Alex Dale - 3/23/21
+/// Alex Dale - 3/28/21
 /// This class defines a Room which contains a set of Tiles
 /// that make up a single room of the game.
 ///
@@ -24,6 +24,8 @@ using Microsoft.Xna.Framework.Input;
 /// > Draw() method assumes there is no offset in the window, but this can be changed easily once
 ///   visual design is discussed.
 ///   
+/// > NEED TO FINISH METHODS FOR CONTENT LIST: Make sure all necessary data is accessible
+/// 
 /// </summary>
 
 namespace SolsUnderground
@@ -34,6 +36,7 @@ namespace SolsUnderground
         private int width;
         private int height;
         private List<Tile> tiles;
+        private List<GameObject> contents;
 
         // Properties
         public int Width
@@ -49,12 +52,14 @@ namespace SolsUnderground
         public Room(string filepath) // Should probably use this one to load rooms
         {
             Load(filepath);
+            contents = new List<GameObject>();
         }
         public Room(int width, int height, List<Tile> tiles) // Can use this to build and test rooms w/o editor
         {
             this.width = width;
             this.height = height;
             this.tiles = tiles;
+            contents = new List<GameObject>();
         }
 
         // Methods
@@ -106,6 +111,31 @@ namespace SolsUnderground
         }
 
         /// <summary>
+        /// Adds game objects to room's list of contents.
+        /// </summary>
+        /// <param name="gameObject"></param>
+        public void Add(GameObject gameObject)
+        {
+            contents.Add(gameObject);
+        }
+
+        /// <summary>
+        /// Retrieves data on any enemies in the room.
+        /// </summary>
+        /// <returns>List containing all Enemy objects in room contents</returns>
+        public List<Enemy> GetEnemies()
+        {
+            List<Enemy> enemies = new List<Enemy>();
+
+            foreach (Enemy e in contents)
+            {
+                enemies.Add(e);
+            }
+
+            return enemies;
+        }
+
+        /// <summary>
         /// Draws tiles using width and height to scale and place them in position
         /// based on their order in list.
         /// </summary>
@@ -114,6 +144,7 @@ namespace SolsUnderground
         /// <param name="windowHeight">Pixel height of area to draw Room</param>
         public void Draw(SpriteBatch sb, int windowWidth, int windowHeight)
         {
+            // Draw tiles of room
             for (int i = 0; i < height; i++)
             {
                 for (int j = 0; j < width; j++)
@@ -124,6 +155,12 @@ namespace SolsUnderground
                         windowWidth / width, windowHeight / height),
                         Color.White);
                 }
+            }
+
+            // Draw enemies and other objects in room
+            foreach (GameObject o in contents)
+            {
+                // Call each object's Draw
             }
         }
     }

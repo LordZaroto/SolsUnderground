@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
 /// <summary>
-/// Alex Dale - 3/23/21
+/// Alex Dale - 3/28/21
 /// This class defines a MapManager that creates floors
 /// from a pool of Rooms and tracks the player's location
 /// within the dungeon.
@@ -18,6 +18,9 @@ using Microsoft.Xna.Framework.Input;
 ///   when the currentRoom becomes higher than the number of rooms on the floor.
 /// 
 /// > Need to account for boss rooms in floor generation and room pools
+/// 
+/// > Finish adding enemies and chests to rooms
+/// 
 /// </summary>
 
 namespace SolsUnderground
@@ -31,7 +34,6 @@ namespace SolsUnderground
         private int currentRoom;
         private int windowWidth;
         private int windowHeight;
-        private Random rng;
 
         // Constructor
         public MapManager(List<Room> roomPool, int windowWidth, int windowHeight)
@@ -41,7 +43,6 @@ namespace SolsUnderground
             this.windowHeight = windowHeight;
             currentRoom = 0;
             currentFloor = 0;
-            rng = new Random();
         }
 
         // Methods
@@ -49,16 +50,33 @@ namespace SolsUnderground
         /// <summary>
         /// Draws rooms from the room pool to build a floor of five rooms.
         /// </summary>
-        /// <param name="floorSize">Number of rooms on new floor</param>
-        public void LoadNewFloor(int floorSize)
+        public void LoadNewFloor()
         {
             // Clear previous floor
             floor.Clear();
 
-            for (int i = 0; i < floorSize; i++)
+            for (int i = 0; i < 5; i++)
             {
                 // Adds a random room from roomPool to the floor
-                floor.Add(roomPool[rng.Next(0, roomPool.Count)]);
+                floor.Add(roomPool[Program.rng.Next(0, roomPool.Count)]);
+
+                // Add enemies and chest to room if not boss room
+                if (i != 4)
+                {
+                    // Each room randomly gets assigned 1-3 enemies
+                    int enemyCount = Program.rng.Next(1, 4);
+
+                    for (int j = 0; j < enemyCount; j++)
+                    {
+                        //floor[i].Add(new Minion());                    // FILL IN
+                    }
+
+                    // Random chance to contain chest: 30%
+                    if (Program.rng.Next(100) < 30)
+                    {
+                        //floor[i].Add(new Chest());                     // FILL IN
+                    }
+                }
             }
         }
 
@@ -76,7 +94,7 @@ namespace SolsUnderground
             {
                 currentRoom = 0;
                 currentFloor++;
-                LoadNewFloor(5);   // CURRENT DEFAULT FLOOR SIZE
+                LoadNewFloor();
             }
 
             // Add a second list and random picker for Boss rooms
