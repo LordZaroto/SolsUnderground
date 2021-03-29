@@ -14,6 +14,8 @@ using Microsoft.Xna.Framework.Input;
 /// NOTES:
 /// > MapManager needs a full list of loaded Rooms before being initialized
 /// 
+/// > Should MapManager be in charge of loading all Rooms?
+/// 
 /// > NextRoom() automatically loads the next floor (and clears the current one)
 ///   when the currentRoom becomes higher than the number of rooms on the floor.
 /// 
@@ -32,15 +34,12 @@ namespace SolsUnderground
         private List<Room> floor;
         private int currentFloor;
         private int currentRoom;
-        private int windowWidth;
-        private int windowHeight;
 
         // Constructor
-        public MapManager(List<Room> roomPool, int windowWidth, int windowHeight)
+        public MapManager(List<Room> roomPool)
         {
             this.roomPool = roomPool;
-            this.windowWidth = windowWidth;
-            this.windowHeight = windowHeight;
+            this.floor = new List<Room>();
             currentRoom = 0;
             currentFloor = 0;
         }
@@ -78,6 +77,8 @@ namespace SolsUnderground
                     }
                 }
             }
+
+            // Maybe subtract one from loop above and do boss-exclusive stuff here?
         }
 
         /// <summary>
@@ -106,7 +107,7 @@ namespace SolsUnderground
         /// <param name="sb"></param>
         public void Draw(SpriteBatch sb)
         {
-            floor[currentRoom].Draw(sb, windowWidth, windowHeight);
+            floor[currentRoom].Draw(sb);
         }
     }
 }

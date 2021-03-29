@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
 /// <summary>
-/// Alex Dale - 3/28/21
+/// Alex Dale - 3/29/21
 /// This class defines a Room which contains a set of Tiles
 /// that make up a single room of the game.
 ///
@@ -25,6 +25,9 @@ using Microsoft.Xna.Framework.Input;
 ///   visual design is discussed.
 ///   
 /// > NEED TO FINISH METHODS FOR CONTENT LIST: Make sure all necessary data is accessible
+///   What goes in contents list? Enemies, chests, anything else?
+/// 
+/// > Need to define default width and height of rooms
 /// 
 /// </summary>
 
@@ -49,17 +52,20 @@ namespace SolsUnderground
         }
 
         // Constructors
-        public Room(string filepath) // Should probably use this one to load rooms
+        public Room(string filepath, int windowWidth, int windowHeight) // Should probably use this one to load rooms
         {
             Load(filepath);
             contents = new List<GameObject>();
+            SetTiles(windowWidth, windowHeight);
         }
-        public Room(int width, int height, List<Tile> tiles) // Can use this to build and test rooms w/o editor
+        public Room(int width, int height, List<Tile> tiles, 
+            int windowWidth, int windowHeight) // Can use this to build and test rooms w/o editor
         {
             this.width = width;
             this.height = height;
             this.tiles = tiles;
             contents = new List<GameObject>();
+            SetTiles(windowWidth, windowHeight);
         }
 
         // Methods
@@ -77,7 +83,7 @@ namespace SolsUnderground
             string[] data = line.Split('|');
             Texture2D texture = null;              // CHANGE ONCE TEXTURES ARE ADDED
             
-            // Width of the room (IN TILES)
+            // Size of the room (IN TILES)
             width = Int32.Parse(data[0]);
             height = Int32.Parse(data[1]);
         
@@ -111,6 +117,27 @@ namespace SolsUnderground
         }
 
         /// <summary>
+        /// Initializes each tile's size and position
+        /// </summary>
+        /// <param name="windowWidth">Pixel width of area to draw Room</param>
+        /// <param name="windowHeight">Pixel height of area to draw Room</param>
+        public void SetTiles(int windowWidth, int windowHeight)
+        {
+            // Determine size of tiles using window size
+            int tileWidth = windowWidth / width;
+            int tileHeight = windowHeight / height;
+
+            // Set each tile's position and size
+            for (int i = 0; i < width * height; i++)
+            {
+                tiles[i].X = tileWidth * (i % width);
+                tiles[i].Y = tileHeight * (i / height);
+                tiles[i].Width = tileWidth;
+                tiles[i].Height = tileHeight;
+            }
+        }
+
+        /// <summary>
         /// Adds game objects to room's list of contents.
         /// </summary>
         /// <param name="gameObject"></param>
@@ -136,32 +163,20 @@ namespace SolsUnderground
         }
 
         /// <summary>
-        /// Draws tiles using width and height to scale and place them in position
-        /// based on their order in list.
+        /// Draws all tiles in room.
         /// </summary>
         /// <param name="sb">Spritebatch to draw with</param>
         /// <param name="windowWidth">Pixel width of area to draw Room</param>
         /// <param name="windowHeight">Pixel height of area to draw Room</param>
-        public void Draw(SpriteBatch sb, int windowWidth, int windowHeight)
+        public void Draw(SpriteBatch sb)
         {
             // Draw tiles of room
-            for (int i = 0; i < height; i++)
+            foreach (Tile t in tiles)
             {
-                for (int j = 0; j < width; j++)
-                {
-                    sb.Draw(
-                        tiles[i * width + j].Texture,
-                        new Rectangle(width * j, height * i, 
-                        windowWidth / width, windowHeight / height),
-                        Color.White);
-                }
+                t.Draw(sb);
             }
 
-            // Draw enemies and other objects in room
-            foreach (GameObject o in contents)
-            {
-                // Call each object's Draw
-            }
+            // Anything to draw from contents list?
         }
     }
 }
