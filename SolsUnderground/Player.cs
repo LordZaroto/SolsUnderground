@@ -274,7 +274,7 @@ namespace SolsUnderground
         /// <param name="lButton"></param>
         /// <param name="previousLeftBState"></param>
         /// <param name="gameTime"></param>
-        public Rectangle BasicAttack(ButtonState lButton, ButtonState previousLeftBState, GameTime gameTime)
+        public Rectangle BasicAttack(ButtonState lButton, ButtonState previousLeftBState)
         {
             if(SingleLButtonPress(lButton, previousLeftBState))
             {
@@ -308,15 +308,17 @@ namespace SolsUnderground
         
         /// <summary>
         /// Reads the user's input and executes the desired actions.
+        /// Should be called every tick.
         /// </summary>
         /// <param name="kbState"></param>
-        public void Input(KeyboardState kbState, GameTime gameTime)
+        public void Input(KeyboardState kbState, GameTime gameTime, ButtonState lButton, ButtonState previousLeftBState)
         {
             //Keep track of time passed
             basicCounter += gameTime.ElapsedGameTime.TotalSeconds;
             specialCounter += gameTime.ElapsedGameTime.TotalSeconds;
 
             Move(kbState);
+            BasicAttack(lButton, previousLeftBState);
         }
 
         /// <summary>
