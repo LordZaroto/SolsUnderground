@@ -38,11 +38,10 @@ namespace SolsUnderground
             get;
             set;
         }
-
+        
         /// <summary>
         /// to be overridden with movement AI for enemies or controls for the player
         /// </summary>
-        //public abstract void Move();
         // ^^^
         //I commented this out because it was breaking my code. I forget how to make
         //an abstract method that does NOT specify parameters. That is what we need

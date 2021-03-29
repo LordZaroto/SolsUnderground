@@ -140,7 +140,7 @@ namespace SolsUnderground
         /// <summary>
         /// Moves the player based on user input - W A S D
         /// </summary>
-        public void Move(KeyboardState kbState)
+        public void PlayerMove(KeyboardState kbState)
         {
             bool test = false;
             
@@ -317,7 +317,7 @@ namespace SolsUnderground
             basicCounter += gameTime.ElapsedGameTime.TotalSeconds;
             specialCounter += gameTime.ElapsedGameTime.TotalSeconds;
 
-            Move(kbState);
+            PlayerMove(kbState);
             BasicAttack(lButton, previousLeftBState);
         }
 

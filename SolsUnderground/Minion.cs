@@ -12,25 +12,25 @@ namespace SolsUnderground
     class Minion : Enemy
     {
         //consructor: initializes the fields
-        public Minion(Texture2D texture, Vector2 position, int health, int attack)
+        public Minion(Texture2D texture, Rectangle positionRect, int health, int attack)
         {
             this.texture = texture;
-            this.position = position;
+            this.positionRect = positionRect;
             this.health = health;
             this.attack = attack;
         }
 
         //properties
-        public override float X
+        public override int X
         {
-            get { return position.X; }
-            set { position.X = value; }
+            get { return positionRect.X; }
+            set { positionRect.X = value; }
         }
 
-        public override float Y
+        public override int Y
         {
-            get { return position.Y; }
-            set { position.Y = value; }
+            get { return positionRect.Y; }
+            set { positionRect.Y = value; }
         }
 
         public override int Health
@@ -43,6 +43,18 @@ namespace SolsUnderground
         {
             get { return attack; }
             set { attack = value; }
+        }
+
+        public override int Width
+        {
+            get { return positionRect.Width; }
+            set { positionRect.Width = value; }
+        }
+
+        public override int Height
+        {
+            get { return positionRect.Height; }
+            set { positionRect.Height = value; }
         }
 
         /// <summary>
@@ -58,29 +70,34 @@ namespace SolsUnderground
         /// <summary>
         /// movement AI that will chase the player
         /// </summary>
-        public void Move() //I got rid of your override for now - see DynamicObject for the reason
+        public override void EnemyMove(Player player) //I got rid of your override for now - see DynamicObject for the reason
         {
-            if(Math.Abs(position.X-Player.X) > Math.Abs(position.Y - Player.Y))
+            if(Math.Abs(positionRect.X-player.X) > Math.Abs(positionRect.Y - player.Y))
             {
-                if(position.X > Player.X)
+                if(positionRect.X > player.X)
                 {
-                    position.X--;
+                    positionRect.X--;
                 }
                 else
                 {
-                    position.X++;
+                    positionRect.X++;
                 }
-            }else if (Math.Abs(position.X - Player.X) < Math.Abs(position.Y - Player.Y))
+            }else if (Math.Abs(positionRect.X - player.X) < Math.Abs(positionRect.Y - player.Y))
             {
-                if (position.Y > Player.Y)
+                if (positionRect.Y > player.Y)
                 {
-                    position.Y--;
+                    positionRect.Y--;
                 }
                 else
                 {
-                    position.Y++;
+                    positionRect.Y++;
                 }
             }
+        }
+
+        public override void Draw(SpriteBatch sb)
+        {
+            sb.Draw(texture, positionRect, Color.White);
         }
     }
 }
