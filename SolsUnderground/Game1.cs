@@ -124,6 +124,7 @@ namespace SolsUnderground
             button8 = new Rectangle( 0, 653, 914, 141);
             exitToMenu = Content.Load<Texture2D>("Exit");
             button9 = new Rectangle( 0, 792, 914, 141);
+            currentWeapon = new Rectangle(1161, 398, 139, 113);
 
             //Game Over Buttons
             newGame = Content.Load<Texture2D>("newGameGO");
@@ -239,6 +240,7 @@ namespace SolsUnderground
                     _spriteBatch.Draw(saveGame, button7, Color.White);
                     _spriteBatch.Draw(loadGame2, button8, Color.White);
                     _spriteBatch.Draw(exitToMenu, button9, Color.White);
+                    _spriteBatch.Draw(startWeaponTexture, currentWeapon, Color.White);
 
                     break;
                 case GameState.GameOver:
