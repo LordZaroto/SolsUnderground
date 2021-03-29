@@ -112,7 +112,7 @@ namespace SolsUnderground
             button4 = new Rectangle(379, 847, 709, 153);
 
             //options/controls buttons
-            returnToMenu = Content.Load<Texture2D>("retrunToMenu");
+            returnToMenu = Content.Load<Texture2D>("returnToMenu");
             button5 = new Rectangle(347, 827, 719, 145);
 
             //paused buttons
