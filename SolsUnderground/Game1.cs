@@ -40,7 +40,7 @@ namespace SolsUnderground
         private Texture2D startWeaponTexture;
 
         // Managers
-        MapManager mapManager;
+        private MapManager mapManager;
 
         //menu items
         private Texture2D startGame;
@@ -166,7 +166,10 @@ namespace SolsUnderground
             {
                 case GameState.Menu:
                     if (kb.IsKeyDown(Keys.Enter) || MouseClick(button1.X, button1.Y, button1.Width, button1.Height) == true)
+                    {
                         currentState = GameState.Game;
+                        mapManager.NewFloor();
+                    }
                     if (kb.IsKeyDown(Keys.C) || MouseClick(button3.X, button3.Y, button3.Width, button3.Height) == true)
                         currentState = GameState.Controls;
                     if (kb.IsKeyDown(Keys.I) || MouseClick(button4.X, button4.Y, button4.Width, button4.Height) == true)
@@ -263,6 +266,7 @@ namespace SolsUnderground
                     _spriteBatch.Draw(returnToMenu, button5, Color.White);
                     break;
                 case GameState.Game:
+                    mapManager.Draw(_spriteBatch);
                     player.Draw(_spriteBatch);
                     player.PlayerMove(Keyboard.GetState());
                     break;

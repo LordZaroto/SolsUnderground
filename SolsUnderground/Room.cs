@@ -12,7 +12,6 @@ using Microsoft.Xna.Framework.Input;
 /// that make up a single room of the game.
 ///
 /// NOTES:
-///
 /// > Using a List for storing Tiles should work fine, but possibility is open to
 ///   other structures like 2D arrays if issues arise
 ///
@@ -47,8 +46,9 @@ namespace SolsUnderground
         // Constructors
         public Room(string filepath, int windowWidth, int windowHeight, List<Texture2D> tileTextures) // Load room archetypes
         {
-            Load(filepath, tileTextures);
+            tiles = new List<Tile>();
             contents = new List<GameObject>();
+            Load(filepath, tileTextures);
             SetTiles(windowWidth, windowHeight);
         }
 
@@ -76,7 +76,7 @@ namespace SolsUnderground
                 // First data piece is Tiles enum, use int value as ID for texture
                 // Second data piece is boolean for whether tile is barrier
                 tiles.Add(new Tile(
-                    tileTextures[(int)Enum.Parse<Tiles>(data[0])],
+                    tileTextures[(int)Enum.Parse<Tiles>(data[0].Substring(6))],
                     Boolean.Parse(data[1])
                     ));
             }
@@ -99,7 +99,7 @@ namespace SolsUnderground
             for (int i = 0; i < ROOM_WIDTH * ROOM_HEIGHT; i++)
             {
                 tiles[i].X = tileWidth * (i % ROOM_WIDTH);
-                tiles[i].Y = tileHeight * (i / ROOM_HEIGHT);
+                tiles[i].Y = tileHeight * (i / ROOM_WIDTH);
                 tiles[i].Width = tileWidth;
                 tiles[i].Height = tileHeight;
             }

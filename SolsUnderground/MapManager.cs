@@ -54,17 +54,23 @@ namespace SolsUnderground
         // Methods
         
         /// <summary>
-        /// Loads all tile textures and rooms from files.
+        /// Loads all rooms from files and loads each room's tiles.
         /// </summary>
         public void Load(List<Texture2D> tileTextures)
         {
-            DirectoryInfo d = new DirectoryInfo(Environment.CurrentDirectory + "\\Rooms");
-
+            // Program works from three directories down in project in bin\debug\net3.1\
+            DirectoryInfo d = new DirectoryInfo("..\\..\\..\\Rooms");
+            
             // Load in each Room from file
             foreach (FileInfo f in d.GetFiles())
             {
-                roomPool.Add(new Room("Rooms\\" + f.Name, windowWidth, windowHeight, tileTextures));
+                roomPool.Add(new Room("..\\..\\..\\Rooms\\" + f.Name, windowWidth, windowHeight, tileTextures));
             }
+
+            //roomPool.Add(new Room("..\\..\\..\\Rooms\\EmptyRoom.level", windowWidth, windowHeight, tileTextures));
+            //roomPool.Add(new Room("..\\..\\..\\Rooms\\CustomBlankRoom.level", windowWidth, windowHeight, tileTextures));
+            //roomPool.Add(new Room("..\\..\\..\\Rooms\\BasicRoom.level", windowWidth, windowHeight, tileTextures));
+            //roomPool.Add(new Room("..\\..\\..\\Rooms\\CohoRoom.level", windowWidth, windowHeight, tileTextures));
         }
 
         /// <summary>
