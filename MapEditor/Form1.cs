@@ -24,7 +24,8 @@ namespace MapEditor
     public enum Tiles
     {
         DefaultTile,
-        Barrier
+        Barrier,
+        RedBrick
     }
     public partial class Form1 : Form
     {
@@ -92,17 +93,17 @@ namespace MapEditor
                 {
                     for (int j = 0; j < mapHeight; j++)
                     {
-                        if (mapLayout[i, j].BackgroundImage == buttonTile1.Image)
+                        if (mapLayout[i, j].BackgroundImage == buttonTile2.Image)
                         {
-                            writer.WriteLine($"Tiles.DefaultTile|false");
+                            writer.WriteLine($"RedBrick|false");
                         }
                         else if(mapLayout[i, j].BackgroundImage == buttonTile4.Image)
                         {
-                            writer.WriteLine($"Tiles.Barrier|false");
+                            writer.WriteLine($"Barrier|true");
                         }
                         else
                         {
-                            writer.WriteLine($"Empty|false");
+                            writer.WriteLine($"DefaultTile|false");
                         }
                     }
                 }
@@ -127,8 +128,9 @@ namespace MapEditor
             if (result == DialogResult.OK)
             {
                 MapLoadIn(fileFinder.FileName);
+                MessageBox.Show("File loaded successfully", "File loaded", MessageBoxButtons.OK);
             }
-            MessageBox.Show("File loaded successfully", "File loaded", MessageBoxButtons.OK);
+            
         }
 
         /// <summary>
@@ -139,34 +141,30 @@ namespace MapEditor
         private void MapLoadIn(string fileName)
         {
             StreamReader reader = new StreamReader($"{fileName}");
-            CreateMapLayout();
             for (int i = 0; i < mapWidth; i++)
             {
                 for (int j = 0; j < mapHeight; j++)
                 {
+                    mapLayout[i, j] = new PictureBox();
                     string[] tileInfo = reader.ReadLine().Split('|');
-                    if(tileInfo[0] == "Tiles.DefaultTile")
+                    if(tileInfo[0] == "DefaultTile")
                     {
-                        mapLayout[i, j] = new PictureBox();
-                        mapLayout[i, j].BackgroundImage = MapEditor.Properties.Resources.BrickSprite;
-                        mapLayout[i, j].Width = tileWidth;
-                        mapLayout[i, j].Height = tileHeight;
-                        mapLayout[i, j].Left = groupBoxMap.Location.X + (tileWidth * i);
-                        mapLayout[i, j].Top = groupBoxMap.Location.Y + (tileHeight * j);
-                        mapLayout[i, j].Click += pictureBoxTile_Click;
-                        this.Controls.Add(mapLayout[i, j]);
+                        mapLayout[i, j].BackgroundImage = buttonTile1.Image;
                     }
-                    else if(tileInfo[0] == "Tiles.Barrier")
+                    else if(tileInfo[0] == "Barrier")
                     {
-                        mapLayout[i, j] = new PictureBox();
-                        mapLayout[i, j].BackgroundImage = MapEditor.Properties.Resources.BarrierSprite;
-                        mapLayout[i, j].Width = tileWidth;
-                        mapLayout[i, j].Height = tileHeight;
-                        mapLayout[i, j].Left = groupBoxMap.Location.X + (tileWidth * i);
-                        mapLayout[i, j].Top = groupBoxMap.Location.Y + (tileHeight * j);
-                        mapLayout[i, j].Click += pictureBoxTile_Click;
-                        this.Controls.Add(mapLayout[i, j]);
+                        mapLayout[i, j].BackgroundImage = buttonTile4.Image;
                     }
+                    else if(tileInfo[0] == "RedBrick")
+                    {
+                        mapLayout[i, j].BackgroundImage = buttonTile2.Image;
+                    }
+                    mapLayout[i, j].Width = tileWidth;
+                    mapLayout[i, j].Height = tileHeight;
+                    mapLayout[i, j].Left = groupBoxMap.Location.X + (tileWidth * i);
+                    mapLayout[i, j].Top = groupBoxMap.Location.Y + (tileHeight * j);
+                    mapLayout[i, j].Click += pictureBoxTile_Click;
+                    this.Controls.Add(mapLayout[i, j]);
                     mapLayout[i, j].BringToFront();
                 }
             }

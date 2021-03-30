@@ -29,8 +29,9 @@ namespace SolsUnderground
     // IDs used to assign textures to tiles while loading files
     public enum Tiles
     {
-        BrickTile,
-        Barrier
+        DefaultTile,
+        Barrier,
+        RedBrick
     }
 
     class Tile : StaticObject
