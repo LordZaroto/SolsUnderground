@@ -174,7 +174,7 @@ namespace SolsUnderground
                 //to accomadate for adjustments to both axis.
                 if(kbState.IsKeyDown(Keys.D))
                 {
-                    X += 2;
+                    X += 3;
                     
                     //Two trues will make a false!
                     if(test == true)
@@ -188,7 +188,7 @@ namespace SolsUnderground
                 }
                 if (kbState.IsKeyDown(Keys.A))
                 {
-                    X -= 2;
+                    X -= 3;
 
                     if (test == true)
                     {
@@ -218,12 +218,12 @@ namespace SolsUnderground
                     }
                     else if(kbState.IsKeyDown(Keys.W))
                     {
-                        Y -= 2;
+                        Y -= 3;
                         playerState = PlayerState.moveForward;
                     }
                     else if(kbState.IsKeyDown(Keys.S))
                     {
-                        Y += 2;
+                        Y += 3;
                         playerState = PlayerState.moveBack;
                     }
                 }
@@ -335,7 +335,7 @@ namespace SolsUnderground
 
             PlayerMove(kbState);
             BasicAttack(lButton, previousLeftBState);
-            MenuInput(kbState, gameState);
+            //MenuInput(kbState, gameState);
         }
 
         /// <summary>
