@@ -87,6 +87,9 @@ namespace MapEditor
             if (result == DialogResult.OK)
             {
                 StreamWriter writer = new StreamWriter($"{fileSaver.FileName}");
+
+                writer.WriteLine($"{textBoxEnemyCount.Text}");//First written value is
+
                 //Writing each tile as a line of text that includes the image and 
                 //a boolean representing if there is an enemy in that location or not
                 for (int i = 0; i < mapWidth; i++)
@@ -95,15 +98,15 @@ namespace MapEditor
                     {
                         if (mapLayout[i, j].BackgroundImage == buttonTile2.Image)
                         {
-                            writer.WriteLine($"RedBrick|false");
+                            writer.WriteLine("RedBrick|false");
                         }
                         else if(mapLayout[i, j].BackgroundImage == buttonTile4.Image)
                         {
-                            writer.WriteLine($"Barrier|true");
+                            writer.WriteLine("Barrier|true");
                         }
                         else
                         {
-                            writer.WriteLine($"DefaultTile|false");
+                            writer.WriteLine("DefaultTile|false");
                         }
                     }
                 }
@@ -141,6 +144,9 @@ namespace MapEditor
         private void MapLoadIn(string fileName)
         {
             StreamReader reader = new StreamReader($"{fileName}");
+            int enemyCount = int.Parse(reader.ReadLine());
+            textBoxEnemyCount.Text = $"{enemyCount}";
+            
             for (int i = 0; i < mapWidth; i++)
             {
                 for (int j = 0; j < mapHeight; j++)
@@ -192,5 +198,7 @@ namespace MapEditor
             }
             groupBoxMap.SendToBack();
         }
+
+       
     }
 }
