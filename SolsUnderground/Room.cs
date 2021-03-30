@@ -12,6 +12,9 @@ using Microsoft.Xna.Framework.Input;
 /// that make up a single room of the game.
 ///
 /// NOTES:
+/// > FINISH COPY METHOD: Currently doesnt solve issue, only moves object references
+///   into a new Room object
+/// 
 /// > Using a List for storing Tiles should work fine, but possibility is open to
 ///   other structures like 2D arrays if issues arise
 ///
@@ -35,7 +38,6 @@ namespace SolsUnderground
         private List<Tile> tiles;
         private List<GameObject> contents;
         private int enemyCount;
-        private Random rng;
 
         // Properties
         public int Width
@@ -56,13 +58,22 @@ namespace SolsUnderground
             List<Texture2D> tileTextures, Texture2D[] enemyTextures) // Load room archetypes
         {
             this.windowHeight = windowHeight;
-            rng = new Random();
             this.windowWidth = windowWidth;
             tiles = new List<Tile>();
             contents = new List<GameObject>();
             Load(filepath, tileTextures, enemyTextures);
             SetTiles(windowWidth, windowHeight);
             enemyCount = 0;
+        }
+
+        // Only to be used for copying Rooms
+        private Room(int windowWidth, int windowHeight, List<Tile> tiles, List<GameObject> contents, int enemyCount)
+        {
+            this.windowWidth = windowWidth;
+            this.windowHeight = windowHeight;
+            this.tiles = tiles;
+            this.contents = contents;
+            this.enemyCount = enemyCount;
         }
 
         // Methods
@@ -85,8 +96,8 @@ namespace SolsUnderground
             enemyCount = int.Parse(reader.ReadLine());
             for(int i = 0; i < enemyCount; i++)
             {
-                Rectangle enemyRect = new Rectangle(rng.Next(enemyXRange), 
-                    rng.Next(enemyYRange), enemyWidth, enemyHeight);
+                Rectangle enemyRect = new Rectangle(Program.rng.Next(enemyXRange), 
+                    Program.rng.Next(enemyYRange), enemyWidth, enemyHeight);
                 contents.Add(new Minion(enemyTextures, enemyRect, 10, 2));
                 
             }
@@ -134,9 +145,19 @@ namespace SolsUnderground
         }
 
         /// <summary>
+        /// Creates a copy of the Room and its contents.
+        /// </summary>
+        /// <returns></returns>
+        public Room Copy()
+        {
+            // NEED TO FINISH: lists use references, need to create new objects
+            return new Room(windowWidth, windowHeight, tiles, contents, enemyCount);
+        }
+
+        /// <summary>
         /// Adds game objects to room's list of contents.
         /// </summary>
-        /// <param name="gameObject"></param>
+        /// <param name="gameObject">Game object to initialize in room</param>
         public void Add(GameObject gameObject)
         {
             contents.Add(gameObject);

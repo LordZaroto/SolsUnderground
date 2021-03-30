@@ -86,8 +86,8 @@ namespace SolsUnderground
 
             for (int i = 0; i < 5; i++)
             {
-                // Adds a random room from roomPool to the floor
-                floor.Add(roomPool[Program.rng.Next(0, roomPool.Count)]);
+                // Adds a copy of a random room from roomPool to the floor
+                floor.Add(roomPool[Program.rng.Next(0, roomPool.Count)].Copy());
 
                 // Add enemies and chest to room if not boss room
                 if (i != 4)
