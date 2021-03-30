@@ -28,10 +28,14 @@ namespace SolsUnderground
     class Room
     {
         // Fields
+        private int windowWidth;
+        private int windowHeight;
         private const int ROOM_WIDTH = 33;
         private const int ROOM_HEIGHT = 25;
         private List<Tile> tiles;
         private List<GameObject> contents;
+        private int enemyCount;
+        private Random rng;
 
         // Properties
         public int Width
@@ -42,14 +46,23 @@ namespace SolsUnderground
         {
             get { return ROOM_HEIGHT; }
         }
+        public int EnemyCount
+        {
+            get { return enemyCount; }
+        }
 
         // Constructors
-        public Room(string filepath, int windowWidth, int windowHeight, List<Texture2D> tileTextures) // Load room archetypes
+        public Room(string filepath, int windowWidth, int windowHeight, 
+            List<Texture2D> tileTextures, Texture2D[] enemyTextures) // Load room archetypes
         {
+            this.windowHeight = windowHeight;
+            rng = new Random();
+            this.windowWidth = windowWidth;
             tiles = new List<Tile>();
             contents = new List<GameObject>();
-            Load(filepath, tileTextures);
+            Load(filepath, tileTextures, enemyTextures);
             SetTiles(windowWidth, windowHeight);
+            enemyCount = 0;
         }
 
         // Methods
@@ -58,10 +71,25 @@ namespace SolsUnderground
         /// Reads the given file and loads fields with appropriate data.
         /// </summary>
         /// <param name="filepath">String path of file</param>
-        public void Load(string filepath, List<Texture2D> tileTextures)
+        public void Load(string filepath, List<Texture2D> tileTextures, Texture2D[] enemyTextures)
         {
             
             StreamReader reader = new StreamReader(filepath);
+
+            int enemyXRange = windowWidth - enemyTextures[0].Width;
+            int enemyYRange = windowHeight - enemyTextures[0].Height;
+            int enemyWidth = enemyTextures[0].Width;
+            int enemyHeight = enemyTextures[0].Height;
+
+            //First line will be the number of enemies in the room
+            enemyCount = int.Parse(reader.ReadLine());
+            for(int i = 0; i < enemyCount; i++)
+            {
+                Rectangle enemyRect = new Rectangle(rng.Next(enemyXRange), 
+                    rng.Next(enemyYRange), enemyWidth, enemyHeight);
+                contents.Add(new Minion(enemyTextures, enemyRect, 10, 2));
+                
+            }
 
             // Defines necessary variables for file reading
             string line;

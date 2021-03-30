@@ -33,13 +33,20 @@ namespace SolsUnderground
         // Fields
         private List<Room> roomPool;
         private List<Room> floor;
+        private List<Enemy> enemies;
         private int currentFloor;
         private int currentRoom;
         private int windowWidth;
         private int windowHeight;
 
+        //Properties
+        public List<Enemy> Enemies
+        {
+            get { return enemies; }
+        }
+
         // Constructor
-        public MapManager(List<Texture2D> tileTextures, int windowWidth, int windowHeight)
+        public MapManager(List<Texture2D> tileTextures, Texture2D[] enemyTextures, int windowWidth, int windowHeight)
         {
             this.roomPool = new List<Room>();
             this.floor = new List<Room>();
@@ -48,7 +55,7 @@ namespace SolsUnderground
             currentRoom = 0;
             currentFloor = 0;
 
-            Load(tileTextures);
+            Load(tileTextures, enemyTextures);
         }
 
         // Methods
@@ -56,7 +63,7 @@ namespace SolsUnderground
         /// <summary>
         /// Loads all rooms from files and loads each room's tiles.
         /// </summary>
-        public void Load(List<Texture2D> tileTextures)
+        public void Load(List<Texture2D> tileTextures, Texture2D[] enemyTextures)
         {
             // Program works from three directories down in project in bin\debug\net3.1\
             DirectoryInfo d = new DirectoryInfo("..\\..\\..\\Rooms");
@@ -64,7 +71,8 @@ namespace SolsUnderground
             // Load in each Room from file
             foreach (FileInfo f in d.GetFiles())
             {
-                roomPool.Add(new Room("..\\..\\..\\Rooms\\" + f.Name, windowWidth, windowHeight, tileTextures));
+                roomPool.Add(new Room("..\\..\\..\\Rooms\\" + f.Name, 
+                    windowWidth, windowHeight, tileTextures, enemyTextures));
             }
         }
 
@@ -148,6 +156,11 @@ namespace SolsUnderground
         public void Draw(SpriteBatch sb)
         {
             floor[currentRoom].Draw(sb);
+            enemies = floor[currentRoom].GetEnemies();
+            for(int i = 0; i < enemies.Count; i++)
+            {
+                enemies[i].Draw(sb);
+            }
         }
     }
 }

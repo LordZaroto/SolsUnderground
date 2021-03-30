@@ -74,29 +74,29 @@ namespace SolsUnderground
         /// </summary>
         public override void EnemyMove(Player player)
         {
-            if(Math.Abs(positionRect.X-player.X) > Math.Abs(positionRect.Y - player.Y))
+            if(Math.Abs(positionRect.X-player.X) >= Math.Abs(positionRect.Y - player.Y))
             {
-                if(positionRect.X > player.X)
+                if(positionRect.X >= player.X)
                 {
                     texture = textures[2];
-                    positionRect.X--;
+                    positionRect.X-=3;
                 }
                 else
                 {
                     texture = textures[3];
-                    positionRect.X++;
+                    positionRect.X+=3;
                 }
             }else if (Math.Abs(positionRect.X - player.X) < Math.Abs(positionRect.Y - player.Y))
             {
-                if (positionRect.Y > player.Y)
+                if (positionRect.Y >= player.Y)
                 {
                     texture = textures[1];
-                    positionRect.Y--;
+                    positionRect.Y-=3;
                 }
                 else
                 {
                     texture = textures[0];
-                    positionRect.Y++;
+                    positionRect.Y+=3;
                 }
             }
         }
