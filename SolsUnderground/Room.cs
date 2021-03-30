@@ -12,22 +12,14 @@ using Microsoft.Xna.Framework.Input;
 /// that make up a single room of the game.
 ///
 /// NOTES:
-/// > Load method is unfinished - structure is there, but needs specific textures
-///   before it can actually be used
-///
 /// > Using a List for storing Tiles should work fine, but possibility is open to
 ///   other structures like 2D arrays if issues arise
-///
-/// > Two constructors - one loads data using file, other takes parameters and a Tile List
-///   I think the first should be used for loading our rooms, and the second can be for testing
 ///
 /// > Draw() method assumes there is no offset in the window, but this can be changed easily once
 ///   visual design is discussed.
 ///   
 /// > NEED TO FINISH METHODS FOR CONTENT LIST: Make sure all necessary data is accessible
 ///   What goes in contents list? Enemies, chests, anything else?
-/// 
-/// > Need to define default width and height of rooms
 /// 
 /// </summary>
 
@@ -36,35 +28,27 @@ namespace SolsUnderground
     class Room
     {
         // Fields
-        private int width;
-        private int height;
+        private const int ROOM_WIDTH = 33;
+        private const int ROOM_HEIGHT = 25;
         private List<Tile> tiles;
         private List<GameObject> contents;
 
         // Properties
         public int Width
         {
-            get { return width; }
+            get { return ROOM_WIDTH; }
         }
         public int Height
         {
-            get { return height; }
+            get { return ROOM_HEIGHT; }
         }
 
         // Constructors
-        public Room(string filepath, int windowWidth, int windowHeight) // Should probably use this one to load rooms
+        public Room(string filepath, int windowWidth, int windowHeight, List<Texture2D> tileTextures) // Load room archetypes
         {
-            Load(filepath);
+            tiles = new List<Tile>();
             contents = new List<GameObject>();
-            SetTiles(windowWidth, windowHeight);
-        }
-        public Room(int width, int height, List<Tile> tiles, 
-            int windowWidth, int windowHeight) // Can use this to build and test rooms w/o editor
-        {
-            this.width = width;
-            this.height = height;
-            this.tiles = tiles;
-            contents = new List<GameObject>();
+            Load(filepath, tileTextures);
             SetTiles(windowWidth, windowHeight);
         }
 
@@ -74,41 +58,25 @@ namespace SolsUnderground
         /// Reads the given file and loads fields with appropriate data.
         /// </summary>
         /// <param name="filepath">String path of file</param>
-        public void Load(string filepath)
+        public void Load(string filepath, List<Texture2D> tileTextures)
         {
-            StreamReader reader = new StreamReader(filepath);
-        
-            // First line holds width/height
-            string line = reader.ReadLine();
-            string[] data = line.Split('|');
-            Texture2D texture = null;              // CHANGE ONCE TEXTURES ARE ADDED
             
-            // Size of the room (IN TILES)
-            width = Int32.Parse(data[0]);
-            height = Int32.Parse(data[1]);
+            StreamReader reader = new StreamReader(filepath);
+
+            // Defines necessary variables for file reading
+            string line;
+            string[] data;
         
             // Rest of lines hold Tile data
             while ((line = reader.ReadLine()) != null)
             {
                 data = line.Split('|');
 
-                // Use tile ID to assign texture
-                switch (Enum.Parse<Tiles>(data[0]))
-                {
-                    // Fill appropriately once textures are added      <<< ALSO HERE
-
-                    case Tiles.DefaultTile:
-                        // texture = defaultTileTexture;
-                        break;
-
-                    case Tiles.Barrier:
-                        // texture = barrierTexture;
-                        break;
-                }
-
                 // Add new tile using data from text line
+                // First data piece is Tiles enum, use int value as ID for texture
+                // Second data piece is boolean for whether tile is barrier
                 tiles.Add(new Tile(
-                    texture,
+                    tileTextures[(int)Enum.Parse<Tiles>(data[0].Substring(6))],
                     Boolean.Parse(data[1])
                     ));
             }
@@ -124,14 +92,14 @@ namespace SolsUnderground
         public void SetTiles(int windowWidth, int windowHeight)
         {
             // Determine size of tiles using window size
-            int tileWidth = windowWidth / width;
-            int tileHeight = windowHeight / height;
+            int tileWidth = windowWidth / ROOM_WIDTH;
+            int tileHeight = windowHeight / ROOM_HEIGHT;
 
             // Set each tile's position and size
-            for (int i = 0; i < width * height; i++)
+            for (int i = 0; i < ROOM_WIDTH * ROOM_HEIGHT; i++)
             {
-                tiles[i].X = tileWidth * (i % width);
-                tiles[i].Y = tileHeight * (i / height);
+                tiles[i].X = tileWidth * (i % ROOM_WIDTH);
+                tiles[i].Y = tileHeight * (i / ROOM_WIDTH);
                 tiles[i].Width = tileWidth;
                 tiles[i].Height = tileHeight;
             }
@@ -163,6 +131,28 @@ namespace SolsUnderground
         }
 
         /// <summary>
+        /// Retrieves hitboxes of barrier tiles for collision detection.
+        /// </summary>
+        /// <returns>List of Rectangles of all barrier tiles</returns>
+        public List<Rectangle> GetBarriers()
+        {
+            List<Rectangle> barriers = new List<Rectangle>();
+            Rectangle rect;
+
+            foreach (Tile t in tiles)
+            {
+                // If Tile is a barrier, create and store Rectangle for collision
+                if (t.IsObstacle)
+                {
+                    rect = new Rectangle(t.X, t.Y, t.Width, t.Height);
+                    barriers.Add(rect);
+                }
+            }
+
+            return barriers;
+        }
+
+        /// <summary>
         /// Draws all tiles in room.
         /// </summary>
         /// <param name="sb">Spritebatch to draw with</param>
@@ -176,7 +166,8 @@ namespace SolsUnderground
                 t.Draw(sb);
             }
 
-            // Anything to draw from contents list?
+            // I dont think the Room should be responsible for drawing all of its content,
+            // it could get pretty messy trying to track everything in the contents list.
         }
     }
 }

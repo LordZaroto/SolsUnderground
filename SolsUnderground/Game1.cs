@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
@@ -24,16 +25,29 @@ namespace SolsUnderground
         private GameState currentState;
         private SpriteFont heading;
         private SpriteFont text;
-
+        KeyboardState prevKB;
         //Player
-        private Texture2D playerTexture;
+        private Texture2D playerForward;
+        private Texture2D playerBack;
+        private Texture2D playerLeft;
+        private Texture2D playerRight;
         private Rectangle playerRect;
         private Player player;
+        private Texture2D[] playerTextures;
+
+        //enemy
+        private Texture2D minionForward;
+        private Texture2D minionBack;
+        private Texture2D minionLeft;
+        private Texture2D minionRight;
+        private Texture2D[] minionTextures;
 
         //Weapons
         private Weapon startWeapon;
         private Texture2D startWeaponTexture;
 
+        // Managers
+        private MapManager mapManager;
 
         //menu items
         private Texture2D startGame;
@@ -68,8 +82,6 @@ namespace SolsUnderground
         private Rectangle button10;
         private Rectangle button11;
 
-        //character textures
-        private Texture2D playerForward;
 
         public Game1()
         {
@@ -91,22 +103,40 @@ namespace SolsUnderground
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
-            
+
             //Text
             heading = Content.Load<SpriteFont>("Roboto175");
             text = Content.Load<SpriteFont>("Roboto40");
 
             //character textures
             playerForward = Content.Load<Texture2D>("playerForward");
+            playerBack = Content.Load<Texture2D>("playerBack");
+            playerLeft = Content.Load<Texture2D>("playerLeft");
+            playerRight = Content.Load<Texture2D>("playerRight");
+            playerTextures = new Texture2D[]{playerForward, playerBack, playerLeft, playerRight};
+
+            //enemy textures
+            minionForward = Content.Load<Texture2D>("minionForward");
+            minionBack = Content.Load<Texture2D>("minionBack");
+            minionLeft = Content.Load<Texture2D>("minionLeft");
+            minionRight = Content.Load<Texture2D>("minionRight");
+            minionTextures = new Texture2D[] { minionForward, minionBack, minionLeft, minionRight };
 
             //Player
-            //playerTexture = Content.Load<Texture2D>("tempPlayer");
             playerRect = new Rectangle(0, 0, playerForward.Width, playerForward.Height);
             startWeaponTexture = Content.Load<Texture2D>("stick");
             startWeapon = new Weapon(
                 startWeaponTexture,
                 new Rectangle(0, 0, startWeaponTexture.Width, startWeaponTexture.Height));
-            player = new Player(playerForward, playerRect, startWeapon);
+            player = new Player(playerTextures, playerRect, startWeapon);
+
+            // Tiles
+            List<Texture2D> tileTextures = new List<Texture2D>();
+            tileTextures.Add(Content.Load<Texture2D>("BrickSprite"));
+            tileTextures.Add(Content.Load<Texture2D>("BarrierSprite"));
+            mapManager = new MapManager(tileTextures, 
+                _graphics.PreferredBackBufferWidth,
+                _graphics.PreferredBackBufferHeight);
 
             //menu items
             startGame = Content.Load<Texture2D>("startGame");
@@ -137,8 +167,6 @@ namespace SolsUnderground
             newGame = Content.Load<Texture2D>("newGameGO");
             button10 = new Rectangle(263, 643, 914, 139);
             button11 = new Rectangle(263, 782, 914, 139);
-
-
         }
 
         protected override void Update(GameTime gameTime)
@@ -152,41 +180,56 @@ namespace SolsUnderground
             {
                 case GameState.Menu:
                     if (kb.IsKeyDown(Keys.Enter) || MouseClick(button1.X, button1.Y, button1.Width, button1.Height) == true)
+                    {
                         currentState = GameState.Game;
+                        mapManager.NewFloor();
+                    }
                     if (kb.IsKeyDown(Keys.C) || MouseClick(button3.X, button3.Y, button3.Width, button3.Height) == true)
                         currentState = GameState.Controls;
                     if (kb.IsKeyDown(Keys.I) || MouseClick(button4.X, button4.Y, button4.Width, button4.Height) == true)
                         currentState = GameState.Instructions;
                     break;
                 case GameState.Controls:
-                    if(kb.IsKeyDown(Keys.Escape) || MouseClick(button5.X, button5.Y, button5.Width, button5.Height) == true)
+                    if(SingleKeyPress(Keys.Escape, kb, prevKB) || MouseClick(button5.X, button5.Y, button5.Width, button5.Height) == true)
+                    {
                         currentState = GameState.Menu;
+                    }
                     break;
                 case GameState.Instructions:
                     if (kb.IsKeyDown(Keys.Escape) || MouseClick(button5.X, button5.Y, button5.Width, button5.Height) == true)
                         currentState = GameState.Menu;
                     break;
                 case GameState.Game:
-                    if (kb.IsKeyDown(Keys.Escape))
+                    if (SingleKeyPress(Keys.Escape,kb, prevKB))
+                    {
                         currentState = GameState.Pause;
+                    }
+                        
                     if (player.Hp <= 0)
                         currentState = GameState.GameOver;
                     break;
                 case GameState.Pause:
-                    if (kb.IsKeyDown(Keys.Escape) || MouseClick(button6.X, button6.Y, button6.Width, button6.Height) == true)
+                    if (SingleKeyPress(Keys.Escape, kb, prevKB) || MouseClick(button6.X, button6.Y, button6.Width, button6.Height) == true)
+                    {
                         currentState = GameState.Game;
+
+                    }
+                        
                     if (kb.IsKeyDown(Keys.Q) || MouseClick(button9.X, button9.Y, button9.Width, button9.Height) == true)
                         currentState = GameState.Menu;
                     break;
                 case GameState.GameOver:
                     if (kb.IsKeyDown(Keys.Enter) || MouseClick(button10.X, button10.Y, button10.Width, button10.Height) == true)
                         currentState = GameState.Game;
-                    if (kb.IsKeyDown(Keys.Escape) || MouseClick(button11.X, button11.Y, button11.Width, button11.Height) == true)
+                    if (SingleKeyPress(Keys.Escape, kb, prevKB) || MouseClick(button11.X, button11.Y, button11.Width, button11.Height) == true)
+                    {
                         currentState = GameState.Menu;
+                    }
                     break;
 
             }
 
+            prevKB = kb;
             // TODO: Add your update logic here
 
             base.Update(gameTime);
@@ -218,7 +261,7 @@ namespace SolsUnderground
                         Color.White);
                     _spriteBatch.DrawString(
                         text,
-                        "*insert Instructions*",
+                        "*insert Controls*",
                         new Vector2(0, 250),
                         Color.White);
                     _spriteBatch.Draw(returnToMenu, button5, Color.White);
@@ -237,6 +280,7 @@ namespace SolsUnderground
                     _spriteBatch.Draw(returnToMenu, button5, Color.White);
                     break;
                 case GameState.Game:
+                    mapManager.Draw(_spriteBatch);
                     player.Draw(_spriteBatch);
                     player.PlayerMove(Keyboard.GetState());
                     break;
