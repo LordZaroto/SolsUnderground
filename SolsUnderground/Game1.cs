@@ -135,7 +135,7 @@ namespace SolsUnderground
             tileTextures.Add(Content.Load<Texture2D>("BrickSprite"));
             tileTextures.Add(Content.Load<Texture2D>("BarrierSprite"));
             tileTextures.Add(Content.Load<Texture2D>("RedBrickSprite"));
-            mapManager = new MapManager(tileTextures, 
+            mapManager = new MapManager(tileTextures, minionTextures, 
                 _graphics.PreferredBackBufferWidth,
                 _graphics.PreferredBackBufferHeight);
 
@@ -283,6 +283,15 @@ namespace SolsUnderground
                 case GameState.Game:
                     mapManager.Draw(_spriteBatch);
                     player.Draw(_spriteBatch);
+
+                    //Get the current enemies in the current room from the mapManager
+                    //in order to draw and move them
+                    List<Enemy> enemies = mapManager.Enemies;
+                    foreach(Enemy e in enemies)
+                    {
+                        e.Draw(_spriteBatch);
+                        e.EnemyMove(player);
+                    }
                     player.PlayerMove(Keyboard.GetState());
                     break;
                 case GameState.Pause:

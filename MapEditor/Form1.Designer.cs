@@ -43,6 +43,8 @@
             this.buttonTile2 = new System.Windows.Forms.Button();
             this.buttonTile1 = new System.Windows.Forms.Button();
             this.pictureBoxCurrentTile = new System.Windows.Forms.PictureBox();
+            this.textBoxEnemyCount = new System.Windows.Forms.TextBox();
+            this.label2 = new System.Windows.Forms.Label();
             this.groupBoxTileSelect.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxCurrentTile)).BeginInit();
             this.SuspendLayout();
@@ -58,9 +60,9 @@
             // 
             // buttonSave
             // 
-            this.buttonSave.Location = new System.Drawing.Point(30, 487);
+            this.buttonSave.Location = new System.Drawing.Point(30, 565);
             this.buttonSave.Name = "buttonSave";
-            this.buttonSave.Size = new System.Drawing.Size(150, 150);
+            this.buttonSave.Size = new System.Drawing.Size(150, 72);
             this.buttonSave.TabIndex = 2;
             this.buttonSave.Text = "Save";
             this.buttonSave.UseVisualStyleBackColor = true;
@@ -68,9 +70,9 @@
             // 
             // buttonLoad
             // 
-            this.buttonLoad.Location = new System.Drawing.Point(213, 487);
+            this.buttonLoad.Location = new System.Drawing.Point(213, 565);
             this.buttonLoad.Name = "buttonLoad";
-            this.buttonLoad.Size = new System.Drawing.Size(150, 150);
+            this.buttonLoad.Size = new System.Drawing.Size(150, 72);
             this.buttonLoad.TabIndex = 3;
             this.buttonLoad.Text = "Load";
             this.buttonLoad.UseVisualStyleBackColor = true;
@@ -80,7 +82,7 @@
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F);
-            this.label1.Location = new System.Drawing.Point(166, 385);
+            this.label1.Location = new System.Drawing.Point(165, 384);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(124, 26);
             this.label1.TabIndex = 5;
@@ -194,17 +196,37 @@
             // 
             // pictureBoxCurrentTile
             // 
-            this.pictureBoxCurrentTile.Location = new System.Drawing.Point(79, 363);
+            this.pictureBoxCurrentTile.Location = new System.Drawing.Point(77, 363);
             this.pictureBoxCurrentTile.Name = "pictureBoxCurrentTile";
             this.pictureBoxCurrentTile.Size = new System.Drawing.Size(64, 69);
             this.pictureBoxCurrentTile.TabIndex = 4;
             this.pictureBoxCurrentTile.TabStop = false;
+            // 
+            // textBoxEnemyCount
+            // 
+            this.textBoxEnemyCount.Location = new System.Drawing.Point(252, 476);
+            this.textBoxEnemyCount.Name = "textBoxEnemyCount";
+            this.textBoxEnemyCount.Size = new System.Drawing.Size(100, 20);
+            this.textBoxEnemyCount.TabIndex = 6;
+            this.textBoxEnemyCount.Text = "0";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
+            this.label2.Location = new System.Drawing.Point(12, 476);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(208, 20);
+            this.label2.TabIndex = 7;
+            this.label2.Text = "Number of Enemies Desired";
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1225, 649);
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.textBoxEnemyCount);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.pictureBoxCurrentTile);
             this.Controls.Add(this.buttonLoad);
@@ -237,6 +259,8 @@
         private System.Windows.Forms.Button buttonTile8;
         private System.Windows.Forms.Button buttonTile7;
         private System.Windows.Forms.Button buttonTile6;
+        private System.Windows.Forms.TextBox textBoxEnemyCount;
+        private System.Windows.Forms.Label label2;
     }
 }
 
