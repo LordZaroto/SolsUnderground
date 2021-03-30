@@ -11,7 +11,7 @@ namespace SolsUnderground
     {
         //Fields
         //-----------------------------
-        
+        private List<Enemy> enemies;
         //-----------------------------
 
         //---------------------------------------------------------------------
@@ -20,9 +20,13 @@ namespace SolsUnderground
 
         //Properties
         //----------------------------------------
-
-        
-
+        /// <summary>
+        /// The amount of enemies currently in play.
+        /// </summary>
+        public int EnemyCount
+        {
+            get { return enemies.Count; }
+        }
         //----------------------------------------
 
         //---------------------------------------------------------------------
@@ -31,9 +35,9 @@ namespace SolsUnderground
 
         //Constructor
         //----------------------------------------------------------
-        public CombatManager()
+        public CombatManager(Room room)
         {
-            
+            enemies = room.GetEnemies();
         }
         //----------------------------------------------------------
 

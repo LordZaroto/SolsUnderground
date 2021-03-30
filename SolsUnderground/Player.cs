@@ -352,7 +352,7 @@ namespace SolsUnderground
             specialCounter += gameTime.ElapsedGameTime.TotalSeconds;
 
             PlayerMove(kbState);
-            BasicAttack(lButton, previousLeftBState);
+            //BasicAttack(lButton, previousLeftBState);
             //MenuInput(kbState, gameState);
         }
 
