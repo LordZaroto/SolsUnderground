@@ -101,8 +101,8 @@ namespace SolsUnderground
         protected override void Initialize()
         {
             currentState = GameState.Menu;
-            _graphics.PreferredBackBufferWidth = 1440;
-            _graphics.PreferredBackBufferHeight = 1024;
+            _graphics.PreferredBackBufferWidth = 1320;
+            _graphics.PreferredBackBufferHeight = 1000;
             _graphics.ApplyChanges();
 
             base.Initialize();
@@ -212,6 +212,12 @@ namespace SolsUnderground
                     if (SingleKeyPress(Keys.Escape,kb, prevKB))
                     {
                         currentState = GameState.Pause;
+                    }
+
+                    if(player.Width + player.X > _graphics.PreferredBackBufferWidth)
+                    {
+                        player.X = 0;
+                        mapManager.NextRoom();
                     }
                         
                     if (player.Hp <= 0)

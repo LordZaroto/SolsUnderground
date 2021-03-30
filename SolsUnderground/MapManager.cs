@@ -54,7 +54,7 @@ namespace SolsUnderground
         // Methods
         
         /// <summary>
-        /// Loads all rooms from files and loads each room's tiles.
+        /// Reads and loads all room files.
         /// </summary>
         public void Load(List<Texture2D> tileTextures)
         {
@@ -69,7 +69,7 @@ namespace SolsUnderground
         }
 
         /// <summary>
-        /// Draws rooms from the room pool to build a floor of five rooms.
+        /// Randomly draws rooms from the room pool to build a floor of five rooms.
         /// </summary>
         public void NewFloor()
         {
@@ -104,9 +104,9 @@ namespace SolsUnderground
         }
 
         /// <summary>
-        /// Increments the currentRoom. If currentRoom exceeds number of
-        /// rooms on floor, reset currentRoom, increment currentFloor,
-        /// and loads next floor.
+        /// Sets active room to the next room on the floor. If called
+        /// while the last room is active, creates a new floor and sets
+        /// the first room active.
         /// </summary>
         public void NextRoom()
         {
@@ -124,7 +124,7 @@ namespace SolsUnderground
         }
 
         /// <summary>
-        /// Retrieves the list of Enemy objects stored in the current Room.
+        /// Retrieves a list of Enemy objects stored in the current Room.
         /// </summary>
         /// <returns></returns>
         public List<Enemy> GetRoomEnemies()
@@ -142,7 +142,7 @@ namespace SolsUnderground
         }
 
         /// <summary>
-        /// Call's current room's Draw method
+        /// Draws the current active room.
         /// </summary>
         /// <param name="sb"></param>
         public void Draw(SpriteBatch sb)
