@@ -22,10 +22,18 @@ namespace SolsUnderground
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
+
+        //gamesstate
         private GameState currentState;
+
+        //text
         private SpriteFont heading;
         private SpriteFont text;
+
+        //keyboard
         KeyboardState prevKB;
+
+
         //Player
         private Texture2D playerForward;
         private Texture2D playerBack;
@@ -256,12 +264,12 @@ namespace SolsUnderground
                 case GameState.Controls:
                      _spriteBatch.DrawString(
                         heading,
-                        "Controls",
+                        "\tControls",
                         new Vector2(0, 0),
                         Color.White);
                     _spriteBatch.DrawString(
                         text,
-                        "*insert Controls*",
+                        "\tForward - W\n\tBackWards - S\n\tLeft - A\n\tRight - D\n\tAttack - \n\tPause - ESC",
                         new Vector2(0, 250),
                         Color.White);
                     _spriteBatch.Draw(returnToMenu, button5, Color.White);
@@ -269,7 +277,7 @@ namespace SolsUnderground
                 case GameState.Instructions:
                     _spriteBatch.DrawString(
                         heading,
-                        "Instructions",
+                        "\tInstructions",
                         new Vector2(0, 0),
                         Color.White);
                     _spriteBatch.DrawString(
