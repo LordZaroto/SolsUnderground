@@ -142,6 +142,7 @@ namespace SolsUnderground
             List<Texture2D> tileTextures = new List<Texture2D>();
             tileTextures.Add(Content.Load<Texture2D>("BrickSprite"));
             tileTextures.Add(Content.Load<Texture2D>("BarrierSprite"));
+            tileTextures.Add(Content.Load<Texture2D>("RedBrickSprite"));
             mapManager = new MapManager(tileTextures, 
                 _graphics.PreferredBackBufferWidth,
                 _graphics.PreferredBackBufferHeight);
