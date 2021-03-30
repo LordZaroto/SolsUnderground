@@ -30,8 +30,9 @@ namespace SolsUnderground
         private SpriteFont heading;
         private SpriteFont text;
 
-        //keyboard
+        //keyboard and mouse
         KeyboardState prevKB;
+        MouseState prevM;
 
 
         //Player
@@ -183,29 +184,30 @@ namespace SolsUnderground
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.End))
                 Exit();
             KeyboardState kb = Keyboard.GetState();
+            MouseState mouse = Mouse.GetState();
             
 
             switch(currentState)
             {
                 case GameState.Menu:
-                    if (kb.IsKeyDown(Keys.Enter) || MouseClick(button1) == true)
+                    if (kb.IsKeyDown(Keys.Enter) || MouseClick(button1, mouse, prevM) == true)
                     {
                         currentState = GameState.Game;
                         mapManager.NewFloor();
                     }
-                    else if (kb.IsKeyDown(Keys.C) || MouseClick(button3) == true)
+                    else if (kb.IsKeyDown(Keys.C) || MouseClick(button3, mouse, prevM) == true)
                         currentState = GameState.Controls;
-                    else if (kb.IsKeyDown(Keys.I) || MouseClick(button4) == true)
+                    else if (kb.IsKeyDown(Keys.I) || MouseClick(button4, mouse, prevM) == true)
                         currentState = GameState.Instructions;
                     break;
                 case GameState.Controls:
-                    if(SingleKeyPress(Keys.Escape, kb, prevKB) || MouseClick(button5) == true)
+                    if(SingleKeyPress(Keys.Escape, kb, prevKB) || MouseClick(button5, mouse, prevM) == true)
                     {
                         currentState = GameState.Menu;
                     }
                     break;
                 case GameState.Instructions:
-                    if (kb.IsKeyDown(Keys.Escape) || MouseClick(button5) == true)
+                    if (kb.IsKeyDown(Keys.Escape) || MouseClick(button5, mouse, prevM) == true)
                         currentState = GameState.Menu;
                     break;
                 case GameState.Game:
@@ -224,19 +226,19 @@ namespace SolsUnderground
                         currentState = GameState.GameOver;
                     break;
                 case GameState.Pause:
-                    if (SingleKeyPress(Keys.Escape, kb, prevKB) || MouseClick(button6) == true)
+                    if (SingleKeyPress(Keys.Escape, kb, prevKB) || MouseClick(button6, mouse, prevM) == true)
                     {
                         currentState = GameState.Game;
 
                     }
                         
-                    if (kb.IsKeyDown(Keys.Q) || MouseClick(button9) == true)
+                    if (kb.IsKeyDown(Keys.Q) || MouseClick(button9, mouse, prevM) == true)
                         currentState = GameState.Menu;
                     break;
                 case GameState.GameOver:
-                    if (kb.IsKeyDown(Keys.Enter) || MouseClick(button10) == true)
+                    if (kb.IsKeyDown(Keys.Enter) || MouseClick(button10, mouse, prevM) == true)
                         currentState = GameState.Game;
-                    if (SingleKeyPress(Keys.Escape, kb, prevKB) || MouseClick(button11) == true)
+                    if (SingleKeyPress(Keys.Escape, kb, prevKB) || MouseClick(button11, mouse, prevM) == true)
                     {
                         currentState = GameState.Menu;
                     }
@@ -245,6 +247,7 @@ namespace SolsUnderground
             }
 
             prevKB = kb;
+            prevM = mouse;
             // TODO: Add your update logic here
 
             base.Update(gameTime);
@@ -288,8 +291,8 @@ namespace SolsUnderground
                         new Vector2(255, 0),
                         Color.White);
                     _spriteBatch.DrawString(
-                        heading,
-                        "*insert Instructions*",
+                        text,
+                        "defeat all enemies to go to the next room",
                         new Vector2(0, 250),
                         Color.White);
                     _spriteBatch.Draw(returnToMenu, button5, Color.White);
@@ -337,11 +340,13 @@ namespace SolsUnderground
 
             base.Draw(gameTime);
         }
-        protected bool MouseClick(Rectangle button)
+        protected bool MouseClick(Rectangle button, MouseState currentMouse, MouseState previousMouse)
         {
             MouseState mouse = Mouse.GetState();
-            if ((mouse.X >= button.Left && mouse.X <= button.Right) && (mouse.Y >= button.Top && mouse.Y <= button.Bottom) && mouse.LeftButton == ButtonState.Pressed)
+            if ((currentMouse.X >= button.Left && currentMouse.X <= button.Right) && (currentMouse.Y >= button.Top && currentMouse.Y <= button.Bottom) && currentMouse.LeftButton == ButtonState.Released && previousMouse.LeftButton == ButtonState.Pressed)
+            {
                 return true;
+            }
             else
                 return false;
         }
