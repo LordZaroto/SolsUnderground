@@ -66,11 +66,6 @@ namespace SolsUnderground
             {
                 roomPool.Add(new Room("..\\..\\..\\Rooms\\" + f.Name, windowWidth, windowHeight, tileTextures));
             }
-
-            //roomPool.Add(new Room("..\\..\\..\\Rooms\\EmptyRoom.level", windowWidth, windowHeight, tileTextures));
-            //roomPool.Add(new Room("..\\..\\..\\Rooms\\CustomBlankRoom.level", windowWidth, windowHeight, tileTextures));
-            //roomPool.Add(new Room("..\\..\\..\\Rooms\\BasicRoom.level", windowWidth, windowHeight, tileTextures));
-            //roomPool.Add(new Room("..\\..\\..\\Rooms\\CohoRoom.level", windowWidth, windowHeight, tileTextures));
         }
 
         /// <summary>
@@ -118,7 +113,7 @@ namespace SolsUnderground
             currentRoom++;
 
             // If moving beyond last room, adjust to new floor
-            if (currentRoom > floor.Count)
+            if (currentRoom == floor.Count)
             {
                 currentRoom = 0;
                 currentFloor++;
@@ -126,6 +121,24 @@ namespace SolsUnderground
             }
 
             // Add a second list and random picker for Boss rooms
+        }
+
+        /// <summary>
+        /// Retrieves the list of Enemy objects stored in the current Room.
+        /// </summary>
+        /// <returns></returns>
+        public List<Enemy> GetRoomEnemies()
+        {
+            return floor[currentRoom].GetEnemies();
+        }
+
+        /// <summary>
+        /// Retrieves a list of Rectangles representing barrier tiles in the current Room.
+        /// </summary>
+        /// <returns></returns>
+        public List<Rectangle> GetRoomBarriers()
+        {
+            return floor[currentRoom].GetBarriers();
         }
 
         /// <summary>
