@@ -5,6 +5,8 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
+//Author: Preston Gilmore
+
 namespace SolsUnderground
 {
     public enum PlayerState
@@ -43,6 +45,7 @@ namespace SolsUnderground
         private double basicCounter;
         private PlayerState playerState;
         private Texture2D[] textures;
+        private int tigerBucks;
         //-----------------------------
 
         //---------------------------------------------------------------------
@@ -75,12 +78,17 @@ namespace SolsUnderground
             set { positionRect.Height = value; }
         }
 
-        public Rectangle Position
+        public override Rectangle PositionRect
         {
             get { return positionRect; }
-
+            set { positionRect = value; }
         }
-
+        
+        public PlayerState State
+        {
+            get { return playerState; }
+            set { playerState = value; }
+        }
 
         //------------------------------
 
@@ -116,6 +124,14 @@ namespace SolsUnderground
         public int Attack
         {
             get { return weapon.Attack; }
+        }
+        /// <summary>
+        /// Currency gained upon enemy kill.
+        /// </summary>
+        public int TigerBucks
+        {
+            get { return tigerBucks; }
+            set { tigerBucks = value; }
         }
         //------------------------------
 
@@ -330,6 +346,14 @@ namespace SolsUnderground
             }
 
             return new Rectangle();
+        }
+
+        /// <summary>
+        /// The player will take damage an be knocked back.
+        /// </summary>
+        public void TakeDamage(int damage)
+        {
+            hp -= damage;
         }
 
         /// <summary>

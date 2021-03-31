@@ -11,6 +11,7 @@ namespace SolsUnderground
     //implements all of the abstract methods and properties
     class Minion : Enemy
     {
+        private EnemyState enemyState;
         Texture2D[] textures;
         //consructor: initializes the fields
         public Minion(Texture2D[] textures, Rectangle positionRect, int health, int attack)
@@ -57,6 +58,18 @@ namespace SolsUnderground
         {
             get { return positionRect.Height; }
             set { positionRect.Height = value; }
+        }
+
+        public override Rectangle PositionRect
+        {
+            get { return positionRect; }
+            set { positionRect = value; }
+        }
+
+        public override EnemyState State
+        {
+            get { return enemyState; }
+            set { enemyState = value; }
         }
 
         /// <summary>
