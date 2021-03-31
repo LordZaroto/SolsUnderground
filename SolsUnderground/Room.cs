@@ -17,9 +17,6 @@ using Microsoft.Xna.Framework.Input;
 /// 
 /// > Using a List for storing Tiles should work fine, but possibility is open to
 ///   other structures like 2D arrays if issues arise
-///
-/// > Draw() method assumes there is no offset in the window, but this can be changed easily once
-///   visual design is discussed.
 ///   
 /// > NEED TO FINISH METHODS FOR CONTENT LIST: Make sure all necessary data is accessible
 ///   What goes in contents list? Enemies, chests, anything else?
@@ -94,13 +91,7 @@ namespace SolsUnderground
 
             //First line will be the number of enemies in the room
             enemyCount = int.Parse(reader.ReadLine());
-            for(int i = 0; i < enemyCount; i++)
-            {
-                Rectangle enemyRect = new Rectangle(Program.rng.Next(enemyXRange), 
-                    Program.rng.Next(enemyYRange), enemyWidth, enemyHeight);
-                contents.Add(new Minion(enemyTextures, enemyRect, 10, 2));
-                
-            }
+            
 
             // Defines necessary variables for file reading
             string line;
@@ -118,6 +109,24 @@ namespace SolsUnderground
                     tileTextures[(int)Enum.Parse<Tiles>(data[0])],
                     Boolean.Parse(data[1])
                     ));
+            }
+
+            //Creating enemies based on the enemy count at the top of the room file
+            for (int i = 0; i < enemyCount; i++)
+            {
+                Rectangle enemyRect = new Rectangle(Program.rng.Next(enemyXRange),
+                    Program.rng.Next(enemyYRange), enemyWidth, enemyHeight);
+                List<Rectangle> barrierSpots = GetBarriers();
+                foreach(Rectangle b in barrierSpots)
+                {
+                    while (enemyRect.Intersects(b))
+                    {
+                        enemyRect = new Rectangle(Program.rng.Next(enemyXRange),
+                        Program.rng.Next(enemyYRange), enemyWidth, enemyHeight);
+                    }
+                }
+                contents.Add(new Minion(enemyTextures, enemyRect, 10, 2));
+
             }
 
             reader.Close();

@@ -44,6 +44,14 @@ namespace SolsUnderground
         {
             get { return enemies; }
         }
+        public int CurrentFloor
+        {
+            get { return currentFloor; }
+        }
+        public int CurrentRoom
+        {
+            get { return currentRoom; }
+        }
 
         // Constructor
         public MapManager(List<Texture2D> tileTextures, Texture2D[] enemyTextures, int windowWidth, int windowHeight)
@@ -84,10 +92,21 @@ namespace SolsUnderground
             // Clear previous floor
             floor.Clear();
 
+            int nextRoomID;
+            int lastRoomID = -1;
             for (int i = 0; i < 5; i++)
             {
                 // Adds a copy of a random room from roomPool to the floor
-                floor.Add(roomPool[Program.rng.Next(0, roomPool.Count)].Copy());
+                // Avoids consecutive repeat rooms
+                do
+                {
+                    nextRoomID = Program.rng.Next(0, roomPool.Count);
+                }
+                while (nextRoomID == lastRoomID);
+
+                lastRoomID = nextRoomID;
+
+                floor.Add(roomPool[nextRoomID].Copy());
 
                 // Add enemies and chest to room if not boss room
                 if (i != 4)
