@@ -131,7 +131,7 @@ namespace SolsUnderground
             minionTextures = new Texture2D[] { minionForward, minionBack, minionLeft, minionRight };
 
             //Player
-            playerRect = new Rectangle(0, 0, playerForward.Width, playerForward.Height);
+            playerRect = new Rectangle(100, 100, playerForward.Width, playerForward.Height);
             startWeaponTexture = Content.Load<Texture2D>("stick");
             startWeapon = new Weapon(
                 startWeaponTexture,
@@ -209,6 +209,8 @@ namespace SolsUnderground
                         currentState = GameState.Menu;
                     break;
                 case GameState.Game:
+                    PlayerCollisions();
+                    MinionCollisions();
                     if (SingleKeyPress(Keys.Escape,kb, prevKB))
                     {
                         currentState = GameState.Pause;
@@ -345,6 +347,103 @@ namespace SolsUnderground
             {
                 return false;
             }
+        }
+
+        /// <summary>
+        /// resolve collisions between the player and barriers
+        /// </summary>
+        public void PlayerCollisions()
+        {
+            List<Rectangle> barriers = mapManager.GetRoomBarriers();
+            Rectangle temp = new Rectangle(player.X, player.Y, player.Width, player.Height);
+
+            for(int i = 0; i < barriers.Count; i++)
+            {
+                //checks if the player intersects with a barrier
+                if (barriers[i].Intersects(temp))
+                {
+                    //checks if the x or y needs to be adjusted
+                    if (Rectangle.Intersect(temp, barriers[i]).Width <= Rectangle.Intersect(temp, barriers[i]).Height)
+                    {
+                        //adjusts the position
+                        if (barriers[i].X > player.X)
+                        {
+                            temp.X -= Rectangle.Intersect(temp, barriers[i]).Width;
+
+                        }
+                        else
+                        {
+                            temp.X += Rectangle.Intersect(temp, barriers[i]).Width;
+                        }
+                    }
+                    else
+                    {
+                        if (barriers[i].Y > temp.Y)
+                        {
+                            temp.Y -= Rectangle.Intersect(temp, barriers[i]).Height;
+
+                        }
+                        else
+                        {
+                            temp.Y += Rectangle.Intersect(temp, barriers[i]).Height;
+                        }
+                    }
+                }
+            }
+            player.X = temp.X;
+            player.Y = temp.Y;
+        }
+
+        //resolve collisions between the minions and barriers
+        public void MinionCollisions()
+        {
+            List<Rectangle> barriers = mapManager.GetRoomBarriers();
+            List<Enemy> enemies = mapManager.GetRoomEnemies();
+            Rectangle temp = new Rectangle(0,0,0,0);
+
+            //loops through all enemies in the room
+            for (int j = 0; j < enemies.Count; j++)
+            {
+                temp = new Rectangle(enemies[j].X, enemies[j].Y, enemies[j].Width, enemies[j].Height);
+
+                for (int i = 0; i < barriers.Count; i++)
+                {
+                    //checks if the enemies intersect with a barrier
+                    if (barriers[i].Intersects(temp))
+                    {
+                        //checks if the x or y needs to be adjusted
+                        if (Rectangle.Intersect(temp, barriers[i]).Width <= Rectangle.Intersect(temp, barriers[i]).Height)
+                        {
+                            //adjusts the position
+                            if (barriers[i].X > player.X)
+                            {
+                                temp.X -= Rectangle.Intersect(temp, barriers[i]).Width;
+
+                            }
+                            else
+                            {
+                                temp.X += Rectangle.Intersect(temp, barriers[i]).Width;
+                            }
+                        }
+                        else
+                        {
+                            if (barriers[i].Y > temp.Y)
+                            {
+                                temp.Y -= Rectangle.Intersect(temp, barriers[i]).Height;
+
+                            }
+                            else
+                            {
+                                temp.Y += Rectangle.Intersect(temp, barriers[i]).Height;
+                            }
+                        }
+                    }
+                }
+                enemies[j].X = temp.X;
+                enemies[j].Y = temp.Y;
+            }
+            
+            
         }
     }
 }

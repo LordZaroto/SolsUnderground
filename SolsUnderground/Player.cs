@@ -74,6 +74,14 @@ namespace SolsUnderground
             get { return positionRect.Height; }
             set { positionRect.Height = value; }
         }
+
+        public Rectangle Position
+        {
+            get { return positionRect; }
+
+        }
+
+
         //------------------------------
 
         //Player Stats
