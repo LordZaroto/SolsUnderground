@@ -69,8 +69,10 @@ namespace SolsUnderground
             this.windowWidth = windowWidth;
             this.windowHeight = windowHeight;
             this.tiles = tiles;
-            this.contents = contents;
             this.enemyCount = enemyCount;
+
+            this.contents = new List<GameObject>();
+
         }
 
         // Methods
