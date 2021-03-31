@@ -10,13 +10,6 @@ Barrier|true
 Barrier|true
 Barrier|true
 Barrier|true
-Barrier|true
-Barrier|true
-Barrier|true
-Barrier|true
-Barrier|true
-Barrier|true
-Barrier|true
 DefaultTile|false
 Barrier|true
 Barrier|true
@@ -113,6 +106,13 @@ Barrier|true
 Barrier|true
 Barrier|true
 Barrier|true
+Barrier|true
+Barrier|true
+Barrier|true
+Barrier|true
+DefaultTile|false
+DefaultTile|false
+DefaultTile|false
 DefaultTile|false
 DefaultTile|false
 DefaultTile|false
