@@ -43,6 +43,7 @@ namespace SolsUnderground
         private Weapon weapon;
         private double specialCounter;
         private double basicCounter;
+        private double damageCounter;
         private PlayerState playerState;
         private Texture2D[] textures;
         private int tigerBucks;
@@ -153,6 +154,7 @@ namespace SolsUnderground
             weapon = startWeapon;
             basicCounter = 0;
             specialCounter = 0;
+            damageCounter = 0;
             playerState = PlayerState.faceBack;
         }
         //----------------------------------------------------------
@@ -353,7 +355,27 @@ namespace SolsUnderground
         /// </summary>
         public void TakeDamage(int damage)
         {
-            hp -= damage;
+            if(damageCounter >= 0.2)
+            {
+                hp -= damage;
+
+                if (playerState == PlayerState.faceForward || playerState == PlayerState.moveForward)
+                {
+                    Y += 8;
+                }
+                if (playerState == PlayerState.faceLeft || playerState == PlayerState.moveLeft)
+                {
+                    X += 8;
+                }
+                if (playerState == PlayerState.faceBack || playerState == PlayerState.moveBack)
+                {
+                    Y -= 8;
+                }
+                if (playerState == PlayerState.faceRight || playerState == PlayerState.moveRight)
+                {
+                    X -= 8;
+                }
+            }
         }
 
         /// <summary>
@@ -382,6 +404,7 @@ namespace SolsUnderground
             //Keep track of time passed
             basicCounter += gameTime.ElapsedGameTime.TotalSeconds;
             specialCounter += gameTime.ElapsedGameTime.TotalSeconds;
+            damageCounter += gameTime.ElapsedGameTime.TotalSeconds;
 
             PlayerMove(kbState);
             //BasicAttack(lButton, previousLeftBState);

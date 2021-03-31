@@ -69,7 +69,7 @@ namespace SolsUnderground
         }
 
         /// <summary>
-        /// If an enemy attack connects with the player
+        /// If an enemy attack connects with the player, execute the resultant consequences.
         /// </summary>
         public void EnemyAttack(Rectangle hitBox, int damage)
         {

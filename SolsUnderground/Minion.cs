@@ -80,6 +80,23 @@ namespace SolsUnderground
         public override void TakeDamage(int damage)
         {
             health -= damage;
+
+            if (enemyState == EnemyState.faceForward || enemyState == EnemyState.moveForward)
+            {
+                Y += 8;
+            }
+            if (enemyState == EnemyState.faceLeft || enemyState == EnemyState.moveLeft)
+            {
+                X += 8;
+            }
+            if (enemyState == EnemyState.faceBack || enemyState == EnemyState.moveBack)
+            {
+                Y -= 8;
+            }
+            if (enemyState == EnemyState.faceRight || enemyState == EnemyState.moveRight)
+            {
+                X -= 8;
+            }
         }
 
         /// <summary>
