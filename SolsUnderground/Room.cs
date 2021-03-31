@@ -84,10 +84,8 @@ namespace SolsUnderground
             
             StreamReader reader = new StreamReader(filepath);
 
-            int enemyXRange = windowWidth - enemyTextures[0].Width;
-            int enemyYRange = windowHeight - enemyTextures[0].Height;
-            int enemyWidth = enemyTextures[0].Width;
-            int enemyHeight = enemyTextures[0].Height;
+            int enemyWidth = enemyTextures[2].Width;
+            int enemyHeight = enemyTextures[2].Height;
 
             //First line will be the number of enemies in the room
             enemyCount = int.Parse(reader.ReadLine());
@@ -111,20 +109,21 @@ namespace SolsUnderground
                     ));
             }
 
+            //Establishing a set list of valid spawn locations for the enemies
+            SetTiles(windowWidth, windowHeight);
+            List<Tile> validSpawn = new List<Tile>();
+            foreach(Tile t in tiles)
+            {
+                if(t.IsObstacle == false)
+                {
+                    validSpawn.Add(t);
+                }
+            }
             //Creating enemies based on the enemy count at the top of the room file
             for (int i = 0; i < enemyCount; i++)
             {
-                Rectangle enemyRect = new Rectangle(Program.rng.Next(enemyXRange),
-                    Program.rng.Next(enemyYRange), enemyWidth, enemyHeight);
-                List<Rectangle> barrierSpots = GetBarriers();
-                foreach(Rectangle b in barrierSpots)
-                {
-                    while (enemyRect.Intersects(b))
-                    {
-                        enemyRect = new Rectangle(Program.rng.Next(enemyXRange),
-                        Program.rng.Next(enemyYRange), enemyWidth, enemyHeight);
-                    }
-                }
+                Rectangle enemyRect = new Rectangle(validSpawn[Program.rng.Next(validSpawn.Count)].X, 
+                    validSpawn[Program.rng.Next(validSpawn.Count)].Y, enemyWidth, enemyHeight);
                 contents.Add(new Minion(enemyTextures, enemyRect, 3, 4));
 
             }

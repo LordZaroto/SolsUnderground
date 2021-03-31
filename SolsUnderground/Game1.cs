@@ -465,7 +465,7 @@ namespace SolsUnderground
         {
             List<Rectangle> barriers = mapManager.GetRoomBarriers();
             List<Enemy> enemies = mapManager.GetRoomEnemies();
-            Rectangle temp = new Rectangle(0,0,0,0);
+            Rectangle temp;
 
             //loops through all enemies in the room
             for (int j = 0; j < enemies.Count; j++)
@@ -475,25 +475,25 @@ namespace SolsUnderground
                 for (int i = 0; i < barriers.Count; i++)
                 {
                     //checks if the enemies intersect with a barrier
-                    if (barriers[i].Intersects(temp))
+                    if (temp.Intersects(barriers[i]))
                     {
                         //checks if the x or y needs to be adjusted
                         if (Rectangle.Intersect(temp, barriers[i]).Width <= Rectangle.Intersect(temp, barriers[i]).Height)
                         {
                             //adjusts the position
-                            if (barriers[i].X > player.X)
+                            if (barriers[i].X >= player.X)
                             {
-                                temp.X -= Rectangle.Intersect(temp, barriers[i]).Width;
+                                temp.X += Rectangle.Intersect(temp, barriers[i]).Width;
 
                             }
                             else
                             {
-                                temp.X += Rectangle.Intersect(temp, barriers[i]).Width;
+                                temp.X -= Rectangle.Intersect(temp, barriers[i]).Width;
                             }
                         }
                         else
                         {
-                            if (barriers[i].Y > temp.Y)
+                            if (barriers[i].Y >= temp.Y)
                             {
                                 temp.Y -= Rectangle.Intersect(temp, barriers[i]).Height;
 
