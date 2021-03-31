@@ -73,7 +73,7 @@ namespace SolsUnderground
         /// </summary>
         public void Load(List<Texture2D> tileTextures, Texture2D[] enemyTextures)
         {
-            // Program works from three directories down in project in bin\debug\net3.1\
+            // Program works from three directories down in project, in bin\debug\net3.1\
             DirectoryInfo d = new DirectoryInfo("..\\..\\..\\Rooms");
             
             // Load in each Room from file

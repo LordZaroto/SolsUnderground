@@ -71,7 +71,7 @@ namespace SolsUnderground
             this.tiles = tiles;
             this.enemyCount = enemyCount;
 
-            this.contents = new List<GameObject>();
+            this.contents = contents;
 
         }
 
