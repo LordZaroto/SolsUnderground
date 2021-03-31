@@ -18,9 +18,6 @@ using Microsoft.Xna.Framework.Input;
 /// > Currently cannot change isObstacle value, depending on how game goes this might change
 ///   i.e. Will tiles be able to change walk-ability during game?
 ///   
-/// > Color is not stored because the Color used by Monogame is different than the Color in
-///   Windows Forms, plus determining the right tints may be too tedious.
-///   
 /// </summary>
 
 namespace SolsUnderground
