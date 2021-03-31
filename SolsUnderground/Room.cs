@@ -93,13 +93,7 @@ namespace SolsUnderground
 
             //First line will be the number of enemies in the room
             enemyCount = int.Parse(reader.ReadLine());
-            for(int i = 0; i < enemyCount; i++)
-            {
-                Rectangle enemyRect = new Rectangle(Program.rng.Next(enemyXRange), 
-                    Program.rng.Next(enemyYRange), enemyWidth, enemyHeight);
-                contents.Add(new Minion(enemyTextures, enemyRect, 10, 2));
-                
-            }
+            
 
             // Defines necessary variables for file reading
             string line;
@@ -117,6 +111,24 @@ namespace SolsUnderground
                     tileTextures[(int)Enum.Parse<Tiles>(data[0])],
                     Boolean.Parse(data[1])
                     ));
+            }
+
+            //Creating enemies based on the enemy count at the top of the room file
+            for (int i = 0; i < enemyCount; i++)
+            {
+                Rectangle enemyRect = new Rectangle(Program.rng.Next(enemyXRange),
+                    Program.rng.Next(enemyYRange), enemyWidth, enemyHeight);
+                List<Rectangle> barrierSpots = GetBarriers();
+                foreach(Rectangle b in barrierSpots)
+                {
+                    while (enemyRect.Intersects(b))
+                    {
+                        enemyRect = new Rectangle(Program.rng.Next(enemyXRange),
+                        Program.rng.Next(enemyYRange), enemyWidth, enemyHeight);
+                    }
+                }
+                contents.Add(new Minion(enemyTextures, enemyRect, 10, 2));
+
             }
 
             reader.Close();
