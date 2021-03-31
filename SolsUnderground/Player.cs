@@ -300,7 +300,7 @@ namespace SolsUnderground
         /// <param name="lButton"></param>
         /// <param name="previousLeftBState"></param>
         /// <param name="gameTime"></param>
-        public Rectangle BasicAttack(ButtonState lButton, ButtonState previousLeftBState)
+        public Rectangle BasicAttack(ButtonState lButton, ButtonState previousLeftBState, SpriteBatch sb)
         {
             if(SingleLButtonPress(lButton, previousLeftBState))
             {
@@ -414,6 +414,11 @@ namespace SolsUnderground
         {
             sb.Draw(texture, positionRect, Color.White);
 
+        }
+
+        public void EquipWeapon(Weapon weapon)
+        {
+            this.weapon = weapon;
         }
     }
 }

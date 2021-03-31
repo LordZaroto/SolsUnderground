@@ -44,6 +44,10 @@ namespace SolsUnderground
         private Player player;
         private Texture2D[] playerTextures;
 
+        //weapon
+        private Weapon stick;
+        private Texture2D stickTexture;
+
         //enemy
         private Texture2D minionForward;
         private Texture2D minionBack;
@@ -138,6 +142,11 @@ namespace SolsUnderground
                 startWeaponTexture,
                 new Rectangle(0, 0, startWeaponTexture.Width, startWeaponTexture.Height));
             player = new Player(playerTextures, playerRect, startWeapon);
+
+            //weapon
+            stickTexture = Content.Load<Texture2D>("stick");
+            stick = new Weapon(stickTexture, new Rectangle(0, 0, 0, 0));
+            player.EquipWeapon(stick);
 
             // Tiles
             List<Texture2D> tileTextures = new List<Texture2D>();
