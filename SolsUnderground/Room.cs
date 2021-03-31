@@ -17,9 +17,6 @@ using Microsoft.Xna.Framework.Input;
 /// 
 /// > Using a List for storing Tiles should work fine, but possibility is open to
 ///   other structures like 2D arrays if issues arise
-///
-/// > Draw() method assumes there is no offset in the window, but this can be changed easily once
-///   visual design is discussed.
 ///   
 /// > NEED TO FINISH METHODS FOR CONTENT LIST: Make sure all necessary data is accessible
 ///   What goes in contents list? Enemies, chests, anything else?
