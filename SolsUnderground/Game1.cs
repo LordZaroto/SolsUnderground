@@ -311,7 +311,6 @@ namespace SolsUnderground
                 case GameState.Game:
                     mapManager.Draw(_spriteBatch);
                     player.Draw(_spriteBatch);
-
                     //Get the current enemies in the current room from the mapManager
                     //in order to draw and move them
                     List<Enemy> enemies = mapManager.Enemies;

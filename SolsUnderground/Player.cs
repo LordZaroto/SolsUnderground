@@ -316,10 +316,10 @@ namespace SolsUnderground
         /// <param name="lButton"></param>
         /// <param name="previousLeftBState"></param>
         /// <param name="gameTime"></param>
-        public Rectangle BasicAttack(ButtonState lButton, ButtonState previousLeftBState, SpriteBatch sb)
+        public Rectangle BasicAttack(/*ButtonState lButton, ButtonState previousLeftBState,*/)
         {
-            if(SingleLButtonPress(lButton, previousLeftBState))
-            {
+            //if(SingleLButtonPress(lButton, previousLeftBState))
+            //{
                 if(basicCounter >= weapon.BasicCooldown)
                 {
                     //Reset the cooldown
@@ -328,22 +328,26 @@ namespace SolsUnderground
                     //Create the attack hitbox in the direction the player is facing
                     if(playerState == PlayerState.faceForward || playerState == PlayerState.moveForward)
                     {
-                        return new Rectangle(X - Width / 2, Y - Height / 2, Width * 2, Height);
+                    //return new Rectangle(X - Width / 2, Y - Height / 2, Width * 2, Height);
+                    return new Rectangle(100, 100, weapon.Width, weapon.Height);
                     }
                     else if (playerState == PlayerState.faceLeft || playerState == PlayerState.moveLeft)
                     {
-                        return new Rectangle(X - Width / 2, Y - Height / 2, Width, Height * 2);
-                    }
+                    //return new Rectangle(X - Width / 2, Y - Height / 2, Width, Height * 2);
+                    return new Rectangle(100, 100, weapon.Width, weapon.Height);
+                }
                     else if (playerState == PlayerState.faceBack || playerState == PlayerState.moveBack)
                     {
-                        return new Rectangle(X + Width / 2, Y + Height / 2, Width * 2, Height);
-                    }
+                    //return new Rectangle(X + Width / 2, Y + Height / 2, Width * 2, Height);
+                    return new Rectangle(100, 100, weapon.Width, weapon.Height);
+                }
                     else if (playerState == PlayerState.faceRight || playerState == PlayerState.moveRight)
                     {
-                        return new Rectangle(X + Width / 2, Y - Height / 2, Width, Height * 2);
-                    }
+                    //return new Rectangle(X + Width / 2, Y - Height / 2, Width, Height * 2);
+                    return new Rectangle(100, 100, weapon.Width, weapon.Height);
                 }
-            }
+                }
+            //}
 
             return new Rectangle();
         }
