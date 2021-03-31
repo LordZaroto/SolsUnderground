@@ -9,6 +9,27 @@ using Microsoft.Xna.Framework.Input;
 //all types of enemies will inherit from this class
 namespace SolsUnderground
 {
+    public enum EnemyState
+    {
+        faceForward,
+        faceLeft,
+        faceBack,
+        faceRight,
+        moveForward,
+        moveLeft,
+        moveBack,
+        moveRight,
+        attackForward,
+        attackLeft,
+        attackBack,
+        attackRight,
+        specialForward,
+        specialLeft,
+        specialBack,
+        specialRight,
+        dead
+    }
+
     abstract class Enemy : DynamicObject
     {
         //fields
@@ -23,6 +44,12 @@ namespace SolsUnderground
         }
 
         public abstract int Attack
+        {
+            get;
+            set;
+        }
+
+        public abstract EnemyState State
         {
             get;
             set;

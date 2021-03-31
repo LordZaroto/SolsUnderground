@@ -11,6 +11,7 @@ namespace SolsUnderground
     //implements all of the abstract methods and properties
     class Minion : Enemy
     {
+        private EnemyState enemyState;
         Texture2D[] textures;
         //consructor: initializes the fields
         public Minion(Texture2D[] textures, Rectangle positionRect, int health, int attack)
@@ -59,6 +60,18 @@ namespace SolsUnderground
             set { positionRect.Height = value; }
         }
 
+        public override Rectangle PositionRect
+        {
+            get { return positionRect; }
+            set { positionRect = value; }
+        }
+
+        public override EnemyState State
+        {
+            get { return enemyState; }
+            set { enemyState = value; }
+        }
+
         /// <summary>
         /// overridden method
         /// changes health when hit by the player
@@ -67,6 +80,23 @@ namespace SolsUnderground
         public override void TakeDamage(int damage)
         {
             health -= damage;
+
+            if (enemyState == EnemyState.faceForward || enemyState == EnemyState.moveForward)
+            {
+                Y += 8;
+            }
+            if (enemyState == EnemyState.faceLeft || enemyState == EnemyState.moveLeft)
+            {
+                X += 8;
+            }
+            if (enemyState == EnemyState.faceBack || enemyState == EnemyState.moveBack)
+            {
+                Y -= 8;
+            }
+            if (enemyState == EnemyState.faceRight || enemyState == EnemyState.moveRight)
+            {
+                X -= 8;
+            }
         }
 
         /// <summary>

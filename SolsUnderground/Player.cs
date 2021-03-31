@@ -5,6 +5,8 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
+//Author: Preston Gilmore
+
 namespace SolsUnderground
 {
     public enum PlayerState
@@ -41,8 +43,10 @@ namespace SolsUnderground
         private Weapon weapon;
         private double specialCounter;
         private double basicCounter;
+        private double damageCounter;
         private PlayerState playerState;
         private Texture2D[] textures;
+        private int tigerBucks;
         //-----------------------------
 
         //---------------------------------------------------------------------
@@ -75,12 +79,17 @@ namespace SolsUnderground
             set { positionRect.Height = value; }
         }
 
-        public Rectangle Position
+        public override Rectangle PositionRect
         {
             get { return positionRect; }
-
+            set { positionRect = value; }
         }
-
+        
+        public PlayerState State
+        {
+            get { return playerState; }
+            set { playerState = value; }
+        }
 
         //------------------------------
 
@@ -117,6 +126,14 @@ namespace SolsUnderground
         {
             get { return weapon.Attack; }
         }
+        /// <summary>
+        /// Currency gained upon enemy kill.
+        /// </summary>
+        public int TigerBucks
+        {
+            get { return tigerBucks; }
+            set { tigerBucks = value; }
+        }
         //------------------------------
 
         //----------------------------------------
@@ -137,6 +154,7 @@ namespace SolsUnderground
             weapon = startWeapon;
             basicCounter = 0;
             specialCounter = 0;
+            damageCounter = 0;
             playerState = PlayerState.faceBack;
         }
         //----------------------------------------------------------
@@ -300,7 +318,7 @@ namespace SolsUnderground
         /// <param name="lButton"></param>
         /// <param name="previousLeftBState"></param>
         /// <param name="gameTime"></param>
-        public Rectangle BasicAttack(ButtonState lButton, ButtonState previousLeftBState)
+        public Rectangle BasicAttack(ButtonState lButton, ButtonState previousLeftBState, SpriteBatch sb)
         {
             if(SingleLButtonPress(lButton, previousLeftBState))
             {
@@ -333,6 +351,34 @@ namespace SolsUnderground
         }
 
         /// <summary>
+        /// The player will take damage an be knocked back.
+        /// </summary>
+        public void TakeDamage(int damage)
+        {
+            if(damageCounter >= 0.2)
+            {
+                hp -= damage;
+
+                if (playerState == PlayerState.faceForward || playerState == PlayerState.moveForward)
+                {
+                    Y += 8;
+                }
+                if (playerState == PlayerState.faceLeft || playerState == PlayerState.moveLeft)
+                {
+                    X += 8;
+                }
+                if (playerState == PlayerState.faceBack || playerState == PlayerState.moveBack)
+                {
+                    Y -= 8;
+                }
+                if (playerState == PlayerState.faceRight || playerState == PlayerState.moveRight)
+                {
+                    X -= 8;
+                }
+            }
+        }
+
+        /// <summary>
         /// The player can press 'P' to pause the game.
         /// </summary>
         /// <param name="kbState"></param>
@@ -358,6 +404,7 @@ namespace SolsUnderground
             //Keep track of time passed
             basicCounter += gameTime.ElapsedGameTime.TotalSeconds;
             specialCounter += gameTime.ElapsedGameTime.TotalSeconds;
+            damageCounter += gameTime.ElapsedGameTime.TotalSeconds;
 
             PlayerMove(kbState);
             //BasicAttack(lButton, previousLeftBState);
@@ -414,6 +461,11 @@ namespace SolsUnderground
         {
             sb.Draw(texture, positionRect, Color.White);
 
+        }
+
+        public void EquipWeapon(Weapon weapon)
+        {
+            this.weapon = weapon;
         }
     }
 }

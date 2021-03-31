@@ -39,6 +39,12 @@ namespace SolsUnderground
             set;
         }
 
+        public abstract Rectangle PositionRect
+        {
+            get;
+            set;
+        }
+
         /// <summary>
         /// Draw the object on screen.
         /// </summary>
