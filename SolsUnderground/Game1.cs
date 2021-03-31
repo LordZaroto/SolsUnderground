@@ -132,7 +132,7 @@ namespace SolsUnderground
             minionTextures = new Texture2D[] { minionForward, minionBack, minionLeft, minionRight };
 
             //Player
-            playerRect = new Rectangle(100, 100, playerForward.Width, playerForward.Height);
+            playerRect = new Rectangle(30, 440, playerForward.Width, playerForward.Height);
             startWeaponTexture = Content.Load<Texture2D>("stick");
             startWeapon = new Weapon(
                 startWeaponTexture,
