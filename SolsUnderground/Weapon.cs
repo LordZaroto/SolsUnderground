@@ -48,6 +48,12 @@ namespace SolsUnderground
             get { return positionRect.Height; }
             set { positionRect.Height = value; }
         }
+
+        public Rectangle Position
+        {
+            get { return positionRect; }
+            set { positionRect = value; }
+        }
         //------------------------------
 
         //Weapon Stats
@@ -83,7 +89,7 @@ namespace SolsUnderground
             this.texture = texture;
             this.positionRect = positionRect;
             attack = 3;
-            basicCooldown = 0.6;
+            basicCooldown = 0.3;
         }
         //----------------------------------------------------------
 
@@ -93,5 +99,10 @@ namespace SolsUnderground
 
         //Methods
         //----------------------------------------------------------
+
+        public void Draw(SpriteBatch sb)
+        {
+            sb.Draw(texture, positionRect, Color.White);
+        }
     }
 }
