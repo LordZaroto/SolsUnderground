@@ -12,6 +12,9 @@ using Microsoft.Xna.Framework.Input;
 /// that make up a single room of the game.
 ///
 /// NOTES:
+/// > FINISH COPY METHOD: Currently doesnt solve issue, only moves object references
+///   into a new Room object
+/// 
 /// > Using a List for storing Tiles should work fine, but possibility is open to
 ///   other structures like 2D arrays if issues arise
 ///
@@ -28,10 +31,13 @@ namespace SolsUnderground
     class Room
     {
         // Fields
+        private int windowWidth;
+        private int windowHeight;
         private const int ROOM_WIDTH = 33;
         private const int ROOM_HEIGHT = 25;
         private List<Tile> tiles;
         private List<GameObject> contents;
+        private int enemyCount;
 
         // Properties
         public int Width
@@ -42,14 +48,32 @@ namespace SolsUnderground
         {
             get { return ROOM_HEIGHT; }
         }
+        public int EnemyCount
+        {
+            get { return enemyCount; }
+        }
 
         // Constructors
-        public Room(string filepath, int windowWidth, int windowHeight, List<Texture2D> tileTextures) // Load room archetypes
+        public Room(string filepath, int windowWidth, int windowHeight, 
+            List<Texture2D> tileTextures, Texture2D[] enemyTextures) // Load room archetypes
         {
+            this.windowHeight = windowHeight;
+            this.windowWidth = windowWidth;
             tiles = new List<Tile>();
             contents = new List<GameObject>();
-            Load(filepath, tileTextures);
+            Load(filepath, tileTextures, enemyTextures);
             SetTiles(windowWidth, windowHeight);
+            enemyCount = 0;
+        }
+
+        // Only to be used for copying Rooms
+        private Room(int windowWidth, int windowHeight, List<Tile> tiles, List<GameObject> contents, int enemyCount)
+        {
+            this.windowWidth = windowWidth;
+            this.windowHeight = windowHeight;
+            this.tiles = tiles;
+            this.contents = contents;
+            this.enemyCount = enemyCount;
         }
 
         // Methods
@@ -58,10 +82,25 @@ namespace SolsUnderground
         /// Reads the given file and loads fields with appropriate data.
         /// </summary>
         /// <param name="filepath">String path of file</param>
-        public void Load(string filepath, List<Texture2D> tileTextures)
+        public void Load(string filepath, List<Texture2D> tileTextures, Texture2D[] enemyTextures)
         {
             
             StreamReader reader = new StreamReader(filepath);
+
+            int enemyXRange = windowWidth - enemyTextures[0].Width;
+            int enemyYRange = windowHeight - enemyTextures[0].Height;
+            int enemyWidth = enemyTextures[0].Width;
+            int enemyHeight = enemyTextures[0].Height;
+
+            //First line will be the number of enemies in the room
+            enemyCount = int.Parse(reader.ReadLine());
+            for(int i = 0; i < enemyCount; i++)
+            {
+                Rectangle enemyRect = new Rectangle(Program.rng.Next(enemyXRange), 
+                    Program.rng.Next(enemyYRange), enemyWidth, enemyHeight);
+                contents.Add(new Minion(enemyTextures, enemyRect, 10, 2));
+                
+            }
 
             // Defines necessary variables for file reading
             string line;
@@ -106,9 +145,19 @@ namespace SolsUnderground
         }
 
         /// <summary>
+        /// Creates a copy of the Room and its contents.
+        /// </summary>
+        /// <returns></returns>
+        public Room Copy()
+        {
+            // NEED TO FINISH: lists use references, need to create new objects
+            return new Room(windowWidth, windowHeight, tiles, contents, enemyCount);
+        }
+
+        /// <summary>
         /// Adds game objects to room's list of contents.
         /// </summary>
-        /// <param name="gameObject"></param>
+        /// <param name="gameObject">Game object to initialize in room</param>
         public void Add(GameObject gameObject)
         {
             contents.Add(gameObject);

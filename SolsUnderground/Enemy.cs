@@ -28,6 +28,7 @@ namespace SolsUnderground
             set;
         }
 
+
         //method to be overridden
         //changes health when hit by the player
         public abstract void TakeDamage(int damage);

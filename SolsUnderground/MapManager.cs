@@ -33,13 +33,20 @@ namespace SolsUnderground
         // Fields
         private List<Room> roomPool;
         private List<Room> floor;
+        private List<Enemy> enemies;
         private int currentFloor;
         private int currentRoom;
         private int windowWidth;
         private int windowHeight;
 
+        //Properties
+        public List<Enemy> Enemies
+        {
+            get { return enemies; }
+        }
+
         // Constructor
-        public MapManager(List<Texture2D> tileTextures, int windowWidth, int windowHeight)
+        public MapManager(List<Texture2D> tileTextures, Texture2D[] enemyTextures, int windowWidth, int windowHeight)
         {
             this.roomPool = new List<Room>();
             this.floor = new List<Room>();
@@ -48,15 +55,15 @@ namespace SolsUnderground
             currentRoom = 0;
             currentFloor = 0;
 
-            Load(tileTextures);
+            Load(tileTextures, enemyTextures);
         }
 
         // Methods
         
         /// <summary>
-        /// Loads all rooms from files and loads each room's tiles.
+        /// Reads and loads all room files.
         /// </summary>
-        public void Load(List<Texture2D> tileTextures)
+        public void Load(List<Texture2D> tileTextures, Texture2D[] enemyTextures)
         {
             // Program works from three directories down in project in bin\debug\net3.1\
             DirectoryInfo d = new DirectoryInfo("..\\..\\..\\Rooms");
@@ -64,12 +71,13 @@ namespace SolsUnderground
             // Load in each Room from file
             foreach (FileInfo f in d.GetFiles())
             {
-                roomPool.Add(new Room("..\\..\\..\\Rooms\\" + f.Name, windowWidth, windowHeight, tileTextures));
+                roomPool.Add(new Room("..\\..\\..\\Rooms\\" + f.Name, 
+                    windowWidth, windowHeight, tileTextures, enemyTextures));
             }
         }
 
         /// <summary>
-        /// Draws rooms from the room pool to build a floor of five rooms.
+        /// Randomly draws rooms from the room pool to build a floor of five rooms.
         /// </summary>
         public void NewFloor()
         {
@@ -78,8 +86,8 @@ namespace SolsUnderground
 
             for (int i = 0; i < 5; i++)
             {
-                // Adds a random room from roomPool to the floor
-                floor.Add(roomPool[Program.rng.Next(0, roomPool.Count)]);
+                // Adds a copy of a random room from roomPool to the floor
+                floor.Add(roomPool[Program.rng.Next(0, roomPool.Count)].Copy());
 
                 // Add enemies and chest to room if not boss room
                 if (i != 4)
@@ -104,9 +112,9 @@ namespace SolsUnderground
         }
 
         /// <summary>
-        /// Increments the currentRoom. If currentRoom exceeds number of
-        /// rooms on floor, reset currentRoom, increment currentFloor,
-        /// and loads next floor.
+        /// Sets active room to the next room on the floor. If called
+        /// while the last room is active, creates a new floor and sets
+        /// the first room active.
         /// </summary>
         public void NextRoom()
         {
@@ -124,7 +132,7 @@ namespace SolsUnderground
         }
 
         /// <summary>
-        /// Retrieves the list of Enemy objects stored in the current Room.
+        /// Retrieves a list of Enemy objects stored in the current Room.
         /// </summary>
         /// <returns></returns>
         public List<Enemy> GetRoomEnemies()
@@ -142,12 +150,17 @@ namespace SolsUnderground
         }
 
         /// <summary>
-        /// Call's current room's Draw method
+        /// Draws the current active room.
         /// </summary>
         /// <param name="sb"></param>
         public void Draw(SpriteBatch sb)
         {
             floor[currentRoom].Draw(sb);
+            enemies = floor[currentRoom].GetEnemies();
+            for(int i = 0; i < enemies.Count; i++)
+            {
+                enemies[i].Draw(sb);
+            }
         }
     }
 }
