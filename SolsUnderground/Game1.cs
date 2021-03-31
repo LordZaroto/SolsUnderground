@@ -150,17 +150,17 @@ namespace SolsUnderground
 
             //menu items
             startGame = Content.Load<Texture2D>("startGame");
-            button1 = new Rectangle(379, 345, 709, 153);
+            button1 = new Rectangle(349, 345, 709, 153);
             loadGame = Content.Load<Texture2D>("LoadGame");
-            button2 = new Rectangle(379, 512, 709, 153);
+            button2 = new Rectangle(349, 512, 709, 153);
             controls = Content.Load<Texture2D>("Controls");
-            button3 = new Rectangle(379, 679, 709, 153);
+            button3 = new Rectangle(349, 679, 709, 153);
             instructions = Content.Load<Texture2D>("instructions");
-            button4 = new Rectangle(379, 847, 709, 153);
+            button4 = new Rectangle(349, 847, 709, 153);
 
             //options/controls buttons
             returnToMenu = Content.Load<Texture2D>("returnToMenu");
-            button5 = new Rectangle(347, 827, 719, 145);
+            button5 = new Rectangle(327, 827, 719, 145);
 
             //paused buttons
             returnToGame = Content.Load<Texture2D>("return");
@@ -175,8 +175,8 @@ namespace SolsUnderground
 
             //Game Over Buttons
             newGame = Content.Load<Texture2D>("newGameGO");
-            button10 = new Rectangle(263, 643, 914, 139);
-            button11 = new Rectangle(263, 782, 914, 139);
+            button10 = new Rectangle(233, 643, 914, 139);
+            button11 = new Rectangle(233, 782, 914, 139);
         }
 
         protected override void Update(GameTime gameTime)
@@ -312,6 +312,16 @@ namespace SolsUnderground
                         e.EnemyMove(player);
                     }
                     player.PlayerMove(Keyboard.GetState());
+                    _spriteBatch.DrawString(
+                        text,
+                        "health-" + player.Hp,
+                        new Vector2(0, 0),
+                        Color.White);
+                    _spriteBatch.DrawString(
+                        text,
+                        "health-" + player.Hp,
+                        new Vector2(860, 0),
+                        Color.White);
                     break;
                 case GameState.Pause:
                     _spriteBatch.DrawString(
