@@ -89,7 +89,7 @@ namespace SolsUnderground
             this.texture = texture;
             this.positionRect = positionRect;
             attack = 3;
-            basicCooldown = 0.6;
+            basicCooldown = 0.3;
         }
         //----------------------------------------------------------
 

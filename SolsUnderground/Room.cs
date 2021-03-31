@@ -125,7 +125,7 @@ namespace SolsUnderground
                         Program.rng.Next(enemyYRange), enemyWidth, enemyHeight);
                     }
                 }
-                contents.Add(new Minion(enemyTextures, enemyRect, 10, 2));
+                contents.Add(new Minion(enemyTextures, enemyRect, 3, 4));
 
             }
 
