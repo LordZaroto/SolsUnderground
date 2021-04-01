@@ -25,21 +25,20 @@ namespace SolsUnderground
 
         //gamesstate
         private GameState currentState;
+        bool godMode;
 
         //text
         private SpriteFont heading;
         private SpriteFont text;
 
         //keyboard and mouse
-        KeyboardState prevKB;
-        MouseState prevM;
+        private KeyboardState prevKB;
+        private MouseState prevM;
+        private ButtonState previousLeftBState;
+        private ButtonState previousRightBState;
 
 
         //Player
-        private Texture2D playerForward;
-        private Texture2D playerBack;
-        private Texture2D playerLeft;
-        private Texture2D playerRight;
         private Rectangle playerRect;
         private Player player;
         private Texture2D[] playerTextures;
@@ -49,10 +48,6 @@ namespace SolsUnderground
         private Texture2D stickTexture;
 
         //enemy
-        private Texture2D minionForward;
-        private Texture2D minionBack;
-        private Texture2D minionLeft;
-        private Texture2D minionRight;
         private Texture2D[] minionTextures;
 
         //Weapons
@@ -61,6 +56,9 @@ namespace SolsUnderground
 
         // Managers
         private MapManager mapManager;
+        private CombatManager combatManager;
+        private EnemyManager enemyManager;
+        private CollisionManager collisionManager;
 
         //menu items
         private Texture2D startGame;
@@ -78,6 +76,8 @@ namespace SolsUnderground
 
         //HUD items
         private Rectangle hudWeapon;
+        private int money = 0;
+        private int enemyAmount;
 
         //pause items
         private Texture2D returnToGame;
@@ -106,6 +106,7 @@ namespace SolsUnderground
         protected override void Initialize()
         {
             currentState = GameState.Menu;
+            godMode = false;
             _graphics.PreferredBackBufferWidth = 1320;
             _graphics.PreferredBackBufferHeight = 1000;
             _graphics.ApplyChanges();
@@ -122,38 +123,39 @@ namespace SolsUnderground
             text = Content.Load<SpriteFont>("Roboto40");
 
             //character textures
-            playerForward = Content.Load<Texture2D>("playerForward");
-            playerBack = Content.Load<Texture2D>("playerBack");
-            playerLeft = Content.Load<Texture2D>("playerLeft");
-            playerRight = Content.Load<Texture2D>("playerRight");
-            playerTextures = new Texture2D[]{playerForward, playerBack, playerLeft, playerRight};
-
-            //enemy textures
-            minionForward = Content.Load<Texture2D>("minionForward");
-            minionBack = Content.Load<Texture2D>("minionBack");
-            minionLeft = Content.Load<Texture2D>("minionLeft");
-            minionRight = Content.Load<Texture2D>("minionRight");
-            minionTextures = new Texture2D[] { minionForward, minionBack, minionLeft, minionRight };
-
-            //Player
-            playerRect = new Rectangle(30, 440, playerForward.Width, playerForward.Height);
-            startWeaponTexture = Content.Load<Texture2D>("stick");
-            startWeapon = new Weapon(
-                startWeaponTexture,
-                new Rectangle(0, 0, startWeaponTexture.Width, startWeaponTexture.Height));
-            player = new Player(playerTextures, playerRect, startWeapon);
+            playerTextures = new Texture2D[] {
+                Content.Load<Texture2D>("playerForward"),
+                Content.Load<Texture2D>("playerBack"),
+                Content.Load<Texture2D>("playerLeft"),
+                Content.Load<Texture2D>("playerRight") };
 
             //weapon
             stickTexture = Content.Load<Texture2D>("stick");
             stick = new Weapon(stickTexture, new Rectangle(0, 0, 0, 0));
-            player.EquipWeapon(stick);
+
+            //Player
+            playerRect = new Rectangle(30, 440, playerTextures[0].Width, playerTextures[0].Height);
+            player = new Player(playerTextures, playerRect, stick);
+
+            // Managers
+            collisionManager = new CollisionManager(player);
+            combatManager = new CombatManager(player);
+            enemyManager = new EnemyManager(player, collisionManager, combatManager);
+
+            //enemy textures
+            minionTextures = new Texture2D[] {
+                Content.Load<Texture2D>("minionForward"),
+                Content.Load<Texture2D>("minionBack"),
+                Content.Load<Texture2D>("minionLeft"),
+                Content.Load<Texture2D>("minionRight") };
+            enemyManager.AddEnemyData(minionTextures);
 
             // Tiles
             List<Texture2D> tileTextures = new List<Texture2D>();
             tileTextures.Add(Content.Load<Texture2D>("BrickSprite"));
             tileTextures.Add(Content.Load<Texture2D>("BarrierSprite"));
             tileTextures.Add(Content.Load<Texture2D>("RedBrickSprite"));
-            mapManager = new MapManager(tileTextures, minionTextures, 
+            mapManager = new MapManager(tileTextures, 
                 _graphics.PreferredBackBufferWidth,
                 _graphics.PreferredBackBufferHeight);
 
@@ -192,63 +194,131 @@ namespace SolsUnderground
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.End))
                 Exit();
+            
+            //User Input
             KeyboardState kb = Keyboard.GetState();
             MouseState mouse = Mouse.GetState();
-            
+            ButtonState leftBState = mouse.LeftButton;
+            ButtonState rightBState = mouse.RightButton;
 
-            switch(currentState)
+
+            switch (currentState)
             {
+                // Main Menu State
                 case GameState.Menu:
                     if (kb.IsKeyDown(Keys.Enter) || MouseClick(button1, mouse, prevM) == true)
                     {
                         currentState = GameState.Game;
-                        mapManager.NewFloor();
+                        StartGame();
+                    }
+                    if (SingleKeyPress(Keys.G, kb, prevKB)) // Toggle Godmode using G key
+                    {
+                        godMode = !godMode;
                     }
                     else if (kb.IsKeyDown(Keys.C) || MouseClick(button3, mouse, prevM) == true)
                         currentState = GameState.Controls;
                     else if (kb.IsKeyDown(Keys.I) || MouseClick(button4, mouse, prevM) == true)
                         currentState = GameState.Instructions;
+                    else if (SingleKeyPress(Keys.Escape, kb, prevKB))
+                        Exit();
                     break;
+
+
+                // Controls Screen
                 case GameState.Controls:
                     if(SingleKeyPress(Keys.Escape, kb, prevKB) || MouseClick(button5, mouse, prevM) == true)
                     {
                         currentState = GameState.Menu;
                     }
                     break;
+
+
+                // Instructions Screen
                 case GameState.Instructions:
                     if (kb.IsKeyDown(Keys.Escape) || MouseClick(button5, mouse, prevM) == true)
                         currentState = GameState.Menu;
                     break;
-                case GameState.Game:
-                    PlayerCollisions();
-                    MinionCollisions();
-                    if (SingleKeyPress(Keys.Escape,kb, prevKB))
-                    {
-                        currentState = GameState.Pause;
-                    }
 
-                    if(player.Width + player.X > _graphics.PreferredBackBufferWidth)
+
+                // Main Game Loop
+                case GameState.Game:
+
+                    //Player
+                    player.Input(kb, gameTime);
+                    combatManager.PlayerAttack(
+                        player.BasicAttack(leftBState, previousLeftBState),
+                        player.Attack);
+
+                    //Enemy
+                    foreach (Enemy e in mapManager.GetRoomEnemies())
+                    {
+                        e.EnemyMove(player);
+                        combatManager.EnemyAttack(
+                            e.PositionRect,
+                            e.Attack,
+                            e.State);
+                    }
+                    enemyManager.MoveEnemies();
+                    combatManager.EnemyAttacks();
+                    combatManager.CleanUp();
+
+                    money += combatManager.CleanUp();
+                    //Collisions
+                    collisionManager.CheckCollisions();
+
+                    // Move to next room
+                    if(player.Width + player.X > _graphics.PreferredBackBufferWidth 
+                        || (SingleKeyPress(Keys.N, kb, prevKB) && godMode))
                     {
                         player.X = 0;
                         mapManager.NextRoom();
+
+                        enemyManager.ClearEnemies();
+                        enemyManager.SpawnEnemies(
+                            mapManager.CurrentRoom.EnemyCount,
+                            mapManager.CurrentRoom.GetOpenTiles());
+
+                        collisionManager.GetBarriers(mapManager.CurrentRoom.GetBarriers());
                     }
-                        
+
+                    // State transitions
+                    if (SingleKeyPress(Keys.Escape, kb, prevKB))
+                    {
+                        currentState = GameState.Pause;
+                    }
                     if (player.Hp <= 0)
-                        currentState = GameState.GameOver;
+                    {
+                        if (godMode)
+                        {
+                            player.Hp = player.MaxHp;
+                        }
+                        else
+                        {
+                            currentState = GameState.GameOver;
+                        }
+                    }
                     break;
+
+
+                // Pause Menu
                 case GameState.Pause:
                     if (SingleKeyPress(Keys.Escape, kb, prevKB) || MouseClick(button6, mouse, prevM) == true)
                     {
                         currentState = GameState.Game;
-
                     }
                         
                     if (kb.IsKeyDown(Keys.Q) || MouseClick(button9, mouse, prevM) == true)
                         currentState = GameState.Menu;
                     break;
+
+
+                // Game Over Menu
                 case GameState.GameOver:
                     if (kb.IsKeyDown(Keys.Enter) || MouseClick(button10, mouse, prevM) == true)
+                    {
                         currentState = GameState.Game;
+                        StartGame();
+                    }
                     if (SingleKeyPress(Keys.Escape, kb, prevKB) || MouseClick(button11, mouse, prevM) == true)
                     {
                         currentState = GameState.Menu;
@@ -257,9 +327,11 @@ namespace SolsUnderground
 
             }
 
+            //Keep track of the previous inputs
             prevKB = kb;
             prevM = mouse;
-            // TODO: Add your update logic here
+            previousLeftBState = leftBState;
+            previousRightBState = rightBState;
 
             base.Update(gameTime);
         }
@@ -271,6 +343,7 @@ namespace SolsUnderground
             _spriteBatch.Begin();
             switch (currentState)
             {
+                // Main Menu State
                 case GameState.Menu:
                     _spriteBatch.DrawString(
                         heading,
@@ -281,20 +354,57 @@ namespace SolsUnderground
                     _spriteBatch.Draw(loadGame, button2, Color.White);
                     _spriteBatch.Draw(controls, button3, Color.White);
                     _spriteBatch.Draw(instructions, button4, Color.White);
+
+                    // Draw godMode toggle
+                    if (godMode)
+                    {
+                        _spriteBatch.DrawString(text, "GodMode", new Vector2(20, 150), Color.White);
+                    }
                     break;
+
+
+                // Controls Screen
                 case GameState.Controls:
                      _spriteBatch.DrawString(
                         heading,
                         "Controls",
                         new Vector2(390, 0),
                         Color.White);
+                      _spriteBatch.DrawString(
+                        text,
+                        "Forward - W",
+                        new Vector2(550, 250),
+                        Color.White);
                     _spriteBatch.DrawString(
                         text,
-                        "Forward - W BackWards - S Left - A Right - D Attack -  Pause - ESC",
-                        new Vector2(0, 250),
+                        "Backwards - S",
+                        new Vector2(550, 350),
+                        Color.White);
+                    _spriteBatch.DrawString(
+                        text,
+                        " Left - A ",
+                        new Vector2(550, 450),
+                        Color.White);
+                    _spriteBatch.DrawString(
+                        text,
+                        "Right - D ",
+                        new Vector2(550, 550),
+                        Color.White);
+                    _spriteBatch.DrawString(
+                        text,
+                        "Attack - Left Click",
+                        new Vector2(550, 650),
+                        Color.White);
+                    _spriteBatch.DrawString(
+                        text,
+                        "Pause - ESC",
+                        new Vector2(550, 750),
                         Color.White);
                     _spriteBatch.Draw(returnToMenu, button5, Color.White);
                     break;
+
+
+                // Instructions Screen
                 case GameState.Instructions:
                     _spriteBatch.DrawString(
                         heading,
@@ -303,23 +413,19 @@ namespace SolsUnderground
                         Color.White);
                     _spriteBatch.DrawString(
                         text,
-                        "defeat all enemies to go to the next room",
-                        new Vector2(0, 250),
+                        "defeat all enemies to go on to the next room",
+                        new Vector2(350, 250),
                         Color.White);
                     _spriteBatch.Draw(returnToMenu, button5, Color.White);
                     break;
+
+
+                // Main Game Screen
                 case GameState.Game:
                     mapManager.Draw(_spriteBatch);
                     player.Draw(_spriteBatch);
-                    //Get the current enemies in the current room from the mapManager
-                    //in order to draw and move them
-                    List<Enemy> enemies = mapManager.Enemies;
-                    foreach(Enemy e in enemies)
-                    {
-                        e.Draw(_spriteBatch);
-                        e.EnemyMove(player);
-                    }
-                    player.PlayerMove(Keyboard.GetState());
+                    enemyManager.Draw(_spriteBatch);
+
                     _spriteBatch.DrawString(
                         text,
                         "health-" + player.Hp,
@@ -327,10 +433,23 @@ namespace SolsUnderground
                         Color.White);
                     _spriteBatch.DrawString(
                         text,
-                        "health-" + player.Hp,
-                        new Vector2(860, 0),
+                        "Tiger Bucks-" + money,
+                        new Vector2(330, 0),
+                        Color.White);
+                    _spriteBatch.DrawString(
+                        text,
+                        "Floor-" + mapManager.CurrentFloor,
+                        new Vector2(800, 0),
+                        Color.White);
+                    _spriteBatch.DrawString(
+                        text,
+                        "Room-" + mapManager.CurrentRoom,
+                        new Vector2(1100, 0),
                         Color.White);
                     break;
+
+
+                // Pause Screen
                 case GameState.Pause:
                     _spriteBatch.DrawString(
                         heading,
@@ -341,14 +460,17 @@ namespace SolsUnderground
                     _spriteBatch.Draw(saveGame, button7, Color.White);
                     _spriteBatch.Draw(loadGame2, button8, Color.White);
                     _spriteBatch.Draw(exitToMenu, button9, Color.White);
-                    _spriteBatch.Draw(startWeaponTexture, currentWeapon, Color.White);
-
+                    _spriteBatch.Draw(stickTexture, currentWeapon, Color.White);
+                    
                     break;
+
+
+                // Game Over Screen
                 case GameState.GameOver:
                     _spriteBatch.DrawString(
                         heading,
                         "Game Over",
-                        new Vector2(0, 60),
+                        new Vector2(350, 60),
                         Color.White);
                     _spriteBatch.Draw(newGame, button10, Color.White);
                     _spriteBatch.Draw(exitToMenu, button11, Color.White);
@@ -388,100 +510,26 @@ namespace SolsUnderground
         }
 
         /// <summary>
-        /// resolve collisions between the player and barriers
+        /// Resets all game-related variables to starting values.
         /// </summary>
-        public void PlayerCollisions()
+        public void StartGame()
         {
-            List<Rectangle> barriers = mapManager.GetRoomBarriers();
-            Rectangle temp = new Rectangle(player.X, player.Y, player.Width, player.Height);
+            // Reset managers
+            mapManager.Reset();
 
-            for(int i = 0; i < barriers.Count; i++)
-            {
-                //checks if the player intersects with a barrier
-                if (barriers[i].Intersects(temp))
-                {
-                    //checks if the x or y needs to be adjusted
-                    if (Rectangle.Intersect(temp, barriers[i]).Width <= Rectangle.Intersect(temp, barriers[i]).Height)
-                    {
-                        //adjusts the position
-                        if (barriers[i].X > player.X)
-                        {
-                            temp.X -= Rectangle.Intersect(temp, barriers[i]).Width;
+            enemyManager.ClearEnemies();
+            enemyManager.SpawnEnemies(
+                mapManager.CurrentRoom.EnemyCount,
+                mapManager.CurrentRoom.GetOpenTiles());
 
-                        }
-                        else
-                        {
-                            temp.X += Rectangle.Intersect(temp, barriers[i]).Width;
-                        }
-                    }
-                    else
-                    {
-                        if (barriers[i].Y > temp.Y)
-                        {
-                            temp.Y -= Rectangle.Intersect(temp, barriers[i]).Height;
+            collisionManager.GetBarriers(mapManager.CurrentRoom.GetBarriers());
 
-                        }
-                        else
-                        {
-                            temp.Y += Rectangle.Intersect(temp, barriers[i]).Height;
-                        }
-                    }
-                }
-            }
-            player.X = temp.X;
-            player.Y = temp.Y;
-        }
-
-        //resolve collisions between the minions and barriers
-        public void MinionCollisions()
-        {
-            List<Rectangle> barriers = mapManager.GetRoomBarriers();
-            List<Enemy> enemies = mapManager.GetRoomEnemies();
-            Rectangle temp;
-
-            //loops through all enemies in the room
-            for (int j = 0; j < enemies.Count; j++)
-            {
-                temp = new Rectangle(enemies[j].X, enemies[j].Y, enemies[j].Width, enemies[j].Height);
-
-                for (int i = 0; i < barriers.Count; i++)
-                {
-                    //checks if the enemies intersect with a barrier
-                    if (temp.Intersects(barriers[i]))
-                    {
-                        //checks if the x or y needs to be adjusted
-                        if (Rectangle.Intersect(temp, barriers[i]).Width <= Rectangle.Intersect(temp, barriers[i]).Height)
-                        {
-                            //adjusts the position
-                            if (barriers[i].X >= player.X)
-                            {
-                                temp.X += Rectangle.Intersect(temp, barriers[i]).Width;
-
-                            }
-                            else
-                            {
-                                temp.X -= Rectangle.Intersect(temp, barriers[i]).Width;
-                            }
-                        }
-                        else
-                        {
-                            if (barriers[i].Y >= temp.Y)
-                            {
-                                temp.Y -= Rectangle.Intersect(temp, barriers[i]).Height;
-
-                            }
-                            else
-                            {
-                                temp.Y += Rectangle.Intersect(temp, barriers[i]).Height;
-                            }
-                        }
-                    }
-                }
-                enemies[j].X = temp.X;
-                enemies[j].Y = temp.Y;
-            }
-            
-            
+            // Reset player stats
+            player.MaxHp = 100;
+            player.Hp = player.MaxHp;
+            player.EquipWeapon(stick);
+            player.X = 30;
+            player.Y = 440;
         }
     }
 }

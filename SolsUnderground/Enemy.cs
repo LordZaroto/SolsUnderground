@@ -27,6 +27,7 @@ namespace SolsUnderground
         specialLeft,
         specialBack,
         specialRight,
+        hit,
         dead
     }
 
