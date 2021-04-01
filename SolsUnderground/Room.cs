@@ -33,7 +33,6 @@ namespace SolsUnderground
         private const int ROOM_WIDTH = 33;
         private const int ROOM_HEIGHT = 25;
         private List<Tile> tiles;
-        private List<GameObject> contents;
         private int enemyCount;
 
         // Properties
@@ -52,25 +51,13 @@ namespace SolsUnderground
 
         // Constructors
         public Room(string filepath, int windowWidth, int windowHeight, 
-            List<Texture2D> tileTextures, Texture2D[] enemyTextures) // Load room archetypes
+            List<Texture2D> tileTextures) // Load room archetypes
         {
             this.windowHeight = windowHeight;
             this.windowWidth = windowWidth;
             tiles = new List<Tile>();
-            contents = new List<GameObject>();
-            Load(filepath, tileTextures, enemyTextures);
+            Load(filepath, tileTextures);
             SetTiles(windowWidth, windowHeight);
-            enemyCount = 0;
-        }
-
-        // Only to be used for copying Rooms
-        private Room(int windowWidth, int windowHeight, List<Tile> tiles, List<GameObject> contents, int enemyCount)
-        {
-            this.windowWidth = windowWidth;
-            this.windowHeight = windowHeight;
-            this.tiles = tiles;
-            this.contents = contents;
-            this.enemyCount = enemyCount;
         }
 
         // Methods
@@ -79,18 +66,14 @@ namespace SolsUnderground
         /// Reads the given file and loads fields with appropriate data.
         /// </summary>
         /// <param name="filepath">String path of file</param>
-        public void Load(string filepath, List<Texture2D> tileTextures, Texture2D[] enemyTextures)
+        private void Load(string filepath, List<Texture2D> tileTextures)
         {
             
             StreamReader reader = new StreamReader(filepath);
 
-            int enemyWidth = enemyTextures[2].Width;
-            int enemyHeight = enemyTextures[2].Height;
-
             //First line will be the number of enemies in the room
             enemyCount = int.Parse(reader.ReadLine());
             
-
             // Defines necessary variables for file reading
             string line;
             string[] data;
@@ -109,25 +92,6 @@ namespace SolsUnderground
                     ));
             }
 
-            //Establishing a set list of valid spawn locations for the enemies
-            SetTiles(windowWidth, windowHeight);
-            List<Tile> validSpawn = new List<Tile>();
-            foreach(Tile t in tiles)
-            {
-                if(t.IsObstacle == false)
-                {
-                    validSpawn.Add(t);
-                }
-            }
-            //Creating enemies based on the enemy count at the top of the room file
-            for (int i = 0; i < enemyCount; i++)
-            {
-                Rectangle enemyRect = new Rectangle(validSpawn[Program.rng.Next(validSpawn.Count)].X, 
-                    validSpawn[Program.rng.Next(validSpawn.Count)].Y, enemyWidth, enemyHeight);
-                contents.Add(new Minion(enemyTextures, enemyRect, 3, 4));
-
-            }
-
             reader.Close();
         }
 
@@ -136,7 +100,7 @@ namespace SolsUnderground
         /// </summary>
         /// <param name="windowWidth">Pixel width of area to draw Room</param>
         /// <param name="windowHeight">Pixel height of area to draw Room</param>
-        public void SetTiles(int windowWidth, int windowHeight)
+        private void SetTiles(int windowWidth, int windowHeight)
         {
             // Determine size of tiles using window size
             int tileWidth = windowWidth / ROOM_WIDTH;
@@ -153,68 +117,52 @@ namespace SolsUnderground
         }
 
         /// <summary>
-        /// Creates a copy of the Room and its contents.
-        /// </summary>
-        /// <returns></returns>
-        public Room Copy()
-        {
-            // NEED TO FINISH: lists use references, need to create new objects
-            return new Room(windowWidth, windowHeight, tiles, contents, enemyCount);
-        }
-
-        /// <summary>
-        /// Adds game objects to room's list of contents.
-        /// </summary>
-        /// <param name="gameObject">Game object to initialize in room</param>
-        public void Add(GameObject gameObject)
-        {
-            contents.Add(gameObject);
-        }
-
-        /// <summary>
-        /// Retrieves data on any enemies in the room.
-        /// </summary>
-        /// <returns>List containing all Enemy objects in room contents</returns>
-        public List<Enemy> GetEnemies()
-        {
-            List<Enemy> enemies = new List<Enemy>();
-
-            foreach (Enemy e in contents)
-            {
-                enemies.Add(e);
-            }
-
-            return enemies;
-        }
-
-        /// <summary>
         /// Retrieves hitboxes of barrier tiles for collision detection.
         /// </summary>
         /// <returns>List of Rectangles of all barrier tiles</returns>
         public List<Rectangle> GetBarriers()
         {
             List<Rectangle> barriers = new List<Rectangle>();
-            Rectangle rect;
 
             foreach (Tile t in tiles)
             {
                 // If Tile is a barrier, create and store Rectangle for collision
                 if (t.IsObstacle)
                 {
-                    rect = new Rectangle(t.X, t.Y, t.Width, t.Height);
-                    barriers.Add(rect);
+                    barriers.Add(new Rectangle(t.X, t.Y, t.Width, t.Height));
                 }
             }
 
+            // Add barrier to left-hand side of screen
+            barriers.Add(new Rectangle(-50, 0, 50, windowHeight));
+
             return barriers;
+        }
+
+        /// <summary>
+        /// Retrieves hitboxes of nonbarrier tiles for enemy spawning.
+        /// </summary>
+        /// <returns>List of Rectangles of all nonbarrier tiles</returns>
+        public List<Rectangle> GetOpenTiles()
+        {
+            List<Rectangle> openTiles = new List<Rectangle>();
+
+            foreach (Tile t in tiles)
+            {
+                // If tile is not a barrier, create and store Rectangle for spawning
+                if (!t.IsObstacle)
+                {
+                    openTiles.Add(new Rectangle(t.X, t.Y, t.Width, t.Height));
+                }
+            }
+
+            return openTiles;
         }
 
         /// <summary>
         /// Draws all tiles in room.
         /// </summary>
         /// <param name="sb">Spritebatch to draw with</param>
-        /// <param name="windowWidth">Pixel width of area to draw Room</param>
-        /// <param name="windowHeight">Pixel height of area to draw Room</param>
         public void Draw(SpriteBatch sb)
         {
             // Draw tiles of room
@@ -222,9 +170,6 @@ namespace SolsUnderground
             {
                 t.Draw(sb);
             }
-
-            // I dont think the Room should be responsible for drawing all of its content,
-            // it could get pretty messy trying to track everything in the contents list.
         }
     }
 }
