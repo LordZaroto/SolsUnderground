@@ -7,6 +7,9 @@ using Microsoft.Xna.Framework.Input;
 
 namespace SolsUnderground
 {
+    //Preston Gillmore
+    //Braden Flanders
+
     /// <summary>
     /// Weapons have different attack stats and unique abilities.
     /// Basic Attacks and ablities will have cooldowns.

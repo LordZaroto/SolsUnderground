@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework.Input;
 //Almost all classes will inherit from GameObject
 namespace SolsUnderground
 {
+    //Braden Flanders
     abstract class GameObject
     {
         protected Texture2D texture;

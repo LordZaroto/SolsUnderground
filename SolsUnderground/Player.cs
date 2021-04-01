@@ -9,6 +9,8 @@ using Microsoft.Xna.Framework.Input;
 
 namespace SolsUnderground
 {
+    //Preston Gillmore
+    //Braden Flanders
     public enum PlayerState
     {
         faceForward,
