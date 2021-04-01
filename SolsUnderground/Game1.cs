@@ -416,6 +416,11 @@ namespace SolsUnderground
                     mapManager.Draw(_spriteBatch);
                     player.Draw(_spriteBatch);
                     enemyManager.Draw(_spriteBatch);
+                    if(Mouse.GetState().LeftButton == ButtonState.Pressed)
+                    {
+                        player.CurrentWeapon.Draw(_spriteBatch);
+                    }
+                    
 
                     _spriteBatch.DrawString(
                         text,
