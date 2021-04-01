@@ -249,12 +249,11 @@ namespace SolsUnderground
                         player.BasicAttack(leftBState, previousLeftBState),
                         player.Attack);
 
-                    //Enemy
- 
+                    // Enemies
                     enemyManager.MoveEnemies();
                     combatManager.EnemyAttacks();
-
                     money += combatManager.CleanUp();
+
                     //Collisions
                     collisionManager.CheckCollisions();
 
