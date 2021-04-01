@@ -3,10 +3,13 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-//Preston Gilmore
+// Preston Gilmore
+// Alex Dale
+//Hunter Wells
 
 namespace SolsUnderground
 {
+    //the game states
     public enum GameState
     {
         Menu,
@@ -23,7 +26,7 @@ namespace SolsUnderground
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
 
-        //gamesstate
+        //games state
         private GameState currentState;
         bool godMode;
 
@@ -105,6 +108,7 @@ namespace SolsUnderground
 
         protected override void Initialize()
         {
+            //sets game state to menu, and sets window size
             currentState = GameState.Menu;
             godMode = false;
             _graphics.PreferredBackBufferWidth = 1320;
@@ -466,7 +470,7 @@ namespace SolsUnderground
                     _spriteBatch.DrawString(
                         heading,
                         "Game Over",
-                        new Vector2(350, 60),
+                        new Vector2(280, 60),
                         Color.White);
                     _spriteBatch.Draw(newGame, button10, Color.White);
                     _spriteBatch.Draw(exitToMenu, button11, Color.White);
@@ -478,6 +482,8 @@ namespace SolsUnderground
 
             base.Draw(gameTime);
         }
+
+        //allows the mouse clicks
         protected bool MouseClick(Rectangle button, MouseState currentMouse, MouseState previousMouse)
         {
             MouseState mouse = Mouse.GetState();
@@ -489,6 +495,7 @@ namespace SolsUnderground
                 return false;
         }
 
+        //allows single key presses
         public bool SingleKeyPress(Keys key, KeyboardState kbState, KeyboardState previousKbState)
         {
             if (previousKbState.IsKeyDown(key) && kbState.IsKeyDown(key))
