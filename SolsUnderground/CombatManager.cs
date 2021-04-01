@@ -90,8 +90,14 @@ namespace SolsUnderground
             this.enemies = enemies;
         }
 
+        /// <summary>
+        /// Removes any dead enemies and gives money accordingly.
+        /// </summary>
+        /// <returns>Int money equal to dead enemies</returns>
         public int CleanUp()
         {
+            int money = 0;
+
             for(int i = 0; i < enemies.Count;)
             {
                 if(enemies[i].State == EnemyState.dead)
