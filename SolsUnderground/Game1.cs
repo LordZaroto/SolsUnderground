@@ -4,10 +4,11 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
 
-//Noah Flanders
+// Noah Flanders
 // Preston Gilmore
 // Alex Dale
-//Hunter Wells
+// Hunter Wells
+// Braden Flanders
 
 namespace SolsUnderground
 {
