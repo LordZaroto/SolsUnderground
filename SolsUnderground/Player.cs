@@ -5,6 +5,8 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
+//Author: Preston Gilmore
+
 namespace SolsUnderground
 {
     public enum PlayerState
@@ -25,6 +27,7 @@ namespace SolsUnderground
         specialLeft,
         specialBack,
         specialRight,
+        hit,
         dead
     }
     
@@ -40,9 +43,15 @@ namespace SolsUnderground
         private int maxHp;
         private Weapon weapon;
         private double specialCounter;
+        private double specialCD;
         private double basicCounter;
+        private double damageCounter;
+        private double damageCD;
+        private double moveCounter;
+        private double moveCD;
         private PlayerState playerState;
         private Texture2D[] textures;
+        private int tigerBucks;
         //-----------------------------
 
         //---------------------------------------------------------------------
@@ -75,12 +84,17 @@ namespace SolsUnderground
             set { positionRect.Height = value; }
         }
 
-        public Rectangle Position
+        public override Rectangle PositionRect
         {
             get { return positionRect; }
-
+            set { positionRect = value; }
         }
-
+        
+        public PlayerState State
+        {
+            get { return playerState; }
+            set { playerState = value; }
+        }
 
         //------------------------------
 
@@ -117,6 +131,14 @@ namespace SolsUnderground
         {
             get { return weapon.Attack; }
         }
+        /// <summary>
+        /// Currency gained upon enemy kill.
+        /// </summary>
+        public int TigerBucks
+        {
+            get { return tigerBucks; }
+            set { tigerBucks = value; }
+        }
         //------------------------------
 
         //----------------------------------------
@@ -132,11 +154,16 @@ namespace SolsUnderground
             this.textures = textures;
             this.texture = textures[0];
             this.positionRect = positionRect;
-            maxHp = 10;
+            maxHp = 100;
             hp = maxHp;
             weapon = startWeapon;
             basicCounter = 0;
-            specialCounter = 0;
+            specialCD = 5;
+            specialCounter = specialCD;
+            damageCD = 0.6;
+            damageCounter = damageCD;
+            moveCD = 0.1;
+            moveCounter = moveCD;
             playerState = PlayerState.faceBack;
         }
         //----------------------------------------------------------
@@ -152,144 +179,147 @@ namespace SolsUnderground
         /// </summary>
         public void PlayerMove(KeyboardState kbState)
         {
-            bool test = false;
-            
-            //If the character does not move, change the playerState to the appropriate
-            //idle direction. Then end the method.
-
-            //changes texture according to direction
-            if(!(kbState.IsKeyDown(Keys.W) || kbState.IsKeyDown(Keys.A) || kbState.IsKeyDown(Keys.S) || kbState.IsKeyDown(Keys.D)))
+            if(moveCounter >= moveCD)
             {
-                if(playerState == PlayerState.moveForward)
+                bool test = false;
+
+                //If the character does not move, change the playerState to the appropriate
+                //idle direction. Then end the method.
+
+                //changes texture according to direction
+                if (!(kbState.IsKeyDown(Keys.W) || kbState.IsKeyDown(Keys.A) || kbState.IsKeyDown(Keys.S) || kbState.IsKeyDown(Keys.D)))
                 {
-                    texture = textures[1];
-                    playerState = PlayerState.faceForward;
-                }
-                else if (playerState == PlayerState.moveLeft)
-                {
-                    texture = textures[2];
-                    playerState = PlayerState.faceLeft;
-                }
-                else if (playerState == PlayerState.moveBack)
-                {
-                    texture = textures[0];
-                    playerState = PlayerState.faceBack;
-                }
-                else if (playerState == PlayerState.moveRight)
-                {
-                    texture = textures[3];
-                    playerState = PlayerState.faceRight;
+                    if (playerState == PlayerState.moveForward)
+                    {
+                        texture = textures[1];
+                        playerState = PlayerState.faceForward;
+                    }
+                    else if (playerState == PlayerState.moveLeft)
+                    {
+                        texture = textures[2];
+                        playerState = PlayerState.faceLeft;
+                    }
+                    else if (playerState == PlayerState.moveBack)
+                    {
+                        texture = textures[0];
+                        playerState = PlayerState.faceBack;
+                    }
+                    else if (playerState == PlayerState.moveRight)
+                    {
+                        texture = textures[3];
+                        playerState = PlayerState.faceRight;
+                    }
+
+                    return;
                 }
 
-                return;
-            }
-            
-            if (kbState.IsKeyDown(Keys.W) || kbState.IsKeyDown(Keys.S))
-            {
-                //The values adjustments are lower when traveling diagonally
-                //to accomadate for adjustments to both axis.
-                if(kbState.IsKeyDown(Keys.D))
+                if (kbState.IsKeyDown(Keys.W) || kbState.IsKeyDown(Keys.S))
                 {
-                    X += 3;
-                    
-                    //Two trues will make a false!
-                    if(test == true)
+                    //The values adjustments are lower when traveling diagonally
+                    //to accomadate for adjustments to both axis.
+                    if (kbState.IsKeyDown(Keys.D))
                     {
-                        test = false;
-                    }
-                    else
-                    {
-                        test = true;
-                    }
-                }
-                if (kbState.IsKeyDown(Keys.A))
-                {
-                    X -= 3;
+                        X += 3;
 
+                        //Two trues will make a false!
+                        if (test == true)
+                        {
+                            test = false;
+                        }
+                        else
+                        {
+                            test = true;
+                        }
+                    }
+                    if (kbState.IsKeyDown(Keys.A))
+                    {
+                        X -= 3;
+
+                        if (test == true)
+                        {
+                            test = false;
+                        }
+                        else
+                        {
+                            test = true;
+                        }
+                    }
+                    //Determine the vertical displacement
                     if (test == true)
                     {
-                        test = false;
+                        if (kbState.IsKeyDown(Keys.W) && kbState.IsKeyDown(Keys.S))
+                        {
+                            Y += 0;
+
+                            //Is there horizontal movement? If so, change player state accordingly.
+                            if (kbState.IsKeyDown(Keys.A) && test == true)
+                            {
+                                texture = textures[2];
+                                playerState = PlayerState.moveLeft;
+                            }
+                            else if (kbState.IsKeyDown(Keys.D) && test == true)
+                            {
+                                texture = textures[3];
+                                playerState = PlayerState.moveRight;
+                            }
+                        }
+                        else if (kbState.IsKeyDown(Keys.W))
+                        {
+                            Y -= 3;
+                            texture = textures[1];
+                            playerState = PlayerState.moveForward;
+                        }
+                        else if (kbState.IsKeyDown(Keys.S))
+                        {
+                            Y += 3;
+                            texture = textures[0];
+                            playerState = PlayerState.moveBack;
+                        }
                     }
                     else
                     {
-                        test = true;
-                    }
-                }
-                //Determine the vertical displacement
-                if (test == true)
-                {
-                    if(kbState.IsKeyDown(Keys.W) && kbState.IsKeyDown(Keys.S))
-                    {
-                        Y += 0;
+                        if (kbState.IsKeyDown(Keys.W) && kbState.IsKeyDown(Keys.S))
+                        {
+                            Y += 0;
 
-                        //Is there horizontal movement? If so, change player state accordingly.
-                        if (kbState.IsKeyDown(Keys.A) && test == true)
-                        {
-                            texture = textures[2];
-                            playerState = PlayerState.moveLeft;
+                            //Is there horizontal movement? If so, change player state accordingly.
+                            if (kbState.IsKeyDown(Keys.A) && test == true)
+                            {
+                                texture = textures[2];
+                                playerState = PlayerState.moveLeft;
+                            }
+                            else if (kbState.IsKeyDown(Keys.D) && test == true)
+                            {
+                                texture = textures[3];
+                                playerState = PlayerState.moveRight;
+                            }
                         }
-                        else if (kbState.IsKeyDown(Keys.D) && test == true)
+                        else if (kbState.IsKeyDown(Keys.W))
                         {
-                            texture = textures[3];
-                            playerState = PlayerState.moveRight;
+                            texture = textures[1];
+                            Y -= 4;
+                            playerState = PlayerState.moveForward;
                         }
-                    }
-                    else if(kbState.IsKeyDown(Keys.W))
-                    {
-                        Y -= 3;
-                        texture = textures[1];
-                        playerState = PlayerState.moveForward;
-                    }
-                    else if(kbState.IsKeyDown(Keys.S))
-                    {
-                        Y += 3;
-                        texture = textures[0];
-                        playerState = PlayerState.moveBack;
+                        else if (kbState.IsKeyDown(Keys.S))
+                        {
+                            texture = textures[0];
+                            Y += 4;
+                            playerState = PlayerState.moveBack;
+                        }
                     }
                 }
-                else
+                if (kbState.IsKeyDown(Keys.A) && test == false)
                 {
-                    if (kbState.IsKeyDown(Keys.W) && kbState.IsKeyDown(Keys.S))
-                    {
-                        Y += 0;
-
-                        //Is there horizontal movement? If so, change player state accordingly.
-                        if (kbState.IsKeyDown(Keys.A) && test == true)
-                        {
-                            texture = textures[2];
-                            playerState = PlayerState.moveLeft;
-                        }
-                        else if (kbState.IsKeyDown(Keys.D) && test == true)
-                        {
-                            texture = textures[3];
-                            playerState = PlayerState.moveRight;
-                        }
-                    }
-                    else if (kbState.IsKeyDown(Keys.W))
-                    {
-                        texture = textures[1];
-                        Y -= 4;
-                        playerState = PlayerState.moveForward;
-                    }
-                    else if (kbState.IsKeyDown(Keys.S))
-                    {
-                        texture = textures[0];
-                        Y += 4;
-                        playerState = PlayerState.moveBack;
-                    }
+                    texture = textures[2];
+                    X -= 4;
+                    playerState = PlayerState.moveLeft;
                 }
-            }
-            if (kbState.IsKeyDown(Keys.A) && test == false)
-            {
-                texture = textures[2];
-                X -= 4;
-                playerState = PlayerState.moveLeft;
-            }
-            if (kbState.IsKeyDown(Keys.D) && test == false)
-            {
-                texture = textures[3];
-                X += 4;
-                playerState = PlayerState.moveRight;
+                if (kbState.IsKeyDown(Keys.D) && test == false)
+                {
+                    texture = textures[3];
+                    X += 4;
+                    playerState = PlayerState.moveRight;
+                }
             }
         }
 
@@ -333,12 +363,43 @@ namespace SolsUnderground
         }
 
         /// <summary>
+        /// The player will take damage an be knocked back.
+        /// </summary>
+        public void TakeDamage(int damage)
+        {
+            if(damageCounter >= damageCD)
+            {
+                moveCounter = 0;
+                damageCounter = 0;
+                hp -= damage;
+
+                //Player knockback - Commented out till reworked
+                /*if (playerState == PlayerState.faceForward || playerState == PlayerState.moveForward)
+                {
+                    Y += 32;
+                }
+                if (playerState == PlayerState.faceLeft || playerState == PlayerState.moveLeft)
+                {
+                    X += 32;
+                }
+                if (playerState == PlayerState.faceBack || playerState == PlayerState.moveBack)
+                {
+                    Y -= 32;
+                }
+                if (playerState == PlayerState.faceRight || playerState == PlayerState.moveRight)
+                {
+                    X -= 32;
+                }*/
+            }
+        }
+
+        /// <summary>
         /// The player can press 'P' to pause the game.
         /// </summary>
         /// <param name="kbState"></param>
         /// <param name="gameState"></param>
         /// <returns></returns>
-        public GameState MenuInput(KeyboardState kbState, GameState gameState)
+        public GameState MenuInput(KeyboardState kbState, GameState gameState) //Not being used right now
         {
             if(kbState.IsKeyDown(Keys.P))
             {
@@ -353,15 +414,15 @@ namespace SolsUnderground
         /// Should be called every tick.
         /// </summary>
         /// <param name="kbState"></param>
-        public void Input(KeyboardState kbState, GameTime gameTime, ButtonState lButton, ButtonState previousLeftBState, GameState gameState)
+        public void Input(KeyboardState kbState, GameTime gameTime)
         {
-            //Keep track of time passed
+            //Update Cooldowns
             basicCounter += gameTime.ElapsedGameTime.TotalSeconds;
             specialCounter += gameTime.ElapsedGameTime.TotalSeconds;
+            damageCounter += gameTime.ElapsedGameTime.TotalSeconds;
+            moveCounter += gameTime.ElapsedGameTime.TotalSeconds;
 
             PlayerMove(kbState);
-            //BasicAttack(lButton, previousLeftBState);
-            //MenuInput(kbState, gameState);
         }
 
         /// <summary>
@@ -414,6 +475,15 @@ namespace SolsUnderground
         {
             sb.Draw(texture, positionRect, Color.White);
 
+        }
+
+        /// <summary>
+        /// The player equips the given weapon.
+        /// </summary>
+        /// <param name="weapon"></param>
+        public void EquipWeapon(Weapon weapon)
+        {
+            this.weapon = weapon;
         }
     }
 }

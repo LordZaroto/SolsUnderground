@@ -31,8 +31,10 @@ namespace SolsUnderground
         private SpriteFont text;
 
         //keyboard and mouse
-        KeyboardState prevKB;
-        MouseState prevM;
+        private KeyboardState prevKB;
+        private MouseState prevM;
+        private ButtonState previousLeftBState;
+        private ButtonState previousRightBState;
 
 
         //Player
@@ -43,6 +45,10 @@ namespace SolsUnderground
         private Rectangle playerRect;
         private Player player;
         private Texture2D[] playerTextures;
+
+        //weapon
+        private Weapon stick;
+        private Texture2D stickTexture;
 
         //enemy
         private Texture2D minionForward;
@@ -140,6 +146,11 @@ namespace SolsUnderground
                 new Rectangle(0, 0, startWeaponTexture.Width, startWeaponTexture.Height));
             player = new Player(playerTextures, playerRect, startWeapon);
 
+            //weapon
+            stickTexture = Content.Load<Texture2D>("stick");
+            stick = new Weapon(stickTexture, new Rectangle(0, 0, 0, 0));
+            player.EquipWeapon(stick);
+
             // Tiles
             List<Texture2D> tileTextures = new List<Texture2D>();
             tileTextures.Add(Content.Load<Texture2D>("BrickSprite"));
@@ -184,17 +195,22 @@ namespace SolsUnderground
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.End))
                 Exit();
+            
+            //User Input
             KeyboardState kb = Keyboard.GetState();
             MouseState mouse = Mouse.GetState();
-            
+            ButtonState leftBState = mouse.LeftButton;
+            ButtonState rightBState = mouse.RightButton;
 
-            switch(currentState)
+
+            switch (currentState)
             {
                 case GameState.Menu:
                     if (kb.IsKeyDown(Keys.Enter) || MouseClick(button1, mouse, prevM) == true)
                     {
                         currentState = GameState.Game;
                         mapManager.NewFloor();
+                        combatManager = new CombatManager(mapManager.GetRoomEnemies(), player);
                     }
                     else if (kb.IsKeyDown(Keys.C) || MouseClick(button3, mouse, prevM) == true)
                         currentState = GameState.Controls;
@@ -212,8 +228,27 @@ namespace SolsUnderground
                         currentState = GameState.Menu;
                     break;
                 case GameState.Game:
+
+                    //Player
+                    player.Input(kb, gameTime);
+                    combatManager.PlayerAttack(
+                        player.BasicAttack(leftBState, previousLeftBState),
+                        player.Attack);
+
+                    //Enemy
+                    foreach(Enemy e in mapManager.GetRoomEnemies())
+                    {
+                        e.EnemyMove(player);
+                        combatManager.EnemyAttack(
+                            e.PositionRect,
+                            e.Attack,
+                            e.State);
+                    }
+
+                    //Collisions
                     PlayerCollisions();
                     MinionCollisions();
+
                     if (SingleKeyPress(Keys.Escape,kb, prevKB))
                     {
                         currentState = GameState.Pause;
@@ -223,6 +258,7 @@ namespace SolsUnderground
                     {
                         player.X = 0;
                         mapManager.NextRoom();
+                        combatManager = new CombatManager(mapManager.GetRoomEnemies(), player);
                     }
                         
                     if (player.Hp <= 0)
@@ -249,9 +285,11 @@ namespace SolsUnderground
 
             }
 
+            //Keep track of the previous inputs
             prevKB = kb;
             prevM = mouse;
-            // TODO: Add your update logic here
+            previousLeftBState = leftBState;
+            previousRightBState = rightBState;
 
             base.Update(gameTime);
         }
@@ -330,14 +368,11 @@ namespace SolsUnderground
                     player.Draw(_spriteBatch);
 
                     //Get the current enemies in the current room from the mapManager
-                    //in order to draw and move them
-                    List<Enemy> enemies = mapManager.Enemies;
-                    foreach(Enemy e in enemies)
+                    //in order to draw them
+                    foreach(Enemy e in mapManager.GetRoomEnemies())
                     {
                         e.Draw(_spriteBatch);
-                        e.EnemyMove(player);
                     }
-                    player.PlayerMove(Keyboard.GetState());
                     _spriteBatch.DrawString(
                         text,
                         "health-" + player.Hp,
@@ -465,7 +500,7 @@ namespace SolsUnderground
         {
             List<Rectangle> barriers = mapManager.GetRoomBarriers();
             List<Enemy> enemies = mapManager.GetRoomEnemies();
-            Rectangle temp = new Rectangle(0,0,0,0);
+            Rectangle temp;
 
             //loops through all enemies in the room
             for (int j = 0; j < enemies.Count; j++)
@@ -475,25 +510,25 @@ namespace SolsUnderground
                 for (int i = 0; i < barriers.Count; i++)
                 {
                     //checks if the enemies intersect with a barrier
-                    if (barriers[i].Intersects(temp))
+                    if (temp.Intersects(barriers[i]))
                     {
                         //checks if the x or y needs to be adjusted
                         if (Rectangle.Intersect(temp, barriers[i]).Width <= Rectangle.Intersect(temp, barriers[i]).Height)
                         {
                             //adjusts the position
-                            if (barriers[i].X > player.X)
+                            if (barriers[i].X >= player.X)
                             {
-                                temp.X -= Rectangle.Intersect(temp, barriers[i]).Width;
+                                temp.X += Rectangle.Intersect(temp, barriers[i]).Width;
 
                             }
                             else
                             {
-                                temp.X += Rectangle.Intersect(temp, barriers[i]).Width;
+                                temp.X -= Rectangle.Intersect(temp, barriers[i]).Width;
                             }
                         }
                         else
                         {
-                            if (barriers[i].Y > temp.Y)
+                            if (barriers[i].Y >= temp.Y)
                             {
                                 temp.Y -= Rectangle.Intersect(temp, barriers[i]).Height;
 

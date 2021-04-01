@@ -11,6 +11,9 @@ namespace SolsUnderground
     //implements all of the abstract methods and properties
     class Minion : Enemy
     {
+        private EnemyState enemyState;
+        private double moveCounter;
+        private double moveCD;
         Texture2D[] textures;
         //consructor: initializes the fields
         public Minion(Texture2D[] textures, Rectangle positionRect, int health, int attack)
@@ -20,6 +23,8 @@ namespace SolsUnderground
             this.positionRect = positionRect;
             this.health = health;
             this.attack = attack;
+            moveCD = 0.3;
+            moveCounter = moveCD;
         }
 
         //properties
@@ -59,6 +64,18 @@ namespace SolsUnderground
             set { positionRect.Height = value; }
         }
 
+        public override Rectangle PositionRect
+        {
+            get { return positionRect; }
+            set { positionRect = value; }
+        }
+
+        public override EnemyState State
+        {
+            get { return enemyState; }
+            set { enemyState = value; }
+        }
+
         /// <summary>
         /// overridden method
         /// changes health when hit by the player
@@ -66,7 +83,34 @@ namespace SolsUnderground
         /// <param name="damage"></param>
         public override void TakeDamage(int damage)
         {
-            health -= damage;
+            if(!(enemyState == EnemyState.dead))
+            {
+                moveCD = 0;
+                
+                health -= damage;
+
+                if (enemyState == EnemyState.faceForward || enemyState == EnemyState.moveForward)
+                {
+                    Y += 32;
+                }
+                if (enemyState == EnemyState.faceLeft || enemyState == EnemyState.moveLeft)
+                {
+                    X += 32;
+                }
+                if (enemyState == EnemyState.faceBack || enemyState == EnemyState.moveBack)
+                {
+                    Y -= 32;
+                }
+                if (enemyState == EnemyState.faceRight || enemyState == EnemyState.moveRight)
+                {
+                    X -= 32;
+                }
+
+                if (health <= 0)
+                {
+                    enemyState = EnemyState.dead;
+                }
+            }
         }
 
         /// <summary>
@@ -74,29 +118,36 @@ namespace SolsUnderground
         /// </summary>
         public override void EnemyMove(Player player)
         {
-            if(Math.Abs(positionRect.X-player.X) >= Math.Abs(positionRect.Y - player.Y))
+            if(moveCounter >= moveCD)
             {
-                if(positionRect.X >= player.X)
+                if (!(enemyState == EnemyState.dead))
                 {
-                    texture = textures[2];
-                    positionRect.X-=3;
-                }
-                else
-                {
-                    texture = textures[3];
-                    positionRect.X+=3;
-                }
-            }else if (Math.Abs(positionRect.X - player.X) < Math.Abs(positionRect.Y - player.Y))
-            {
-                if (positionRect.Y >= player.Y)
-                {
-                    texture = textures[1];
-                    positionRect.Y-=3;
-                }
-                else
-                {
-                    texture = textures[0];
-                    positionRect.Y+=3;
+                    if (Math.Abs(positionRect.X - player.X) >= Math.Abs(positionRect.Y - player.Y))
+                    {
+                        if (positionRect.X >= player.X)
+                        {
+                            texture = textures[2];
+                            positionRect.X -= 3;
+                        }
+                        else
+                        {
+                            texture = textures[3];
+                            positionRect.X += 3;
+                        }
+                    }
+                    else if (Math.Abs(positionRect.X - player.X) < Math.Abs(positionRect.Y - player.Y))
+                    {
+                        if (positionRect.Y >= player.Y)
+                        {
+                            texture = textures[1];
+                            positionRect.Y -= 3;
+                        }
+                        else
+                        {
+                            texture = textures[0];
+                            positionRect.Y += 3;
+                        }
+                    }
                 }
             }
         }

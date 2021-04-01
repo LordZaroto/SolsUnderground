@@ -5,13 +5,19 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
+//Author: Preston Gilmore
+
 namespace SolsUnderground
 {
+    /// <summary>
+    /// Deals with all combat related collisions.
+    /// </summary>
     class CombatManager
     {
         //Fields
         //-----------------------------
         private List<Enemy> enemies;
+        private Player player;
         //-----------------------------
 
         //---------------------------------------------------------------------
@@ -35,9 +41,10 @@ namespace SolsUnderground
 
         //Constructor
         //----------------------------------------------------------
-        public CombatManager(Room room)
+        public CombatManager(List<Enemy> enemies, Player player)
         {
-            enemies = room.GetEnemies();
+            this.enemies = enemies;
+            this.player = player;
         }
         //----------------------------------------------------------
 
@@ -47,5 +54,40 @@ namespace SolsUnderground
 
         //Methods
         //----------------------------------------------------------
+        /// <summary>
+        /// If that player's attack connects, execute the resultant consequences.
+        /// </summary>
+        public void PlayerAttack(Rectangle hitBox, int damage)
+        {
+            for(int i = 0; i < enemies.Count; i++)
+            {
+                if(hitBox.Intersects(enemies[i].PositionRect))
+                {
+                    enemies[i].TakeDamage(damage);
+                }
+            }
+        }
+
+        /// <summary>
+        /// If an enemy attack connects with the player, execute the resultant consequences.
+        /// </summary>
+        public void EnemyAttack(Rectangle hitBox, int damage, EnemyState state)
+        {
+            if(hitBox.Intersects(player.PositionRect) && !(state == EnemyState.dead))
+            {
+                player.TakeDamage(damage);
+            }
+        }
+
+        public void CleanUp()
+        {
+            for(int i = 0; i < enemies.Count; i++)
+            {
+                if(enemies[i].State == EnemyState.dead)
+                {
+                    enemies.RemoveAt(i);
+                }
+            }
+        }
     }
 }
