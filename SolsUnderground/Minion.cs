@@ -7,6 +7,8 @@ using Microsoft.Xna.Framework.Input;
 
 namespace SolsUnderground
 {
+    //Braden Flanders
+
     //minion class inherits from enemy
     //implements all of the abstract methods and properties
     class Minion : Enemy
@@ -128,11 +130,13 @@ namespace SolsUnderground
                         {
                             texture = textures[2];
                             positionRect.X -= 3;
+                            enemyState = EnemyState.moveLeft;
                         }
                         else
                         {
                             texture = textures[3];
                             positionRect.X += 3;
+                            enemyState = EnemyState.moveRight;
                         }
                     }
                     else if (Math.Abs(positionRect.X - player.X) < Math.Abs(positionRect.Y - player.Y))
@@ -141,11 +145,13 @@ namespace SolsUnderground
                         {
                             texture = textures[1];
                             positionRect.Y -= 3;
+                            enemyState = EnemyState.moveBack;
                         }
                         else
                         {
                             texture = textures[0];
                             positionRect.Y += 3;
+                            enemyState = EnemyState.moveForward;
                         }
                     }
                 }
