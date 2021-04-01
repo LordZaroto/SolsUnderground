@@ -11,6 +11,8 @@ using Microsoft.Xna.Framework.Input;
 //Any object that will be able to move will inherit from this class
 namespace SolsUnderground
 {
+    //Braden Flanders
+
     abstract class DynamicObject : GameObject
     {
         protected Rectangle positionRect; 

@@ -7,6 +7,8 @@ using Microsoft.Xna.Framework.Input;
 
 namespace SolsUnderground
 {
+    //Braden Flanders
+
     //minion class inherits from enemy
     //implements all of the abstract methods and properties
     class Minion : Enemy

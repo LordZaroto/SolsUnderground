@@ -9,6 +9,8 @@ using Microsoft.Xna.Framework.Input;
 //all types of enemies will inherit from this class
 namespace SolsUnderground
 {
+    //Braden Flanders
+    //Preston Gillmore
     public enum EnemyState
     {
         faceForward,
