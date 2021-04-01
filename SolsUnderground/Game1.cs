@@ -81,6 +81,8 @@ namespace SolsUnderground
 
         //HUD items
         private Rectangle hudWeapon;
+        private int money = 0;
+        private int enemyAmount;
 
         //pause items
         private Texture2D returnToGame;
@@ -243,8 +245,17 @@ namespace SolsUnderground
                             e.PositionRect,
                             e.Attack,
                             e.State);
+                        enemyAmount = 0;
+
                     }
 
+                    for(int i =0; i < enemyAmount; i++)
+                    {
+                        if(combatManager.enemies[i].Health == 0)
+                        {
+                            money += 1;
+                        }
+                    }
                     //Collisions
                     PlayerCollisions();
                     MinionCollisions();
@@ -276,6 +287,10 @@ namespace SolsUnderground
                     break;
                 case GameState.GameOver:
                     if (kb.IsKeyDown(Keys.Enter) || MouseClick(button10, mouse, prevM) == true)
+                    {
+                        currentState = GameState.Game;
+                        player.Hp = 100;
+                    }
                         currentState = GameState.Game;
                     if (SingleKeyPress(Keys.Escape, kb, prevKB) || MouseClick(button11, mouse, prevM) == true)
                     {
@@ -318,10 +333,35 @@ namespace SolsUnderground
                         "Controls",
                         new Vector2(390, 0),
                         Color.White);
+                      _spriteBatch.DrawString(
+                        text,
+                        "Forward - W",
+                        new Vector2(550, 250),
+                        Color.White);
                     _spriteBatch.DrawString(
                         text,
-                        "Forward - W BackWards - S Left - A Right - D Attack -  Pause - ESC",
-                        new Vector2(0, 250),
+                        "Backwards - S",
+                        new Vector2(550, 350),
+                        Color.White);
+                    _spriteBatch.DrawString(
+                        text,
+                        " Left - A ",
+                        new Vector2(550, 450),
+                        Color.White);
+                    _spriteBatch.DrawString(
+                        text,
+                        "Right - D ",
+                        new Vector2(550, 550),
+                        Color.White);
+                    _spriteBatch.DrawString(
+                        text,
+                        "Attack - Left Click",
+                        new Vector2(550, 650),
+                        Color.White);
+                    _spriteBatch.DrawString(
+                        text,
+                        "Pause - ESC",
+                        new Vector2(550, 750),
                         Color.White);
                     _spriteBatch.Draw(returnToMenu, button5, Color.White);
                     break;
@@ -333,8 +373,8 @@ namespace SolsUnderground
                         Color.White);
                     _spriteBatch.DrawString(
                         text,
-                        "defeat all enemies to go to the next room",
-                        new Vector2(0, 250),
+                        "defeat all enemies to go on to the next room",
+                        new Vector2(350, 250),
                         Color.White);
                     _spriteBatch.Draw(returnToMenu, button5, Color.White);
                     break;
@@ -355,8 +395,18 @@ namespace SolsUnderground
                         Color.White);
                     _spriteBatch.DrawString(
                         text,
-                        "health-" + player.Hp,
-                        new Vector2(860, 0),
+                        "Tiger Bucks-" + money,
+                        new Vector2(330, 0),
+                        Color.White);
+                    _spriteBatch.DrawString(
+                        text,
+                        "Floor-" + mapManager.CurrentFloor,
+                        new Vector2(800, 0),
+                        Color.White);
+                    _spriteBatch.DrawString(
+                        text,
+                        "Room-" + mapManager.CurrentRoom,
+                        new Vector2(1100, 0),
                         Color.White);
                     break;
                 case GameState.Pause:
@@ -376,7 +426,7 @@ namespace SolsUnderground
                     _spriteBatch.DrawString(
                         heading,
                         "Game Over",
-                        new Vector2(0, 60),
+                        new Vector2(350, 60),
                         Color.White);
                     _spriteBatch.Draw(newGame, button10, Color.White);
                     _spriteBatch.Draw(exitToMenu, button11, Color.White);

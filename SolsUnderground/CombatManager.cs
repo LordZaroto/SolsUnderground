@@ -16,7 +16,7 @@ namespace SolsUnderground
     {
         //Fields
         //-----------------------------
-        private List<Enemy> enemies;
+        public List<Enemy> enemies;
         private Player player;
         //-----------------------------
 
