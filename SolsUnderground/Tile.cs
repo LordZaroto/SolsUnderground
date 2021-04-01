@@ -6,7 +6,8 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
 /// <summary>
-/// Alex Dale - 3/29/21
+/// Alex Dale
+/// 
 /// This class defines a Tile that stores a texture
 /// and a field indicating if it can be walked on.
 ///

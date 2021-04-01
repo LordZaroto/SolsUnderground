@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework.Input;
 
 //Author: Preston Gilmore
 //Hunter Wells
+// Alex Dale
 
 namespace SolsUnderground
 {
