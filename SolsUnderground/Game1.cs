@@ -57,6 +57,7 @@ namespace SolsUnderground
 
         // Managers
         private MapManager mapManager;
+        private CombatManager combatManager;
 
         //menu items
         private Texture2D startGame;
@@ -344,7 +345,7 @@ namespace SolsUnderground
                         Color.White);
                     _spriteBatch.DrawString(
                         text,
-                        "Tiger Bucks" + player.Hp,
+                        "Tiger Bucks-" + player.Hp,
                         new Vector2(330, 0),
                         Color.White);
                     _spriteBatch.DrawString(
