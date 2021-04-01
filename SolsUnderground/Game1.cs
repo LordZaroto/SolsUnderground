@@ -245,17 +245,11 @@ namespace SolsUnderground
                             e.PositionRect,
                             e.Attack,
                             e.State);
-                        enemyAmount = 0;
+                        enemyAmount += 1;
 
                     }
 
-                    for(int i =0; i < enemyAmount; i++)
-                    {
-                        if(combatManager.enemies[i].Health == 0)
-                        {
-                            money += 1;
-                        }
-                    }
+                    money += combatManager.CleanUp();
                     //Collisions
                     PlayerCollisions();
                     MinionCollisions();
