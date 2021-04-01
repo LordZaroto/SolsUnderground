@@ -5,7 +5,8 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-//Author: Preston Gilmore
+// Author: Preston Gilmore
+// Alex Dale
 
 namespace SolsUnderground
 {
