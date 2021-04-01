@@ -249,20 +249,11 @@ namespace SolsUnderground
                         player.BasicAttack(leftBState, previousLeftBState),
                         player.Attack);
 
-                    //Enemy
-                    foreach (Enemy e in mapManager.GetRoomEnemies())
-                    {
-                        e.EnemyMove(player);
-                        combatManager.EnemyAttack(
-                            e.PositionRect,
-                            e.Attack,
-                            e.State);
-                    }
+                    // Enemies
                     enemyManager.MoveEnemies();
                     combatManager.EnemyAttacks();
-                    combatManager.CleanUp();
-
                     money += combatManager.CleanUp();
+
                     //Collisions
                     collisionManager.CheckCollisions();
 
@@ -443,7 +434,7 @@ namespace SolsUnderground
                         Color.White);
                     _spriteBatch.DrawString(
                         text,
-                        "Room-" + mapManager.CurrentRoom,
+                        "Room-" + mapManager.CurrentRoomNum,
                         new Vector2(1100, 0),
                         Color.White);
                     break;
