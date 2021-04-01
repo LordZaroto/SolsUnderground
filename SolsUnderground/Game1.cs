@@ -465,7 +465,7 @@ namespace SolsUnderground
                     _spriteBatch.DrawString(
                         heading,
                         "Game Over",
-                        new Vector2(350, 60),
+                        new Vector2(280, 60),
                         Color.White);
                     _spriteBatch.Draw(newGame, button10, Color.White);
                     _spriteBatch.Draw(exitToMenu, button11, Color.White);
