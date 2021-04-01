@@ -6,10 +6,10 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
 /// <summary>
+/// Noah Flanders
+/// 
 /// This class is in charge of initializing enemies for each room
 /// as well as their movement and attack patterns.
-/// 
-/// > Currently not in use, fully implement in next milestone
 /// 
 /// > Need to expand on SpawnEnemies method, currently hardcoded for SkaterBros only
 /// 

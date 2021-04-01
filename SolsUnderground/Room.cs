@@ -10,6 +10,10 @@ using Microsoft.Xna.Framework.Input;
 /// Alex Dale - 3/29/21
 /// This class defines a Room which contains a set of Tiles
 /// that make up a single room of the game.
+/// 
+/// Noah Flanders - 3/30/21
+/// Different enemies spawn in each room
+/// (this code moved to EnemyManager)
 ///
 /// NOTES:
 /// > FINISH COPY METHOD: Currently doesnt solve issue, only moves object references

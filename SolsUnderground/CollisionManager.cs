@@ -6,6 +6,9 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
 /// <summary>
+/// Preston Gilmore
+/// Braden Flanders
+/// Noah Flanders
 /// This class is responsible for managing collisions between static and dynamic
 /// game objects, or any collision that doens't deal damage to an entity.
 /// </summary>
