@@ -6,6 +6,8 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
 /// <summary>
+/// Alex Dale
+/// 
 /// Noah Flanders
 /// 
 /// This class is in charge of initializing enemies for each room

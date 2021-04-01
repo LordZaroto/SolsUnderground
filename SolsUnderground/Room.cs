@@ -7,7 +7,8 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
 /// <summary>
-/// Alex Dale - 3/29/21
+/// Alex Dale
+/// 
 /// This class defines a Room which contains a set of Tiles
 /// that make up a single room of the game.
 /// 

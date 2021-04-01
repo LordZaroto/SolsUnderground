@@ -139,6 +139,11 @@ namespace SolsUnderground
             get { return tigerBucks; }
             set { tigerBucks = value; }
         }
+
+        public Weapon CurrentWeapon
+        {
+            get { return weapon; }
+        }
         //------------------------------
 
         //----------------------------------------
@@ -342,19 +347,23 @@ namespace SolsUnderground
                     //Create the attack hitbox in the direction the player is facing
                     if(playerState == PlayerState.faceForward || playerState == PlayerState.moveForward)
                     {
-                        return new Rectangle(X - Width / 2, Y - Height / 2, Width * 2, Height);
+                        weapon.Position = new Rectangle(X - Width / 2, Y - Height / 2, Width * 2, Height);
+                        return weapon.Position;
                     }
                     else if (playerState == PlayerState.faceLeft || playerState == PlayerState.moveLeft)
                     {
-                        return new Rectangle(X - Width / 2, Y - Height / 2, Width, Height * 2);
+                        weapon.Position = new Rectangle(X - Width / 2, Y - Height / 2, Width, Height * 2);
+                        return weapon.Position;
                     }
                     else if (playerState == PlayerState.faceBack || playerState == PlayerState.moveBack)
                     {
-                        return new Rectangle(X + Width / 2, Y + Height / 2, Width * 2, Height);
+                        weapon.Position = new Rectangle(X - Width / 2, Y + Height / 2, Width * 2, Height);
+                        return weapon.Position;
                     }
                     else if (playerState == PlayerState.faceRight || playerState == PlayerState.moveRight)
                     {
-                        return new Rectangle(X + Width / 2, Y - Height / 2, Width, Height * 2);
+                        weapon.Position = new Rectangle(X + Width / 2, Y - Height / 2, Width, Height * 2);
+                        return weapon.Position;
                     }
                 }
             }

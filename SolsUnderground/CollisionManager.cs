@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
 /// <summary>
+/// Alex Dale
 /// Preston Gilmore
 /// Braden Flanders
 /// Noah Flanders
