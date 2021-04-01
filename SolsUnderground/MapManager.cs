@@ -48,13 +48,17 @@ namespace SolsUnderground
         {
             get { return currentFloor; }
         }
-        public int CurrentRoom
+        public int CurrentRoomNum
         {
             get { return currentRoom; }
         }
+        public Room CurrentRoom
+        {
+            get { return floor[currentRoom]; }
+        }
 
         // Constructor
-        public MapManager(List<Texture2D> tileTextures, Texture2D[] enemyTextures, int windowWidth, int windowHeight)
+        public MapManager(List<Texture2D> tileTextures, int windowWidth, int windowHeight)
         {
             this.roomPool = new List<Room>();
             this.floor = new List<Room>();
@@ -63,7 +67,7 @@ namespace SolsUnderground
             currentRoom = 0;
             currentFloor = 0;
 
-            Load(tileTextures, enemyTextures);
+            Load(tileTextures);
         }
 
         // Methods
@@ -71,7 +75,7 @@ namespace SolsUnderground
         /// <summary>
         /// Reads and loads all room files.
         /// </summary>
-        public void Load(List<Texture2D> tileTextures, Texture2D[] enemyTextures)
+        public void Load(List<Texture2D> tileTextures)
         {
             // Program works from three directories down in project, in bin\debug\net3.1\
             DirectoryInfo d = new DirectoryInfo("..\\..\\..\\Rooms");
@@ -80,7 +84,7 @@ namespace SolsUnderground
             foreach (FileInfo f in d.GetFiles())
             {
                 roomPool.Add(new Room("..\\..\\..\\Rooms\\" + f.Name, 
-                    windowWidth, windowHeight, tileTextures, enemyTextures));
+                    windowWidth, windowHeight, tileTextures));
             }
         }
 
@@ -106,25 +110,7 @@ namespace SolsUnderground
 
                 lastRoomID = nextRoomID;
 
-                floor.Add(roomPool[nextRoomID].Copy());
-
-                // Add enemies and chest to room if not boss room
-                if (i != 4)
-                {
-                    // Each room randomly gets assigned 1-3 enemies
-                    int enemyCount = Program.rng.Next(1, 4);
-
-                    for (int j = 0; j < enemyCount; j++)
-                    {
-                        //floor[i].Add(new Minion());                    // FILL IN
-                    }
-
-                    // Random chance to contain chest: 30%
-                    if (Program.rng.Next(100) < 30)
-                    {
-                        //floor[i].Add(new Chest());                     // FILL IN
-                    }
-                }
+                floor.Add(roomPool[nextRoomID]);
             }
 
             // Maybe subtract one from loop above and do boss-exclusive stuff here?
@@ -151,21 +137,13 @@ namespace SolsUnderground
         }
 
         /// <summary>
-        /// Retrieves a list of Enemy objects stored in the current Room.
+        /// Resets floor and room tracking and generates new floor.
         /// </summary>
-        /// <returns></returns>
-        public List<Enemy> GetRoomEnemies()
+        public void Reset()
         {
-            return floor[currentRoom].GetEnemies();
-        }
-
-        /// <summary>
-        /// Retrieves a list of Rectangles representing barrier tiles in the current Room.
-        /// </summary>
-        /// <returns></returns>
-        public List<Rectangle> GetRoomBarriers()
-        {
-            return floor[currentRoom].GetBarriers();
+            currentFloor = 0;
+            currentRoom = 0;
+            NewFloor();
         }
 
         /// <summary>
@@ -175,11 +153,6 @@ namespace SolsUnderground
         public void Draw(SpriteBatch sb)
         {
             floor[currentRoom].Draw(sb);
-            enemies = floor[currentRoom].GetEnemies();
-            for(int i = 0; i < enemies.Count; i++)
-            {
-                enemies[i].Draw(sb);
-            }
         }
     }
 }

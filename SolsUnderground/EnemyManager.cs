@@ -26,19 +26,20 @@ namespace SolsUnderground
     class EnemyManager
     {
         // Fields
-        private List<Enemy> currentEnemies;
+        private List<Enemy> enemies;
         private List<Texture2D[]> enemyTextures;
-        private int windowWidth;
-        private int windowHeight;
-
-        // Properties
-
+        private Player player;
 
         // Constructor
-        public EnemyManager(int windowWidth, int windowHeight)
+        public EnemyManager(Player player, CollisionManager collisionManager, CombatManager combatManager)
         {
-            this.windowWidth = windowWidth;
-            this.windowHeight = windowHeight;
+            this.player = player;
+            enemies = new List<Enemy>();
+            enemyTextures = new List<Texture2D[]>();
+
+            // Hand a reference of enemy list to collision and combat managers
+            collisionManager.GetEnemies(enemies);
+            combatManager.GetEnemies(enemies);
         }
 
         // Methods
@@ -54,43 +55,37 @@ namespace SolsUnderground
 
         /// <summary>
         /// Creates a number of enemies and adds them to the current active enemies.
+        /// Currently only spawns default SkaterBro enemy.
         /// </summary>
         /// <param name="enemyCount">Number of enemies to add</param>
-        public void SpawnEnemies(int enemyCount, List<Rectangle> barriers)
+        public void SpawnEnemies(int enemyCount, List<Rectangle> openTiles)
         {
-            int enemyXRange = windowWidth - enemyTextures[0][0].Width;
-            int enemyYRange = windowHeight - enemyTextures[0][0].Height;
-            int enemyWidth = enemyTextures[0][0].Width;
-            int enemyHeight = enemyTextures[0][0].Height;
+            // Use to store random index of openTile list
+            int spawnPoint;
 
             for (int i = 0; i < enemyCount; i++)
             {
-                Rectangle enemyRect = new Rectangle(Program.rng.Next(enemyXRange),
-                    Program.rng.Next(enemyYRange), enemyWidth, enemyHeight);
-                List<Rectangle> barrierSpots = barriers;
-                foreach (Rectangle b in barrierSpots)
-                {
-                    while (enemyRect.Intersects(b))
-                    {
-                        enemyRect = new Rectangle(Program.rng.Next(enemyXRange),
-                        Program.rng.Next(enemyYRange), enemyWidth, enemyHeight);
-                    }
-                }
+                spawnPoint = Program.rng.Next(openTiles.Count);
 
-                // Adds default SkaterBro - should expand for different enemies
-                currentEnemies.Add(new Minion(enemyTextures[0], enemyRect, 10, 2));
+                // Need to expand and implement spawning multiple enemy types
+                Rectangle enemyRect = new Rectangle(
+                    openTiles[spawnPoint].X,
+                    openTiles[spawnPoint].Y, 
+                    enemyTextures[0][2].Width, 
+                    enemyTextures[0][2].Height);
 
+                enemies.Add(new Minion(enemyTextures[0], enemyRect, 6, 4));
             }
         }
 
         /// <summary>
-        /// UNFINISHED - Moves each enemy on the screen.
+        /// Moves all active enemies towards player.
         /// </summary>
         public void MoveEnemies()
         {
-            foreach(Enemy e in currentEnemies)
+            for (int i = 0; i < enemies.Count; i++)
             {
-                // Move each enemy
+                enemies[i].EnemyMove(player);
             }
         }
 
@@ -99,7 +94,19 @@ namespace SolsUnderground
         /// </summary>
         public void ClearEnemies()
         {
-            currentEnemies.Clear();
+            enemies.Clear();
+        }
+
+        /// <summary>
+        /// Draws all active enemies.
+        /// </summary>
+        /// <param name="sb"></param>
+        public void Draw(SpriteBatch sb)
+        {
+            foreach (Enemy e in enemies)
+            {
+                e.Draw(sb);
+            }
         }
     }
 }

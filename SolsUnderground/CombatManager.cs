@@ -41,9 +41,8 @@ namespace SolsUnderground
 
         //Constructor
         //----------------------------------------------------------
-        public CombatManager(List<Enemy> enemies, Player player)
+        public CombatManager(Player player)
         {
-            this.enemies = enemies;
             this.player = player;
         }
         //----------------------------------------------------------
@@ -71,22 +70,37 @@ namespace SolsUnderground
         /// <summary>
         /// If an enemy attack connects with the player, execute the resultant consequences.
         /// </summary>
-        public void EnemyAttack(Rectangle hitBox, int damage, EnemyState state)
+        public void EnemyAttacks()
         {
-            if(hitBox.Intersects(player.PositionRect) && !(state == EnemyState.dead))
+            foreach (Enemy e in enemies)
             {
-                player.TakeDamage(damage);
+                if (e.PositionRect.Intersects(player.PositionRect) && !(e.State == EnemyState.dead))
+                {
+                    player.TakeDamage(e.Attack);
+                }
             }
+        }
+
+        /// <summary>
+        /// Loads enemy list into combat manager.
+        /// </summary>
+        /// <param name="enemies">Reference to working enemy list</param>
+        public void GetEnemies(List<Enemy> enemies)
+        {
+            this.enemies = enemies;
         }
 
         public void CleanUp()
         {
-            for(int i = 0; i < enemies.Count; i++)
+            for(int i = 0; i < enemies.Count;)
             {
                 if(enemies[i].State == EnemyState.dead)
                 {
                     enemies.RemoveAt(i);
+                    continue;
                 }
+
+                i++;
             }
         }
     }
