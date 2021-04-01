@@ -79,7 +79,10 @@ namespace SolsUnderground
             }
         }
 
-        public int CleanUp()
+        /// <summary>
+        /// Take care of the dead enemies in the room.
+        /// </summary>
+        public int CleanUp() //Not to be implemented at the moment
         {
             int money = 0;
             for(int i = 0; i < enemies.Count; i++)
