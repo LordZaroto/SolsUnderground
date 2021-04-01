@@ -92,6 +92,7 @@ namespace SolsUnderground
 
         public int CleanUp()
         {
+            int money = 0;
             for(int i = 0; i < enemies.Count;)
             {
                 if(enemies[i].State == EnemyState.dead)
