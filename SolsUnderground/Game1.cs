@@ -412,7 +412,7 @@ namespace SolsUnderground
                     _spriteBatch.DrawString(
                         text,
                         "defeat all enemies to go on to the next room",
-                        new Vector2(350, 250),
+                        new Vector2(150, 250),
                         Color.White);
                     _spriteBatch.Draw(returnToMenu, button5, Color.White);
                     break;
@@ -536,6 +536,7 @@ namespace SolsUnderground
             player.EquipWeapon(stick);
             player.X = 30;
             player.Y = 440;
+            money = 0;
         }
     }
 }
