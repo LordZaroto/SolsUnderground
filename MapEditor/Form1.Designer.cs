@@ -196,6 +196,9 @@
             // 
             // pictureBoxCurrentTile
             // 
+            this.pictureBoxCurrentTile.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.pictureBoxCurrentTile.Image = global::MapEditor.Properties.Resources.BrickSprite;
+            this.pictureBoxCurrentTile.ImageLocation = "";
             this.pictureBoxCurrentTile.Location = new System.Drawing.Point(77, 363);
             this.pictureBoxCurrentTile.Name = "pictureBoxCurrentTile";
             this.pictureBoxCurrentTile.Size = new System.Drawing.Size(64, 69);
