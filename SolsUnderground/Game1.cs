@@ -49,22 +49,24 @@ namespace SolsUnderground
         private Player player;
         private Texture2D[] playerTextures;
 
-        //weapon
-        private Weapon stick;
-        private Texture2D stickTexture;
-
         //enemy
         private Texture2D[] minionTextures;
 
-        //Weapons
-        private Weapon startWeapon;
-        private Texture2D startWeaponTexture;
+        // Item Textures
+        private List<Texture2D> itemTextures;
+
+        // Weapons
+        private Weapon stick;
+        private Texture2D stickTexture;
+
+        // Armors
 
         // Managers
         private MapManager mapManager;
         private CombatManager combatManager;
         private EnemyManager enemyManager;
         private CollisionManager collisionManager;
+        private ItemManager itemManager;
 
         //menu items
         private Texture2D startGame;
@@ -82,7 +84,6 @@ namespace SolsUnderground
 
         //HUD items
         private Rectangle hudWeapon;
-        private int money = 0;
         private int enemyAmount;
 
         //pause items
@@ -136,9 +137,16 @@ namespace SolsUnderground
                 Content.Load<Texture2D>("playerLeft"),
                 Content.Load<Texture2D>("playerRight") };
 
-            //weapon
+            // Items
+            itemTextures = new List<Texture2D>();
+            itemTextures.Add(Content.Load<Texture2D>("TigerBuck"));
+            // Add Potion Texture
+
+            // Weapons
             stickTexture = Content.Load<Texture2D>("stick");
-            stick = new Weapon(stickTexture, new Rectangle(0, 0, 0, 0));
+            stick = new Weapon(stickTexture, 3, new Rectangle(0, 0, 0, 0));
+
+            // Armor
 
             //Player
             playerRect = new Rectangle(30, 440, playerTextures[0].Width, playerTextures[0].Height);
@@ -148,6 +156,7 @@ namespace SolsUnderground
             collisionManager = new CollisionManager(player);
             combatManager = new CombatManager(player);
             enemyManager = new EnemyManager(player, collisionManager, combatManager);
+            itemManager = new ItemManager(player, collisionManager, itemTextures);
 
             //enemy textures
             minionTextures = new Texture2D[] {
@@ -259,9 +268,10 @@ namespace SolsUnderground
                     // Enemies
                     enemyManager.MoveEnemies();
                     combatManager.EnemyAttacks();
-                    money += combatManager.CleanUp();
+                    combatManager.CleanUp(itemManager);
 
                     //Collisions
+                    itemManager.ActivateItems();
                     collisionManager.CheckCollisions();
 
                     // Move to next room
@@ -270,13 +280,14 @@ namespace SolsUnderground
                     {
                         player.X = 0;
                         mapManager.NextRoom();
+                        itemManager.NextRoom();
 
                         enemyManager.ClearEnemies();
                         enemyManager.SpawnEnemies(
                             mapManager.CurrentRoom.EnemyCount,
                             mapManager.CurrentRoom.GetOpenTiles());
 
-                        collisionManager.GetBarriers(mapManager.CurrentRoom.GetBarriers());
+                        collisionManager.GetBarrierList(mapManager.CurrentRoom.GetBarriers());
                     }
 
                     // State transitions
@@ -421,6 +432,7 @@ namespace SolsUnderground
                 // Main Game Screen
                 case GameState.Game:
                     mapManager.Draw(_spriteBatch);
+                    itemManager.Draw(_spriteBatch);
                     player.Draw(_spriteBatch);
                     enemyManager.Draw(_spriteBatch);
                     if(Mouse.GetState().LeftButton == ButtonState.Pressed)
@@ -436,7 +448,7 @@ namespace SolsUnderground
                         Color.White);
                     _spriteBatch.DrawString(
                         text,
-                        "Tiger Bucks-" + money,
+                        "Tiger Bucks-" + player.TigerBucks,
                         new Vector2(330, 0),
                         Color.White);
                     _spriteBatch.DrawString(
@@ -524,19 +536,20 @@ namespace SolsUnderground
             mapManager.Reset();
 
             enemyManager.ClearEnemies();
+            itemManager.NextRoom();
             enemyManager.SpawnEnemies(
                 mapManager.CurrentRoom.EnemyCount,
                 mapManager.CurrentRoom.GetOpenTiles());
 
-            collisionManager.GetBarriers(mapManager.CurrentRoom.GetBarriers());
+            collisionManager.GetBarrierList(mapManager.CurrentRoom.GetBarriers());
 
             // Reset player stats
             player.MaxHp = 100;
             player.Hp = player.MaxHp;
-            player.EquipWeapon(stick);
             player.X = 30;
             player.Y = 440;
-            money = 0;
+            player.TigerBucks = 0;
+            player.Equip(stick);
         }
     }
 }

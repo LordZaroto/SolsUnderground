@@ -15,38 +15,6 @@ namespace SolsUnderground
 
     abstract class DynamicObject : GameObject
     {
-        protected Rectangle positionRect; 
-
-        //properties
-        public abstract int X
-        {
-            get;
-            set;
-        }
-
-        public abstract int Y
-        {
-            get;
-            set;
-        }
-        public abstract int Width
-        {
-            get;
-            set;
-        }
-
-        public abstract int Height
-        {
-            get;
-            set;
-        }
-
-        public abstract Rectangle PositionRect
-        {
-            get;
-            set;
-        }
-
         /// <summary>
         /// Draw the object on screen.
         /// </summary>

@@ -36,17 +36,12 @@ namespace SolsUnderground
         private List<Room> roomPool;
         private List<Room> bossRooms;
         private List<Room> floor;
-        private List<Enemy> enemies;
         private int currentFloor;
         private int currentRoom;
         private int windowWidth;
         private int windowHeight;
 
         //Properties
-        public List<Enemy> Enemies
-        {
-            get { return enemies; }
-        }
         public int CurrentFloor
         {
             get { return currentFloor; }
@@ -120,20 +115,17 @@ namespace SolsUnderground
             floor.Add(startRoom);
 
             // Adds a copy of a random room from roomPool to the floor
-            // Avoids consecutive repeat rooms
-            int nextRoomID;
-            int lastRoomID = -1;
+            // Avoids repeat rooms on the same floor
+            Room nextRoom = null;
             for (int i = 0; i < 4; i++)
             {
                 do
                 {
-                    nextRoomID = Program.rng.Next(0, roomPool.Count);
+                    nextRoom = roomPool[Program.rng.Next(roomPool.Count)];
                 }
-                while (nextRoomID == lastRoomID);
+                while (floor.Contains(nextRoom));
 
-                lastRoomID = nextRoomID;
-
-                floor.Add(roomPool[nextRoomID]);
+                floor.Add(nextRoom);
             }
 
             // Add a boss room/boss stuff here
@@ -156,8 +148,6 @@ namespace SolsUnderground
                 currentFloor++;
                 NewFloor();
             }
-
-            // Add a second list and random picker for Boss rooms
         }
 
         /// <summary>

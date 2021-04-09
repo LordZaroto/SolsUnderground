@@ -492,9 +492,15 @@ namespace SolsUnderground
         /// The player equips the given weapon.
         /// </summary>
         /// <param name="weapon"></param>
-        public void EquipWeapon(Weapon weapon)
+        public void Equip(Weapon weapon)
         {
             this.weapon = weapon;
+        }
+
+        
+        public void Equip(Armor armor)
+        {
+            
         }
     }
 }

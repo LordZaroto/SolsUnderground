@@ -67,6 +67,11 @@ namespace SolsUnderground
             get { return positionRect.Height; }
             set { positionRect.Height = value; }
         }
+        public override Rectangle PositionRect
+        {
+            get { return positionRect; }
+            set { positionRect = value; }
+        }
 
         // Constructor
         public Tile(Texture2D texture, bool isObstacle)

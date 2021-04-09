@@ -40,7 +40,7 @@ namespace SolsUnderground
             enemyTextures = new List<Texture2D[]>();
 
             // Hand a reference of enemy list to collision and combat managers
-            collisionManager.GetEnemies(enemies);
+            collisionManager.GetEnemyList(enemies);
             combatManager.GetEnemies(enemies);
         }
 

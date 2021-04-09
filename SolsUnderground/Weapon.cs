@@ -14,7 +14,7 @@ namespace SolsUnderground
     /// Weapons have different attack stats and unique abilities.
     /// Basic Attacks and ablities will have cooldowns.
     /// </summary>
-    class Weapon : Equip
+    class Weapon : Item
     {
         //Fields
         //-----------------------------
@@ -87,11 +87,10 @@ namespace SolsUnderground
 
         //Constructor
         //----------------------------------------------------------
-        public Weapon(Texture2D texture, Rectangle positionRect)
+        public Weapon(Texture2D texture, int attack, Rectangle positionRect) 
+            : base(ItemType.Weapon, attack, texture, positionRect)
         {
-            this.texture = texture;
-            this.positionRect = positionRect;
-            attack = 3;
+            this.attack = attack;
             basicCooldown = 0.3;
         }
         //----------------------------------------------------------
