@@ -15,6 +15,7 @@ namespace SolsUnderground
         private Rectangle positionRect;
         private int attack;
         private double basicCooldown;
+        private double knockback;
         private Rectangle hitboxF;
         private Rectangle hitboxL;
         private Rectangle hitboxB;
@@ -84,21 +85,21 @@ namespace SolsUnderground
 
         //Weapon Stats
         //------------------------------
-        /// <summary>
-        /// Reduces the value of incoming damage
-        /// </summary>
+        
         public int Attack
         {
             get { return attack; }
             set { attack = value; }
         }
 
-        /// <summary>
-        /// Minimum time that must pass between each Basic Attack
-        /// </summary>
         public double BasicCooldown
         {
             get { return basicCooldown; }
+        }
+
+        public double Knockback
+        {
+            get { return knockback; }
         }
         //------------------------------
 
@@ -114,6 +115,7 @@ namespace SolsUnderground
             this.positionRect = positionRect;
             basicCooldown = 0.3;
             attack = 3;
+            knockback = 1;
             hitboxF = new Rectangle(X - Width / 2, Y - Height / 2, Width * 2, Height);
             hitboxL = new Rectangle(X - Width / 2, Y - Height / 2, Width, Height * 2);
             hitboxB = new Rectangle(X - Width / 2, Y + Height / 2, Width * 2, Height);

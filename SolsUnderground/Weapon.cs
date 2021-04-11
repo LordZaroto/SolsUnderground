@@ -46,6 +46,11 @@ namespace SolsUnderground
         /// Minimum time that must pass between each Basic Attack
         /// </summary>
         double BasicCooldown { get; }
+
+        /// <summary>
+        /// A multiplyer for how far enemies will be knocked back
+        /// </summary>
+        double Knockback { get; }
         //----------------------------------------
 
         //Methods

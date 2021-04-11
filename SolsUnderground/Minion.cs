@@ -16,6 +16,8 @@ namespace SolsUnderground
         private EnemyState enemyState;
         private double moveCounter;
         private double moveCD;
+        private double kbCounter;
+        private double kbCD;
         Texture2D[] textures;
         //consructor: initializes the fields
         public Minion(Texture2D[] textures, Rectangle positionRect, int health, int attack)
@@ -27,6 +29,9 @@ namespace SolsUnderground
             this.attack = attack;
             moveCD = 0.3;
             moveCounter = moveCD;
+            kbCD = 0.1;
+            kbCounter = kbCD;
+
         }
 
         //properties
@@ -83,7 +88,7 @@ namespace SolsUnderground
         /// changes health when hit by the player
         /// </summary>
         /// <param name="damage"></param>
-        public override void TakeDamage(int damage)
+        public override void TakeDamage(int damage, double knockback)
         {
             if(!(enemyState == EnemyState.dead))
             {
@@ -93,19 +98,19 @@ namespace SolsUnderground
 
                 if (enemyState == EnemyState.faceForward || enemyState == EnemyState.moveForward)
                 {
-                    Y += 32;
+                    Y += (int)(32 * knockback);
                 }
                 if (enemyState == EnemyState.faceLeft || enemyState == EnemyState.moveLeft)
                 {
-                    X += 32;
+                    X += (int)(32 * knockback);
                 }
                 if (enemyState == EnemyState.faceBack || enemyState == EnemyState.moveBack)
                 {
-                    Y -= 32;
+                    Y -= (int)(32 * knockback);
                 }
                 if (enemyState == EnemyState.faceRight || enemyState == EnemyState.moveRight)
                 {
-                    X -= 32;
+                    X -= (int)(32 * knockback);
                 }
 
                 if (health <= 0)
