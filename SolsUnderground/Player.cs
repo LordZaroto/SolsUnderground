@@ -172,6 +172,11 @@ namespace SolsUnderground
             moveCD = 0.1;
             moveCounter = moveCD;
             playerState = PlayerState.faceBack;
+
+            weapon.HitboxF = new Rectangle(X - Width / 2, Y - Height / 2, Width * 2, Height);
+            weapon.HitboxL = new Rectangle(X - Width / 2, Y - Height / 2, Width, Height * 2);
+            weapon.HitboxB = new Rectangle(X - Width / 2, Y + Height / 2, Width * 2, Height);
+            weapon.HitboxR = new Rectangle(X + Width / 2, Y - Height / 2, Width, Height * 2);
         }
         //----------------------------------------------------------
 
@@ -330,6 +335,11 @@ namespace SolsUnderground
             }
         }
 
+        public void Special()
+        {
+
+        }
+
         /// <summary>
         /// The character will unleash the basic attack of their weapon.
         /// Has a short cooldown. Returns the hitbox of the attack.
@@ -341,7 +351,7 @@ namespace SolsUnderground
         {
             if(SingleLButtonPress(lButton, previousLeftBState))
             {
-                if(basicCounter >= weapon.BasicCooldown)
+                if (basicCounter >= weapon.BasicCooldown)
                 {
                     //Reset the cooldown
                     basicCounter = 0;
@@ -349,23 +359,21 @@ namespace SolsUnderground
                     //Create the attack hitbox in the direction the player is facing
                     if(playerState == PlayerState.faceForward || playerState == PlayerState.moveForward)
                     {
-                        weapon.Position = new Rectangle(X - Width / 2, Y - Height / 2, Width * 2, Height);
-                        return weapon.Position;
+                        //System.Diagnostics.Debug.WriteLine(x);
+
+                        return weapon.GetHitbox(X, Y, Width, Height, PlayerState.faceForward);
                     }
                     else if (playerState == PlayerState.faceLeft || playerState == PlayerState.moveLeft)
                     {
-                        weapon.Position = new Rectangle(X - Width / 2, Y - Height / 2, Width, Height * 2);
-                        return weapon.Position;
+                        return weapon.GetHitbox(X, Y, Width, Height, PlayerState.faceLeft);
                     }
                     else if (playerState == PlayerState.faceBack || playerState == PlayerState.moveBack)
                     {
-                        weapon.Position = new Rectangle(X - Width / 2, Y + Height / 2, Width * 2, Height);
-                        return weapon.Position;
+                        return weapon.GetHitbox(X, Y, Width, Height, PlayerState.faceBack);
                     }
                     else if (playerState == PlayerState.faceRight || playerState == PlayerState.moveRight)
                     {
-                        weapon.Position = new Rectangle(X + Width / 2, Y - Height / 2, Width, Height * 2);
-                        return weapon.Position;
+                        return weapon.GetHitbox(X, Y, Width, Height, PlayerState.faceRight);
                     }
                 }
             }

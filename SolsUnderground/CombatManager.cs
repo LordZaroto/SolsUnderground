@@ -60,9 +60,9 @@ namespace SolsUnderground
         /// </summary>
         public void PlayerAttack(Rectangle hitBox, int damage)
         {
-            for(int i = 0; i < enemies.Count; i++)
+            for (int i = 0; i < enemies.Count; i++)
             {
-                if(hitBox.Intersects(enemies[i].PositionRect))
+                if (hitBox.Intersects(enemies[i].PositionRect))
                 {
                     enemies[i].TakeDamage(damage);
                 }
