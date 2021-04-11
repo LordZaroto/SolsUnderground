@@ -172,11 +172,6 @@ namespace SolsUnderground
             moveCD = 0.1;
             moveCounter = moveCD;
             playerState = PlayerState.faceBack;
-
-            weapon.HitboxF = new Rectangle(X - Width / 2, Y - Height / 2, Width * 2, Height);
-            weapon.HitboxL = new Rectangle(X - Width / 2, Y - Height / 2, Width, Height * 2);
-            weapon.HitboxB = new Rectangle(X - Width / 2, Y + Height / 2, Width * 2, Height);
-            weapon.HitboxR = new Rectangle(X + Width / 2, Y - Height / 2, Width, Height * 2);
         }
         //----------------------------------------------------------
 
@@ -359,8 +354,6 @@ namespace SolsUnderground
                     //Create the attack hitbox in the direction the player is facing
                     if(playerState == PlayerState.faceForward || playerState == PlayerState.moveForward)
                     {
-                        //System.Diagnostics.Debug.WriteLine(x);
-
                         return weapon.GetHitbox(X, Y, Width, Height, PlayerState.faceForward);
                     }
                     else if (playerState == PlayerState.faceLeft || playerState == PlayerState.moveLeft)
