@@ -38,6 +38,7 @@ namespace SolsUnderground
         //fields
         protected int health;
         protected int attack;
+        protected int knockback;
 
         //properties
         public abstract int Health
@@ -47,6 +48,12 @@ namespace SolsUnderground
         }
 
         public abstract int Attack
+        {
+            get;
+            set;
+        }
+        
+        public abstract int Knockback
         {
             get;
             set;
@@ -61,7 +68,7 @@ namespace SolsUnderground
 
         //method to be overridden
         //changes health when hit by the player
-        public abstract void TakeDamage(int damage);
+        public abstract void TakeDamage(int damage, double knockback);
 
         public abstract void EnemyMove(Player player);
     }

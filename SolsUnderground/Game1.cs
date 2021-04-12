@@ -52,14 +52,12 @@ namespace SolsUnderground
         //enemy
         private Texture2D[] minionTextures;
 
-        // Item Textures
-        private List<Texture2D> itemTextures;
-
-        // Weapons
-        private Weapon stick;
+        //Weapons
+        private Stick stick;
+        private RITchieClaw ritchieClaw;
         private Texture2D stickTexture;
-
-        // Armors
+        private Weapon startWeapon;
+        private Texture2D startWeaponTexture;
 
         // Managers
         private MapManager mapManager;
@@ -130,12 +128,21 @@ namespace SolsUnderground
             heading = Content.Load<SpriteFont>("Roboto175");
             text = Content.Load<SpriteFont>("Roboto40");
 
+            //character animations
+            Dictionary<string, Animation> animations = new Dictionary<string, Animation>()
+            {
+                {"playerMoveForward", new Animation(Content.Load<Texture2D>("playerMovingUp2"), 4) },
+                {"playerMoveBack", new Animation(Content.Load<Texture2D>("playerMovingDown2"), 4) },
+                {"playerMoveLeft", new Animation(Content.Load<Texture2D>("playerMovingLeft"), 4) },
+                {"playerMoveRight", new Animation(Content.Load<Texture2D>("playerMovingRight"), 4) }
+            };
+
             //character textures
             playerTextures = new Texture2D[] {
-                Content.Load<Texture2D>("playerForward"),
-                Content.Load<Texture2D>("playerBack"),
-                Content.Load<Texture2D>("playerLeft"),
-                Content.Load<Texture2D>("playerRight") };
+                Content.Load<Texture2D>("heroForward2"),
+                Content.Load<Texture2D>("heroBack2"),
+                Content.Load<Texture2D>("heroLeft"),
+                Content.Load<Texture2D>("heroRight") };
 
             // Items
             itemTextures = new List<Texture2D>();
@@ -144,13 +151,14 @@ namespace SolsUnderground
 
             // Weapons
             stickTexture = Content.Load<Texture2D>("stick");
-            stick = new Weapon(stickTexture, 3, new Rectangle(0, 0, 0, 0));
+            stick = new Stick(stickTexture, new Rectangle(0, 0, 0, 0));
 
-            // Armor
+            //Testing Weapons
+            ritchieClaw = new RITchieClaw(stickTexture, new Rectangle(0, 0, 0, 0));
 
             //Player
             playerRect = new Rectangle(30, 440, playerTextures[0].Width, playerTextures[0].Height);
-            player = new Player(playerTextures, playerRect, stick);
+            player = new Player(playerTextures, playerRect, stick, animations);
 
             // Managers
             collisionManager = new CollisionManager(player);
@@ -204,6 +212,8 @@ namespace SolsUnderground
             newGame = Content.Load<Texture2D>("newGameGO");
             button10 = new Rectangle(233, 643, 914, 139);
             button11 = new Rectangle(233, 782, 914, 139);
+
+            
         }
 
         protected override void Update(GameTime gameTime)
@@ -263,7 +273,8 @@ namespace SolsUnderground
                     player.Input(kb, gameTime);
                     combatManager.PlayerAttack(
                         player.BasicAttack(leftBState, previousLeftBState),
-                        player.Attack);
+                        player.Attack,
+                        player.Knockback);
 
                     // Enemies
                     enemyManager.MoveEnemies();
@@ -546,10 +557,10 @@ namespace SolsUnderground
             // Reset player stats
             player.MaxHp = 100;
             player.Hp = player.MaxHp;
+            player.EquipWeapon(stick);
             player.X = 30;
             player.Y = 440;
             player.TigerBucks = 0;
-            player.Equip(stick);
         }
     }
 }

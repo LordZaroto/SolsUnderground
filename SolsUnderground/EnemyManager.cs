@@ -76,7 +76,7 @@ namespace SolsUnderground
                     enemyTextures[0][2].Width, 
                     enemyTextures[0][2].Height);
 
-                enemies.Add(new Minion(enemyTextures[0], enemyRect, 6, 4));
+                enemies.Add(new Minion(enemyTextures[0], enemyRect));
             }
         }
 

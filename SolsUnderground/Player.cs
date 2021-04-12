@@ -4,6 +4,7 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System.Linq;
 
 //Author: Preston Gilmore
 
@@ -54,6 +55,9 @@ namespace SolsUnderground
         private PlayerState playerState;
         private Texture2D[] textures;
         private int tigerBucks;
+
+        private AnimationManager _animationManager;
+        private Dictionary<string, Animation> _animations;
         //-----------------------------
 
         //---------------------------------------------------------------------
@@ -133,6 +137,14 @@ namespace SolsUnderground
         {
             get { return weapon.Attack; }
         }
+
+        /// <summary>
+        /// A multiplyer for how far enemies will be knocked back
+        /// </summary>
+        public double Knockback
+        {
+            get { return weapon.Knockback; }
+        }
         /// <summary>
         /// Currency gained upon enemy kill.
         /// </summary>
@@ -156,7 +168,7 @@ namespace SolsUnderground
 
         //Constructor
         //----------------------------------------------------------
-        public Player(Texture2D[] textures, Rectangle positionRect, Weapon startWeapon)
+        public Player(Texture2D[] textures, Rectangle positionRect, Weapon startWeapon, Dictionary<string, Animation> animations)
         {
             this.textures = textures;
             this.texture = textures[0];
@@ -172,6 +184,8 @@ namespace SolsUnderground
             moveCD = 0.1;
             moveCounter = moveCD;
             playerState = PlayerState.faceBack;
+            _animations = animations;
+            _animationManager = new AnimationManager(_animations.First().Value, this);
         }
         //----------------------------------------------------------
 
@@ -198,21 +212,25 @@ namespace SolsUnderground
                 {
                     if (playerState == PlayerState.moveForward)
                     {
+                        
                         texture = textures[1];
                         playerState = PlayerState.faceForward;
                     }
                     else if (playerState == PlayerState.moveLeft)
                     {
+                        
                         texture = textures[2];
                         playerState = PlayerState.faceLeft;
                     }
                     else if (playerState == PlayerState.moveBack)
                     {
+                        
                         texture = textures[0];
                         playerState = PlayerState.faceBack;
                     }
                     else if (playerState == PlayerState.moveRight)
                     {
+                        
                         texture = textures[3];
                         playerState = PlayerState.faceRight;
                     }
@@ -261,26 +279,30 @@ namespace SolsUnderground
                             //Is there horizontal movement? If so, change player state accordingly.
                             if (kbState.IsKeyDown(Keys.A) && test == true)
                             {
-                                texture = textures[2];
+                                _animationManager.Play(_animations["playerMoveLeft"]);
                                 playerState = PlayerState.moveLeft;
+                                
                             }
                             else if (kbState.IsKeyDown(Keys.D) && test == true)
                             {
-                                texture = textures[3];
+                                _animationManager.Play(_animations["playerMoveRight"]);
                                 playerState = PlayerState.moveRight;
+                                
                             }
                         }
                         else if (kbState.IsKeyDown(Keys.W))
                         {
+                            _animationManager.Play(_animations["playerMoveForward"]);
                             Y -= 3;
-                            texture = textures[1];
                             playerState = PlayerState.moveForward;
+                            
                         }
                         else if (kbState.IsKeyDown(Keys.S))
                         {
+                            _animationManager.Play(_animations["playerMoveBack"]);
                             Y += 3;
-                            texture = textures[0];
                             playerState = PlayerState.moveBack;
+                            
                         }
                     }
                     else
@@ -292,42 +314,54 @@ namespace SolsUnderground
                             //Is there horizontal movement? If so, change player state accordingly.
                             if (kbState.IsKeyDown(Keys.A) && test == true)
                             {
-                                texture = textures[2];
+                                _animationManager.Play(_animations["playerMoveLeft"]);
                                 playerState = PlayerState.moveLeft;
+                                
                             }
                             else if (kbState.IsKeyDown(Keys.D) && test == true)
                             {
-                                texture = textures[3];
+                                _animationManager.Play(_animations["playerMoveRight"]);
                                 playerState = PlayerState.moveRight;
+                                
                             }
                         }
                         else if (kbState.IsKeyDown(Keys.W))
                         {
-                            texture = textures[1];
+                            _animationManager.Play(_animations["playerMoveForward"]);
                             Y -= 4;
                             playerState = PlayerState.moveForward;
+                            
                         }
                         else if (kbState.IsKeyDown(Keys.S))
                         {
-                            texture = textures[0];
+                            _animationManager.Play(_animations["playerMoveBack"]);
                             Y += 4;
                             playerState = PlayerState.moveBack;
+                            
                         }
                     }
                 }
                 if (kbState.IsKeyDown(Keys.A) && test == false)
                 {
-                    texture = textures[2];
+                    _animationManager.Play(_animations["playerMoveLeft"]);
                     X -= 4;
                     playerState = PlayerState.moveLeft;
+                    
                 }
                 if (kbState.IsKeyDown(Keys.D) && test == false)
                 {
-                    texture = textures[3];
+                    _animationManager.Play(_animations["playerMoveRight"]);
                     X += 4;
                     playerState = PlayerState.moveRight;
+                    
                 }
             }
+            
+        }
+
+        public void Special()
+        {
+
         }
 
         /// <summary>
@@ -341,7 +375,7 @@ namespace SolsUnderground
         {
             if(SingleLButtonPress(lButton, previousLeftBState))
             {
-                if(basicCounter >= weapon.BasicCooldown)
+                if (basicCounter >= weapon.BasicCooldown)
                 {
                     //Reset the cooldown
                     basicCounter = 0;
@@ -349,23 +383,19 @@ namespace SolsUnderground
                     //Create the attack hitbox in the direction the player is facing
                     if(playerState == PlayerState.faceForward || playerState == PlayerState.moveForward)
                     {
-                        weapon.Position = new Rectangle(X - Width / 2, Y - Height / 2, Width * 2, Height);
-                        return weapon.Position;
+                        return weapon.GetHitbox(X, Y, Width, Height, PlayerState.faceForward);
                     }
                     else if (playerState == PlayerState.faceLeft || playerState == PlayerState.moveLeft)
                     {
-                        weapon.Position = new Rectangle(X - Width / 2, Y - Height / 2, Width, Height * 2);
-                        return weapon.Position;
+                        return weapon.GetHitbox(X, Y, Width, Height, PlayerState.faceLeft);
                     }
                     else if (playerState == PlayerState.faceBack || playerState == PlayerState.moveBack)
                     {
-                        weapon.Position = new Rectangle(X - Width / 2, Y + Height / 2, Width * 2, Height);
-                        return weapon.Position;
+                        return weapon.GetHitbox(X, Y, Width, Height, PlayerState.faceBack);
                     }
                     else if (playerState == PlayerState.faceRight || playerState == PlayerState.moveRight)
                     {
-                        weapon.Position = new Rectangle(X + Width / 2, Y - Height / 2, Width, Height * 2);
-                        return weapon.Position;
+                        return weapon.GetHitbox(X, Y, Width, Height, PlayerState.faceRight);
                     }
                 }
             }
@@ -376,7 +406,7 @@ namespace SolsUnderground
         /// <summary>
         /// The player will take damage an be knocked back.
         /// </summary>
-        public void TakeDamage(int damage)
+        public void TakeDamage(int damage, EnemyState enemyState, int knockback)
         {
             if(damageCounter >= damageCD)
             {
@@ -385,22 +415,22 @@ namespace SolsUnderground
                 hp -= damage;
 
                 //Player knockback - Commented out till reworked
-                /*if (playerState == PlayerState.faceForward || playerState == PlayerState.moveForward)
+                if (enemyState == EnemyState.attackBack || enemyState == EnemyState.moveBack || enemyState == EnemyState.faceBack)
                 {
-                    Y += 32;
+                    Y += knockback;
                 }
-                if (playerState == PlayerState.faceLeft || playerState == PlayerState.moveLeft)
+                if (enemyState == EnemyState.attackRight || enemyState == EnemyState.moveRight || enemyState == EnemyState.faceRight)
                 {
-                    X += 32;
+                    X += knockback;
                 }
-                if (playerState == PlayerState.faceBack || playerState == PlayerState.moveBack)
+                if (enemyState == EnemyState.attackLeft || enemyState == EnemyState.moveLeft || enemyState == EnemyState.faceLeft)
                 {
-                    Y -= 32;
+                    Y -= knockback;
                 }
-                if (playerState == PlayerState.faceRight || playerState == PlayerState.moveRight)
+                if (enemyState == EnemyState.attackForward || enemyState == EnemyState.moveForward || enemyState == EnemyState.faceForward)
                 {
-                    X -= 32;
-                }*/
+                    X -= knockback;
+                }
             }
         }
 
@@ -434,6 +464,8 @@ namespace SolsUnderground
             moveCounter += gameTime.ElapsedGameTime.TotalSeconds;
 
             PlayerMove(kbState);
+
+            _animationManager.Update(gameTime);
         }
 
         /// <summary>
@@ -484,7 +516,15 @@ namespace SolsUnderground
         /// <param name="sb"></param>
         public override void Draw(SpriteBatch sb)
         {
-            sb.Draw(texture, positionRect, Color.White);
+            //draws the static image if facing a direction or the moving image if walking in a direction
+            if(playerState == PlayerState.faceBack || playerState == PlayerState.faceForward || playerState == PlayerState.faceLeft || playerState == PlayerState.faceRight)
+            {
+                sb.Draw(texture, positionRect, Color.White);
+            }else if (_animationManager != null)
+            {
+                _animationManager.Draw(sb);
+            }
+            
 
         }
 
@@ -492,10 +532,11 @@ namespace SolsUnderground
         /// The player equips the given weapon.
         /// </summary>
         /// <param name="weapon"></param>
-        public void Equip(Weapon weapon)
+        public void EquipWeapon(Weapon weapon)
         {
             this.weapon = weapon;
         }
+
 
         
         public void Equip(Armor armor)

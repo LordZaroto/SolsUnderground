@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework.Input;
 namespace SolsUnderground
 {
     //Braden Flanders
+    //Preston Gilmore
 
     //minion class inherits from enemy
     //implements all of the abstract methods and properties
@@ -16,17 +17,23 @@ namespace SolsUnderground
         private EnemyState enemyState;
         private double moveCounter;
         private double moveCD;
+        private double kbCounter;
+        private double kbCD;
         Texture2D[] textures;
         //consructor: initializes the fields
-        public Minion(Texture2D[] textures, Rectangle positionRect, int health, int attack)
+        public Minion(Texture2D[] textures, Rectangle positionRect)
         {
             this.textures = textures;
             this.texture = textures[0];
             this.positionRect = positionRect;
-            this.health = health;
-            this.attack = attack;
+            this.health = 5;
+            this.attack = 2;
+            this.knockback = 32;
             moveCD = 0.3;
             moveCounter = moveCD;
+            kbCD = 0.1;
+            kbCounter = kbCD;
+
         }
 
         //properties
@@ -52,6 +59,12 @@ namespace SolsUnderground
         {
             get { return attack; }
             set { attack = value; }
+        }
+
+        public override int Knockback
+        {
+            get { return knockback; }
+            set { knockback = value; }
         }
 
         public override int Width
@@ -83,7 +96,7 @@ namespace SolsUnderground
         /// changes health when hit by the player
         /// </summary>
         /// <param name="damage"></param>
-        public override void TakeDamage(int damage)
+        public override void TakeDamage(int damage, double knockback)
         {
             if(!(enemyState == EnemyState.dead))
             {
@@ -93,19 +106,19 @@ namespace SolsUnderground
 
                 if (enemyState == EnemyState.faceForward || enemyState == EnemyState.moveForward)
                 {
-                    Y += 32;
+                    Y += (int)(32 * knockback);
                 }
                 if (enemyState == EnemyState.faceLeft || enemyState == EnemyState.moveLeft)
                 {
-                    X += 32;
+                    X += (int)(32 * knockback);
                 }
                 if (enemyState == EnemyState.faceBack || enemyState == EnemyState.moveBack)
                 {
-                    Y -= 32;
+                    Y -= (int)(32 * knockback);
                 }
                 if (enemyState == EnemyState.faceRight || enemyState == EnemyState.moveRight)
                 {
-                    X -= 32;
+                    X -= (int)(32 * knockback);
                 }
 
                 if (health <= 0)
