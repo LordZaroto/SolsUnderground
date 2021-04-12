@@ -13,5 +13,36 @@ namespace SolsUnderground
     abstract class GameObject
     {
         protected Texture2D texture;
+        protected Rectangle positionRect;
+
+        //properties
+        public abstract int X
+        {
+            get;
+            set;
+        }
+
+        public abstract int Y
+        {
+            get;
+            set;
+        }
+        public abstract int Width
+        {
+            get;
+            set;
+        }
+
+        public abstract int Height
+        {
+            get;
+            set;
+        }
+
+        public abstract Rectangle PositionRect
+        {
+            get;
+            set;
+        }
     }
 }

@@ -7,13 +7,10 @@ using Microsoft.Xna.Framework.Input;
 
 namespace SolsUnderground
 {
-    //Preston Gillmore
-
-    /// <summary>
-    /// An item that can be equipped to the player.
-    /// </summary>
-    abstract class Equip : StaticObject
+    class Attack
     {
-
+        private Rectangle hitbox;
+        private int knockback;
+        private int damage;
     }
 }

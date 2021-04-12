@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace SolsUnderground
 {
-    //Preston Gillmore
+    //Preston Gilmore
     //Braden Flanders
 
     /// <summary>
@@ -50,7 +50,7 @@ namespace SolsUnderground
         /// <summary>
         /// A multiplyer for how far enemies will be knocked back
         /// </summary>
-        double Knockback { get; }
+        int Knockback { get; }
         //----------------------------------------
 
         //Methods
