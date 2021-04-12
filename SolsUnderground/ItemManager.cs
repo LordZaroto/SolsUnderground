@@ -94,12 +94,12 @@ namespace SolsUnderground
                             continue;
 
                         case ItemType.Weapon:
-                            player.Equip((Weapon)items[i]);
+                            player.EquipWeapon((Weapon)items[i]);
                             items.RemoveAt(i);
                             continue;
 
                         case ItemType.Armor:
-                            player.Equip((Armor)items[i]);
+                            player.EquipArmor((Armor)items[i]);
                             items.RemoveAt(i);
                             continue;
                     }

@@ -52,12 +52,13 @@ namespace SolsUnderground
         //enemy
         private Texture2D[] minionTextures;
 
+        // Items
+        private List<Texture2D> itemTextures;
+
         //Weapons
         private Stick stick;
         private RITchieClaw ritchieClaw;
         private Texture2D stickTexture;
-        private Weapon startWeapon;
-        private Texture2D startWeaponTexture;
 
         // Managers
         private MapManager mapManager;
@@ -147,6 +148,7 @@ namespace SolsUnderground
             // Items
             itemTextures = new List<Texture2D>();
             itemTextures.Add(Content.Load<Texture2D>("TigerBuck"));
+
             // Add Potion Texture
 
             // Weapons

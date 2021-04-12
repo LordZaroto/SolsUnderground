@@ -538,8 +538,11 @@ namespace SolsUnderground
         }
 
 
-        
-        public void Equip(Armor armor)
+        /// <summary>
+        /// Player equips the given armor piece.
+        /// </summary>
+        /// <param name="armor"></param>
+        public void EquipArmor(Armor armor)
         {
             
         }
