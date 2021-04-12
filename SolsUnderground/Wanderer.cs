@@ -17,6 +17,8 @@ namespace SolsUnderground
         Texture2D[] textures;
         GameTime gameTime;
         float _timer = 0f;
+        Random rng;
+        int moveDirection;
         //consructor: initializes the fields
         public Wanderer(Texture2D[] textures, Rectangle positionRect, int health, int attack)
         {
@@ -29,22 +31,8 @@ namespace SolsUnderground
             moveCounter = moveCD;
             kbCD = 2;
             kbCounter = kbCD;
-
-        }
-
-        //constructor that takes in a gametime to in order to time movements(different movement mechanics)
-        public Wanderer(Texture2D[] textures, Rectangle positionRect, int health, int attack, GameTime gameTime)
-        {
-            this.textures = textures;
-            this.texture = textures[0];
-            this.positionRect = positionRect;
-            this.health = health;
-            this.attack = attack;
-            moveCD = 2;
-            moveCounter = moveCD;
-            kbCD = 2;
-            kbCounter = kbCD;
-            this.gameTime = gameTime;
+            rng = new Random();
+            moveDirection = rng.Next(0, 4);
         }
 
         //properties
@@ -96,12 +84,18 @@ namespace SolsUnderground
             set { enemyState = value; }
         }
 
+        public override int Knockback
+        {
+            get { return knockback; }
+            set { knockback = value; }
+        }
+
         /// <summary>
         /// overridden method
         /// changes health when hit by the player
         /// </summary>
         /// <param name="damage"></param>
-        public override void TakeDamage(int damage, double knockback)
+        public override void TakeDamage(int damage, int knockback)
         {
             if (!(enemyState == EnemyState.dead))
             {
@@ -171,28 +165,34 @@ namespace SolsUnderground
                     }
                     else 
                     {
-                        Random rng = new Random();
-                        int moveDirection;
-                        _timer += (float)gameTime.ElapsedGameTime.TotalSeconds;
-                        if(_timer >= 3)
+                        
+                        if(_timer >= 3 && _timer < 4)
                         {
-                            _timer = 0f;
-                            moveDirection = rng.Next(0, 4);
+                            
                             switch (moveDirection)
                             {
                                 case 0:
+                                    texture = textures[3];
                                     positionRect.X += 1;
                                     break;
                                 case 1:
+                                    texture = textures[2];
                                     positionRect.X -= 1;
                                     break;
                                 case 2:
+                                    texture = textures[0];
                                     positionRect.Y += 1;
                                     break;
                                 case 3:
+                                    texture = textures[1];
                                     positionRect.Y -= 1;
                                     break;
                             }
+                        }
+                        else if(_timer >= 5)
+                        {
+                            _timer = 0f;
+                            moveDirection = rng.Next(0, 4);
                         }
                     }
                 }
@@ -202,6 +202,11 @@ namespace SolsUnderground
         public override void Draw(SpriteBatch sb)
         {
             sb.Draw(texture, positionRect, Color.White);
+        }
+
+        public void UpdateTimer(GameTime gameTime)
+        {
+            _timer += (float)gameTime.ElapsedGameTime.TotalSeconds;
         }
     }
 }

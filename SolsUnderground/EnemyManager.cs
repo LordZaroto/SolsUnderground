@@ -77,24 +77,35 @@ namespace SolsUnderground
                 spawnPoint = Program.rng.Next(openTiles.Count);
 
                 // Need to expand and implement spawning multiple enemy types
-                Rectangle enemyRect = new Rectangle(
+                Rectangle skaterRect = new Rectangle(
                     openTiles[spawnPoint].X,
                     openTiles[spawnPoint].Y, 
                     enemyTextures[0][2].Width, 
                     enemyTextures[0][2].Height);
+                //second enemy 
+                Rectangle fratRect = new Rectangle(
+                    openTiles[spawnPoint].X,
+                    openTiles[spawnPoint].Y,
+                    enemyTextures[1][2].Width,
+                    enemyTextures[1][2].Height);
 
-                enemies.Add(new Minion(enemyTextures[0], enemyRect, 6, 4));
-                enemies.Add(new Wanderer(enemyTextures[0], enemyRect, 12, 8, gameTime));
+                enemies.Add(new Minion(enemyTextures[0], skaterRect, 6, 4));
+                enemies.Add(new Wanderer(enemyTextures[1], fratRect, 12, 8));
             }
         }
 
         /// <summary>
         /// Moves all active enemies towards player.
         /// </summary>
-        public void MoveEnemies()
+        public void MoveEnemies(GameTime gameTime)
         {
             for (int i = 0; i < enemies.Count; i++)
             {
+                if(enemies[i] is Wanderer)
+                {
+                    Wanderer newWander = (Wanderer)enemies[i];
+                    newWander.UpdateTimer(gameTime);
+                }
                 enemies[i].EnemyMove(player);
             }
         }

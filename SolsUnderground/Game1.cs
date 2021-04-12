@@ -56,6 +56,7 @@ namespace SolsUnderground
 
         //enemy
         private Texture2D[] minionTextures;
+        private Texture2D[] wandererTextures;
 
         // Items
         private List<Texture2D> itemTextures;
@@ -185,6 +186,14 @@ namespace SolsUnderground
                 Content.Load<Texture2D>("minionRight") };
             enemyManager.AddEnemyData(minionTextures);
 
+            wandererTextures = new Texture2D[]
+            {
+                Content.Load<Texture2D>("wandererForward"),
+                Content.Load<Texture2D>("wandererBack"),
+                Content.Load<Texture2D>("wandererLeft"),
+                Content.Load<Texture2D>("wandererRight") };
+            enemyManager.AddEnemyData(wandererTextures);
+
             // Tiles
             List<Texture2D> tileTextures = new List<Texture2D>();
             tileTextures.Add(Content.Load<Texture2D>("BrickSprite"));
@@ -294,7 +303,8 @@ namespace SolsUnderground
                         player.Knockback);
 
                     // Enemies
-                    enemyManager.MoveEnemies();
+
+                    enemyManager.MoveEnemies(gameTime);
                     combatManager.EnemyAttacks();
                     combatManager.CleanUp(itemManager);
 
