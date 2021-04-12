@@ -21,13 +21,13 @@ namespace SolsUnderground
         private double kbCD;
         Texture2D[] textures;
         //consructor: initializes the fields
-        public Minion(Texture2D[] textures, Rectangle positionRect, int health, int attack)
+        public Minion(Texture2D[] textures, Rectangle positionRect)
         {
             this.textures = textures;
             this.texture = textures[0];
             this.positionRect = positionRect;
-            this.health = health;
-            this.attack = attack;
+            this.health = 5;
+            this.attack = 2;
             this.knockback = 32;
             moveCD = 0.3;
             moveCounter = moveCD;
