@@ -1,0 +1,16 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
+
+namespace SolsUnderground
+{
+    class Attack
+    {
+        private Rectangle hitbox;
+        private int knockback;
+        private int damage;
+    }
+}

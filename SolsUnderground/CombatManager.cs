@@ -58,7 +58,7 @@ namespace SolsUnderground
         /// <summary>
         /// If that player's attack connects, execute the resultant consequences.
         /// </summary>
-        public void PlayerAttack(Rectangle hitBox, int damage, double knockback)
+        public void PlayerAttack(Rectangle hitBox, int damage, int knockback)
         {
             for (int i = 0; i < enemies.Count; i++)
             {

@@ -96,7 +96,7 @@ namespace SolsUnderground
         /// changes health when hit by the player
         /// </summary>
         /// <param name="damage"></param>
-        public override void TakeDamage(int damage, double knockback)
+        public override void TakeDamage(int damage, int knockback)
         {
             if(!(enemyState == EnemyState.dead))
             {
@@ -106,19 +106,19 @@ namespace SolsUnderground
 
                 if (enemyState == EnemyState.faceForward || enemyState == EnemyState.moveForward)
                 {
-                    Y += (int)(32 * knockback);
+                    Y += knockback;
                 }
                 if (enemyState == EnemyState.faceLeft || enemyState == EnemyState.moveLeft)
                 {
-                    X += (int)(32 * knockback);
+                    X += knockback;
                 }
                 if (enemyState == EnemyState.faceBack || enemyState == EnemyState.moveBack)
                 {
-                    Y -= (int)(32 * knockback);
+                    Y -= knockback;
                 }
                 if (enemyState == EnemyState.faceRight || enemyState == EnemyState.moveRight)
                 {
-                    X -= (int)(32 * knockback);
+                    X -= knockback;
                 }
 
                 if (health <= 0)

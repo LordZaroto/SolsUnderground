@@ -141,7 +141,7 @@ namespace SolsUnderground
         /// <summary>
         /// A multiplyer for how far enemies will be knocked back
         /// </summary>
-        public double Knockback
+        public int Knockback
         {
             get { return weapon.Knockback; }
         }
