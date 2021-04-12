@@ -66,8 +66,13 @@ namespace MapEditor
         /// <param name="e"></param>
         private void pictureBoxTile_Click(object sender, EventArgs e)
         {
-            PictureBox tile = (PictureBox)sender;
-            tile.BackgroundImage = pictureBoxCurrentTile.Image;
+            ((PictureBox)sender).Capture = false;
+
+            if (MouseButtons.Equals(MouseButtons.Left))
+            {
+                PictureBox tile = (PictureBox)sender;
+                tile.BackgroundImage = pictureBoxCurrentTile.Image;
+            }
         }
 
         /// <summary>
@@ -169,7 +174,8 @@ namespace MapEditor
                     mapLayout[i, j].Height = tileHeight;
                     mapLayout[i, j].Left = groupBoxMap.Location.X + (tileWidth * i);
                     mapLayout[i, j].Top = groupBoxMap.Location.Y + (tileHeight * j);
-                    mapLayout[i, j].Click += pictureBoxTile_Click;
+                    mapLayout[i, j].MouseDown += pictureBoxTile_Click;
+                    mapLayout[i, j].MouseEnter += pictureBoxTile_Click;
                     this.Controls.Add(mapLayout[i, j]);
                     mapLayout[i, j].BringToFront();
                 }
@@ -192,7 +198,8 @@ namespace MapEditor
                     mapLayout[i, j].Height = tileHeight;
                     mapLayout[i, j].Left = groupBoxMap.Location.X + (tileWidth * i);
                     mapLayout[i, j].Top = groupBoxMap.Location.Y + (tileHeight * j);
-                    mapLayout[i, j].Click += pictureBoxTile_Click;
+                    mapLayout[i, j].MouseDown += pictureBoxTile_Click;
+                    mapLayout[i, j].MouseEnter += pictureBoxTile_Click;
                     this.Controls.Add(mapLayout[i, j]);
                 }
             }

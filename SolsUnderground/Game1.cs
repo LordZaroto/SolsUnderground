@@ -4,10 +4,11 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
 
-//Noah Flanders
+// Noah Flanders
 // Preston Gilmore
 // Alex Dale
-//Hunter Wells
+// Hunter Wells
+// Braden Flanders
 
 namespace SolsUnderground
 {
@@ -48,14 +49,12 @@ namespace SolsUnderground
         private Player player;
         private Texture2D[] playerTextures;
 
-        //weapon
-        private Weapon stick;
-        private Texture2D stickTexture;
-
         //enemy
         private Texture2D[] minionTextures;
 
         //Weapons
+        private Stick stick;
+        private Texture2D stickTexture;
         private Weapon startWeapon;
         private Texture2D startWeaponTexture;
 
@@ -146,7 +145,8 @@ namespace SolsUnderground
 
             //weapon
             stickTexture = Content.Load<Texture2D>("stick");
-            stick = new Weapon(stickTexture, new Rectangle(0, 0, 0, 0));
+            stick = new Stick(stickTexture, new Rectangle(0, 0, 0, 0));
+            startWeapon = stick;
 
             //Player
             playerRect = new Rectangle(30, 440, playerTextures[0].Width, playerTextures[0].Height);
@@ -264,7 +264,8 @@ namespace SolsUnderground
                     player.Input(kb, gameTime);
                     combatManager.PlayerAttack(
                         player.BasicAttack(leftBState, previousLeftBState),
-                        player.Attack);
+                        player.Attack,
+                        player.Knockback);
 
                     // Enemies
                     enemyManager.MoveEnemies();
@@ -422,7 +423,7 @@ namespace SolsUnderground
                     _spriteBatch.DrawString(
                         text,
                         "defeat all enemies to go on to the next room",
-                        new Vector2(350, 250),
+                        new Vector2(150, 250),
                         Color.White);
                     _spriteBatch.Draw(returnToMenu, button5, Color.White);
                     break;
@@ -546,6 +547,7 @@ namespace SolsUnderground
             player.EquipWeapon(stick);
             player.X = 30;
             player.Y = 440;
+            money = 0;
         }
     }
 }

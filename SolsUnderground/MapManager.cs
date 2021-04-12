@@ -23,7 +23,7 @@ using Microsoft.Xna.Framework.Input;
 /// 
 /// > Need to account for boss rooms in floor generation and room pools
 /// 
-/// > Finish adding enemies and chests to rooms
+/// > Need to add chests to rooms
 /// 
 /// </summary>
 
@@ -32,7 +32,9 @@ namespace SolsUnderground
     class MapManager
     {
         // Fields
+        private Room startRoom;
         private List<Room> roomPool;
+        private List<Room> bossRooms;
         private List<Room> floor;
         private List<Enemy> enemies;
         private int currentFloor;
@@ -62,6 +64,7 @@ namespace SolsUnderground
         public MapManager(List<Texture2D> tileTextures, int windowWidth, int windowHeight)
         {
             this.roomPool = new List<Room>();
+            this.bossRooms = new List<Room>();
             this.floor = new List<Room>();
             this.windowWidth = windowWidth;
             this.windowHeight = windowHeight;
@@ -79,12 +82,25 @@ namespace SolsUnderground
         public void Load(List<Texture2D> tileTextures)
         {
             // Program works from three directories down in project, in bin\debug\net3.1\
-            DirectoryInfo d = new DirectoryInfo("..\\..\\..\\Rooms");
-            
+            DirectoryInfo d = new DirectoryInfo("Content\\Rooms");
+
+            // Load starting room for each floor
+            startRoom = new Room("Content\\Rooms\\StartRooms\\basicStartRoom.level",
+                windowWidth, windowHeight, tileTextures);
+
             // Load in each Room from file
             foreach (FileInfo f in d.GetFiles())
             {
-                roomPool.Add(new Room("..\\..\\..\\Rooms\\" + f.Name, 
+                roomPool.Add(new Room("Content\\Rooms\\" + f.Name, 
+                    windowWidth, windowHeight, tileTextures));
+            }
+
+            // Load in boss rooms separately
+            d = new DirectoryInfo("Content\\Rooms\\BossRooms");
+
+            foreach (FileInfo f in d.GetFiles())
+            {
+                bossRooms.Add(new Room("Content\\Rooms\\BossRooms\\" + f.Name,
                     windowWidth, windowHeight, tileTextures));
             }
         }
@@ -94,15 +110,21 @@ namespace SolsUnderground
         /// </summary>
         public void NewFloor()
         {
+            // Current floor composition:
+            // Start Room -> 4 random rooms -> Boss Room
+
             // Clear previous floor
             floor.Clear();
 
+            // Add starting room - may do floor specific rooms later
+            floor.Add(startRoom);
+
+            // Adds a copy of a random room from roomPool to the floor
+            // Avoids consecutive repeat rooms
             int nextRoomID;
             int lastRoomID = -1;
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < 4; i++)
             {
-                // Adds a copy of a random room from roomPool to the floor
-                // Avoids consecutive repeat rooms
                 do
                 {
                     nextRoomID = Program.rng.Next(0, roomPool.Count);
@@ -114,7 +136,8 @@ namespace SolsUnderground
                 floor.Add(roomPool[nextRoomID]);
             }
 
-            // Maybe subtract one from loop above and do boss-exclusive stuff here?
+            // Add a boss room/boss stuff here
+            floor.Add(bossRooms[Program.rng.Next(bossRooms.Count)]);
         }
 
         /// <summary>

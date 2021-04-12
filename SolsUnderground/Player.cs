@@ -137,6 +137,14 @@ namespace SolsUnderground
         {
             get { return weapon.Attack; }
         }
+
+        /// <summary>
+        /// A multiplyer for how far enemies will be knocked back
+        /// </summary>
+        public double Knockback
+        {
+            get { return weapon.Knockback; }
+        }
         /// <summary>
         /// Currency gained upon enemy kill.
         /// </summary>
@@ -351,6 +359,11 @@ namespace SolsUnderground
             
         }
 
+        public void Special()
+        {
+
+        }
+
         /// <summary>
         /// The character will unleash the basic attack of their weapon.
         /// Has a short cooldown. Returns the hitbox of the attack.
@@ -362,7 +375,7 @@ namespace SolsUnderground
         {
             if(SingleLButtonPress(lButton, previousLeftBState))
             {
-                if(basicCounter >= weapon.BasicCooldown)
+                if (basicCounter >= weapon.BasicCooldown)
                 {
                     //Reset the cooldown
                     basicCounter = 0;
@@ -370,23 +383,19 @@ namespace SolsUnderground
                     //Create the attack hitbox in the direction the player is facing
                     if(playerState == PlayerState.faceForward || playerState == PlayerState.moveForward)
                     {
-                        weapon.Position = new Rectangle(X - Width / 2, Y - Height / 2, Width * 2, Height);
-                        return weapon.Position;
+                        return weapon.GetHitbox(X, Y, Width, Height, PlayerState.faceForward);
                     }
                     else if (playerState == PlayerState.faceLeft || playerState == PlayerState.moveLeft)
                     {
-                        weapon.Position = new Rectangle(X - Width / 2, Y - Height / 2, Width, Height * 2);
-                        return weapon.Position;
+                        return weapon.GetHitbox(X, Y, Width, Height, PlayerState.faceLeft);
                     }
                     else if (playerState == PlayerState.faceBack || playerState == PlayerState.moveBack)
                     {
-                        weapon.Position = new Rectangle(X - Width / 2, Y + Height / 2, Width * 2, Height);
-                        return weapon.Position;
+                        return weapon.GetHitbox(X, Y, Width, Height, PlayerState.faceBack);
                     }
                     else if (playerState == PlayerState.faceRight || playerState == PlayerState.moveRight)
                     {
-                        weapon.Position = new Rectangle(X + Width / 2, Y - Height / 2, Width, Height * 2);
-                        return weapon.Position;
+                        return weapon.GetHitbox(X, Y, Width, Height, PlayerState.faceRight);
                     }
                 }
             }
@@ -397,7 +406,7 @@ namespace SolsUnderground
         /// <summary>
         /// The player will take damage an be knocked back.
         /// </summary>
-        public void TakeDamage(int damage)
+        public void TakeDamage(int damage, EnemyState enemyState)
         {
             if(damageCounter >= damageCD)
             {
@@ -406,22 +415,22 @@ namespace SolsUnderground
                 hp -= damage;
 
                 //Player knockback - Commented out till reworked
-                /*if (playerState == PlayerState.faceForward || playerState == PlayerState.moveForward)
+                if (enemyState == EnemyState.attackBack || enemyState == EnemyState.moveBack || enemyState == EnemyState.faceBack)
                 {
                     Y += 32;
                 }
-                if (playerState == PlayerState.faceLeft || playerState == PlayerState.moveLeft)
+                if (enemyState == EnemyState.attackRight || enemyState == EnemyState.moveRight || enemyState == EnemyState.faceRight)
                 {
                     X += 32;
                 }
-                if (playerState == PlayerState.faceBack || playerState == PlayerState.moveBack)
+                if (enemyState == EnemyState.attackLeft || enemyState == EnemyState.moveLeft || enemyState == EnemyState.faceLeft)
                 {
                     Y -= 32;
                 }
-                if (playerState == PlayerState.faceRight || playerState == PlayerState.moveRight)
+                if (enemyState == EnemyState.attackForward || enemyState == EnemyState.moveForward || enemyState == EnemyState.faceForward)
                 {
                     X -= 32;
-                }*/
+                }
             }
         }
 

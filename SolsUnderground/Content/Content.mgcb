@@ -303,6 +303,24 @@
 /processorParam:TextureFormat=Compressed
 /build:Roboto40.spritefont
 
+#begin Rooms/BossRooms/basicBossRoom.level
+/copy:Rooms/BossRooms/basicBossRoom.level
+
+#begin Rooms/Coho.level
+/copy:Rooms/Coho.level
+
+#begin Rooms/EmptyRoom.level
+/copy:Rooms/EmptyRoom.level
+
+#begin Rooms/SimpleRoom.level
+/copy:Rooms/SimpleRoom.level
+
+#begin Rooms/StartRooms/basicStartRoom.level
+/copy:Rooms/StartRooms/basicStartRoom.level
+
+#begin Rooms/TunnelRoom.level
+/copy:Rooms/TunnelRoom.level
+
 #begin Save.PNG
 /importer:TextureImporter
 /processor:TextureProcessor
