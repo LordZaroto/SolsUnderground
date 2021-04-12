@@ -128,12 +128,21 @@ namespace SolsUnderground
             heading = Content.Load<SpriteFont>("Roboto175");
             text = Content.Load<SpriteFont>("Roboto40");
 
+            //character animations
+            Dictionary<string, Animation> animations = new Dictionary<string, Animation>()
+            {
+                {"playerMoveForward", new Animation(Content.Load<Texture2D>("playerMovingUp2"), 4) },
+                {"playerMoveBack", new Animation(Content.Load<Texture2D>("playerMovingDown2"), 4) },
+                {"playerMoveLeft", new Animation(Content.Load<Texture2D>("playerMovingLeft"), 4) },
+                {"playerMoveRight", new Animation(Content.Load<Texture2D>("playerMovingRight"), 4) }
+            };
+
             //character textures
             playerTextures = new Texture2D[] {
-                Content.Load<Texture2D>("playerForward"),
-                Content.Load<Texture2D>("playerBack"),
-                Content.Load<Texture2D>("playerLeft"),
-                Content.Load<Texture2D>("playerRight") };
+                Content.Load<Texture2D>("heroForward2"),
+                Content.Load<Texture2D>("heroBack2"),
+                Content.Load<Texture2D>("heroLeft"),
+                Content.Load<Texture2D>("heroRight") };
 
             //weapon
             stickTexture = Content.Load<Texture2D>("stick");
@@ -141,7 +150,7 @@ namespace SolsUnderground
 
             //Player
             playerRect = new Rectangle(30, 440, playerTextures[0].Width, playerTextures[0].Height);
-            player = new Player(playerTextures, playerRect, stick);
+            player = new Player(playerTextures, playerRect, stick, animations);
 
             // Managers
             collisionManager = new CollisionManager(player);
@@ -194,6 +203,8 @@ namespace SolsUnderground
             newGame = Content.Load<Texture2D>("newGameGO");
             button10 = new Rectangle(233, 643, 914, 139);
             button11 = new Rectangle(233, 782, 914, 139);
+
+            
         }
 
         protected override void Update(GameTime gameTime)
