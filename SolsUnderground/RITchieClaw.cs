@@ -15,7 +15,7 @@ namespace SolsUnderground
         private Rectangle positionRect;
         private int attack;
         private double basicCooldown;
-        private double knockback;
+        private int knockback;
         private Rectangle hitboxF;
         private Rectangle hitboxL;
         private Rectangle hitboxB;
@@ -97,7 +97,7 @@ namespace SolsUnderground
             get { return basicCooldown; }
         }
 
-        public double Knockback
+        public int Knockback
         {
             get { return knockback; }
         }
@@ -115,7 +115,7 @@ namespace SolsUnderground
             this.positionRect = positionRect;
             basicCooldown = 0.1;
             attack = 7;
-            knockback = 0.8;
+            knockback = (int)(0.8 * 32);
         }
 
         public void Draw(SpriteBatch sb)
