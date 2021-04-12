@@ -720,7 +720,7 @@ namespace SolsUnderground
 
             //Adjust the players stats based on the file data
             player.Hp = int.Parse(fileData[0]);
-            money = int.Parse(fileData[1]);
+            player.TigerBucks = int.Parse(fileData[1]);
 
             int numFloors = int.Parse(fileData[2]);
             for(int i = 0; i <= numFloors; i++)
@@ -748,7 +748,7 @@ namespace SolsUnderground
         private void SaveFile(string fileName)
         {
             StreamWriter writer = new StreamWriter($"../../../Content//SaveFiles//{fileName}");
-            writer.WriteLine($"{player.Hp}|{money}|{mapManager.CurrentFloor}|{mapManager.CurrentRoomNum}");
+            writer.WriteLine($"{player.Hp}|{player.TigerBucks}|{mapManager.CurrentFloor}|{mapManager.CurrentRoomNum}");
             writer.Close();
             currentState = GameState.Saved;
         }
