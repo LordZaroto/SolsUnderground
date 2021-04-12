@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace SolsUnderground
 {
-    class Stick : Weapon
+    class RITchieClaw : Weapon
     {
         //Fields
         //-----------------------------
@@ -85,7 +85,7 @@ namespace SolsUnderground
 
         //Weapon Stats
         //------------------------------
-        
+
         public int Attack
         {
             get { return attack; }
@@ -109,13 +109,13 @@ namespace SolsUnderground
         //||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
         //---------------------------------------------------------------------
 
-        public Stick(Texture2D texture, Rectangle positionRect)
+        public RITchieClaw(Texture2D texture, Rectangle positionRect)
         {
             this.texture = texture;
             this.positionRect = positionRect;
-            basicCooldown = 0.3;
-            attack = 3;
-            knockback = 1;
+            basicCooldown = 0.1;
+            attack = 7;
+            knockback = 0.8;
         }
 
         public void Draw(SpriteBatch sb)
@@ -123,6 +123,9 @@ namespace SolsUnderground
             sb.Draw(texture, positionRect, Color.White);
         }
 
+        /// <summary>
+        /// The player will dash a long distance, striking enemies along the way.
+        /// </summary>
         public void Special()
         {
             return;
@@ -130,7 +133,7 @@ namespace SolsUnderground
 
         public Rectangle GetHitbox(int x, int y, int width, int height, PlayerState state)
         {
-            if(state == PlayerState.faceForward)
+            if (state == PlayerState.faceForward)
             {
                 return new Rectangle(x - width / 2, y - height / 2, width * 2, height);
             }

@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace SolsUnderground
 {
-    //Preston Gillmore
+    //Preston Gilmore
     //Braden Flanders
 
     /// <summary>

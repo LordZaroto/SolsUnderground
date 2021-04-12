@@ -54,6 +54,7 @@ namespace SolsUnderground
 
         //Weapons
         private Stick stick;
+        private RITchieClaw ritchieClaw;
         private Texture2D stickTexture;
         private Weapon startWeapon;
         private Texture2D startWeaponTexture;
@@ -146,7 +147,9 @@ namespace SolsUnderground
             //weapon
             stickTexture = Content.Load<Texture2D>("stick");
             stick = new Stick(stickTexture, new Rectangle(0, 0, 0, 0));
-            startWeapon = stick;
+
+            //Testing Weapons
+            ritchieClaw = new RITchieClaw(stickTexture, new Rectangle(0, 0, 0, 0));
 
             //Player
             playerRect = new Rectangle(30, 440, playerTextures[0].Width, playerTextures[0].Height);
