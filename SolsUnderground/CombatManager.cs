@@ -78,7 +78,7 @@ namespace SolsUnderground
             {
                 if (e.PositionRect.Intersects(player.PositionRect) && !(e.State == EnemyState.dead))
                 {
-                    player.TakeDamage(e.Attack, e.State);
+                    player.TakeDamage(e.Attack, e.State, e.Knockback);
                 }
             }
         }

@@ -385,7 +385,7 @@ namespace SolsUnderground
         /// <summary>
         /// The player will take damage an be knocked back.
         /// </summary>
-        public void TakeDamage(int damage, EnemyState enemyState)
+        public void TakeDamage(int damage, EnemyState enemyState, int knockback)
         {
             if(damageCounter >= damageCD)
             {
@@ -396,19 +396,19 @@ namespace SolsUnderground
                 //Player knockback - Commented out till reworked
                 if (enemyState == EnemyState.attackBack || enemyState == EnemyState.moveBack || enemyState == EnemyState.faceBack)
                 {
-                    Y += 32;
+                    Y += knockback;
                 }
                 if (enemyState == EnemyState.attackRight || enemyState == EnemyState.moveRight || enemyState == EnemyState.faceRight)
                 {
-                    X += 32;
+                    X += knockback;
                 }
                 if (enemyState == EnemyState.attackLeft || enemyState == EnemyState.moveLeft || enemyState == EnemyState.faceLeft)
                 {
-                    Y -= 32;
+                    Y -= knockback;
                 }
                 if (enemyState == EnemyState.attackForward || enemyState == EnemyState.moveForward || enemyState == EnemyState.faceForward)
                 {
-                    X -= 32;
+                    X -= knockback;
                 }
             }
         }

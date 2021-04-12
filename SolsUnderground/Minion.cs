@@ -27,6 +27,7 @@ namespace SolsUnderground
             this.positionRect = positionRect;
             this.health = health;
             this.attack = attack;
+            this.knockback = 32;
             moveCD = 0.3;
             moveCounter = moveCD;
             kbCD = 0.1;
@@ -57,6 +58,12 @@ namespace SolsUnderground
         {
             get { return attack; }
             set { attack = value; }
+        }
+
+        public override int Knockback
+        {
+            get { return knockback; }
+            set { knockback = value; }
         }
 
         public override int Width
