@@ -100,6 +100,9 @@ namespace SolsUnderground
         private Rectangle button11;
 
 
+        //game time
+        private GameTime gameTime;
+
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -133,7 +136,8 @@ namespace SolsUnderground
                 {"playerMoveForward", new Animation(Content.Load<Texture2D>("playerMovingUp2"), 4) },
                 {"playerMoveBack", new Animation(Content.Load<Texture2D>("playerMovingDown2"), 4) },
                 {"playerMoveLeft", new Animation(Content.Load<Texture2D>("playerMovingLeft"), 4) },
-                {"playerMoveRight", new Animation(Content.Load<Texture2D>("playerMovingRight"), 4) }
+                {"playerMoveRight", new Animation(Content.Load<Texture2D>("playerMovingRight"), 4) },
+                {"heroDeath", new Animation(Content.Load<Texture2D>("heroDeath"), 4) }
             };
 
             //character textures
@@ -211,7 +215,9 @@ namespace SolsUnderground
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.End))
                 Exit();
-            
+
+            enemyManager.GameTime = gameTime;
+
             //User Input
             KeyboardState kb = Keyboard.GetState();
             MouseState mouse = Mouse.GetState();
@@ -436,7 +442,7 @@ namespace SolsUnderground
                     enemyManager.Draw(_spriteBatch);
                     if(Mouse.GetState().LeftButton == ButtonState.Pressed)
                     {
-                        player.CurrentWeapon.Draw(_spriteBatch);
+                        stick.Draw(_spriteBatch);
                     }
                     
 

@@ -414,6 +414,7 @@ namespace SolsUnderground
                 damageCounter = 0;
                 hp -= damage;
 
+
                 //Player knockback - Commented out till reworked
                 if (enemyState == EnemyState.attackBack || enemyState == EnemyState.moveBack || enemyState == EnemyState.faceBack)
                 {
@@ -536,6 +537,5 @@ namespace SolsUnderground
         {
             this.weapon = weapon;
         }
-
     }
 }

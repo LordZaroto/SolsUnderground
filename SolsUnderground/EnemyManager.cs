@@ -31,6 +31,12 @@ namespace SolsUnderground
         private List<Enemy> enemies;
         private List<Texture2D[]> enemyTextures;
         private Player player;
+        private GameTime gameTime;
+
+        public GameTime GameTime
+        {
+            set { gameTime = value; }
+        }
 
         // Constructor
         public EnemyManager(Player player, CollisionManager collisionManager, CombatManager combatManager)
@@ -42,6 +48,7 @@ namespace SolsUnderground
             // Hand a reference of enemy list to collision and combat managers
             collisionManager.GetEnemies(enemies);
             combatManager.GetEnemies(enemies);
+            this.gameTime = gameTime;
         }
 
         // Methods
@@ -77,6 +84,7 @@ namespace SolsUnderground
                     enemyTextures[0][2].Height);
 
                 enemies.Add(new Minion(enemyTextures[0], enemyRect, 6, 4));
+                enemies.Add(new Wanderer(enemyTextures[0], enemyRect, 12, 8, gameTime));
             }
         }
 
