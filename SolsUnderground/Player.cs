@@ -58,6 +58,7 @@ namespace SolsUnderground
 
         private AnimationManager _animationManager;
         private Dictionary<string, Animation> _animations;
+        float _timer;
         //-----------------------------
 
         //---------------------------------------------------------------------
@@ -186,6 +187,7 @@ namespace SolsUnderground
             playerState = PlayerState.faceBack;
             _animations = animations;
             _animationManager = new AnimationManager(_animations.First().Value, this);
+            _timer = 0f;
         }
         //----------------------------------------------------------
 
@@ -200,163 +202,169 @@ namespace SolsUnderground
         /// </summary>
         public void PlayerMove(KeyboardState kbState)
         {
-            if(moveCounter >= moveCD)
+            if (hp > 0)
             {
-                bool test = false;
-
-                //If the character does not move, change the playerState to the appropriate
-                //idle direction. Then end the method.
-
-                //changes texture according to direction
-                if (!(kbState.IsKeyDown(Keys.W) || kbState.IsKeyDown(Keys.A) || kbState.IsKeyDown(Keys.S) || kbState.IsKeyDown(Keys.D)))
+                if (moveCounter >= moveCD)
                 {
-                    if (playerState == PlayerState.moveForward)
+                    bool test = false;
+
+
+                    //If the character does not move, change the playerState to the appropriate
+                    //idle direction. Then end the method.
+
+                    //changes texture according to direction
+                    if (!(kbState.IsKeyDown(Keys.W) || kbState.IsKeyDown(Keys.A) || kbState.IsKeyDown(Keys.S) || kbState.IsKeyDown(Keys.D)))
                     {
-                        
-                        texture = textures[1];
-                        playerState = PlayerState.faceForward;
-                    }
-                    else if (playerState == PlayerState.moveLeft)
-                    {
-                        
-                        texture = textures[2];
-                        playerState = PlayerState.faceLeft;
-                    }
-                    else if (playerState == PlayerState.moveBack)
-                    {
-                        
-                        texture = textures[0];
-                        playerState = PlayerState.faceBack;
-                    }
-                    else if (playerState == PlayerState.moveRight)
-                    {
-                        
-                        texture = textures[3];
-                        playerState = PlayerState.faceRight;
+
+                        if (playerState == PlayerState.moveForward)
+                        {
+
+                            texture = textures[1];
+                            playerState = PlayerState.faceForward;
+                        }
+                        else if (playerState == PlayerState.moveLeft)
+                        {
+
+                            texture = textures[2];
+                            playerState = PlayerState.faceLeft;
+                        }
+                        else if (playerState == PlayerState.moveBack)
+                        {
+
+                            texture = textures[0];
+                            playerState = PlayerState.faceBack;
+                        }
+                        else if (playerState == PlayerState.moveRight)
+                        {
+
+                            texture = textures[3];
+                            playerState = PlayerState.faceRight;
+                        }
+
+                        return;
                     }
 
-                    return;
-                }
-
-                if (kbState.IsKeyDown(Keys.W) || kbState.IsKeyDown(Keys.S))
-                {
-                    //The values adjustments are lower when traveling diagonally
-                    //to accomadate for adjustments to both axis.
-                    if (kbState.IsKeyDown(Keys.D))
+                    if (kbState.IsKeyDown(Keys.W) || kbState.IsKeyDown(Keys.S))
                     {
-                        X += 3;
+                        //The values adjustments are lower when traveling diagonally
+                        //to accomadate for adjustments to both axis.
+                        if (kbState.IsKeyDown(Keys.D))
+                        {
+                            X += 3;
 
-                        //Two trues will make a false!
+                            //Two trues will make a false!
+                            if (test == true)
+                            {
+                                test = false;
+                            }
+                            else
+                            {
+                                test = true;
+                            }
+                        }
+                        if (kbState.IsKeyDown(Keys.A))
+                        {
+                            X -= 3;
+
+                            if (test == true)
+                            {
+                                test = false;
+                            }
+                            else
+                            {
+                                test = true;
+                            }
+                        }
+                        //Determine the vertical displacement
                         if (test == true)
                         {
-                            test = false;
+                            if (kbState.IsKeyDown(Keys.W) && kbState.IsKeyDown(Keys.S))
+                            {
+                                Y += 0;
+
+                                //Is there horizontal movement? If so, change player state accordingly.
+                                if (kbState.IsKeyDown(Keys.A) && test == true)
+                                {
+                                    _animationManager.Play(_animations["playerMoveLeft"]);
+                                    playerState = PlayerState.moveLeft;
+
+                                }
+                                else if (kbState.IsKeyDown(Keys.D) && test == true)
+                                {
+                                    _animationManager.Play(_animations["playerMoveRight"]);
+                                    playerState = PlayerState.moveRight;
+
+                                }
+                            }
+                            else if (kbState.IsKeyDown(Keys.W))
+                            {
+                                _animationManager.Play(_animations["playerMoveForward"]);
+                                Y -= 3;
+                                playerState = PlayerState.moveForward;
+
+                            }
+                            else if (kbState.IsKeyDown(Keys.S))
+                            {
+                                _animationManager.Play(_animations["playerMoveBack"]);
+                                Y += 3;
+                                playerState = PlayerState.moveBack;
+
+                            }
                         }
                         else
                         {
-                            test = true;
-                        }
-                    }
-                    if (kbState.IsKeyDown(Keys.A))
-                    {
-                        X -= 3;
+                            if (kbState.IsKeyDown(Keys.W) && kbState.IsKeyDown(Keys.S))
+                            {
+                                Y += 0;
 
-                        if (test == true)
-                        {
-                            test = false;
-                        }
-                        else
-                        {
-                            test = true;
-                        }
-                    }
-                    //Determine the vertical displacement
-                    if (test == true)
-                    {
-                        if (kbState.IsKeyDown(Keys.W) && kbState.IsKeyDown(Keys.S))
-                        {
-                            Y += 0;
+                                //Is there horizontal movement? If so, change player state accordingly.
+                                if (kbState.IsKeyDown(Keys.A) && test == true)
+                                {
+                                    _animationManager.Play(_animations["playerMoveLeft"]);
+                                    playerState = PlayerState.moveLeft;
 
-                            //Is there horizontal movement? If so, change player state accordingly.
-                            if (kbState.IsKeyDown(Keys.A) && test == true)
-                            {
-                                _animationManager.Play(_animations["playerMoveLeft"]);
-                                playerState = PlayerState.moveLeft;
-                                
-                            }
-                            else if (kbState.IsKeyDown(Keys.D) && test == true)
-                            {
-                                _animationManager.Play(_animations["playerMoveRight"]);
-                                playerState = PlayerState.moveRight;
-                                
-                            }
-                        }
-                        else if (kbState.IsKeyDown(Keys.W))
-                        {
-                            _animationManager.Play(_animations["playerMoveForward"]);
-                            Y -= 3;
-                            playerState = PlayerState.moveForward;
-                            
-                        }
-                        else if (kbState.IsKeyDown(Keys.S))
-                        {
-                            _animationManager.Play(_animations["playerMoveBack"]);
-                            Y += 3;
-                            playerState = PlayerState.moveBack;
-                            
-                        }
-                    }
-                    else
-                    {
-                        if (kbState.IsKeyDown(Keys.W) && kbState.IsKeyDown(Keys.S))
-                        {
-                            Y += 0;
+                                }
+                                else if (kbState.IsKeyDown(Keys.D) && test == true)
+                                {
+                                    _animationManager.Play(_animations["playerMoveRight"]);
+                                    playerState = PlayerState.moveRight;
 
-                            //Is there horizontal movement? If so, change player state accordingly.
-                            if (kbState.IsKeyDown(Keys.A) && test == true)
-                            {
-                                _animationManager.Play(_animations["playerMoveLeft"]);
-                                playerState = PlayerState.moveLeft;
-                                
+                                }
                             }
-                            else if (kbState.IsKeyDown(Keys.D) && test == true)
+                            else if (kbState.IsKeyDown(Keys.W))
                             {
-                                _animationManager.Play(_animations["playerMoveRight"]);
-                                playerState = PlayerState.moveRight;
-                                
+                                _animationManager.Play(_animations["playerMoveForward"]);
+                                Y -= 4;
+                                playerState = PlayerState.moveForward;
+
                             }
-                        }
-                        else if (kbState.IsKeyDown(Keys.W))
-                        {
-                            _animationManager.Play(_animations["playerMoveForward"]);
-                            Y -= 4;
-                            playerState = PlayerState.moveForward;
-                            
-                        }
-                        else if (kbState.IsKeyDown(Keys.S))
-                        {
-                            _animationManager.Play(_animations["playerMoveBack"]);
-                            Y += 4;
-                            playerState = PlayerState.moveBack;
-                            
+                            else if (kbState.IsKeyDown(Keys.S))
+                            {
+                                _animationManager.Play(_animations["playerMoveBack"]);
+                                Y += 4;
+                                playerState = PlayerState.moveBack;
+
+                            }
                         }
                     }
-                }
-                if (kbState.IsKeyDown(Keys.A) && test == false)
-                {
-                    _animationManager.Play(_animations["playerMoveLeft"]);
-                    X -= 4;
-                    playerState = PlayerState.moveLeft;
-                    
-                }
-                if (kbState.IsKeyDown(Keys.D) && test == false)
-                {
-                    _animationManager.Play(_animations["playerMoveRight"]);
-                    X += 4;
-                    playerState = PlayerState.moveRight;
-                    
+                    if (kbState.IsKeyDown(Keys.A) && test == false)
+                    {
+                        _animationManager.Play(_animations["playerMoveLeft"]);
+                        X -= 4;
+                        playerState = PlayerState.moveLeft;
+
+                    }
+                    if (kbState.IsKeyDown(Keys.D) && test == false)
+                    {
+                        _animationManager.Play(_animations["playerMoveRight"]);
+                        X += 4;
+                        playerState = PlayerState.moveRight;
+
+                    }
+
+
                 }
             }
-            
         }
 
         public void Special()
@@ -467,6 +475,15 @@ namespace SolsUnderground
             PlayerMove(kbState);
 
             _animationManager.Update(gameTime);
+            if (hp <= 0 && _animationManager.Animation.CurrentFrame == 3)
+            {
+                _animationManager.Stop();
+                if(_timer > 2)
+                {
+                    playerState = PlayerState.dead;
+                }
+                
+            }
         }
 
         /// <summary>
@@ -511,23 +528,7 @@ namespace SolsUnderground
             return rButton == ButtonState.Pressed && previousRightBState == ButtonState.Released;
         }
 
-        /// <summary>
-        /// Displays the player on screen.
-        /// </summary>
-        /// <param name="sb"></param>
-        public override void Draw(SpriteBatch sb)
-        {
-            //draws the static image if facing a direction or the moving image if walking in a direction
-            if(playerState == PlayerState.faceBack || playerState == PlayerState.faceForward || playerState == PlayerState.faceLeft || playerState == PlayerState.faceRight)
-            {
-                sb.Draw(texture, positionRect, Color.White);
-            }else if (_animationManager != null)
-            {
-                _animationManager.Draw(sb);
-            }
-            
-
-        }
+        
 
         /// <summary>
         /// The player equips the given weapon.
@@ -546,6 +547,37 @@ namespace SolsUnderground
         public void EquipArmor(Armor armor)
         {
             
+        }
+        
+        public void Die()
+        {
+            
+            _animationManager.Play(_animations["heroDeath"]);
+            
+        }
+
+        public void UpdateTimer(GameTime gameTime)
+        {
+            _timer += (float)gameTime.ElapsedGameTime.TotalSeconds;
+        }
+
+        /// <summary>
+        /// Displays the player on screen.
+        /// </summary>
+        /// <param name="sb"></param>
+        public override void Draw(SpriteBatch sb)
+        {
+            //draws the static image if facing a direction or the moving image if walking in a direction
+            if ((playerState == PlayerState.faceBack || playerState == PlayerState.faceForward || playerState == PlayerState.faceLeft || playerState == PlayerState.faceRight)&& hp > 0)
+            {
+                sb.Draw(texture, positionRect, Color.White);
+            }
+            else if (_animationManager != null)
+            {
+                _animationManager.Draw(sb);
+            }
+
+
         }
     }
 }

@@ -31,12 +31,7 @@ namespace SolsUnderground
         private List<Enemy> enemies;
         private List<Texture2D[]> enemyTextures;
         private Player player;
-        private GameTime gameTime;
 
-        public GameTime GameTime
-        {
-            set { gameTime = value; }
-        }
 
         // Constructor
         public EnemyManager(Player player, CollisionManager collisionManager, CombatManager combatManager)
@@ -48,7 +43,6 @@ namespace SolsUnderground
             // Hand a reference of enemy list to collision and combat managers
             collisionManager.GetEnemyList(enemies);
             combatManager.GetEnemies(enemies);
-            this.gameTime = gameTime;
         }
 
         // Methods

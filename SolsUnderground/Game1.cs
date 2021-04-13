@@ -241,7 +241,6 @@ namespace SolsUnderground
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.End))
                 Exit();
 
-            enemyManager.GameTime = gameTime;
 
             //User Input
             KeyboardState kb = Keyboard.GetState();
@@ -337,7 +336,8 @@ namespace SolsUnderground
                     {
                         currentState = GameState.Pause;
                     }
-                    if (player.Hp <= 0)
+
+                    if(player.Hp <= 0)
                     {
                         if (godMode)
                         {
@@ -345,8 +345,17 @@ namespace SolsUnderground
                         }
                         else
                         {
-                            currentState = GameState.GameOver;
+                            enemyManager.ClearEnemies();
+                            player.Die();
+                            player.UpdateTimer(gameTime);
+                            //player.State = PlayerState.dead;
                         }
+                        
+                    }
+
+                    if (player.State == PlayerState.dead)
+                    {
+                        currentState = GameState.GameOver;
                     }
                     break;
 
@@ -372,11 +381,13 @@ namespace SolsUnderground
                 case GameState.GameOver:
                     if (kb.IsKeyDown(Keys.Enter) || MouseClick(button10, mouse, prevM) == true)
                     {
+                        player.State = PlayerState.faceForward;
                         currentState = GameState.Game;
                         StartGame();
                     }
                     if (SingleKeyPress(Keys.Escape, kb, prevKB) || MouseClick(button11, mouse, prevM) == true)
                     {
+                        player.State = PlayerState.faceForward;
                         currentState = GameState.Menu;
                     }
                     break;
