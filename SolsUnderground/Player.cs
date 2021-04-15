@@ -379,7 +379,7 @@ namespace SolsUnderground
         /// <param name="lButton"></param>
         /// <param name="previousLeftBState"></param>
         /// <param name="gameTime"></param>
-        public Rectangle BasicAttack(ButtonState lButton, ButtonState previousLeftBState)
+        public Attack BasicAttack(ButtonState lButton, ButtonState previousLeftBState)
         {
             if(SingleLButtonPress(lButton, previousLeftBState))
             {
@@ -392,27 +392,51 @@ namespace SolsUnderground
                     if(playerState == PlayerState.faceForward || playerState == PlayerState.moveForward)
                     {
                         playerState = PlayerState.attackForward;
-                        return weapon.GetHitbox(X, Y, Width, Height, PlayerState.faceForward);
+
+                        Attack basicAttack = new Attack(
+                            weapon.GetHitbox(X, Y, Width, Height, PlayerState.faceForward),
+                            Attack,
+                            Knockback);
+
+                        return basicAttack;
                     }
                     else if (playerState == PlayerState.faceLeft || playerState == PlayerState.moveLeft)
                     {
                         playerState = PlayerState.attackLeft;
-                        return weapon.GetHitbox(X, Y, Width, Height, PlayerState.faceLeft);
+
+                        Attack basicAttack = new Attack(
+                            weapon.GetHitbox(X, Y, Width, Height, PlayerState.faceLeft),
+                            Attack,
+                            Knockback);
+
+                        return basicAttack;
                     }
                     else if (playerState == PlayerState.faceBack || playerState == PlayerState.moveBack)
                     {
                         playerState = PlayerState.attackBack;
-                        return weapon.GetHitbox(X, Y, Width, Height, PlayerState.faceBack);
+
+                        Attack basicAttack = new Attack(
+                            weapon.GetHitbox(X, Y, Width, Height, PlayerState.faceBack),
+                            Attack,
+                            Knockback);
+
+                        return basicAttack;
                     }
                     else if (playerState == PlayerState.faceRight || playerState == PlayerState.moveRight)
                     {
                         playerState = PlayerState.attackRight;
-                        return weapon.GetHitbox(X, Y, Width, Height, PlayerState.faceRight);
+
+                        Attack basicAttack = new Attack(
+                            weapon.GetHitbox(X, Y, Width, Height, PlayerState.faceRight),
+                            Attack,
+                            Knockback);
+
+                        return basicAttack;
                     }
                 }
             }
 
-            return new Rectangle();
+            return null;
         }
 
         /// <summary>
