@@ -297,9 +297,7 @@ namespace SolsUnderground
                     //Player
                     player.Input(kb, gameTime);
                     combatManager.PlayerAttack(
-                        player.BasicAttack(leftBState, previousLeftBState),
-                        player.Attack,
-                        player.Knockback);
+                        player.BasicAttack(leftBState, previousLeftBState));
 
                     // Enemies
 
