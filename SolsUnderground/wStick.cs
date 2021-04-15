@@ -7,12 +7,10 @@ using Microsoft.Xna.Framework.Input;
 
 namespace SolsUnderground
 {
-    class Stick : Weapon
+    class wStick : Item, Weapon
     {
         //Fields
         //-----------------------------
-        private Texture2D texture;
-        private Rectangle positionRect;
         private int attack;
         private double basicCooldown;
         private int knockback;
@@ -31,22 +29,22 @@ namespace SolsUnderground
 
         //Weapon Position
         //------------------------------
-        public int X
+        public override int X
         {
             get { return positionRect.X; }
             set { positionRect.X = value; }
         }
-        public int Y
+        public override int Y
         {
             get { return positionRect.Y; }
             set { positionRect.Y = value; }
         }
-        public int Width
+        public override int Width
         {
             get { return positionRect.Width; }
             set { positionRect.Width = value; }
         }
-        public int Height
+        public override int Height
         {
             get { return positionRect.Height; }
             set { positionRect.Height = value; }
@@ -109,18 +107,14 @@ namespace SolsUnderground
         //||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
         //---------------------------------------------------------------------
 
-        public Stick(Texture2D texture, Rectangle positionRect)
+        public wStick(Texture2D texture, Rectangle positionRect)
+            : base(ItemType.Weapon, 3, texture, positionRect)
         {
             this.texture = texture;
             this.positionRect = positionRect;
             basicCooldown = 0.3;
             attack = 3;
             knockback = (int)(1 * 32);
-        }
-
-        public void Draw(SpriteBatch sb)
-        {
-            sb.Draw(texture, positionRect, Color.White);
         }
 
         public void Special()
@@ -132,19 +126,23 @@ namespace SolsUnderground
         {
             if(state == PlayerState.faceForward)
             {
-                return new Rectangle(x - width / 2, y - height / 2, width * 2, height);
+                positionRect = new Rectangle(x - width / 2, y - height / 2, width * 2, height);
+                return positionRect;
             }
             else if (state == PlayerState.faceLeft)
             {
-                return new Rectangle(x - width / 2, y - height / 2, width, height * 2);
+                positionRect = new Rectangle(x - width / 2, y - height / 2, width, height * 2);
+                return positionRect;
             }
             else if (state == PlayerState.faceBack)
             {
-                return new Rectangle(x - width / 2, y + height / 2, width * 2, height);
+                positionRect = new Rectangle(x - width / 2, y + height / 2, width * 2, height);
+                return positionRect;
             }
             else // if faceRight
             {
-                return new Rectangle(x + width / 2, y - height / 2, width, height * 2);
+                positionRect = new Rectangle(x + width / 2, y - height / 2, width, height * 2);
+                return positionRect;
             }
         }
     }

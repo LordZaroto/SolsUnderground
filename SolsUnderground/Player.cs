@@ -391,18 +391,22 @@ namespace SolsUnderground
                     //Create the attack hitbox in the direction the player is facing
                     if(playerState == PlayerState.faceForward || playerState == PlayerState.moveForward)
                     {
+                        playerState = PlayerState.attackForward;
                         return weapon.GetHitbox(X, Y, Width, Height, PlayerState.faceForward);
                     }
                     else if (playerState == PlayerState.faceLeft || playerState == PlayerState.moveLeft)
                     {
+                        playerState = PlayerState.attackLeft;
                         return weapon.GetHitbox(X, Y, Width, Height, PlayerState.faceLeft);
                     }
                     else if (playerState == PlayerState.faceBack || playerState == PlayerState.moveBack)
                     {
+                        playerState = PlayerState.attackBack;
                         return weapon.GetHitbox(X, Y, Width, Height, PlayerState.faceBack);
                     }
                     else if (playerState == PlayerState.faceRight || playerState == PlayerState.moveRight)
                     {
+                        playerState = PlayerState.attackRight;
                         return weapon.GetHitbox(X, Y, Width, Height, PlayerState.faceRight);
                     }
                 }

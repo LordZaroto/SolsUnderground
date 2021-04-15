@@ -62,8 +62,8 @@ namespace SolsUnderground
         private List<Texture2D> itemTextures;
 
         //Weapons
-        private Stick stick;
-        private RITchieClaw ritchieClaw;
+        private wStick stick;
+        private wRITchieClaw ritchieClaw;
         private Texture2D stickTexture;
 
         // Managers
@@ -163,10 +163,10 @@ namespace SolsUnderground
 
             // Weapons
             stickTexture = Content.Load<Texture2D>("stick");
-            stick = new Stick(stickTexture, new Rectangle(0, 0, 0, 0));
+            stick = new wStick(stickTexture, new Rectangle(0, 0, 0, 0));
 
             //Testing Weapons
-            ritchieClaw = new RITchieClaw(stickTexture, new Rectangle(0, 0, 0, 0));
+            ritchieClaw = new wRITchieClaw(stickTexture, new Rectangle(0, 0, 0, 0));
 
             //Player
             playerRect = new Rectangle(30, 440, playerTextures[0].Width, playerTextures[0].Height);
@@ -569,11 +569,19 @@ namespace SolsUnderground
                     itemManager.Draw(_spriteBatch);
                     player.Draw(_spriteBatch);
                     enemyManager.Draw(_spriteBatch);
-                    if(Mouse.GetState().LeftButton == ButtonState.Pressed)
+                    //if(Mouse.GetState().LeftButton == ButtonState.Pressed)
+                    //{
+                    //    stick.Draw(_spriteBatch);
+                    //}
+                    switch (player.State)
                     {
-                        stick.Draw(_spriteBatch);
+                        case PlayerState.attackForward:
+                        case PlayerState.attackLeft:
+                        case PlayerState.attackBack:
+                        case PlayerState.attackRight:
+                            player.CurrentWeapon.Draw(_spriteBatch);
+                            break;
                     }
-                    
 
                     _spriteBatch.DrawString(
                         text,

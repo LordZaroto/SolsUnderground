@@ -81,7 +81,7 @@ namespace SolsUnderground
         /// <param name="sb">Spritebatch to draw</param>
         public void Draw(SpriteBatch sb)
         {
-            sb.Draw(texture, PositionRect, Color.White);
+            sb.Draw(texture, positionRect, Color.White);
         }
     }
 }

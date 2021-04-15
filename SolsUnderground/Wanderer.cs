@@ -17,7 +17,6 @@ namespace SolsUnderground
         Texture2D[] textures;
         GameTime gameTime;
         float _timer = 0f;
-        Random rng;
         int moveDirection;
         //consructor: initializes the fields
         public Wanderer(Texture2D[] textures, Rectangle positionRect, int health, int attack)
@@ -27,12 +26,12 @@ namespace SolsUnderground
             this.positionRect = positionRect;
             this.health = health;
             this.attack = attack;
+            this.knockback = 64;
             moveCD = 2;
             moveCounter = moveCD;
             kbCD = 2;
             kbCounter = kbCD;
-            rng = new Random();
-            moveDirection = rng.Next(0, 4);
+            moveDirection = Program.rng.Next(0, 4);
         }
 
         //properties
@@ -192,7 +191,7 @@ namespace SolsUnderground
                         else if(_timer >= 5)
                         {
                             _timer = 0f;
-                            moveDirection = rng.Next(0, 4);
+                            moveDirection = Program.rng.Next(0, 4);
                         }
                     }
                 }
