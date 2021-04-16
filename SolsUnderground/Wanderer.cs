@@ -17,7 +17,6 @@ namespace SolsUnderground
         Texture2D[] textures;
         GameTime gameTime;
         float _timer = 0f;
-        Random rng;
         int moveDirection;
         //consructor: initializes the fields
         public Wanderer(Texture2D[] textures, Rectangle positionRect, int health, int attack)
@@ -27,12 +26,12 @@ namespace SolsUnderground
             this.positionRect = positionRect;
             this.health = health;
             this.attack = attack;
+            this.knockback = 64;
             moveCD = 2;
             moveCounter = moveCD;
             kbCD = 2;
             kbCounter = kbCD;
-            rng = new Random();
-            moveDirection = rng.Next(0, 4);
+            moveDirection = Program.rng.Next(0, 4);
         }
 
         //properties
@@ -105,19 +104,19 @@ namespace SolsUnderground
 
                 if (enemyState == EnemyState.faceForward || enemyState == EnemyState.moveForward)
                 {
-                    Y += (int)(32 * knockback);
+                    Y += (int)(knockback);
                 }
                 if (enemyState == EnemyState.faceLeft || enemyState == EnemyState.moveLeft)
                 {
-                    X += (int)(32 * knockback);
+                    X += (int)(knockback);
                 }
                 if (enemyState == EnemyState.faceBack || enemyState == EnemyState.moveBack)
                 {
-                    Y -= (int)(32 * knockback);
+                    Y -= (int)(knockback);
                 }
                 if (enemyState == EnemyState.faceRight || enemyState == EnemyState.moveRight)
                 {
-                    X -= (int)(32 * knockback);
+                    X -= (int)(knockback);
                 }
 
                 if (health <= 0)
@@ -192,7 +191,7 @@ namespace SolsUnderground
                         else if(_timer >= 5)
                         {
                             _timer = 0f;
-                            moveDirection = rng.Next(0, 4);
+                            moveDirection = Program.rng.Next(0, 4);
                         }
                     }
                 }

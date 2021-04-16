@@ -62,11 +62,16 @@ namespace SolsUnderground
 
         // Items
         private List<Texture2D> itemTextures;
+        private List<Texture2D> chestTextures;
 
         //Weapons
-        private Stick stick;
-        private RITchieClaw ritchieClaw;
+        private wStick stick;
+        private wRITchieClaw ritchieClaw;
         private Texture2D stickTexture;
+
+        // Armor
+        private aHoodie hoodie;
+        private Texture2D hoodieTexture;
 
         // Managers
         private MapManager mapManager;
@@ -159,26 +164,37 @@ namespace SolsUnderground
 
             // Items
             itemTextures = new List<Texture2D>();
-            itemTextures.Add(Content.Load<Texture2D>("TigerBuck"));
+            itemTextures.Add(Content.Load<Texture2D>("TigerBuck"));   // Money drop
+            itemTextures.Add(Content.Load<Texture2D>("Cola"));        // Health pickup
+            chestTextures = new List<Texture2D>();
+            chestTextures.Add(Content.Load<Texture2D>("ChestClosed"));
+            chestTextures.Add(Content.Load<Texture2D>("ChestOpen"));
 
-            // Add Potion Texture
+            /// NOTE: When adding new weapons/armor, item needs to be registered in
+            /// itemTextures list and Chest class to be added in chest drops.
 
             // Weapons
             stickTexture = Content.Load<Texture2D>("stick");
-            stick = new Stick(stickTexture, new Rectangle(0, 0, 0, 0));
+            itemTextures.Add(stickTexture);
+            stick = new wStick(stickTexture, new Rectangle(0, 0, 0, 0));
 
             //Testing Weapons
-            ritchieClaw = new RITchieClaw(stickTexture, new Rectangle(0, 0, 0, 0));
+            ritchieClaw = new wRITchieClaw(stickTexture, new Rectangle(0, 0, 0, 0));
+
+            // Armor
+            hoodieTexture = Content.Load<Texture2D>("Hoodie");
+            itemTextures.Add(hoodieTexture);
+            hoodie = new aHoodie(hoodieTexture, new Rectangle(0, 0, 0, 0));
 
             //Player
             playerRect = new Rectangle(30, 440, playerTextures[0].Width, playerTextures[0].Height);
-            player = new Player(playerTextures, playerRect, stick, animations);
+            player = new Player(playerTextures, playerRect, stick, hoodie, animations);
 
             // Managers
             collisionManager = new CollisionManager(player);
             combatManager = new CombatManager(player);
             enemyManager = new EnemyManager(player, collisionManager, combatManager);
-            itemManager = new ItemManager(player, collisionManager, itemTextures);
+            itemManager = new ItemManager(player, collisionManager, itemTextures, chestTextures);
 
             //enemy textures
             minionTextures = new Texture2D[] {
@@ -332,7 +348,7 @@ namespace SolsUnderground
                             mapManager.CurrentRoom.EnemyCount,
                             mapManager.CurrentRoom.GetOpenTiles());
 
-                        collisionManager.GetBarrierList(mapManager.CurrentRoom.GetBarriers());
+                        collisionManager.SetBarrierList(mapManager.CurrentRoom.GetBarriers());
                     }
 
                     // State transitions
@@ -602,11 +618,19 @@ namespace SolsUnderground
                     itemManager.Draw(_spriteBatch);
                     player.Draw(_spriteBatch);
                     enemyManager.Draw(_spriteBatch);
-                    if(Mouse.GetState().LeftButton == ButtonState.Pressed)
+                    //if(Mouse.GetState().LeftButton == ButtonState.Pressed)
+                    //{
+                    //    stick.Draw(_spriteBatch);
+                    //}
+                    switch (player.State)
                     {
-                        stick.Draw(_spriteBatch);
+                        case PlayerState.attackForward:
+                        case PlayerState.attackLeft:
+                        case PlayerState.attackBack:
+                        case PlayerState.attackRight:
+                            player.CurrentWeapon.Draw(_spriteBatch);
+                            break;
                     }
-                    
 
                     _spriteBatch.DrawString(
                         text,
@@ -767,7 +791,7 @@ namespace SolsUnderground
                 mapManager.CurrentRoom.EnemyCount,
                 mapManager.CurrentRoom.GetOpenTiles());
 
-            collisionManager.GetBarrierList(mapManager.CurrentRoom.GetBarriers());
+            collisionManager.SetBarrierList(mapManager.CurrentRoom.GetBarriers());
 
             // Reset player stats
             player.MaxHp = 100;
