@@ -45,6 +45,7 @@ namespace SolsUnderground
         private int maxHp;
         private Weapon weapon;
         private Armor armor;
+        private Attack currentAttack;
         private double specialCounter;
         private double basicCounter;
         private double damageCounter;
@@ -132,13 +133,13 @@ namespace SolsUnderground
         /// <summary>
         /// The basic attack damage value of the equiped weapon.
         /// </summary>
-        public int Attack
+        public int Damage
         {
             get { return weapon.Attack; }
         }
 
         /// <summary>
-        /// A multiplyer for how far enemies will be knocked back
+        /// A multiplier for how far enemies will be knocked back
         /// </summary>
         public int Knockback
         {
@@ -176,6 +177,7 @@ namespace SolsUnderground
             maxHp = 100;
             hp = maxHp;
             weapon = startWeapon;
+            currentAttack = null;
             basicCounter = weapon.BasicCooldown;
             specialCounter = weapon.SpecialCooldown;
             armor = startArmor;
@@ -375,19 +377,19 @@ namespace SolsUnderground
                     //Reset the cooldown
                     specialCounter = 0;
 
-                    Attack special = null;
+                    Attack special = CurrentWeapon.Special(this);
 
-                    //Check which weapon is equipped
-                    if (weapon is Stick)
-                    {
-                        Stick stick = new Stick();
-                        special = stick.Special(this);
-                    }
-                    else if(weapon is RITchieClaw)
-                    {
-                        RITchieClaw claw = new RITchieClaw();
-                        special = claw.Special(this);
-                    }
+                    ////Check which weapon is equipped
+                    //if (weapon is wStick)
+                    //{
+                    //    wStick stick = new wStick();
+                    //    special = stick.Special(this);
+                    //}
+                    //else if(weapon is wRITchieClaw)
+                    //{
+                    //    wRITchieClaw claw = new wRITchieClaw();
+                    //    special = claw.Special(this);
+                    //}
                     
                     //Return the special attack of the appropriate weapon
                     return special;
@@ -420,7 +422,7 @@ namespace SolsUnderground
 
                         Attack basicAttack = new Attack(
                             weapon.GetHitbox(X, Y, Width, Height, PlayerState.faceForward),
-                            Attack,
+                            Damage,
                             Knockback);
 
                         return basicAttack;
@@ -431,7 +433,7 @@ namespace SolsUnderground
 
                         Attack basicAttack = new Attack(
                             weapon.GetHitbox(X, Y, Width, Height, PlayerState.faceLeft),
-                            Attack,
+                            Damage,
                             Knockback);
 
                         return basicAttack;
@@ -442,7 +444,7 @@ namespace SolsUnderground
 
                         Attack basicAttack = new Attack(
                             weapon.GetHitbox(X, Y, Width, Height, PlayerState.faceBack),
-                            Attack,
+                            Damage,
                             Knockback);
 
                         return basicAttack;
@@ -453,7 +455,7 @@ namespace SolsUnderground
 
                         Attack basicAttack = new Attack(
                             weapon.GetHitbox(X, Y, Width, Height, PlayerState.faceRight),
-                            Attack,
+                            Damage,
                             Knockback);
 
                         return basicAttack;
