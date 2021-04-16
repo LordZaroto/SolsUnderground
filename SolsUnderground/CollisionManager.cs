@@ -6,6 +6,10 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
 /// <summary>
+/// Alex Dale
+/// Braden Flanders
+/// Preston Gilmore
+/// Noah Flanders
 /// This class is responsible for managing collisions between static and dynamic
 /// game objects, or any collision that doens't deal damage to an entity.
 /// </summary>
@@ -18,6 +22,8 @@ namespace SolsUnderground
         private List<Rectangle> barriers;
         private Player player;
         private List<Enemy> enemies;
+        private List<Item> items;
+        private List<Chest> chests;
 
         // Constructor
         public CollisionManager(Player player)
@@ -31,16 +37,26 @@ namespace SolsUnderground
         /// Load enemy list into the collision manager.
         /// </summary>
         /// <param name="enemies">Reference to working enemy list</param>
-        public void GetEnemies(List<Enemy> enemies)
+        public void SetEnemyList(List<Enemy> enemies)
         {
             this.enemies = enemies;
+        }
+
+        /// <summary>
+        /// Load item list and chest list into the collision manager.
+        /// </summary>
+        /// <param name="items"></param>
+        public void SetItemList(List<Item> items, List<Chest> chests)
+        {
+            this.items = items;
+            this.chests = chests;
         }
 
         /// <summary>
         /// Loads current room's barriers into the collision manager.
         /// </summary>
         /// <param name="barriers">List of Rectangles for barrier hitboxes</param>
-        public void GetBarriers(List<Rectangle> barriers)
+        public void SetBarrierList(List<Rectangle> barriers)
         {
             this.barriers = barriers;
         }
@@ -50,17 +66,35 @@ namespace SolsUnderground
         /// </summary>
         public void CheckCollisions()
         {
-            PlayerWallCollisions();
-            EnemyWallCollisions();
+            // Player collisions
+            FixWallCollisions(player);
+            FixChestCollisions(player);
+
+            // Put lists in same loop for efficiency
+            int loopMax = Math.Max(enemies.Count, items.Count);
+            for (int i = 0; i < loopMax; i++)
+            {
+                if (i < enemies.Count)
+                {
+                    // Enemy collisions
+                    FixWallCollisions(enemies[i]);
+                    FixChestCollisions(enemies[i]);
+                }
+                if (i < items.Count)
+                {
+                    // Item-wall collisions
+                    FixWallCollisions(items[i]);
+                }
+            }
         }
 
         /// <summary>
-        /// Detects any collisions between the player and room barriers and adjusts
-        /// the player's location accordingly.
+        /// Detects and corrects collisions with current barriers.
         /// </summary>
-        public void PlayerWallCollisions()
+        /// <param name="gameObject">Object to detect collisions of</param>
+        public void FixWallCollisions(GameObject gameObject)
         {
-            Rectangle temp = player.PositionRect;
+            Rectangle temp = gameObject.PositionRect;
 
             for (int i = 0; i < barriers.Count; i++)
             {
@@ -71,10 +105,9 @@ namespace SolsUnderground
                     if (Rectangle.Intersect(temp, barriers[i]).Width <= Rectangle.Intersect(temp, barriers[i]).Height)
                     {
                         //adjusts the position
-                        if (barriers[i].X > player.X)
+                        if (barriers[i].X > temp.X)
                         {
                             temp.X -= Rectangle.Intersect(temp, barriers[i]).Width;
-
                         }
                         else
                         {
@@ -86,7 +119,6 @@ namespace SolsUnderground
                         if (barriers[i].Y > temp.Y)
                         {
                             temp.Y -= Rectangle.Intersect(temp, barriers[i]).Height;
-
                         }
                         else
                         {
@@ -95,60 +127,55 @@ namespace SolsUnderground
                     }
                 }
 
-                player.X = temp.X;
-                player.Y = temp.Y;
+                gameObject.X = temp.X;
+                gameObject.Y = temp.Y;
             }
         }
 
         /// <summary>
-        /// Detects any collisions between enemies in the room and the room barriers,
-        /// adjusting each enemy's location as necessary.
+        /// Detects and corrects collisions with active chests.
         /// </summary>
-        public void EnemyWallCollisions()
+        /// <param name="gameObject"></param>
+        public void FixChestCollisions(GameObject gameObject)
         {
-            Rectangle temp;
+            Rectangle temp = gameObject.PositionRect;
+            Rectangle chest;
 
-            //loops through all enemies in the room
-            for (int j = 0; j < enemies.Count; j++)
+            for (int i = 0; i < chests.Count; i++)
             {
-                temp = enemies[j].PositionRect;
+                chest = chests[i].PositionRect;
 
-                for (int i = 0; i < barriers.Count; i++)
+                //checks if the player intersects with a barrier
+                if (chest.Intersects(temp) && !chests[i].IsOpen)
                 {
-                    //checks if the enemies intersect with a barrier
-                    if (temp.Intersects(barriers[i]))
+                    //checks if the x or y needs to be adjusted
+                    if (Rectangle.Intersect(temp, chest).Width <= Rectangle.Intersect(temp, chest).Height)
                     {
-                        //checks if the x or y needs to be adjusted
-                        if (Rectangle.Intersect(temp, barriers[i]).Width <= Rectangle.Intersect(temp, barriers[i]).Height)
+                        //adjusts the position
+                        if (chest.X > temp.X)
                         {
-                            //adjusts the position
-                            if (barriers[i].X >= player.X)
-                            {
-                                temp.X += Rectangle.Intersect(temp, barriers[i]).Width;
-
-                            }
-                            else
-                            {
-                                temp.X -= Rectangle.Intersect(temp, barriers[i]).Width;
-                            }
+                            temp.X -= Rectangle.Intersect(temp, chest).Width;
                         }
                         else
                         {
-                            if (barriers[i].Y >= temp.Y)
-                            {
-                                temp.Y -= Rectangle.Intersect(temp, barriers[i]).Height;
-
-                            }
-                            else
-                            {
-                                temp.Y += Rectangle.Intersect(temp, barriers[i]).Height;
-                            }
+                            temp.X += Rectangle.Intersect(temp, chest).Width;
                         }
                     }
-
-                    enemies[j].X = temp.X;
-                    enemies[j].Y = temp.Y;
+                    else
+                    {
+                        if (chest.Y > temp.Y)
+                        {
+                            temp.Y -= Rectangle.Intersect(temp, chest).Height;
+                        }
+                        else
+                        {
+                            temp.Y += Rectangle.Intersect(temp, chest).Height;
+                        }
+                    }
                 }
+
+                gameObject.X = temp.X;
+                gameObject.Y = temp.Y;
             }
         }
     }

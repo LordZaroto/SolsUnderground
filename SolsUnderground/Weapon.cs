@@ -38,7 +38,7 @@ namespace SolsUnderground
         Rectangle HitboxR { get; set; }
 
         /// <summary>
-        /// Reduces the value of incoming damage
+        /// Base damage dealt to enemies with this weapon
         /// </summary>
         int Attack { get; set; }
         
@@ -48,9 +48,14 @@ namespace SolsUnderground
         double BasicCooldown { get; }
 
         /// <summary>
-        /// A multiplyer for how far enemies will be knocked back
+        /// Minimum time that must pass between each Special Ability use
         /// </summary>
-        double Knockback { get; }
+        double SpecialCooldown { get; }
+
+        /// <summary>
+        /// A multiplier for how far enemies will be knocked back
+        /// </summary>
+        int Knockback { get; }
         //----------------------------------------
 
         //Methods
@@ -61,7 +66,7 @@ namespace SolsUnderground
         /// <summary>
         /// Will be overridden by each weapon type.
         /// </summary>
-        void Special();
+        Attack Special(Player player);
 
         /// <summary>
         /// Returns the basic attack hit box

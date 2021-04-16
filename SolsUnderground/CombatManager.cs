@@ -58,13 +58,18 @@ namespace SolsUnderground
         /// <summary>
         /// If that player's attack connects, execute the resultant consequences.
         /// </summary>
-        public void PlayerAttack(Rectangle hitBox, int damage, double knockback)
+        public void PlayerAttack(Attack attack)
         {
+            if(attack == null)
+            {
+                return;
+            }
+            
             for (int i = 0; i < enemies.Count; i++)
             {
-                if (hitBox.Intersects(enemies[i].PositionRect))
+                if (attack.Hitbox.Intersects(enemies[i].PositionRect))
                 {
-                    enemies[i].TakeDamage(damage, knockback);
+                    enemies[i].TakeDamage(attack.Damage, attack.Knockback);
                 }
             }
         }
@@ -96,22 +101,21 @@ namespace SolsUnderground
         /// Removes any dead enemies and gives money accordingly.
         /// </summary>
         /// <returns>Int money equal to dead enemies</returns>
-        public int CleanUp()
+        public void CleanUp(ItemManager itemManager)
         {
-            int money = 0;
-
-            for(int i = 0; i < enemies.Count;)
+            for (int i = 0; i < enemies.Count;)
             {
-                if(enemies[i].State == EnemyState.dead)
+                if (enemies[i].State == EnemyState.dead)
                 {
+                    // Create gold item in enemy's place
+                    itemManager.EnemyDrops(enemies[i].Attack * 3, enemies[i].PositionRect);
+
                     enemies.RemoveAt(i);
-                    money += 1;
                     continue;
                 }
 
                 i++;
             }
-            return money;
         }
     }
 }

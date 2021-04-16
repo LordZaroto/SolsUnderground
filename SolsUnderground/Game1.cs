@@ -2,7 +2,8 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-
+using System.IO;
+using System;
 
 // Noah Flanders
 // Preston Gilmore
@@ -20,9 +21,14 @@ namespace SolsUnderground
         Instructions,
         Game,
         Pause,
-        GameOver
-            
-
+        GameOver,
+        SaveChoice,
+        Saved,
+        ClearSave,
+        SaveCleared,
+        LoadChoice,
+        LoadFailed,
+        Win
     }
     public class Game1 : Game
     {
@@ -51,19 +57,27 @@ namespace SolsUnderground
 
         //enemy
         private Texture2D[] minionTextures;
+        private Texture2D[] wandererTextures;
+
+        // Items
+        private List<Texture2D> itemTextures;
+        private List<Texture2D> chestTextures;
 
         //Weapons
-        private Stick stick;
-        private RITchieClaw ritchieClaw;
+        private wStick stick;
+        private wRITchieClaw ritchieClaw;
         private Texture2D stickTexture;
-        private Weapon startWeapon;
-        private Texture2D startWeaponTexture;
+
+        // Armor
+        private aHoodie hoodie;
+        private Texture2D hoodieTexture;
 
         // Managers
         private MapManager mapManager;
         private CombatManager combatManager;
         private EnemyManager enemyManager;
         private CollisionManager collisionManager;
+        private ItemManager itemManager;
 
         //menu items
         private Texture2D startGame;
@@ -81,7 +95,6 @@ namespace SolsUnderground
 
         //HUD items
         private Rectangle hudWeapon;
-        private int money = 0;
         private int enemyAmount;
 
         //pause items
@@ -100,6 +113,9 @@ namespace SolsUnderground
         private Rectangle button10;
         private Rectangle button11;
 
+
+        //game time
+        private GameTime gameTime;
 
         public Game1()
         {
@@ -134,7 +150,8 @@ namespace SolsUnderground
                 {"playerMoveForward", new Animation(Content.Load<Texture2D>("playerMovingUp2"), 4) },
                 {"playerMoveBack", new Animation(Content.Load<Texture2D>("playerMovingDown2"), 4) },
                 {"playerMoveLeft", new Animation(Content.Load<Texture2D>("playerMovingLeft"), 4) },
-                {"playerMoveRight", new Animation(Content.Load<Texture2D>("playerMovingRight"), 4) }
+                {"playerMoveRight", new Animation(Content.Load<Texture2D>("playerMovingRight"), 4) },
+                {"heroDeath", new Animation(Content.Load<Texture2D>("heroDeath"), 4) }
             };
 
             //character textures
@@ -144,21 +161,39 @@ namespace SolsUnderground
                 Content.Load<Texture2D>("heroLeft"),
                 Content.Load<Texture2D>("heroRight") };
 
-            //weapon
+            // Items
+            itemTextures = new List<Texture2D>();
+            itemTextures.Add(Content.Load<Texture2D>("TigerBuck"));   // Money drop
+            itemTextures.Add(Content.Load<Texture2D>("Cola"));        // Health pickup
+            chestTextures = new List<Texture2D>();
+            chestTextures.Add(Content.Load<Texture2D>("ChestClosed"));
+            chestTextures.Add(Content.Load<Texture2D>("ChestOpen"));
+
+            /// NOTE: When adding new weapons/armor, item needs to be registered in
+            /// itemTextures list and Chest class to be added in chest drops.
+
+            // Weapons
             stickTexture = Content.Load<Texture2D>("stick");
-            stick = new Stick(stickTexture, new Rectangle(0, 0, 0, 0));
+            itemTextures.Add(stickTexture);
+            stick = new wStick(stickTexture, new Rectangle(0, 0, 0, 0));
 
             //Testing Weapons
-            ritchieClaw = new RITchieClaw(stickTexture, new Rectangle(0, 0, 0, 0));
+            ritchieClaw = new wRITchieClaw(stickTexture, new Rectangle(0, 0, 0, 0));
+
+            // Armor
+            hoodieTexture = Content.Load<Texture2D>("Hoodie");
+            itemTextures.Add(hoodieTexture);
+            hoodie = new aHoodie(hoodieTexture, new Rectangle(0, 0, 0, 0));
 
             //Player
             playerRect = new Rectangle(30, 440, playerTextures[0].Width, playerTextures[0].Height);
-            player = new Player(playerTextures, playerRect, stick, animations);
+            player = new Player(playerTextures, playerRect, ritchieClaw, hoodie, animations);
 
             // Managers
             collisionManager = new CollisionManager(player);
             combatManager = new CombatManager(player);
             enemyManager = new EnemyManager(player, collisionManager, combatManager);
+            itemManager = new ItemManager(player, collisionManager, itemTextures, chestTextures);
 
             //enemy textures
             minionTextures = new Texture2D[] {
@@ -167,6 +202,14 @@ namespace SolsUnderground
                 Content.Load<Texture2D>("minionLeft"),
                 Content.Load<Texture2D>("minionRight") };
             enemyManager.AddEnemyData(minionTextures);
+
+            wandererTextures = new Texture2D[]
+            {
+                Content.Load<Texture2D>("wandererForward"),
+                Content.Load<Texture2D>("wandererBack"),
+                Content.Load<Texture2D>("wandererLeft"),
+                Content.Load<Texture2D>("wandererRight") };
+            enemyManager.AddEnemyData(wandererTextures);
 
             // Tiles
             List<Texture2D> tileTextures = new List<Texture2D>();
@@ -214,7 +257,8 @@ namespace SolsUnderground
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.End))
                 Exit();
-            
+
+
             //User Input
             KeyboardState kb = Keyboard.GetState();
             MouseState mouse = Mouse.GetState();
@@ -241,6 +285,14 @@ namespace SolsUnderground
                         currentState = GameState.Instructions;
                     else if (SingleKeyPress(Keys.Escape, kb, prevKB))
                         Exit();
+                    else if (SingleKeyPress(Keys.L, kb, prevKB))
+                    {
+                        currentState = GameState.LoadChoice;
+                    }
+                    else if (SingleKeyPress(Keys.K, kb, prevKB))
+                    {
+                        currentState = GameState.ClearSave;
+                    }
                     break;
 
 
@@ -265,17 +317,17 @@ namespace SolsUnderground
 
                     //Player
                     player.Input(kb, gameTime);
-                    combatManager.PlayerAttack(
-                        player.BasicAttack(leftBState, previousLeftBState),
-                        player.Attack,
-                        player.Knockback);
+                    combatManager.PlayerAttack(player.BasicAttack(leftBState, previousLeftBState));
+                    combatManager.PlayerAttack(player.Special(rightBState, previousRightBState));
 
                     // Enemies
-                    enemyManager.MoveEnemies();
+
+                    enemyManager.MoveEnemies(gameTime);
                     combatManager.EnemyAttacks();
-                    money += combatManager.CleanUp();
+                    combatManager.CleanUp(itemManager);
 
                     //Collisions
+                    itemManager.ActivateItems();
                     collisionManager.CheckCollisions();
 
                     // Move to next room
@@ -284,13 +336,18 @@ namespace SolsUnderground
                     {
                         player.X = 0;
                         mapManager.NextRoom();
+                        if(mapManager.CurrentFloor > 6)
+                        {
+                            currentState = GameState.Win;
+                        }
+                        itemManager.NextRoom();
 
                         enemyManager.ClearEnemies();
                         enemyManager.SpawnEnemies(
                             mapManager.CurrentRoom.EnemyCount,
                             mapManager.CurrentRoom.GetOpenTiles());
 
-                        collisionManager.GetBarriers(mapManager.CurrentRoom.GetBarriers());
+                        collisionManager.SetBarrierList(mapManager.CurrentRoom.GetBarriers());
                     }
 
                     // State transitions
@@ -298,7 +355,8 @@ namespace SolsUnderground
                     {
                         currentState = GameState.Pause;
                     }
-                    if (player.Hp <= 0)
+
+                    if(player.Hp <= 0)
                     {
                         if (godMode)
                         {
@@ -306,8 +364,17 @@ namespace SolsUnderground
                         }
                         else
                         {
-                            currentState = GameState.GameOver;
+                            enemyManager.ClearEnemies();
+                            player.Die();
+                            player.UpdateTimer(gameTime);
+                            //player.State = PlayerState.dead;
                         }
+                        
+                    }
+
+                    if (player.State == PlayerState.dead)
+                    {
+                        currentState = GameState.GameOver;
                     }
                     break;
 
@@ -321,6 +388,11 @@ namespace SolsUnderground
                         
                     if (kb.IsKeyDown(Keys.Q) || MouseClick(button9, mouse, prevM) == true)
                         currentState = GameState.Menu;
+
+                    if (SingleKeyPress(Keys.S, kb, prevKB) || MouseClick(button7, mouse, prevM) == true)
+                    {
+                        currentState = GameState.SaveChoice;
+                    }
                     break;
 
 
@@ -328,10 +400,117 @@ namespace SolsUnderground
                 case GameState.GameOver:
                     if (kb.IsKeyDown(Keys.Enter) || MouseClick(button10, mouse, prevM) == true)
                     {
+                        player.State = PlayerState.faceForward;
                         currentState = GameState.Game;
                         StartGame();
                     }
                     if (SingleKeyPress(Keys.Escape, kb, prevKB) || MouseClick(button11, mouse, prevM) == true)
+                    {
+                        player.State = PlayerState.faceForward;
+                        currentState = GameState.Menu;
+                    }
+                    break;
+                case GameState.SaveChoice:
+                    //Saves player stats to the SaveFiles folder in Content
+                    //The user chooses one of three available save files
+                    if (SingleKeyPress(Keys.NumPad2, kb, prevKB))
+                    {
+                        SaveFile("saveFile2");
+                    }
+                    else if(SingleKeyPress(Keys.NumPad3, kb, prevKB))
+                    {
+                        SaveFile("saveFile3");
+                    }
+                    else if(SingleKeyPress(Keys.NumPad1, kb, prevKB))
+                    {
+                        SaveFile("saveFile1");
+                    }
+                    else if (SingleKeyPress(Keys.Escape, kb, prevKB))
+                    {
+                        currentState = GameState.Pause;
+                    }
+
+                    break;
+                case GameState.Saved:
+                    //Pressing escape takes you back to the pause menu to either continue exit
+                    if (SingleKeyPress(Keys.Escape, kb, prevKB))
+                    {
+                        currentState = GameState.Pause;
+                    }
+                    break;
+                case GameState.LoadChoice:
+                    //The user chooses one of three available save files
+                    if (SingleKeyPress(Keys.NumPad2, kb, prevKB))
+                    {
+                        try
+                        {
+                            LoadGameFile("saveFile2");
+                        }
+                        catch
+                        {
+                            currentState = GameState.LoadFailed;
+                        }
+                    }
+                    else if (SingleKeyPress(Keys.NumPad3, kb, prevKB))
+                    {
+                        try
+                        {
+                            LoadGameFile("saveFile3");
+                        }
+                        catch
+                        {
+                            currentState = GameState.LoadFailed;
+                        }
+                    }
+                    else if (SingleKeyPress(Keys.NumPad1, kb, prevKB))
+                    {
+                        try
+                        {
+                            LoadGameFile("saveFile1");
+                        }
+                        catch
+                        {
+                            currentState = GameState.LoadFailed;
+                        }
+                    }
+                    else if(SingleKeyPress(Keys.Escape, kb, prevKB))
+                        {
+                            currentState = GameState.Menu;
+                        }
+                    break;
+                case GameState.LoadFailed:
+                    if (SingleKeyPress(Keys.Escape, kb, prevKB))
+                    {
+                        currentState = GameState.Menu;
+                    }
+                        break;
+                case GameState.Win:
+                    if (SingleKeyPress(Keys.Escape, kb, prevKB))
+                    {
+                        currentState = GameState.Menu;
+                    }
+                    break;
+                case GameState.ClearSave:
+                    if (SingleKeyPress(Keys.Escape, kb, prevKB))
+                    {
+                        currentState = GameState.Menu;
+                    }
+                    //The user chooses one of three available save files
+                    if (SingleKeyPress(Keys.NumPad2, kb, prevKB))
+                    {
+                        ClearFile("saveFile2");
+                    }
+                    else if (SingleKeyPress(Keys.NumPad3, kb, prevKB))
+                    {
+                        ClearFile("saveFile3");
+                    }
+                    else if (SingleKeyPress(Keys.NumPad1, kb, prevKB))
+                    {
+                        ClearFile("saveFile1");
+                    }
+                    break;
+                case GameState.SaveCleared:
+                    if (SingleKeyPress(Keys.Escape, kb, prevKB))
                     {
                         currentState = GameState.Menu;
                     }
@@ -435,13 +614,22 @@ namespace SolsUnderground
                 // Main Game Screen
                 case GameState.Game:
                     mapManager.Draw(_spriteBatch);
+                    itemManager.Draw(_spriteBatch);
                     player.Draw(_spriteBatch);
                     enemyManager.Draw(_spriteBatch);
-                    if(Mouse.GetState().LeftButton == ButtonState.Pressed)
+                    //if(Mouse.GetState().LeftButton == ButtonState.Pressed)
+                    //{
+                    //    stick.Draw(_spriteBatch);
+                    //}
+                    switch (player.State)
                     {
-                        player.CurrentWeapon.Draw(_spriteBatch);
+                        case PlayerState.attackForward:
+                        case PlayerState.attackLeft:
+                        case PlayerState.attackBack:
+                        case PlayerState.attackRight:
+                            player.CurrentWeapon.Draw(_spriteBatch);
+                            break;
                     }
-                    
 
                     _spriteBatch.DrawString(
                         text,
@@ -450,7 +638,7 @@ namespace SolsUnderground
                         Color.White);
                     _spriteBatch.DrawString(
                         text,
-                        "Tiger Bucks-" + money,
+                        "Tiger Bucks-" + player.TigerBucks,
                         new Vector2(330, 0),
                         Color.White);
                     _spriteBatch.DrawString(
@@ -491,6 +679,65 @@ namespace SolsUnderground
                         Color.White);
                     _spriteBatch.Draw(newGame, button10, Color.White);
                     _spriteBatch.Draw(exitToMenu, button11, Color.White);
+                    break;
+
+                //Save file choice screen
+                case GameState.SaveChoice:
+                    _spriteBatch.DrawString(
+                        text,
+                        "Save File 1,   2,  or 3\n" +
+                        "Press esc to return",
+                        new Vector2(0, 0),
+                        Color.White);
+                    break;
+
+                //File saved confirmation screen    
+                case GameState.Saved:
+                    _spriteBatch.DrawString(
+                        text,
+                        "File Saved!\n" +
+                        "Press esc to return to the pause menu",
+                        new Vector2(0, 0),
+                        Color.White);
+                    break;
+                case GameState.LoadChoice:
+                    _spriteBatch.DrawString(
+                        text,
+                        "Load File 1,   2,  or 3",
+                        new Vector2(0, 0),
+                        Color.White);
+                    break;
+                case GameState.LoadFailed:
+                    _spriteBatch.DrawString(
+                        text,
+                        "No save data available!\n" +
+                        "Press esc to return to the menu",
+                        new Vector2(0, 0),
+                        Color.White);
+                    break;
+                case GameState.Win:
+                    _spriteBatch.DrawString(
+                       text,
+                       "Congratulations! You have escaped with your panini!\n" +
+                       "Press esc to return to the menu",
+                       new Vector2(0, 0),
+                       Color.White);
+                    break;
+                case GameState.ClearSave:
+                    _spriteBatch.DrawString(
+                       text,
+                       "Would you like to clear file 1,   2,   or 3?\n" +
+                       "Press esc to return",
+                       new Vector2(0, 0),
+                       Color.White);
+                    break;
+                case GameState.SaveCleared:
+                    _spriteBatch.DrawString(
+                       text,
+                       "Save file has been cleared!\n" +
+                       "Press esc to return",
+                       new Vector2(0, 0),
+                       Color.White);
                     break;
 
             }
@@ -538,11 +785,12 @@ namespace SolsUnderground
             mapManager.Reset();
 
             enemyManager.ClearEnemies();
+            itemManager.NextRoom();
             enemyManager.SpawnEnemies(
                 mapManager.CurrentRoom.EnemyCount,
                 mapManager.CurrentRoom.GetOpenTiles());
 
-            collisionManager.GetBarriers(mapManager.CurrentRoom.GetBarriers());
+            collisionManager.SetBarrierList(mapManager.CurrentRoom.GetBarriers());
 
             // Reset player stats
             player.MaxHp = 100;
@@ -550,7 +798,72 @@ namespace SolsUnderground
             player.EquipWeapon(stick);
             player.X = 30;
             player.Y = 440;
-            money = 0;
+            player.TigerBucks = 0;
+        }
+
+        /// <summary>
+        /// Noah Flanders
+        /// 
+        /// Helper method that takes in the data from the save file chosen 
+        /// and adjusts the player's stats and location accordingly
+        /// </summary>
+        /// <param name="fileName"></param>
+        private void LoadGameFile(string fileName)
+        {
+            StreamReader reader = new StreamReader($"../../../Content//SaveFiles//{fileName}");
+            string fileLine = reader.ReadLine();
+            string[] fileData = fileLine.Split('|');
+            reader.Close();
+
+            //Reset the current game
+            StartGame();
+
+            //Adjust the players stats based on the file data
+            player.Hp = int.Parse(fileData[0]);
+            player.TigerBucks = int.Parse(fileData[1]);
+
+            int numFloors = int.Parse(fileData[2]);
+            for(int i = 0; i <= numFloors; i++)
+            {
+                mapManager.NewFloor();
+            }
+
+            int roomNum = int.Parse(fileData[3]);
+            for(int j = 0; j <= roomNum; j++)
+            {
+                mapManager.NextRoom();
+            }
+
+            //Change the GameState
+            currentState = GameState.Game;
+        }
+
+        /// <summary>
+        /// Noah Flanders
+        /// 
+        /// Helper method that writes all of the player data to a text file
+        /// within the SaveFiles folder in the game's Content folder
+        /// </summary>
+        /// <param name="fileName"></param>
+        private void SaveFile(string fileName)
+        {
+            StreamWriter writer = new StreamWriter($"../../../Content//SaveFiles//{fileName}");
+            writer.WriteLine($"{player.Hp}|{player.TigerBucks}|{mapManager.CurrentFloor}|{mapManager.CurrentRoomNum}");
+            writer.Close();
+            currentState = GameState.Saved;
+        }
+
+        /// <summary>
+        /// Noah Flanders
+        /// 
+        /// Helper method that deletes the save file the user chooses from 
+        /// the game's content folder
+        /// </summary>
+        /// <param name="fileName"></param>
+        private void ClearFile(string fileName)
+        {
+            File.Delete($"../../../Content//SaveFiles//{fileName}");
+            currentState = GameState.SaveCleared;
         }
     }
 }

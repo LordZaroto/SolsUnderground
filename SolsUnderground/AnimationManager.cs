@@ -16,6 +16,11 @@ namespace SolsUnderground
 
         private Player player;
         
+        public Animation Animation
+        {
+            get { return _animation; }
+        }
+
         public Vector2 Position { get; set; }
 
         //creates new animation manager
@@ -46,7 +51,7 @@ namespace SolsUnderground
         public void Stop()
         {
             _timer = 0f;
-            _animation.CurrentFrame = 0;
+            //_animation.CurrentFrame = 0;
         }
 
         /// <summary>

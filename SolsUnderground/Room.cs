@@ -41,11 +41,11 @@ namespace SolsUnderground
         private int enemyCount;
 
         // Properties
-        public int Width
+        public static int Width
         {
             get { return ROOM_WIDTH; }
         }
-        public int Height
+        public static int Height
         {
             get { return ROOM_HEIGHT; }
         }

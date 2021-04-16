@@ -29,7 +29,8 @@ namespace SolsUnderground
     {
         DefaultTile,
         Barrier,
-        RedBrick
+        RedBrick,
+        BlueBrick
     }
 
     class Tile : StaticObject
@@ -67,6 +68,11 @@ namespace SolsUnderground
             get { return positionRect.Height; }
             set { positionRect.Height = value; }
         }
+        public override Rectangle PositionRect
+        {
+            get { return positionRect; }
+            set { positionRect = value; }
+        }
 
         // Constructor
         public Tile(Texture2D texture, bool isObstacle)
@@ -84,7 +90,7 @@ namespace SolsUnderground
         /// Draws Tile using a Texture2D and a Rectangle.
         /// </summary>
         /// <param name="sb"></param>
-        public void Draw(SpriteBatch sb)
+        public override void Draw(SpriteBatch sb)
         {
             sb.Draw(texture, positionRect, Color.White);
         }

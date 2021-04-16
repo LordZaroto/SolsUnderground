@@ -37,6 +37,18 @@
 /processorParam:TextureFormat=Color
 /build:BrickSprite.png
 
+#begin Controls.PNG
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Controls.PNG
+
 #begin Exit.PNG
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -60,6 +72,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:heroBack2.png
+
+#begin heroDeath.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:heroDeath.png
 
 #begin heroForward2.png
 /importer:TextureImporter
@@ -96,6 +120,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:heroRight.png
+
+#begin Hoodie.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Hoodie.png
 
 #begin instructions.PNG
 /importer:TextureImporter
@@ -291,17 +327,32 @@
 /processorParam:TextureFormat=Compressed
 /build:Roboto40.spritefont
 
+#begin Rooms/BlueMaze.level
+/copy:Rooms/BlueMaze.level
+
 #begin Rooms/BossRooms/basicBossRoom.level
 /copy:Rooms/BossRooms/basicBossRoom.level
+
+#begin Rooms/BrokenPillars.level
+/copy:Rooms/BrokenPillars.level
 
 #begin Rooms/Coho.level
 /copy:Rooms/Coho.level
 
+#begin Rooms/CrosshairRoom.level
+/copy:Rooms/CrosshairRoom.level
+
 #begin Rooms/EmptyRoom.level
 /copy:Rooms/EmptyRoom.level
 
+#begin Rooms/EyeRoom.level
+/copy:Rooms/EyeRoom.level
+
 #begin Rooms/SimpleRoom.level
 /copy:Rooms/SimpleRoom.level
+
+#begin Rooms/SkullRoom.level
+/copy:Rooms/SkullRoom.level
 
 #begin Rooms/StartRooms/basicStartRoom.level
 /copy:Rooms/StartRooms/basicStartRoom.level
@@ -356,4 +407,64 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:tempPlayer.png
+
+#begin TigerBuck.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:TigerBuck.png
+
+#begin wandererBack.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:wandererBack.png
+
+#begin wandererForward.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:wandererForward.png
+
+#begin wandererLeft.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:wandererLeft.png
+
+#begin wandererRight.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:wandererRight.png
 

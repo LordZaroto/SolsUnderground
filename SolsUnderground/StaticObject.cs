@@ -9,30 +9,6 @@ namespace SolsUnderground
 {
     abstract class StaticObject : GameObject
     {
-        protected Rectangle positionRect;
-
-        //properties
-        public abstract int X
-        {
-            get;
-            set;
-        }
-
-        public abstract int Y
-        {
-            get;
-            set;
-        }
-        public abstract int Width
-        {
-            get;
-            set;
-        }
-
-        public abstract int Height
-        {
-            get;
-            set;
-        }
+        abstract public void Draw(SpriteBatch sb);
     }
 }
