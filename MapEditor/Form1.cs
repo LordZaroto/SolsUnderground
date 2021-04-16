@@ -124,6 +124,7 @@ namespace MapEditor
                 {
                     for (int j = 0; j < mapHeight; j++)
                     {
+                        //Checks tile type
                         if (mapLayout[i, j].BackgroundImage == buttonTile2.Image)
                         {
                             writer.Write("RedBrick|");
@@ -137,7 +138,18 @@ namespace MapEditor
                             writer.Write("DefaultTile|");
                         }
 
+                        //Checks if barrier is present
                         if(mapLayout[i, j].Image == buttonTile6.Image)
+                        {
+                            writer.Write("true|");
+                        }
+                        else
+                        {
+                            writer.Write("false|");
+                        }
+
+                        //Checks if chest will spawn here
+                        if (mapLayout[i, j].Image == buttonTileChestSpawn.Image)
                         {
                             writer.Write("true|");
                         }
@@ -206,6 +218,10 @@ namespace MapEditor
                     if(tileInfo[1] == "true")
                     {
                         mapLayout[i, j].Image = buttonTile6.Image;
+                    }
+                    if (tileInfo[2] == "true")
+                    {
+                        mapLayout[i, j].Image = buttonTileChestSpawn.Image;
                     }
                     mapLayout[i, j].Width = tileWidth;
                     mapLayout[i, j].Height = tileHeight;
