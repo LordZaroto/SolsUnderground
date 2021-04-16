@@ -159,7 +159,6 @@ namespace SolsUnderground
                     attack / 2,
                     knockback / 2);
 
-                if()
                 player.X -= player.Width * 5;
 
                 return special;
