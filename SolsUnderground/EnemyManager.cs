@@ -84,6 +84,7 @@ namespace SolsUnderground
                     openTiles[spawnPoint].Y,
                     enemyTextures[1][2].Width,
                     enemyTextures[1][2].Height);
+                //The type of enemy spawned should be random
                 switch (enemyChoice)
                 {
                     case 0:
