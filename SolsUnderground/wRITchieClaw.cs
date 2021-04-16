@@ -98,13 +98,16 @@ namespace SolsUnderground
         //||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
         //---------------------------------------------------------------------
 
-        //public wRITchieClaw()
+        //previous version
+        //public RITchieClaw()
         //{
         //    basicCooldown = 0.1;
         //    specialCooldown = 3;
         //    attack = 7;
-        //    knockback = (int)(0.8 * 32);
+        //    knockback = (int)(0.8 * 32); 
         //}
+
+        //public RITchieClaw(Texture2D texture, Rectangle positionRect)
         public wRITchieClaw(Texture2D texture, Rectangle positionRect)
             : base(ItemType.Weapon, 7, texture, positionRect)
         {

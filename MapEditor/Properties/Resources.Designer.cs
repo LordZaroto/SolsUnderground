@@ -63,6 +63,16 @@ namespace MapEditor.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap BarrierIndicator {
+            get {
+                object obj = ResourceManager.GetObject("BarrierIndicator", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap BarrierSprite {
             get {
                 object obj = ResourceManager.GetObject("BarrierSprite", resourceCulture);
@@ -86,6 +96,16 @@ namespace MapEditor.Properties {
         internal static System.Drawing.Bitmap BrickSprite {
             get {
                 object obj = ResourceManager.GetObject("BrickSprite", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap ChestSprite {
+            get {
+                object obj = ResourceManager.GetObject("ChestSprite", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
