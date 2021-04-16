@@ -128,13 +128,19 @@ namespace SolsUnderground
         /// <summary>
         /// Removes all chests and items from previous rooms and spawns chests for the next room.
         /// </summary>
-        public void NextRoom()
+        public void NextRoom(List<Point> chestSpawns)
         {
             items.Clear();
             chests.Clear();
 
             // Spawn chests for next room
-            // MapManager creates list of Points as spawn locations
+            foreach(Point p in chestSpawns)
+            {
+                chests.Add(new Chest(chestTextures,
+                    new Rectangle(p,
+                    new Point(chestTextures[0].Width,
+                    chestTextures[0].Height))));
+            }
         }
 
         /// <summary>

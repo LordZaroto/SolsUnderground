@@ -38,6 +38,7 @@ namespace SolsUnderground
         //games state
         private GameState currentState;
         bool godMode;
+        bool isRoomCleared;
 
         //text
         private SpriteFont heading;
@@ -129,6 +130,7 @@ namespace SolsUnderground
             //sets game state to menu, and sets window size
             currentState = GameState.Menu;
             godMode = false;
+            isRoomCleared = false;
             _graphics.PreferredBackBufferWidth = 1320;
             _graphics.PreferredBackBufferHeight = 1000;
             _graphics.ApplyChanges();
@@ -189,12 +191,6 @@ namespace SolsUnderground
             playerRect = new Rectangle(30, 440, playerTextures[0].Width, playerTextures[0].Height);
             player = new Player(playerTextures, playerRect, ritchieClaw, hoodie, animations);
 
-            // Managers
-            collisionManager = new CollisionManager(player);
-            combatManager = new CombatManager(player);
-            enemyManager = new EnemyManager(player, collisionManager, combatManager);
-            itemManager = new ItemManager(player, collisionManager, itemTextures, chestTextures);
-
             //enemy textures
             minionTextures = new Texture2D[] {
                 Content.Load<Texture2D>("minionForward"),
@@ -216,7 +212,15 @@ namespace SolsUnderground
             tileTextures.Add(Content.Load<Texture2D>("BrickSprite"));
             tileTextures.Add(Content.Load<Texture2D>("BarrierSprite"));
             tileTextures.Add(Content.Load<Texture2D>("RedBrickSprite"));
-            mapManager = new MapManager(tileTextures, 
+
+            // Managers
+            collisionManager = new CollisionManager(player, 
+                _graphics.PreferredBackBufferWidth, 
+                _graphics.PreferredBackBufferHeight);
+            combatManager = new CombatManager(player);
+            enemyManager = new EnemyManager(player, collisionManager, combatManager);
+            itemManager = new ItemManager(player, collisionManager, itemTextures, chestTextures);
+            mapManager = new MapManager(tileTextures,
                 _graphics.PreferredBackBufferWidth,
                 _graphics.PreferredBackBufferHeight);
 
@@ -330,8 +334,16 @@ namespace SolsUnderground
                     itemManager.ActivateItems();
                     collisionManager.CheckCollisions();
 
+                    // Check if room is cleared
+                    if (combatManager.EnemyCount == 0 && !isRoomCleared)
+                    {
+                        itemManager.OpenChests();
+                        collisionManager.OpenNextRoom();
+                        isRoomCleared = true;
+                    }
+
                     // Move to next room
-                    if(player.Width + player.X > _graphics.PreferredBackBufferWidth 
+                    if(player.X > _graphics.PreferredBackBufferWidth 
                         || (SingleKeyPress(Keys.N, kb, prevKB) && godMode))
                     {
                         player.X = 0;
@@ -340,7 +352,9 @@ namespace SolsUnderground
                         {
                             currentState = GameState.Win;
                         }
-                        itemManager.NextRoom();
+
+                        itemManager.NextRoom(mapManager.CurrentRoom.ChestSpawns);
+                        isRoomCleared = false;
 
                         enemyManager.ClearEnemies();
                         enemyManager.SpawnEnemies(
@@ -772,7 +786,8 @@ namespace SolsUnderground
             mapManager.Reset();
 
             enemyManager.ClearEnemies();
-            itemManager.NextRoom();
+            itemManager.NextRoom(mapManager.CurrentRoom.ChestSpawns);
+            isRoomCleared = false;
             enemyManager.SpawnEnemies(
                 mapManager.CurrentRoom.EnemyCount,
                 mapManager.CurrentRoom.GetOpenTiles());

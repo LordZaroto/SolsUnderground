@@ -82,12 +82,7 @@ namespace SolsUnderground
 
             switch (randomPick)
             {
-                case 0: // Health pickup
-                    drop = new Item(ItemType.HealthPickup,
-                        20, itemTextures[1], PositionRect);
-                    break;
-
-                case 1: // Weapon
+                case 0: // Weapon
                     randomPick = Program.rng.Next(2);
 
                     switch (randomPick) // Add weapon items to drop here
@@ -103,7 +98,7 @@ namespace SolsUnderground
                     }
                     break;
 
-                case 2: // Armor
+                case 1: // Armor
                     randomPick = Program.rng.Next(1);
 
                     switch (randomPick) // Add armor items to drop here
@@ -112,6 +107,11 @@ namespace SolsUnderground
                             drop = new aHoodie(itemTextures[3], positionRect);
                             break;
                     }
+                    break;
+
+                case 2: // Health pickup
+                    drop = new Item(ItemType.HealthPickup,
+                        100, itemTextures[1], PositionRect);
                     break;
             }
 
