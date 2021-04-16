@@ -124,11 +124,17 @@
   <data name="RedBrickSprite" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\RedBrickSprite.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="ExitSprite" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\ExitSprite.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="BrickSprite" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\BrickSprite.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="BlueBrickSprite" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\BlueBrickSprite.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="BarrierIndicator" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\BarrierIndicator.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="EntranceSprite" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\EntranceSprite.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -136,7 +142,7 @@
   <data name="BarrierSprite" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\BarrierSprite.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="ExitSprite" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\ExitSprite.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="ChestSprite" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\ChestSprite.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

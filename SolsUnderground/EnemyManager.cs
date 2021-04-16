@@ -65,10 +65,12 @@ namespace SolsUnderground
         {
             // Use to store random index of openTile list
             int spawnPoint;
+            int enemyChoice;
 
             for (int i = 0; i < enemyCount; i++)
             {
                 spawnPoint = Program.rng.Next(openTiles.Count);
+                enemyChoice = Program.rng.Next(2);
 
                 // Need to expand and implement spawning multiple enemy types
                 Rectangle skaterRect = new Rectangle(
@@ -82,9 +84,16 @@ namespace SolsUnderground
                     openTiles[spawnPoint].Y,
                     enemyTextures[1][2].Width,
                     enemyTextures[1][2].Height);
-
-                enemies.Add(new Minion(enemyTextures[0], skaterRect, 6, 4));
-                enemies.Add(new Wanderer(enemyTextures[1], fratRect, 12, 8));
+                //The type of enemy spawned should be random
+                switch (enemyChoice)
+                {
+                    case 0:
+                        enemies.Add(new Minion(enemyTextures[0], skaterRect, 6, 4));
+                        break;
+                    case 1:
+                        enemies.Add(new Wanderer(enemyTextures[1], fratRect, 12, 8));
+                        break;
+                }
             }
         }
 

@@ -21,10 +21,6 @@ using Microsoft.Xna.Framework.Input;
 /// > NextRoom() automatically loads the next floor (and clears the current one)
 ///   when the currentRoom becomes higher than the number of rooms on the floor.
 /// 
-/// > Need to account for boss rooms in floor generation and room pools
-/// 
-/// > Need to add chests to rooms
-/// 
 /// </summary>
 
 namespace SolsUnderground
