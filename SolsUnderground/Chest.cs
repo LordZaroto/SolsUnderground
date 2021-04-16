@@ -75,43 +75,62 @@ namespace SolsUnderground
 
         // Methods
 
-        public Item Open(List<Texture2D> itemTextures)
+        /// <summary>
+        /// Generates a new item for the player to pick up.
+        /// </summary>
+        /// <param name="itemTextures">List of item textures</param>
+        /// <param name="mSpriteCount">Number of money textures</param>
+        /// <param name="hSpriteCount">Number of health pickup textures</param>
+        /// <param name="wSpriteCount">Number of weapon textures</param>
+        /// <param name="aSpriteCount">Number of armor textures</param>
+        /// <returns>Newly generated Item</returns>
+        public Item Open(List<Texture2D> itemTextures, int mSpriteCount, int hSpriteCount, int wSpriteCount, int aSpriteCount)
         {
             int randomPick = Program.rng.Next(3);
+            int textureID = 0;
             Item drop = null;
 
             switch (randomPick)
             {
                 case 0: // Weapon
-                    randomPick = Program.rng.Next(2);
+                    randomPick = Program.rng.Next(wSpriteCount);
+                    textureID = mSpriteCount + hSpriteCount + randomPick;
 
                     switch (randomPick) // Add weapon items to drop here
                     {
                         case 0:
-                            drop = new wStick(itemTextures[2], positionRect);
+                            drop = new wStick(itemTextures[textureID], positionRect);
                             break;
 
                         case 1:
-                            drop = new wRITchieClaw(itemTextures[2], positionRect);
+                            drop = new wRITchieClaw(itemTextures[textureID], positionRect);
                             break;
-
                     }
                     break;
 
                 case 1: // Armor
-                    randomPick = Program.rng.Next(1);
+                    randomPick = Program.rng.Next(aSpriteCount);
+                    textureID = mSpriteCount + hSpriteCount + wSpriteCount + randomPick;
 
                     switch (randomPick) // Add armor items to drop here
                     {
                         case 0:
-                            drop = new aHoodie(itemTextures[3], positionRect);
+                            drop = new aHoodie(itemTextures[textureID], positionRect);
+                            break;
+
+                        case 1:
+                            drop = new aWinterCoat(itemTextures[textureID], positionRect);
+                            break;
+
+                        case 2:
+                            drop = new aBandana(itemTextures[textureID], positionRect);
                             break;
                     }
                     break;
 
                 case 2: // Health pickup
                     drop = new Item(ItemType.HealthPickup,
-                        100, itemTextures[1], PositionRect);
+                        100, itemTextures[mSpriteCount], PositionRect);
                     break;
             }
 

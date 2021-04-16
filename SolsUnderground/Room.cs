@@ -15,17 +15,6 @@ using Microsoft.Xna.Framework.Input;
 /// Noah Flanders - 3/30/21
 /// Different enemies spawn in each room
 /// (this code moved to EnemyManager)
-///
-/// NOTES:
-/// > FINISH COPY METHOD: Currently doesnt solve issue, only moves object references
-///   into a new Room object
-/// 
-/// > Using a List for storing Tiles should work fine, but possibility is open to
-///   other structures like 2D arrays if issues arise
-///   
-/// > NEED TO FINISH METHODS FOR CONTENT LIST: Make sure all necessary data is accessible
-///   What goes in contents list? Enemies, chests, anything else?
-/// 
 /// </summary>
 
 namespace SolsUnderground

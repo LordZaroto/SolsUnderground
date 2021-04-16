@@ -158,6 +158,11 @@ namespace SolsUnderground
         {
             get { return weapon; }
         }
+
+        public Armor CurrentArmor
+        {
+            get { return armor; }
+        }
         //------------------------------
 
         //----------------------------------------

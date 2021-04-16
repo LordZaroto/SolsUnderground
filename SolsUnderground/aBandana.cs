@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace SolsUnderground
 {
-    class aHoodie : Item, Armor
+    class aBandana : Item, Armor
     {
         // Fields
         // Inherits: texture, positionRect, ItemType type, itemValue
@@ -24,6 +24,7 @@ namespace SolsUnderground
         {
             get { return texture; }
         }
+
         public Rectangle Position
         {
             get { return positionRect; }
@@ -43,11 +44,11 @@ namespace SolsUnderground
         }
 
         // Constructor
-        public aHoodie(Texture2D texture, Rectangle positionRect)
+        public aBandana(Texture2D texture, Rectangle positionRect)
             : base(ItemType.Armor, 0, texture, positionRect)
         {
-            defense = 0;
-            speed = 0;
+            defense = -1;
+            speed = 2;
             hp = 0;
         }
 

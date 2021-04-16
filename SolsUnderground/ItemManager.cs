@@ -26,14 +26,21 @@ namespace SolsUnderground
         private List<Item> items;
         private List<Chest> chests;
         private List<Texture2D> itemTextures;
+        private int moneySpriteCount;
+        private int healthSpriteCount;
+        private int weaponSpriteCount;
+        private int armorSpriteCount;
         private List<Texture2D> chestTextures;
 
         // Constructor
-        public ItemManager(Player player, CollisionManager collisionManager, 
-            List<Texture2D> itemTextures, List<Texture2D> chestTextures)
+        public ItemManager(Player player, CollisionManager collisionManager, List<Texture2D> chestTextures)
         {
             this.player = player;
-            this.itemTextures = itemTextures;
+            this.itemTextures = new List<Texture2D>();
+            moneySpriteCount = 0;
+            healthSpriteCount = 0;
+            weaponSpriteCount = 0;
+            armorSpriteCount = 0;
             this.chestTextures = chestTextures;
 
             items = new List<Item>();
@@ -42,6 +49,46 @@ namespace SolsUnderground
         }
 
         // Methods
+
+        /// <summary>
+        /// Registers a new money texture.
+        /// </summary>
+        /// <param name="armorSprite">Texture to register</param>
+        public void AddMoneySprite(Texture2D moneySprite)
+        {
+            itemTextures.Insert(moneySpriteCount, moneySprite);
+            moneySpriteCount++;
+        }
+
+        /// <summary>
+        /// Registers a new health pickup texture.
+        /// </summary>
+        /// <param name="healthSprite">Texture to register</param>
+        public void AddHealthSprite(Texture2D healthTexture)
+        {
+            itemTextures.Insert(moneySpriteCount + healthSpriteCount, healthTexture);
+            healthSpriteCount++;
+        }
+
+        /// <summary>
+        /// Registers a new weapon texture.
+        /// </summary>
+        /// <param name="weaponSprite">Texture to register</param>
+        public void AddWeaponSprite(Texture2D weaponSprite)
+        {
+            itemTextures.Insert(moneySpriteCount + healthSpriteCount + weaponSpriteCount, weaponSprite);
+            weaponSpriteCount++;
+        }
+
+        /// <summary>
+        /// Registers a new armor texture.
+        /// </summary>
+        /// <param name="armorSprite">Texture to register</param>
+        public void AddArmorSprite(Texture2D armorSprite)
+        {
+            itemTextures.Add(armorSprite);
+            armorSpriteCount++;
+        }
 
         /// <summary>
         /// Drops money for the player to pick up, and possibly a health pickup as well.
@@ -65,8 +112,8 @@ namespace SolsUnderground
                      new Rectangle(
                          spawn.X + (Program.rng.Next(5) - 2), 
                          spawn.Y + (Program.rng.Next(5) - 2), 
-                         itemTextures[1].Width, 
-                         itemTextures[1].Height)));
+                         itemTextures[moneySpriteCount].Width, 
+                         itemTextures[moneySpriteCount].Height)));
             }
         }
 
@@ -118,9 +165,13 @@ namespace SolsUnderground
         {
             foreach (Chest c in chests)
             {
-                if (c.IsOpen)
+                if (!c.IsOpen)
                 {
-                    items.Add(c.Open(itemTextures));
+                    items.Add(c.Open(itemTextures, 
+                        moneySpriteCount, 
+                        healthSpriteCount, 
+                        weaponSpriteCount, 
+                        armorSpriteCount));
                 }
             }
         }
