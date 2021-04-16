@@ -31,6 +31,11 @@ namespace SolsUnderground
         //Weapon Position
         //------------------------------
 
+        public Texture2D Sprite
+        {
+            get { return texture; }
+        }
+
         public Rectangle Position
         {
             get { return positionRect; }
@@ -59,11 +64,6 @@ namespace SolsUnderground
         {
             get { return hitboxR; }
             set { hitboxR = value; }
-        }
-
-        public Texture2D Texture
-        {
-            get { return texture; }
         }
         //------------------------------
 

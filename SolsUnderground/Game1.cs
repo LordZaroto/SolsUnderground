@@ -38,6 +38,7 @@ namespace SolsUnderground
         //games state
         private GameState currentState;
         bool godMode;
+        bool isRoomCleared;
 
         //text
         private SpriteFont heading;
@@ -60,7 +61,6 @@ namespace SolsUnderground
         private Texture2D[] wandererTextures;
 
         // Items
-        private List<Texture2D> itemTextures;
         private List<Texture2D> chestTextures;
 
         //Weapons
@@ -108,6 +108,7 @@ namespace SolsUnderground
         private Texture2D exitToMenu;
         private Rectangle button9;
         private Rectangle currentWeapon;
+        private Rectangle currentArmor;
 
         //gameover items
         private Texture2D newGame;
@@ -130,6 +131,7 @@ namespace SolsUnderground
             //sets game state to menu, and sets window size
             currentState = GameState.Menu;
             godMode = false;
+            isRoomCleared = false;
             _graphics.PreferredBackBufferWidth = 1320;
             _graphics.PreferredBackBufferHeight = 1000;
             _graphics.ApplyChanges();
@@ -162,40 +164,47 @@ namespace SolsUnderground
                 Content.Load<Texture2D>("heroLeft"),
                 Content.Load<Texture2D>("heroRight") };
 
-            // Items
-            itemTextures = new List<Texture2D>();
-            itemTextures.Add(Content.Load<Texture2D>("TigerBuck"));   // Money drop
-            itemTextures.Add(Content.Load<Texture2D>("Cola"));        // Health pickup
-            chestTextures = new List<Texture2D>();
-            chestTextures.Add(Content.Load<Texture2D>("ChestClosed"));
-            chestTextures.Add(Content.Load<Texture2D>("ChestOpen"));
-
             /// NOTE: When adding new weapons/armor, item needs to be registered in
             /// itemTextures list and Chest class to be added in chest drops.
 
             // Weapons
             stickTexture = Content.Load<Texture2D>("stick");
-            ritchieClawTexture = Content.Load<Texture2D>("ritchieClaw");
-            itemTextures.Add(stickTexture);
             stick = new wStick(stickTexture, new Rectangle(0, 0, 0, 0));
+            ritchieClawTexture = Content.Load<Texture2D>("ritchieClaw");
 
             //Testing Weapons
             ritchieClaw = new wRITchieClaw(ritchieClawTexture, new Rectangle(0, 0, 0, 0));
+            wBrickBreaker brickBreaker = new wBrickBreaker(
+                Content.Load<Texture2D>("BrickBreaker"), new Rectangle(0, 0, 0, 0));
 
             // Armor
             hoodieTexture = Content.Load<Texture2D>("Hoodie");
-            itemTextures.Add(hoodieTexture);
             hoodie = new aHoodie(hoodieTexture, new Rectangle(0, 0, 0, 0));
 
             //Player
             playerRect = new Rectangle(30, 440, playerTextures[0].Width, playerTextures[0].Height);
-            player = new Player(playerTextures, playerRect, ritchieClaw, hoodie, animations);
+            player = new Player(playerTextures, playerRect, brickBreaker, hoodie, animations);
 
             // Managers
-            collisionManager = new CollisionManager(player);
+            collisionManager = new CollisionManager(player,
+                _graphics.PreferredBackBufferWidth,
+                _graphics.PreferredBackBufferHeight);
             combatManager = new CombatManager(player);
             enemyManager = new EnemyManager(player, collisionManager, combatManager);
-            itemManager = new ItemManager(player, collisionManager, itemTextures, chestTextures);
+
+            // Items
+            chestTextures = new List<Texture2D>();
+            chestTextures.Add(Content.Load<Texture2D>("ChestClosed"));
+            chestTextures.Add(Content.Load<Texture2D>("ChestOpen"));
+            itemManager = new ItemManager(player, collisionManager, chestTextures);
+            itemManager.AddMoneySprite(Content.Load<Texture2D>("TigerBuck"));
+            itemManager.AddHealthSprite(Content.Load<Texture2D>("Cola"));
+            itemManager.AddWeaponSprite(stickTexture);
+            itemManager.AddWeaponSprite(ritchieClawTexture);
+            itemManager.AddWeaponSprite(Content.Load<Texture2D>("BrickBreaker"));
+            itemManager.AddArmorSprite(hoodieTexture);
+            itemManager.AddArmorSprite(Content.Load<Texture2D>("WinterCoat"));
+            itemManager.AddArmorSprite(Content.Load<Texture2D>("Bandana"));
 
             //enemy textures
             minionTextures = new Texture2D[] {
@@ -218,7 +227,7 @@ namespace SolsUnderground
             tileTextures.Add(Content.Load<Texture2D>("BrickSprite"));
             tileTextures.Add(Content.Load<Texture2D>("BarrierSprite"));
             tileTextures.Add(Content.Load<Texture2D>("RedBrickSprite"));
-            mapManager = new MapManager(tileTextures, 
+            mapManager = new MapManager(tileTextures,
                 _graphics.PreferredBackBufferWidth,
                 _graphics.PreferredBackBufferHeight);
 
@@ -246,6 +255,7 @@ namespace SolsUnderground
             exitToMenu = Content.Load<Texture2D>("Exit");
             button9 = new Rectangle( 0, 792, 914, 141);
             currentWeapon = new Rectangle(1161, 398, 139, 113);
+            currentArmor = new Rectangle(1161, 515, 139, 113);
 
             //Game Over Buttons
             newGame = Content.Load<Texture2D>("newGameGO");
@@ -332,8 +342,16 @@ namespace SolsUnderground
                     itemManager.ActivateItems();
                     collisionManager.CheckCollisions();
 
+                    // Check if room is cleared
+                    if (combatManager.EnemyCount == 0 && !isRoomCleared)
+                    {
+                        itemManager.OpenChests();
+                        collisionManager.OpenNextRoom();
+                        isRoomCleared = true;
+                    }
+
                     // Move to next room
-                    if(player.Width + player.X > _graphics.PreferredBackBufferWidth 
+                    if(player.X > _graphics.PreferredBackBufferWidth 
                         || (SingleKeyPress(Keys.N, kb, prevKB) && godMode))
                     {
                         player.X = 0;
@@ -342,7 +360,9 @@ namespace SolsUnderground
                         {
                             currentState = GameState.Win;
                         }
-                        itemManager.NextRoom();
+
+                        itemManager.NextRoom(mapManager.CurrentRoom.ChestSpawns);
+                        isRoomCleared = false;
 
                         enemyManager.ClearEnemies();
                         enemyManager.SpawnEnemies(
@@ -622,7 +642,7 @@ namespace SolsUnderground
 
                     _spriteBatch.DrawString(
                         text,
-                        "health-" + player.Hp,
+                        "HP: " + player.Hp + "/" + player.MaxHp,
                         new Vector2(0, 0),
                         Color.White);
                     _spriteBatch.DrawString(
@@ -654,7 +674,8 @@ namespace SolsUnderground
                     _spriteBatch.Draw(saveGame, button7, Color.White);
                     _spriteBatch.Draw(loadGame2, button8, Color.White);
                     _spriteBatch.Draw(exitToMenu, button9, Color.White);
-                    _spriteBatch.Draw(stickTexture, currentWeapon, Color.White);
+                    _spriteBatch.Draw(player.CurrentWeapon.Sprite, currentWeapon, Color.White);
+                    _spriteBatch.Draw(player.CurrentArmor.Sprite, currentArmor, Color.White);
                     
                     break;
 
@@ -774,7 +795,8 @@ namespace SolsUnderground
             mapManager.Reset();
 
             enemyManager.ClearEnemies();
-            itemManager.NextRoom();
+            itemManager.NextRoom(mapManager.CurrentRoom.ChestSpawns);
+            isRoomCleared = false;
             enemyManager.SpawnEnemies(
                 mapManager.CurrentRoom.EnemyCount,
                 mapManager.CurrentRoom.GetOpenTiles());

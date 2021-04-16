@@ -15,17 +15,6 @@ using Microsoft.Xna.Framework.Input;
 /// Noah Flanders - 3/30/21
 /// Different enemies spawn in each room
 /// (this code moved to EnemyManager)
-///
-/// NOTES:
-/// > FINISH COPY METHOD: Currently doesnt solve issue, only moves object references
-///   into a new Room object
-/// 
-/// > Using a List for storing Tiles should work fine, but possibility is open to
-///   other structures like 2D arrays if issues arise
-///   
-/// > NEED TO FINISH METHODS FOR CONTENT LIST: Make sure all necessary data is accessible
-///   What goes in contents list? Enemies, chests, anything else?
-/// 
 /// </summary>
 
 namespace SolsUnderground
@@ -38,6 +27,7 @@ namespace SolsUnderground
         private const int ROOM_WIDTH = 33;
         private const int ROOM_HEIGHT = 25;
         private List<Tile> tiles;
+        private List<Point> chestSpawns;
         private int enemyCount;
 
         // Properties
@@ -53,6 +43,10 @@ namespace SolsUnderground
         {
             get { return enemyCount; }
         }
+        public List<Point> ChestSpawns
+        {
+            get { return chestSpawns; }
+        }
 
         // Constructors
         public Room(string filepath, int windowWidth, int windowHeight, 
@@ -61,6 +55,7 @@ namespace SolsUnderground
             this.windowHeight = windowHeight;
             this.windowWidth = windowWidth;
             tiles = new List<Tile>();
+            chestSpawns = new List<Point>();
             Load(filepath, tileTextures);
             SetTiles(windowWidth, windowHeight);
         }
@@ -93,7 +88,8 @@ namespace SolsUnderground
                 // Second data piece is boolean for whether tile is barrier
                 tiles.Add(new Tile(
                     tileTextures[(int)Enum.Parse<Tiles>(data[0])],
-                    Boolean.Parse(data[1])
+                    Boolean.Parse(data[1]),
+                    Boolean.Parse(data[2])
                     ));
             }
 
@@ -118,6 +114,12 @@ namespace SolsUnderground
                 tiles[i].Y = tileHeight * (i % ROOM_HEIGHT);
                 tiles[i].Width = tileWidth;
                 tiles[i].Height = tileHeight;
+
+                // Add chest spawn point if indicated
+                if (tiles[i].IsChestSpawn)
+                {
+                    chestSpawns.Add(new Point(tiles[i].X, tiles[i].Y));
+                }
             }
         }
 
