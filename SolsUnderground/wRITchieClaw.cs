@@ -159,7 +159,7 @@ namespace SolsUnderground
                     attack / 2,
                     knockback / 2);
 
-                if()
+                
                 player.X -= player.Width * 5;
 
                 return special;
@@ -208,7 +208,7 @@ namespace SolsUnderground
 
         public override void Draw(SpriteBatch sb)
         {
-            sb.Draw(texture, positionRect, Color.Green);
+            sb.Draw(texture, positionRect, Color.White);
         }
 
         public Rectangle GetHitbox(int x, int y, int width, int height, PlayerState state)

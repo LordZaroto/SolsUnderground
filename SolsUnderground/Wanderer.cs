@@ -143,7 +143,7 @@ namespace SolsUnderground
                             positionRect.X -= 1;
                             enemyState = EnemyState.moveLeft;
                         }
-                        if(positionRect.X < player.X)
+                        if (positionRect.X < player.X)
                         {
                             texture = textures[3];
                             positionRect.X += 1;
@@ -162,12 +162,12 @@ namespace SolsUnderground
                             enemyState = EnemyState.moveForward;
                         }
                     }
-                    else 
+                    else
                     {
-                        
-                        if(_timer >= 3 && _timer < 4)
+
+                        if (_timer >= 3 && _timer < 4)
                         {
-                            
+
                             switch (moveDirection)
                             {
                                 case 0:
@@ -188,7 +188,7 @@ namespace SolsUnderground
                                     break;
                             }
                         }
-                        else if(_timer >= 5)
+                        else if (_timer >= 5)
                         {
                             _timer = 0f;
                             moveDirection = Program.rng.Next(0, 4);
