@@ -15,6 +15,7 @@ namespace SolsUnderground
         private Rectangle positionRect;
         private int attack;
         private double basicCooldown;
+        private double specialCooldown;
         private int knockback;
         private Rectangle hitboxF;
         private Rectangle hitboxL;
@@ -97,6 +98,11 @@ namespace SolsUnderground
             get { return basicCooldown; }
         }
 
+        public double SpecialCooldown
+        {
+            get { return specialCooldown; }
+        }
+
         public int Knockback
         {
             get { return knockback; }
@@ -109,11 +115,20 @@ namespace SolsUnderground
         //||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
         //---------------------------------------------------------------------
 
+        public Stick()
+        {
+            basicCooldown = 0.3;
+            specialCooldown = 5;
+            attack = 3;
+            knockback = (int)(1 * 32);
+        }
+
         public Stick(Texture2D texture, Rectangle positionRect)
         {
             this.texture = texture;
             this.positionRect = positionRect;
             basicCooldown = 0.3;
+            specialCooldown = 5;
             attack = 3;
             knockback = (int)(1 * 32);
         }
@@ -123,9 +138,9 @@ namespace SolsUnderground
             sb.Draw(texture, positionRect, Color.White);
         }
 
-        public void Special()
+        public Attack Special(Player player)
         {
-            return;
+            return null;
         }
 
         public Rectangle GetHitbox(int x, int y, int width, int height, PlayerState state)

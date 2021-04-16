@@ -27,7 +27,6 @@ namespace SolsUnderground
         LoadChoice,
         LoadFailed,
         Win
-
     }
     public class Game1 : Game
     {
@@ -170,7 +169,7 @@ namespace SolsUnderground
 
             //Player
             playerRect = new Rectangle(30, 440, playerTextures[0].Width, playerTextures[0].Height);
-            player = new Player(playerTextures, playerRect, stick, animations);
+            player = new Player(playerTextures, playerRect, ritchieClaw, animations);
 
             // Managers
             collisionManager = new CollisionManager(player);
@@ -296,8 +295,8 @@ namespace SolsUnderground
 
                     //Player
                     player.Input(kb, gameTime);
-                    combatManager.PlayerAttack(
-                        player.BasicAttack(leftBState, previousLeftBState));
+                    combatManager.PlayerAttack(player.BasicAttack(leftBState, previousLeftBState));
+                    combatManager.PlayerAttack(player.Special(rightBState, previousRightBState));
 
                     // Enemies
 

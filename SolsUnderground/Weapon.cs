@@ -48,6 +48,11 @@ namespace SolsUnderground
         double BasicCooldown { get; }
 
         /// <summary>
+        /// Minimum time that must pass between each Special Ability use
+        /// </summary>
+        double SpecialCooldown { get; }
+
+        /// <summary>
         /// A multiplyer for how far enemies will be knocked back
         /// </summary>
         int Knockback { get; }
@@ -61,7 +66,7 @@ namespace SolsUnderground
         /// <summary>
         /// Will be overridden by each weapon type.
         /// </summary>
-        void Special();
+        Attack Special(Player player);
 
         /// <summary>
         /// Returns the basic attack hit box
