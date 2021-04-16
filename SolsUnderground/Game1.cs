@@ -617,19 +617,6 @@ namespace SolsUnderground
                     itemManager.Draw(_spriteBatch);
                     player.Draw(_spriteBatch);
                     enemyManager.Draw(_spriteBatch);
-                    //if(Mouse.GetState().LeftButton == ButtonState.Pressed)
-                    //{
-                    //    stick.Draw(_spriteBatch);
-                    //}
-                    switch (player.State)
-                    {
-                        case PlayerState.attackForward:
-                        case PlayerState.attackLeft:
-                        case PlayerState.attackBack:
-                        case PlayerState.attackRight:
-                            player.CurrentWeapon.Draw(_spriteBatch);
-                            break;
-                    }
 
                     _spriteBatch.DrawString(
                         text,
@@ -795,7 +782,6 @@ namespace SolsUnderground
             // Reset player stats
             player.MaxHp = 100;
             player.Hp = player.MaxHp;
-            player.EquipWeapon(stick);
             player.X = 30;
             player.Y = 440;
             player.TigerBucks = 0;

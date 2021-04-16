@@ -155,7 +155,7 @@ namespace SolsUnderground
                             positionRect.Y -= 1;
                             enemyState = EnemyState.moveBack;
                         }
-                        if (positionRect.X < player.X)
+                        if (positionRect.Y < player.Y)
                         {
                             texture = textures[0];
                             positionRect.Y += 1;

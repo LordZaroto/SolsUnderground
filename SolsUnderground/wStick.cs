@@ -105,7 +105,10 @@ namespace SolsUnderground
         }
 
         public void Special()
-        public void Draw(SpriteBatch sb)
+        {
+
+        }
+        public override void Draw(SpriteBatch sb)
         {
             sb.Draw(texture, positionRect, Color.White);
         }
