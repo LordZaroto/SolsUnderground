@@ -31,6 +31,11 @@ namespace SolsUnderground
         //Weapon Position
         //------------------------------
 
+        public Texture2D Sprite
+        {
+            get { return texture; }
+        }
+
         public Rectangle Position
         {
             get { return positionRect; }
@@ -59,11 +64,6 @@ namespace SolsUnderground
         {
             get { return hitboxR; }
             set { hitboxR = value; }
-        }
-
-        public Texture2D Texture
-        {
-            get { return texture; }
         }
         //------------------------------
 
@@ -207,7 +207,7 @@ namespace SolsUnderground
 
         public override void Draw(SpriteBatch sb)
         {
-            sb.Draw(texture, positionRect, Color.Green);
+            sb.Draw(texture, positionRect, Color.White);
         }
 
         public Rectangle GetHitbox(int x, int y, int width, int height, PlayerState state)

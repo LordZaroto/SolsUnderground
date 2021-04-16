@@ -37,6 +37,7 @@ namespace SolsUnderground
     {
         // Fields
         private bool isObstacle;
+        private bool isChestSpawn;
         // Also has texture and positionRect from parent classes
 
         // Properties
@@ -47,6 +48,10 @@ namespace SolsUnderground
         public bool IsObstacle
         {
             get { return isObstacle; }
+        }
+        public bool IsChestSpawn
+        {
+            get { return isChestSpawn; }
         }
         public override int X
         {
@@ -75,10 +80,11 @@ namespace SolsUnderground
         }
 
         // Constructor
-        public Tile(Texture2D texture, bool isObstacle)
+        public Tile(Texture2D texture, bool isObstacle, bool isChestSpawn)
         {
             this.texture = texture;
             this.isObstacle = isObstacle;
+            this.isChestSpawn = isChestSpawn;
 
             // This gets set immediately by Room methods using properties
             this.positionRect = new Rectangle(0, 0, 0, 0);
