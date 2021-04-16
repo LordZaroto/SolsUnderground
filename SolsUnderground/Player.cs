@@ -378,7 +378,7 @@ namespace SolsUnderground
                     Attack special = null;
 
                     //Check which weapon is equipped
-                    if (weapon is Stick)
+                    /*if (weapon is Stick)
                     {
                         Stick stick = new Stick();
                         special = stick.Special(this);
@@ -387,7 +387,7 @@ namespace SolsUnderground
                     {
                         RITchieClaw claw = new RITchieClaw();
                         special = claw.Special(this);
-                    }
+                    }*/
                     
                     //Return the special attack of the appropriate weapon
                     return special;
