@@ -103,7 +103,7 @@ namespace SolsUnderground
             basicCooldown = 0.1;
             specialCooldown = 3;
             attack = 7;
-            knockback = (int)(0.8 * 32);
+            knockback = (int)(0.8 * 32); 
         }
 
         public RITchieClaw(Texture2D texture, Rectangle positionRect)
