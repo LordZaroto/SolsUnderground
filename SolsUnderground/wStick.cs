@@ -109,10 +109,6 @@ namespace SolsUnderground
             knockback = (int)(1 * 32);
         }
 
-        public void Special()
-        {
-
-        }
         public override void Draw(SpriteBatch sb)
         {
             sb.Draw(texture, positionRect, Color.White);
