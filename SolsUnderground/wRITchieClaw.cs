@@ -123,14 +123,19 @@ namespace SolsUnderground
             //Create the attack hitbox in the direction the player is facing
             if (player.State == PlayerState.faceForward || player.State == PlayerState.moveForward)
             {
-                Attack special = new Attack(
-                    new Rectangle(
-                        player.X - (player.Width * (3/4)),
+                player.State = PlayerState.attackForward;
+
+                positionRect = new Rectangle(
+                        player.X - (player.Width * (3 / 4)),
                         player.Y - (player.Height * 5 + (player.Height / 2)),
-                        player.Width + (player.Width * 2 * (3/4)),
-                        player.Height * 6 + (player.Height / 2)),
+                        player.Width + (player.Width * 2 * (3 / 4)),
+                        player.Height * 6 + (player.Height / 2));
+
+                Attack special = new Attack(
+                    positionRect,
                     attack / 2,
                     knockback / 2);
+
                 System.Diagnostics.Debug.WriteLine(player.Y);
                 player.Y -= player.Height * 5;
                 System.Diagnostics.Debug.WriteLine(player.Y);
@@ -138,12 +143,16 @@ namespace SolsUnderground
             }
             else if (player.State == PlayerState.faceLeft || player.State == PlayerState.moveLeft)
             {
-                Attack special = new Attack(
-                    new Rectangle(
+                player.State = PlayerState.attackLeft;
+
+                positionRect = new Rectangle(
                         player.X - (player.Width * 5 + (player.Width / 2)),
                         player.Y - (player.Height * (3 / 4)),
                         player.Width * 6 + (player.Width / 2),
-                        player.Height + (player.Height * 2 * (3 / 4))),
+                        player.Height + (player.Height * 2 * (3 / 4)));
+
+                Attack special = new Attack(
+                    positionRect,
                     attack / 2,
                     knockback / 2);
 
@@ -153,12 +162,16 @@ namespace SolsUnderground
             }
             else if (player.State == PlayerState.faceBack || player.State == PlayerState.moveBack)
             {
-                Attack special = new Attack(
-                    new Rectangle(
+                player.State = PlayerState.attackBack;
+
+                positionRect = new Rectangle(
                         player.X - (player.Width * (3 / 4)),
                         player.Y - (player.Height / 2),
                         player.Width + (player.Width * 2 * (3 / 4)),
-                        player.Height * 6 + (player.Height / 2)),
+                        player.Height * 6 + (player.Height / 2));
+
+                Attack special = new Attack(
+                    positionRect,
                     attack / 2,
                     knockback / 2);
 
@@ -168,12 +181,16 @@ namespace SolsUnderground
             }
             else if (player.State == PlayerState.faceRight || player.State == PlayerState.moveRight)
             {
-                Attack special = new Attack(
-                    new Rectangle(
+                player.State = PlayerState.attackRight;
+
+                positionRect = new Rectangle(
                         player.X - (player.Width / 2),
                         player.Y - (player.Height * (3 / 4)),
                         player.Width * 6 + (player.Width / 2),
-                        player.Height + (player.Height * 2 * (3 / 4))),
+                        player.Height + (player.Height * 2 * (3 / 4)));
+
+                Attack special = new Attack(
+                    positionRect,
                     attack / 2,
                     knockback / 2);
 

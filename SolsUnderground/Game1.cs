@@ -617,19 +617,6 @@ namespace SolsUnderground
                     itemManager.Draw(_spriteBatch);
                     player.Draw(_spriteBatch);
                     enemyManager.Draw(_spriteBatch);
-                    //if(Mouse.GetState().LeftButton == ButtonState.Pressed)
-                    //{
-                    //    stick.Draw(_spriteBatch);
-                    //}
-                    switch (player.State)
-                    {
-                        case PlayerState.attackForward:
-                        case PlayerState.attackLeft:
-                        case PlayerState.attackBack:
-                        case PlayerState.attackRight:
-                            player.CurrentWeapon.Draw(_spriteBatch);
-                            break;
-                    }
 
                     _spriteBatch.DrawString(
                         text,

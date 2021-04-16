@@ -377,7 +377,7 @@ namespace SolsUnderground
                     //Reset the cooldown
                     specialCounter = 0;
 
-                    Attack special = CurrentWeapon.Special(this);
+                    currentAttack = CurrentWeapon.Special(this);
 
                     ////Check which weapon is equipped
                     //if (weapon is wStick)
@@ -392,7 +392,7 @@ namespace SolsUnderground
                     //}
                     
                     //Return the special attack of the appropriate weapon
-                    return special;
+                    return currentAttack;
                 }
             }
 
@@ -420,45 +420,45 @@ namespace SolsUnderground
                     {
                         playerState = PlayerState.attackForward;
 
-                        Attack basicAttack = new Attack(
+                        currentAttack = new Attack(
                             weapon.GetHitbox(X, Y, Width, Height, PlayerState.faceForward),
                             Damage,
                             Knockback);
 
-                        return basicAttack;
+                        return currentAttack;
                     }
                     else if (playerState == PlayerState.faceLeft || playerState == PlayerState.moveLeft)
                     {
                         playerState = PlayerState.attackLeft;
 
-                        Attack basicAttack = new Attack(
+                        currentAttack = new Attack(
                             weapon.GetHitbox(X, Y, Width, Height, PlayerState.faceLeft),
                             Damage,
                             Knockback);
 
-                        return basicAttack;
+                        return currentAttack;
                     }
                     else if (playerState == PlayerState.faceBack || playerState == PlayerState.moveBack)
                     {
                         playerState = PlayerState.attackBack;
 
-                        Attack basicAttack = new Attack(
+                        currentAttack = new Attack(
                             weapon.GetHitbox(X, Y, Width, Height, PlayerState.faceBack),
                             Damage,
                             Knockback);
 
-                        return basicAttack;
+                        return currentAttack;
                     }
                     else if (playerState == PlayerState.faceRight || playerState == PlayerState.moveRight)
                     {
                         playerState = PlayerState.attackRight;
 
-                        Attack basicAttack = new Attack(
+                        currentAttack = new Attack(
                             weapon.GetHitbox(X, Y, Width, Height, PlayerState.faceRight),
                             Damage,
                             Knockback);
 
-                        return basicAttack;
+                        return currentAttack;
                     }
                 }
             }
@@ -624,9 +624,20 @@ namespace SolsUnderground
             {
                 sb.Draw(texture, positionRect, Color.White);
             }
-            else if (_animationManager != null)
+            else if (_animationManager != null) // Player is moving/attacking
             {
                 _animationManager.Draw(sb);
+
+                // Draw weapon when attacking
+                switch (playerState)
+                {
+                    case PlayerState.attackForward:
+                    case PlayerState.attackLeft:
+                    case PlayerState.attackBack:
+                    case PlayerState.attackRight:
+                        CurrentWeapon.Draw(sb);
+                        break;
+                }
             }
 
 
