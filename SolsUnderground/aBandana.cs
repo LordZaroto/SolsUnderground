@@ -45,7 +45,7 @@ namespace SolsUnderground
 
         // Constructor
         public aBandana(Texture2D texture, Rectangle positionRect)
-            : base(ItemType.Armor, 0, texture, positionRect)
+            : base(ItemType.Armor, -1, texture, positionRect)
         {
             defense = -1;
             speed = 2;

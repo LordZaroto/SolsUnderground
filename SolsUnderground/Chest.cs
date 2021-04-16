@@ -105,6 +105,10 @@ namespace SolsUnderground
                         case 1:
                             drop = new wRITchieClaw(itemTextures[textureID], positionRect);
                             break;
+
+                        case 2:
+                            drop = new wBrickBreaker(itemTextures[textureID], positionRect);
+                            break;
                     }
                     break;
 
