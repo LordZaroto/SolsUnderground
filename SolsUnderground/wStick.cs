@@ -29,26 +29,6 @@ namespace SolsUnderground
 
         //Weapon Position
         //------------------------------
-        public override int X
-        {
-            get { return positionRect.X; }
-            set { positionRect.X = value; }
-        }
-        public override int Y
-        {
-            get { return positionRect.Y; }
-            set { positionRect.Y = value; }
-        }
-        public override int Width
-        {
-            get { return positionRect.Width; }
-            set { positionRect.Width = value; }
-        }
-        public override int Height
-        {
-            get { return positionRect.Height; }
-            set { positionRect.Height = value; }
-        }
 
         public Rectangle Position
         {

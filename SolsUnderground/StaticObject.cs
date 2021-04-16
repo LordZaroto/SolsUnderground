@@ -9,5 +9,6 @@ namespace SolsUnderground
 {
     abstract class StaticObject : GameObject
     {
+        abstract public void Draw(SpriteBatch sb);
     }
 }

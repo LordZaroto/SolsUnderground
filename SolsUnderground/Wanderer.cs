@@ -104,19 +104,19 @@ namespace SolsUnderground
 
                 if (enemyState == EnemyState.faceForward || enemyState == EnemyState.moveForward)
                 {
-                    Y += (int)(32 * knockback);
+                    Y += (int)(knockback);
                 }
                 if (enemyState == EnemyState.faceLeft || enemyState == EnemyState.moveLeft)
                 {
-                    X += (int)(32 * knockback);
+                    X += (int)(knockback);
                 }
                 if (enemyState == EnemyState.faceBack || enemyState == EnemyState.moveBack)
                 {
-                    Y -= (int)(32 * knockback);
+                    Y -= (int)(knockback);
                 }
                 if (enemyState == EnemyState.faceRight || enemyState == EnemyState.moveRight)
                 {
-                    X -= (int)(32 * knockback);
+                    X -= (int)(knockback);
                 }
 
                 if (health <= 0)
