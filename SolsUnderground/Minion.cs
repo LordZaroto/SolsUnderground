@@ -33,7 +33,6 @@ namespace SolsUnderground
             moveCounter = moveCD;
             kbCD = 0.1;
             kbCounter = kbCD;
-
         }
 
         //properties

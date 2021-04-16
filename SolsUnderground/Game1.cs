@@ -24,10 +24,11 @@ namespace SolsUnderground
         GameOver,
         SaveChoice,
         Saved,
+        ClearSave,
+        SaveCleared,
         LoadChoice,
         LoadFailed,
         Win
-
     }
     public class Game1 : Game
     {
@@ -288,7 +289,11 @@ namespace SolsUnderground
                     {
                         currentState = GameState.LoadChoice;
                     }
-                        break;
+                    else if (SingleKeyPress(Keys.K, kb, prevKB))
+                    {
+                        currentState = GameState.ClearSave;
+                    }
+                    break;
 
 
                 // Controls Screen
@@ -312,8 +317,8 @@ namespace SolsUnderground
 
                     //Player
                     player.Input(kb, gameTime);
-                    combatManager.PlayerAttack(
-                        player.BasicAttack(leftBState, previousLeftBState));
+                    combatManager.PlayerAttack(player.BasicAttack(leftBState, previousLeftBState));
+                    combatManager.PlayerAttack(player.Special(rightBState, previousRightBState));
 
                     // Enemies
 
@@ -420,7 +425,11 @@ namespace SolsUnderground
                     {
                         SaveFile("saveFile1");
                     }
-                    
+                    else if (SingleKeyPress(Keys.Escape, kb, prevKB))
+                    {
+                        currentState = GameState.Pause;
+                    }
+
                     break;
                 case GameState.Saved:
                     //Pressing escape takes you back to the pause menu to either continue exit
@@ -476,6 +485,31 @@ namespace SolsUnderground
                     }
                         break;
                 case GameState.Win:
+                    if (SingleKeyPress(Keys.Escape, kb, prevKB))
+                    {
+                        currentState = GameState.Menu;
+                    }
+                    break;
+                case GameState.ClearSave:
+                    if (SingleKeyPress(Keys.Escape, kb, prevKB))
+                    {
+                        currentState = GameState.Menu;
+                    }
+                    //The user chooses one of three available save files
+                    if (SingleKeyPress(Keys.NumPad2, kb, prevKB))
+                    {
+                        ClearFile("saveFile2");
+                    }
+                    else if (SingleKeyPress(Keys.NumPad3, kb, prevKB))
+                    {
+                        ClearFile("saveFile3");
+                    }
+                    else if (SingleKeyPress(Keys.NumPad1, kb, prevKB))
+                    {
+                        ClearFile("saveFile1");
+                    }
+                    break;
+                case GameState.SaveCleared:
                     if (SingleKeyPress(Keys.Escape, kb, prevKB))
                     {
                         currentState = GameState.Menu;
@@ -651,7 +685,8 @@ namespace SolsUnderground
                 case GameState.SaveChoice:
                     _spriteBatch.DrawString(
                         text,
-                        "Save File 1,   2,  or 3",
+                        "Save File 1,   2,  or 3\n" +
+                        "Press esc to return",
                         new Vector2(0, 0),
                         Color.White);
                     break;
@@ -685,6 +720,22 @@ namespace SolsUnderground
                        text,
                        "Congratulations! You have escaped with your panini!\n" +
                        "Press esc to return to the menu",
+                       new Vector2(0, 0),
+                       Color.White);
+                    break;
+                case GameState.ClearSave:
+                    _spriteBatch.DrawString(
+                       text,
+                       "Would you like to clear file 1,   2,   or 3?\n" +
+                       "Press esc to return",
+                       new Vector2(0, 0),
+                       Color.White);
+                    break;
+                case GameState.SaveCleared:
+                    _spriteBatch.DrawString(
+                       text,
+                       "Save file has been cleared!\n" +
+                       "Press esc to return",
                        new Vector2(0, 0),
                        Color.White);
                     break;
@@ -799,6 +850,19 @@ namespace SolsUnderground
             writer.WriteLine($"{player.Hp}|{player.TigerBucks}|{mapManager.CurrentFloor}|{mapManager.CurrentRoomNum}");
             writer.Close();
             currentState = GameState.Saved;
+        }
+
+        /// <summary>
+        /// Noah Flanders
+        /// 
+        /// Helper method that deletes the save file the user chooses from 
+        /// the game's content folder
+        /// </summary>
+        /// <param name="fileName"></param>
+        private void ClearFile(string fileName)
+        {
+            File.Delete($"../../../Content//SaveFiles//{fileName}");
+            currentState = GameState.SaveCleared;
         }
     }
 }

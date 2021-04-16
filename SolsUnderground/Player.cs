@@ -46,7 +46,6 @@ namespace SolsUnderground
         private Weapon weapon;
         private Armor armor;
         private double specialCounter;
-        private double specialCD;
         private double basicCounter;
         private double damageCounter;
         private double damageCD;
@@ -177,10 +176,9 @@ namespace SolsUnderground
             maxHp = 100;
             hp = maxHp;
             weapon = startWeapon;
+            basicCounter = weapon.BasicCooldown;
+            specialCounter = weapon.SpecialCooldown;
             armor = startArmor;
-            basicCounter = 0;
-            specialCD = 5;
-            specialCounter = specialCD;
             damageCD = 0.6;
             damageCounter = damageCD;
             moveCD = 0.1;
@@ -368,9 +366,35 @@ namespace SolsUnderground
             }
         }
 
-        public void Special()
+        public Attack Special(ButtonState rButton, ButtonState previousRightBState)
         {
+            if (SingleRButtonPress(rButton, previousRightBState))
+            {
+                if (specialCounter >= weapon.SpecialCooldown)
+                {
+                    //Reset the cooldown
+                    specialCounter = 0;
 
+                    Attack special = null;
+
+                    //Check which weapon is equipped
+                    if (weapon is Stick)
+                    {
+                        Stick stick = new Stick();
+                        special = stick.Special(this);
+                    }
+                    else if(weapon is RITchieClaw)
+                    {
+                        RITchieClaw claw = new RITchieClaw();
+                        special = claw.Special(this);
+                    }
+                    
+                    //Return the special attack of the appropriate weapon
+                    return special;
+                }
+            }
+
+            return null;
         }
 
         /// <summary>
