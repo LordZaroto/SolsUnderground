@@ -137,7 +137,20 @@ namespace SolsUnderground
         {
             get { return weapon.Attack; }
         }
-
+        /// <summary>
+        /// Counter for basic attack cooldown.
+        /// </summary>
+        public double BasicCounter
+        {
+            get { return basicCounter; }
+        }
+        /// <summary>
+        /// Counter for special attack cooldown.
+        /// </summary>
+        public double SpecialCounter
+        {
+            get { return specialCounter; }
+        }
         /// <summary>
         /// A multiplier for how far enemies will be knocked back
         /// </summary>

@@ -37,6 +37,18 @@
 /processorParam:TextureFormat=Color
 /build:BarrierSprite.png
 
+#begin BlankRect.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:BlankRect.png
+
 #begin BrickBreaker.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -396,6 +408,13 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:ritchieClaw.png
+
+#begin Roberto20.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:Roberto20.spritefont
 
 #begin Roboto175.spritefont
 /importer:FontDescriptionImporter

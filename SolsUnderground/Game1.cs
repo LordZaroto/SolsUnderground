@@ -37,7 +37,6 @@ namespace SolsUnderground
 
         //games state
         private GameState currentState;
-        bool godMode;
         bool isRoomCleared;
 
         //text
@@ -95,6 +94,8 @@ namespace SolsUnderground
         private Rectangle button5;
 
         //HUD items
+        private SpriteFont uiText;
+        private Texture2D drawSquare;
         private Rectangle hudWeapon;
         private int enemyAmount;
 
@@ -130,7 +131,6 @@ namespace SolsUnderground
         {
             //sets game state to menu, and sets window size
             currentState = GameState.Menu;
-            godMode = false;
             isRoomCleared = false;
             _graphics.PreferredBackBufferWidth = 1320;
             _graphics.PreferredBackBufferHeight = 1000;
@@ -242,6 +242,8 @@ namespace SolsUnderground
             button4 = new Rectangle(349, 847, 709, 153);
 
             //options/controls buttons
+            uiText = Content.Load<SpriteFont>("Roberto20");
+            drawSquare = Content.Load<Texture2D>("BlankRect");
             returnToMenu = Content.Load<Texture2D>("returnToMenu");
             button5 = new Rectangle(327, 827, 719, 145);
 
@@ -289,7 +291,7 @@ namespace SolsUnderground
                     }
                     if (SingleKeyPress(Keys.G, kb, prevKB)) // Toggle Godmode using G key
                     {
-                        godMode = !godMode;
+                        Program.godMode = !Program.godMode;
                     }
                     else if (kb.IsKeyDown(Keys.C) || MouseClick(button3, mouse, prevM) == true)
                         currentState = GameState.Controls;
@@ -352,7 +354,7 @@ namespace SolsUnderground
 
                     // Move to next room
                     if(player.X > _graphics.PreferredBackBufferWidth 
-                        || (SingleKeyPress(Keys.N, kb, prevKB) && godMode))
+                        || (SingleKeyPress(Keys.N, kb, prevKB) && Program.godMode))
                     {
                         player.X = 0;
                         mapManager.NextRoom();
@@ -380,7 +382,7 @@ namespace SolsUnderground
 
                     if(player.Hp <= 0)
                     {
-                        if (godMode)
+                        if (Program.godMode)
                         {
                             player.Hp = player.MaxHp;
                         }
@@ -569,7 +571,7 @@ namespace SolsUnderground
                     _spriteBatch.Draw(instructions, button4, Color.White);
 
                     // Draw godMode toggle
-                    if (godMode)
+                    if (Program.godMode)
                     {
                         _spriteBatch.DrawString(text, "GodMode", new Vector2(20, 150), Color.White);
                     }
@@ -640,25 +642,40 @@ namespace SolsUnderground
                     player.Draw(_spriteBatch);
                     enemyManager.Draw(_spriteBatch);
 
+                    // Draw HP bar
+                    _spriteBatch.Draw(drawSquare, new Rectangle(0, 0, player.MaxHp * 3 + 10, 40), Color.Black);
+                    _spriteBatch.Draw(drawSquare, new Rectangle(5, 5, player.Hp * 3, 30), Color.DarkRed);
+
+                    // Draw cooldown bars
+                    if (player.BasicCounter < player.CurrentWeapon.BasicCooldown)
+                    {
+                        _spriteBatch.Draw(drawSquare, 
+                            new Rectangle(player.MaxHp * 3 + 10, 0, 
+                            (int)(player.CurrentWeapon.BasicCooldown * 10 - player.BasicCounter * 10), 20), 
+                            Color.Green);
+                    }
+                    if (player.SpecialCounter < player.CurrentWeapon.SpecialCooldown)
+                    {
+                        _spriteBatch.Draw(drawSquare,
+                            new Rectangle(player.MaxHp * 3 + 10, 20,
+                            (int)(player.CurrentWeapon.SpecialCooldown * 10 - player.SpecialCounter * 10), 20),
+                            Color.Blue);
+                    }
+
                     _spriteBatch.DrawString(
-                        text,
-                        "HP: " + player.Hp + "/" + player.MaxHp,
-                        new Vector2(0, 0),
+                        uiText,
+                        player.Hp + "/" + player.MaxHp,
+                        new Vector2(10, 5),
                         Color.White);
                     _spriteBatch.DrawString(
-                        text,
-                        "Tiger Bucks-" + player.TigerBucks,
-                        new Vector2(330, 0),
-                        Color.White);
+                        uiText,
+                        "Tiger Bucks: " + player.TigerBucks,
+                        new Vector2(800, 5),
+                        Color.Orange);
                     _spriteBatch.DrawString(
-                        text,
-                        "Floor-" + mapManager.CurrentFloor,
-                        new Vector2(800, 0),
-                        Color.White);
-                    _spriteBatch.DrawString(
-                        text,
-                        "Room-" + mapManager.CurrentRoomNum,
-                        new Vector2(1100, 0),
+                        uiText,
+                        mapManager.CurrentFloor + "-" + mapManager.CurrentRoomNum,
+                        new Vector2(1275, 5),
                         Color.White);
                     break;
 
@@ -809,6 +826,11 @@ namespace SolsUnderground
             player.X = 30;
             player.Y = 440;
             player.TigerBucks = 0;
+
+            if (Program.godMode)
+            {
+                itemManager.FullAccess();
+            }
         }
 
         /// <summary>

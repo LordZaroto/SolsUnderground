@@ -12,9 +12,6 @@ using Microsoft.Xna.Framework.Input;
 /// This class is responsible for handling chest spawns, collectible gold
 /// from enemies, and any items that appear on-screen during gameplay.
 /// 
-/// > Need to do:
-/// > Chest spawning
-/// 
 /// </summary>
 
 namespace SolsUnderground
@@ -191,6 +188,49 @@ namespace SolsUnderground
                     new Rectangle(p,
                     new Point(chestTextures[0].Width,
                     chestTextures[0].Height))));
+            }
+        }
+
+        /// <summary>
+        /// Creates all weapons and armor in the starting room
+        /// </summary>
+        public void FullAccess()
+        {
+            if (Program.godMode)
+            {
+                int equipmentStart = moneySpriteCount + healthSpriteCount;
+                Point size = new Point(25, 25);
+
+                for (int i = 0; i < itemTextures.Count - equipmentStart; i++)
+                {
+                    switch (i)
+                    {
+                        case 0:
+                            items.Add(new wStick(itemTextures[i + equipmentStart],
+                                new Rectangle(new Point(50 + 50 * i, 100), size)));
+                            break;
+                        case 1:
+                            items.Add(new wRITchieClaw(itemTextures[i + equipmentStart],
+                                new Rectangle(new Point(50 + 50 * i, 100), size)));
+                            break;
+                        case 2:
+                            items.Add(new wBrickBreaker(itemTextures[i + equipmentStart],
+                                new Rectangle(new Point(50 + 50 * i, 100), size)));
+                            break;
+                        case 3:
+                            items.Add(new aHoodie(itemTextures[i + equipmentStart],
+                                new Rectangle(new Point(50 + 50 * i, 100), size)));
+                            break;
+                        case 4:
+                            items.Add(new aWinterCoat(itemTextures[i + equipmentStart],
+                                new Rectangle(new Point(50 + 50 * i, 100), size)));
+                            break;
+                        case 5:
+                            items.Add(new aBandana(itemTextures[i + equipmentStart],
+                                new Rectangle(new Point(50 + 50 * i, 100), size)));
+                            break;
+                    }
+                }
             }
         }
 
