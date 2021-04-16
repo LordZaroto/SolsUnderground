@@ -60,6 +60,17 @@ namespace MapEditor
         }
 
         /// <summary>
+        /// Changes the selected indicator to draw when an indicator selection button is clicked
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void buttonIndicator_Click(object sender, EventArgs e)
+        {
+            Button tilePicker = (Button)sender;
+            pictureBoxCurrentIndicator.Image = tilePicker.Image;
+        }
+
+        /// <summary>
         /// Changes the tile on the map to the current selected tile sprite
         /// </summary>
         /// <param name="sender"></param>
@@ -73,6 +84,18 @@ namespace MapEditor
                 PictureBox tile = (PictureBox)sender;
                 tile.BackgroundImage = pictureBoxCurrentTile.Image;
             }
+        }
+
+        /// <summary>
+        /// Changes the image of the picture box to display the current
+        /// indicator selected in front of the tile  background image
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void pictureBoxTile_DoubleClick(object sender, EventArgs e)
+        {
+            PictureBox tile = (PictureBox)sender;
+            tile.Image = pictureBoxCurrentIndicator.Image;
         }
 
         /// <summary>
@@ -103,16 +126,26 @@ namespace MapEditor
                     {
                         if (mapLayout[i, j].BackgroundImage == buttonTile2.Image)
                         {
-                            writer.WriteLine("RedBrick|false");
+                            writer.Write("RedBrick|");
                         }
                         else if(mapLayout[i, j].BackgroundImage == buttonTile4.Image)
                         {
-                            writer.WriteLine("Barrier|true");
+                            writer.Write("Barrier|");
                         }
                         else
                         {
-                            writer.WriteLine("DefaultTile|false");
+                            writer.Write("DefaultTile|");
                         }
+
+                        if(mapLayout[i, j].Image == buttonTile6.Image)
+                        {
+                            writer.Write("true|");
+                        }
+                        else
+                        {
+                            writer.Write("false|");
+                        }
+                        writer.Write("\n");
                     }
                 }
                 writer.Close();
@@ -170,12 +203,17 @@ namespace MapEditor
                     {
                         mapLayout[i, j].BackgroundImage = buttonTile2.Image;
                     }
+                    if(tileInfo[1] == "true")
+                    {
+                        mapLayout[i, j].Image = buttonTile6.Image;
+                    }
                     mapLayout[i, j].Width = tileWidth;
                     mapLayout[i, j].Height = tileHeight;
                     mapLayout[i, j].Left = groupBoxMap.Location.X + (tileWidth * i);
                     mapLayout[i, j].Top = groupBoxMap.Location.Y + (tileHeight * j);
                     mapLayout[i, j].MouseDown += pictureBoxTile_Click;
                     mapLayout[i, j].MouseEnter += pictureBoxTile_Click;
+                    mapLayout[i, j].DoubleClick += pictureBoxTile_DoubleClick;
                     this.Controls.Add(mapLayout[i, j]);
                     mapLayout[i, j].BringToFront();
                 }
@@ -200,6 +238,7 @@ namespace MapEditor
                     mapLayout[i, j].Top = groupBoxMap.Location.Y + (tileHeight * j);
                     mapLayout[i, j].MouseDown += pictureBoxTile_Click;
                     mapLayout[i, j].MouseEnter += pictureBoxTile_Click;
+                    mapLayout[i, j].DoubleClick += pictureBoxTile_DoubleClick;
                     this.Controls.Add(mapLayout[i, j]);
                 }
             }
