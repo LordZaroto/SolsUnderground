@@ -29,7 +29,8 @@ namespace SolsUnderground
     {
         DefaultTile,
         Barrier,
-        RedBrick
+        RedBrick,
+        BlueBrick
     }
 
     class Tile : StaticObject
@@ -89,7 +90,7 @@ namespace SolsUnderground
         /// Draws Tile using a Texture2D and a Rectangle.
         /// </summary>
         /// <param name="sb"></param>
-        public void Draw(SpriteBatch sb)
+        public override void Draw(SpriteBatch sb)
         {
             sb.Draw(texture, positionRect, Color.White);
         }

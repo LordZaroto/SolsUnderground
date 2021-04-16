@@ -13,10 +13,6 @@ using Microsoft.Xna.Framework.Input;
 /// defeated, and contains an item for the player to use
 /// or equip.
 /// 
-/// NOTES:
-/// 
-/// > Use ItemManager to spawn chests and determine its item
-/// 
 /// </summary>
 
 namespace SolsUnderground
@@ -25,6 +21,7 @@ namespace SolsUnderground
     {
         // Fields
         // Inherits Texture2D texture and Rectangle positionRect
+        private List<Texture2D> chestTextures;
         private bool isOpen;
 
         // Properties
@@ -48,26 +45,87 @@ namespace SolsUnderground
             get { return positionRect.Height; }
             set { positionRect.Height = value; }
         }
+        public Texture2D Texture
+        {
+            get
+            {
+                if (isOpen)
+                    return chestTextures[1];
+                else
+                    return chestTextures[0];
+            }
+        }
         public override Rectangle PositionRect
         {
             get { return positionRect; }
             set { positionRect = value; }
         }
+        public bool IsOpen
+        {
+            get { return isOpen; }
+        }
 
         // Constructor
-        public Chest(Texture2D texture, Rectangle positionRect)
+        public Chest(List<Texture2D> chestTextures, Rectangle positionRect)
         {
-            this.texture = texture;
+            this.chestTextures = chestTextures;
             this.positionRect = positionRect;
             this.isOpen = false;
         }
 
         // Methods
 
-        // Method to give item
-        // Determines item to give inside the method
+        public Item Open(List<Texture2D> itemTextures)
+        {
+            int randomPick = Program.rng.Next(3);
+            Item drop = null;
 
-        // Draw Method
-        // Draw depending on open state
+            switch (randomPick)
+            {
+                case 0: // Health pickup
+                    drop = new Item(ItemType.HealthPickup,
+                        20, itemTextures[1], PositionRect);
+                    break;
+
+                case 1: // Weapon
+                    randomPick = Program.rng.Next(2);
+
+                    switch (randomPick) // Add weapon items to drop here
+                    {
+                        case 0:
+                            drop = new wStick(itemTextures[2], positionRect);
+                            break;
+
+                        case 1:
+                            drop = new wRITchieClaw(itemTextures[2], positionRect);
+                            break;
+
+                    }
+                    break;
+
+                case 2: // Armor
+                    randomPick = Program.rng.Next(1);
+
+                    switch (randomPick) // Add armor items to drop here
+                    {
+                        case 0:
+                            drop = new aHoodie(itemTextures[3], positionRect);
+                            break;
+                    }
+                    break;
+            }
+
+            isOpen = true;
+            return drop;
+        }
+
+        /// <summary>
+        /// Draws chest using texture property to determine if it is open or closed.
+        /// </summary>
+        /// <param name="sb">SpriteBatch</param>
+        public override void Draw(SpriteBatch sb)
+        {
+            sb.Draw(this.Texture, positionRect, Color.White);
+        }
     }
 }

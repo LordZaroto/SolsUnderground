@@ -7,12 +7,10 @@ using Microsoft.Xna.Framework.Input;
 
 namespace SolsUnderground
 {
-    class RITchieClaw : Weapon
+    class wRITchieClaw : Item, Weapon
     {
         //Fields
         //-----------------------------
-        private Texture2D texture;
-        private Rectangle positionRect;
         private int attack;
         private double basicCooldown;
         private double specialCooldown;
@@ -32,26 +30,6 @@ namespace SolsUnderground
 
         //Weapon Position
         //------------------------------
-        public int X
-        {
-            get { return positionRect.X; }
-            set { positionRect.X = value; }
-        }
-        public int Y
-        {
-            get { return positionRect.Y; }
-            set { positionRect.Y = value; }
-        }
-        public int Width
-        {
-            get { return positionRect.Width; }
-            set { positionRect.Width = value; }
-        }
-        public int Height
-        {
-            get { return positionRect.Height; }
-            set { positionRect.Height = value; }
-        }
 
         public Rectangle Position
         {
@@ -129,18 +107,13 @@ namespace SolsUnderground
         }
 
         public RITchieClaw(Texture2D texture, Rectangle positionRect)
+        public wRITchieClaw(Texture2D texture, Rectangle positionRect)
+            : base(ItemType.Weapon, 7, texture, positionRect)
         {
-            this.texture = texture;
-            this.positionRect = positionRect;
             basicCooldown = 0.1;
             specialCooldown = 3;
             attack = 7;
             knockback = (int)(0.8 * 32);
-        }
-
-        public void Draw(SpriteBatch sb)
-        {
-            sb.Draw(texture, positionRect, Color.White);
         }
 
         /// <summary>
@@ -212,6 +185,11 @@ namespace SolsUnderground
             }
 
             return null;
+        }
+
+        public override void Draw(SpriteBatch sb)
+        {
+            sb.Draw(texture, positionRect, Color.Green);
         }
 
         public Rectangle GetHitbox(int x, int y, int width, int height, PlayerState state)

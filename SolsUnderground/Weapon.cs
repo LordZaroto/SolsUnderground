@@ -38,7 +38,7 @@ namespace SolsUnderground
         Rectangle HitboxR { get; set; }
 
         /// <summary>
-        /// Reduces the value of incoming damage
+        /// Base damage dealt to enemies with this weapon
         /// </summary>
         int Attack { get; set; }
         
@@ -53,7 +53,7 @@ namespace SolsUnderground
         double SpecialCooldown { get; }
 
         /// <summary>
-        /// A multiplyer for how far enemies will be knocked back
+        /// A multiplier for how far enemies will be knocked back
         /// </summary>
         int Knockback { get; }
         //----------------------------------------

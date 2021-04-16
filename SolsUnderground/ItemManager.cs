@@ -34,38 +34,37 @@ namespace SolsUnderground
         private List<Item> items;
         private List<Chest> chests;
         private List<Texture2D> itemTextures;
+        private List<Texture2D> chestTextures;
 
         // Constructor
-        public ItemManager(Player player, CollisionManager collisionManager, List<Texture2D> itemTextures)
+        public ItemManager(Player player, CollisionManager collisionManager, 
+            List<Texture2D> itemTextures, List<Texture2D> chestTextures)
         {
             this.player = player;
             this.itemTextures = itemTextures;
+            this.chestTextures = chestTextures;
 
             items = new List<Item>();
             chests = new List<Chest>();
-            collisionManager.GetItemList(items);
+            collisionManager.SetItemList(items, chests);
         }
 
         // Methods
 
-        // SpawnChests()
-        // Need to figure out how to avoid collisions
-        // Use marker system in editor to determine valid placement?
-        // X% chance for chest to appear in each marked location
-
         /// <summary>
-        /// Creates money items for the player to pickup.
+        /// Drops money for the player to pick up, and possibly a health pickup as well.
         /// </summary>
-        /// <param name="value">Value of the money object</param>
+        /// <param name="moneyValue">Value of the money object</param>
         /// <param name="enemyRect">Rectangle</param>
-        public void DropMoney(int value, Rectangle spawnRect)
+        public void EnemyDrops(int moneyValue, Rectangle spawnRect)
         {
-            // Shirt position of money drop randomly
-            spawnRect.X = spawnRect.X - 5 + Program.rng.Next(11);
-            spawnRect.Y = spawnRect.Y - 5 + Program.rng.Next(11);
-
-            Item moneyDrop = new Item(ItemType.Money, value, itemTextures[0], spawnRect);
+            Item moneyDrop = new Item(ItemType.Money, moneyValue, itemTextures[0], spawnRect);
             items.Add(moneyDrop);
+
+            if (Program.rng.Next(100) < 100)
+            {
+                items.Add(new Item(ItemType.HealthPickup, 20, itemTextures[1], spawnRect));
+            }
         }
 
         /// <summary>
@@ -84,7 +83,7 @@ namespace SolsUnderground
                             items.RemoveAt(i);
                             continue;
 
-                        case ItemType.HealthPotion:
+                        case ItemType.HealthPickup:
                             player.Hp += items[i].Value;
                             //
                             // Clamp player's Hp to maxHp
@@ -110,21 +109,42 @@ namespace SolsUnderground
         }
 
         /// <summary>
-        /// Removes all items from previous rooms and spawns chests for the next room.
+        /// Opens all chests and registers their dropped items.
+        /// </summary>
+        public void OpenChests()
+        {
+            foreach (Chest c in chests)
+            {
+                if (c.IsOpen)
+                {
+                    items.Add(c.Open(itemTextures));
+                }
+            }
+        }
+
+        /// <summary>
+        /// Removes all chests and items from previous rooms and spawns chests for the next room.
         /// </summary>
         public void NextRoom()
         {
             items.Clear();
+            chests.Clear();
 
             // Spawn chests for next room
+            // MapManager creates list of Points as spawn locations
         }
 
         /// <summary>
-        /// Draws all items in the current room.
+        /// Draws all chests and items in the current room.
         /// </summary>
         /// <param name="sb">Spritebatch to draw with</param>
         public void Draw(SpriteBatch sb)
         {
+            foreach (Chest c in chests)
+            {
+                c.Draw(sb);
+            }
+
             foreach (Item i in items)
             {
                 i.Draw(sb);
