@@ -112,19 +112,23 @@ namespace SolsUnderground
         {
             if (state == PlayerState.faceForward)
             {
-                return new Rectangle(x - width / 2, y - height / 2, width * 2, height);
+                positionRect = new Rectangle(x - width / 2, y - height / 2, width * 2, height);
+                return positionRect;
             }
             else if (state == PlayerState.faceLeft)
             {
-                return new Rectangle(x - width / 2, y - height / 2, width, height * 2);
+                positionRect = new Rectangle(x - width / 2, y - height / 2, width, height * 2);
+                return positionRect;
             }
             else if (state == PlayerState.faceBack)
             {
-                return new Rectangle(x - width / 2, y + height / 2, width * 2, height);
+                positionRect = new Rectangle(x - width / 2, y + height / 2, width * 2, height);
+                return positionRect;
             }
             else // if faceRight
             {
-                return new Rectangle(x + width / 2, y - height / 2, width, height * 2);
+                positionRect = new Rectangle(x + width / 2, y - height / 2, width, height * 2);
+                return positionRect;
             }
         }
     }

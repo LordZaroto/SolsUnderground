@@ -186,7 +186,7 @@ namespace SolsUnderground
 
             //Player
             playerRect = new Rectangle(30, 440, playerTextures[0].Width, playerTextures[0].Height);
-            player = new Player(playerTextures, playerRect, stick, hoodie, animations);
+            player = new Player(playerTextures, playerRect, ritchieClaw, hoodie, animations);
 
             // Managers
             collisionManager = new CollisionManager(player);
@@ -744,7 +744,6 @@ namespace SolsUnderground
             // Reset player stats
             player.MaxHp = 100;
             player.Hp = player.MaxHp;
-            player.EquipWeapon(stick);
             player.X = 30;
             player.Y = 440;
             player.TigerBucks = 0;

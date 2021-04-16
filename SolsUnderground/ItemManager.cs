@@ -12,16 +12,8 @@ using Microsoft.Xna.Framework.Input;
 /// This class is responsible for handling chest spawns, collectible gold
 /// from enemies, and any items that appear on-screen during gameplay.
 /// 
-/// NOTES:
-/// 
-/// > Use constructor to load item list to collisionManager for checking item collisions
-/// 
 /// > Need to do:
-/// > Chests
-/// > Item spawning at appropriate times
-/// > Equip weapon and armor to player
-/// > Drop current weapon/armor?
-/// > Finish Armor class
+/// > Chest spawning
 /// 
 /// </summary>
 
@@ -56,14 +48,25 @@ namespace SolsUnderground
         /// </summary>
         /// <param name="moneyValue">Value of the money object</param>
         /// <param name="enemyRect">Rectangle</param>
-        public void EnemyDrops(int moneyValue, Rectangle spawnRect)
+        public void EnemyDrops(int moneyValue, Point spawn)
         {
-            Item moneyDrop = new Item(ItemType.Money, moneyValue, itemTextures[0], spawnRect);
-            items.Add(moneyDrop);
+            // Spawn money item in small randomized area
+            items.Add(new Item(ItemType.Money, moneyValue, itemTextures[0],
+                new Rectangle(
+                    spawn.X + (Program.rng.Next(5) - 2), 
+                    spawn.Y + (Program.rng.Next(5) - 2), 
+                    itemTextures[0].Width, 
+                    itemTextures[0].Height)));
 
-            if (Program.rng.Next(100) < 100)
+            if (Program.rng.Next(100) < 30)
             {
-                items.Add(new Item(ItemType.HealthPickup, 20, itemTextures[1], spawnRect));
+                // 30% chance to spawn health pickup in small randomized area
+                items.Add(new Item(ItemType.HealthPickup, 20, itemTextures[1],
+                     new Rectangle(
+                         spawn.X + (Program.rng.Next(5) - 2), 
+                         spawn.Y + (Program.rng.Next(5) - 2), 
+                         itemTextures[1].Width, 
+                         itemTextures[1].Height)));
             }
         }
 
