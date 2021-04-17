@@ -106,7 +106,7 @@ namespace SolsUnderground
             specialCooldown = 5;
             attack = 3;
             knockback = (int)(1 * 32);
-            hitboxScale = new Vector2(2, 1);
+            hitboxScale = new Vector2(2, 1.5f);
         }
 
         public override void Draw(SpriteBatch sb)

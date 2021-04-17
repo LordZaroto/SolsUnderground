@@ -117,7 +117,7 @@ namespace SolsUnderground
         /// <summary>
         /// Activates the effects of picking up an item if its colliding with the player.
         /// </summary>
-        public void ActivateItems()
+        public void ActivateItems(bool isEKeyPressed)
         {
             for (int i = 0; i < items.Count;)
             {
@@ -140,14 +140,22 @@ namespace SolsUnderground
                             continue;
 
                         case ItemType.Weapon:
-                            player.EquipWeapon((Weapon)items[i]);
-                            items.RemoveAt(i);
-                            continue;
+                            if (isEKeyPressed)
+                            {
+                                player.EquipWeapon((Weapon)items[i]);
+                                items.RemoveAt(i);
+                                continue;
+                            }
+                            break;
 
                         case ItemType.Armor:
-                            player.EquipArmor((Armor)items[i]);
-                            items.RemoveAt(i);
-                            continue;
+                            if (isEKeyPressed)
+                            {
+                                player.EquipArmor((Armor)items[i]);
+                                items.RemoveAt(i);
+                                continue;
+                            }
+                            break;
                     }
                 }
 

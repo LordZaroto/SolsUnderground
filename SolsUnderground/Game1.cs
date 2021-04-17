@@ -343,7 +343,7 @@ namespace SolsUnderground
                     combatManager.CleanUp(itemManager);
 
                     //Collisions
-                    itemManager.ActivateItems();
+                    itemManager.ActivateItems(SingleKeyPress(Keys.E, kb, prevKB));
                     collisionManager.CheckCollisions();
 
                     // Check if room is cleared

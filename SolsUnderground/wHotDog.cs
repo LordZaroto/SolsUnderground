@@ -111,7 +111,7 @@ namespace SolsUnderground
             specialCooldown = 20;
             attack = 5;
             knockback = (int)(1 * 32);
-            hitboxScale = new Vector2(2, 1);
+            hitboxScale = new Vector2(2, 1.5f);
         }
 
         /// <summary>

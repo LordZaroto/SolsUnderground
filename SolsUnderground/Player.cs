@@ -567,11 +567,7 @@ namespace SolsUnderground
         /// </summary>
         public bool SingleKeyPress(Keys key, KeyboardState kbState, KeyboardState previousKbState)
         {
-            if (previousKbState.IsKeyDown(key) && kbState.IsKeyDown(key))
-            {
-                return false;
-            }
-            else if (kbState.IsKeyDown(key))
+            if (previousKbState.IsKeyUp(key) && kbState.IsKeyDown(key))
             {
                 return true;
             }
