@@ -184,10 +184,10 @@ namespace SolsUnderground
             // Spawn chests for next room
             foreach(Point p in chestSpawns)
             {
+                // Add percentage chance?
                 chests.Add(new Chest(chestTextures,
                     new Rectangle(p,
-                    new Point(chestTextures[0].Width,
-                    chestTextures[0].Height))));
+                    new Point(40, 40))));
             }
         }
 
@@ -199,7 +199,7 @@ namespace SolsUnderground
             if (Program.godMode)
             {
                 int equipmentStart = moneySpriteCount + healthSpriteCount;
-                Point size = new Point(25, 25);
+                Point size = new Point(40, 40);
 
                 for (int i = 0; i < itemTextures.Count - equipmentStart; i++)
                 {
@@ -218,17 +218,35 @@ namespace SolsUnderground
                                 new Rectangle(new Point(50 + 50 * i, 100), size)));
                             break;
                         case 3:
-                            items.Add(new aHoodie(itemTextures[i + equipmentStart],
+                            items.Add(new wHockeyStick(itemTextures[i + equipmentStart],
                                 new Rectangle(new Point(50 + 50 * i, 100), size)));
                             break;
                         case 4:
+                            items.Add(new wHotDog(itemTextures[i + equipmentStart],
+                                new Rectangle(new Point(50 + 50 * i, 100), size)));
+                            break;
+
+                        case 5:
+                            items.Add(new aHoodie(itemTextures[i + equipmentStart],
+                                new Rectangle(new Point(50 + 50 * i, 100), size)));
+                            break;
+                        case 6:
                             items.Add(new aWinterCoat(itemTextures[i + equipmentStart],
                                 new Rectangle(new Point(50 + 50 * i, 100), size)));
                             break;
-                        case 5:
+                        case 7:
                             items.Add(new aBandana(itemTextures[i + equipmentStart],
                                 new Rectangle(new Point(50 + 50 * i, 100), size)));
                             break;
+                        case 8:
+                            items.Add(new aSkates(itemTextures[i + equipmentStart],
+                                new Rectangle(new Point(50 + 50 * i, 100), size)));
+                            break;
+                        case 9:
+                            items.Add(new aMask(itemTextures[i + equipmentStart],
+                                new Rectangle(new Point(50 + 50 * i, 100), size)));
+                            break;
+
                     }
                 }
             }

@@ -137,7 +137,7 @@ namespace SolsUnderground
                 {
                     if (Math.Abs(positionRect.X - player.X) <= 80 && Math.Abs(positionRect.Y - player.Y) <= 80)
                     {
-                        if (positionRect.X >= player.X)
+                        if (positionRect.X > player.X)
                         {
                             texture = textures[2];
                             positionRect.X -= 1;
@@ -149,7 +149,7 @@ namespace SolsUnderground
                             positionRect.X += 1;
                             enemyState = EnemyState.moveRight;
                         }
-                        if (positionRect.Y >= player.Y)
+                        if (positionRect.Y > player.Y)
                         {
                             texture = textures[1];
                             positionRect.Y -= 1;

@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace SolsUnderground
 {
-    class wRITchieClaw : Item, Weapon
+    class wHockeyStick : Item, Weapon
     {
         //Fields
         //-----------------------------
@@ -66,6 +66,11 @@ namespace SolsUnderground
             get { return hitboxR; }
             set { hitboxR = value; }
         }
+
+        public Texture2D Texture
+        {
+            get { return texture; }
+        }
         //------------------------------
 
         //Weapon Stats
@@ -99,112 +104,52 @@ namespace SolsUnderground
         //||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
         //---------------------------------------------------------------------
 
-        //previous version
-        //public RITchieClaw()
-        //{
-        //    basicCooldown = 0.1;
-        //    specialCooldown = 3;
-        //    attack = 7;
-        //    knockback = (int)(0.8 * 32); 
-        //}
-
-        //public RITchieClaw(Texture2D texture, Rectangle positionRect)
-        public wRITchieClaw(Texture2D texture, Rectangle positionRect)
+        public wHockeyStick(Texture2D texture, Rectangle positionRect)
             : base(ItemType.Weapon, 5, texture, positionRect)
         {
-            basicCooldown = 0.1;
-            specialCooldown = 3;
+            basicCooldown = 0.4;
+            specialCooldown = 5;
             attack = 5;
-            knockback = (int)(0.8 * 32);
-            hitboxScale = new Vector2(2, 1);
+            knockback = (int)(1 * 32);
+            hitboxScale = new Vector2(0.5f, 4);
         }
 
         /// <summary>
-        /// The player will dash a long distance, striking enemies along the way.
+        /// The player spins and knocks enemies away.
         /// </summary>
         public Attack Special(Player player)
         {
-            System.Diagnostics.Debug.WriteLine(player.Y);
-            //Create the attack hitbox in the direction the player is facing
-            if (player.State == PlayerState.faceForward || player.State == PlayerState.moveForward)
+            switch (player.State)
             {
-                player.State = PlayerState.attackForward;
+                case PlayerState.faceForward:
+                case PlayerState.moveForward:
+                    player.State = PlayerState.attackForward;
+                    break;
 
-                positionRect = new Rectangle(
-                        player.X - (player.Width * (3 / 4)),
-                        player.Y - (player.Height * 5 + (player.Height / 2)),
-                        player.Width + (player.Width * 2 * (3 / 4)),
-                        player.Height * 6 + (player.Height / 2));
+                case PlayerState.faceLeft:
+                case PlayerState.moveLeft:
+                    player.State = PlayerState.attackLeft;
+                    break;
 
-                Attack special = new Attack(
-                    positionRect,
-                    attack / 2,
-                    knockback / 2);
+                case PlayerState.faceBack:
+                case PlayerState.moveBack:
+                    player.State = PlayerState.attackBack;
+                    break;
 
-                System.Diagnostics.Debug.WriteLine(player.Y);
-                player.Y -= player.Height * 5;
-                System.Diagnostics.Debug.WriteLine(player.Y);
-                return special;
-            }
-            else if (player.State == PlayerState.faceLeft || player.State == PlayerState.moveLeft)
-            {
-                player.State = PlayerState.attackLeft;
-
-                positionRect = new Rectangle(
-                        player.X - (player.Width * 5 + (player.Width / 2)),
-                        player.Y - (player.Height * (3 / 4)),
-                        player.Width * 6 + (player.Width / 2),
-                        player.Height + (player.Height * 2 * (3 / 4)));
-
-                Attack special = new Attack(
-                    positionRect,
-                    attack / 2,
-                    knockback / 2);
-
-                player.X -= player.Width * 5;
-
-                return special;
-            }
-            else if (player.State == PlayerState.faceBack || player.State == PlayerState.moveBack)
-            {
-                player.State = PlayerState.attackBack;
-
-                positionRect = new Rectangle(
-                        player.X - (player.Width * (3 / 4)),
-                        player.Y - (player.Height / 2),
-                        player.Width + (player.Width * 2 * (3 / 4)),
-                        player.Height * 6 + (player.Height / 2));
-
-                Attack special = new Attack(
-                    positionRect,
-                    attack / 2,
-                    knockback / 2);
-
-                player.Y += player.Height * 5;
-
-                return special;
-            }
-            else if (player.State == PlayerState.faceRight || player.State == PlayerState.moveRight)
-            {
-                player.State = PlayerState.attackRight;
-
-                positionRect = new Rectangle(
-                        player.X - (player.Width / 2),
-                        player.Y - (player.Height * (3 / 4)),
-                        player.Width * 6 + (player.Width / 2),
-                        player.Height + (player.Height * 2 * (3 / 4)));
-
-                Attack special = new Attack(
-                    positionRect,
-                    attack / 2,
-                    knockback / 2);
-
-                player.X += player.Width * 5;
-
-                return special;
+                case PlayerState.faceRight:
+                case PlayerState.moveRight:
+                    player.State = PlayerState.attackRight;
+                    break;
             }
 
-            return null;
+            // w.X = p.X + (p.W - w.W) / 2
+            positionRect = new Rectangle(
+                player.X - player.Width,
+                player.Y - player.Height,
+                player.Width * 3,
+                player.Height * 3);
+
+            return new Attack(positionRect, (int)(attack * 0.5), (int)(knockback * 3));
         }
 
         public override void Draw(SpriteBatch sb)

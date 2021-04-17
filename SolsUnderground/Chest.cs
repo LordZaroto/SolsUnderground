@@ -109,6 +109,14 @@ namespace SolsUnderground
                         case 2:
                             drop = new wBrickBreaker(itemTextures[textureID], positionRect);
                             break;
+
+                        case 3:
+                            drop = new wHockeyStick(itemTextures[textureID], positionRect);
+                            break;
+
+                        case 4:
+                            drop = new wHotDog(itemTextures[textureID], positionRect);
+                            break;
                     }
                     break;
 
@@ -128,6 +136,14 @@ namespace SolsUnderground
 
                         case 2:
                             drop = new aBandana(itemTextures[textureID], positionRect);
+                            break;
+
+                        case 3:
+                            drop = new aSkates(itemTextures[textureID], positionRect);
+                            break;
+
+                        case 4:
+                            drop = new aMask(itemTextures[textureID], positionRect);
                             break;
                     }
                     break;

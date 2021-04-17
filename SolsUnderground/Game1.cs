@@ -64,9 +64,7 @@ namespace SolsUnderground
 
         //Weapons
         private wStick stick;
-        private wRITchieClaw ritchieClaw;
         private Texture2D stickTexture;
-        private Texture2D ritchieClawTexture;
 
         // Armor
         private aHoodie hoodie;
@@ -108,8 +106,9 @@ namespace SolsUnderground
         private Rectangle button8;
         private Texture2D exitToMenu;
         private Rectangle button9;
-        private Rectangle currentWeapon;
-        private Rectangle currentArmor;
+        private Rectangle weaponIcon;
+        private Rectangle armorIcon;
+        private Rectangle infoRect;
 
         //gameover items
         private Texture2D newGame;
@@ -167,15 +166,9 @@ namespace SolsUnderground
             /// NOTE: When adding new weapons/armor, item needs to be registered in
             /// itemTextures list and Chest class to be added in chest drops.
 
-            // Weapons
+            // Starting weapon
             stickTexture = Content.Load<Texture2D>("stick");
             stick = new wStick(stickTexture, new Rectangle(0, 0, 0, 0));
-            ritchieClawTexture = Content.Load<Texture2D>("ritchieClaw");
-
-            //Testing Weapons
-            ritchieClaw = new wRITchieClaw(ritchieClawTexture, new Rectangle(0, 0, 0, 0));
-            wBrickBreaker brickBreaker = new wBrickBreaker(
-                Content.Load<Texture2D>("BrickBreaker"), new Rectangle(0, 0, 0, 0));
 
             // Armor
             hoodieTexture = Content.Load<Texture2D>("Hoodie");
@@ -183,7 +176,7 @@ namespace SolsUnderground
 
             //Player
             playerRect = new Rectangle(30, 440, playerTextures[0].Width, playerTextures[0].Height);
-            player = new Player(playerTextures, playerRect, brickBreaker, hoodie, animations);
+            player = new Player(playerTextures, playerRect, stick, hoodie, animations);
 
             // Managers
             collisionManager = new CollisionManager(player,
@@ -199,12 +192,20 @@ namespace SolsUnderground
             itemManager = new ItemManager(player, collisionManager, chestTextures);
             itemManager.AddMoneySprite(Content.Load<Texture2D>("TigerBuck"));
             itemManager.AddHealthSprite(Content.Load<Texture2D>("Cola"));
+
+            // Weapons
             itemManager.AddWeaponSprite(stickTexture);
-            itemManager.AddWeaponSprite(ritchieClawTexture);
+            itemManager.AddWeaponSprite(Content.Load<Texture2D>("ritchieClaw"));
             itemManager.AddWeaponSprite(Content.Load<Texture2D>("BrickBreaker"));
+            itemManager.AddWeaponSprite(Content.Load<Texture2D>("HockeyStick"));
+            itemManager.AddWeaponSprite(Content.Load<Texture2D>("HotDog"));
+
+            // Armor
             itemManager.AddArmorSprite(hoodieTexture);
             itemManager.AddArmorSprite(Content.Load<Texture2D>("WinterCoat"));
             itemManager.AddArmorSprite(Content.Load<Texture2D>("Bandana"));
+            itemManager.AddArmorSprite(Content.Load<Texture2D>("Skates"));
+            itemManager.AddArmorSprite(Content.Load<Texture2D>("Mask"));
 
             //enemy textures
             minionTextures = new Texture2D[] {
@@ -256,8 +257,9 @@ namespace SolsUnderground
             button8 = new Rectangle( 0, 653, 914, 141);
             exitToMenu = Content.Load<Texture2D>("Exit");
             button9 = new Rectangle( 0, 792, 914, 141);
-            currentWeapon = new Rectangle(1161, 398, 139, 113);
-            currentArmor = new Rectangle(1161, 515, 139, 113);
+            weaponIcon = new Rectangle(961, 398, 139, 113);
+            armorIcon = new Rectangle(961, 515, 139, 113);
+            infoRect = new Rectangle(0, 0, 0, 0);
 
             //Game Over Buttons
             newGame = Content.Load<Texture2D>("newGameGO");
@@ -651,14 +653,14 @@ namespace SolsUnderground
                     {
                         _spriteBatch.Draw(drawSquare, 
                             new Rectangle(player.MaxHp * 3 + 10, 0, 
-                            (int)(player.CurrentWeapon.BasicCooldown * 10 - player.BasicCounter * 10), 20), 
+                            (int)(player.CurrentWeapon.BasicCooldown * 50 - player.BasicCounter * 50), 20), 
                             Color.Green);
                     }
                     if (player.SpecialCounter < player.CurrentWeapon.SpecialCooldown)
                     {
                         _spriteBatch.Draw(drawSquare,
                             new Rectangle(player.MaxHp * 3 + 10, 20,
-                            (int)(player.CurrentWeapon.SpecialCooldown * 10 - player.SpecialCounter * 10), 20),
+                            (int)(player.CurrentWeapon.SpecialCooldown * 20 - player.SpecialCounter * 20), 20),
                             Color.Blue);
                     }
 
@@ -670,7 +672,7 @@ namespace SolsUnderground
                     _spriteBatch.DrawString(
                         uiText,
                         "Tiger Bucks: " + player.TigerBucks,
-                        new Vector2(800, 5),
+                        new Vector2(5, _graphics.PreferredBackBufferHeight - 35),
                         Color.Orange);
                     _spriteBatch.DrawString(
                         uiText,
@@ -691,9 +693,41 @@ namespace SolsUnderground
                     _spriteBatch.Draw(saveGame, button7, Color.White);
                     _spriteBatch.Draw(loadGame2, button8, Color.White);
                     _spriteBatch.Draw(exitToMenu, button9, Color.White);
-                    _spriteBatch.Draw(player.CurrentWeapon.Sprite, currentWeapon, Color.White);
-                    _spriteBatch.Draw(player.CurrentArmor.Sprite, currentArmor, Color.White);
+                    _spriteBatch.Draw(player.CurrentWeapon.Sprite, weaponIcon, Color.White);
+                    _spriteBatch.Draw(player.CurrentArmor.Sprite, armorIcon, Color.White);
                     
+                    // Draw weapon info if mouse hovers over weapon icon
+                    if (prevM.X > weaponIcon.X && prevM.X < weaponIcon.X + weaponIcon.Width
+                        && prevM.Y > weaponIcon.Y && prevM.Y < weaponIcon.Y + weaponIcon.Height)
+                    {
+                        infoRect = new Rectangle(prevM.X, prevM.Y, 270, 120);
+
+                        _spriteBatch.Draw(drawSquare, infoRect, Color.DarkGray);
+                        _spriteBatch.DrawString(uiText, "Damage: " + player.CurrentWeapon.Attack,
+                            new Vector2(infoRect.X + 10, infoRect.Y + 3), Color.White);
+                        _spriteBatch.DrawString(uiText, "Knockback: " + player.CurrentWeapon.Knockback,
+                            new Vector2(infoRect.X + 10, infoRect.Y + 30), Color.White);
+                        _spriteBatch.DrawString(uiText, "Basic Cooldown: " + player.CurrentWeapon.BasicCooldown,
+                            new Vector2(infoRect.X + 10, infoRect.Y + 55), Color.White);
+                        _spriteBatch.DrawString(uiText, "Special Cooldown: " + player.CurrentWeapon.SpecialCooldown,
+                            new Vector2(infoRect.X + 10, infoRect.Y + 80), Color.White);
+                    }
+
+                    // Draw armor info if mouse hovers over armor icon
+                    if (prevM.X > armorIcon.X && prevM.X < armorIcon.X + armorIcon.Width
+                        && prevM.Y > armorIcon.Y && prevM.Y < armorIcon.Y + armorIcon.Height)
+                    {
+                        infoRect = new Rectangle(prevM.X, prevM.Y, 150, 90);
+
+                        _spriteBatch.Draw(drawSquare, infoRect, Color.DarkGray);
+                        _spriteBatch.DrawString(uiText, "Defense: " + player.CurrentArmor.Defense,
+                            new Vector2(infoRect.X + 10, infoRect.Y + 3), Color.White);
+                        _spriteBatch.DrawString(uiText, "Speed: " + player.CurrentArmor.Speed,
+                            new Vector2(infoRect.X + 10, infoRect.Y + 30), Color.White);
+                        _spriteBatch.DrawString(uiText, "HP: " + player.CurrentArmor.HP,
+                            new Vector2(infoRect.X + 10, infoRect.Y + 55), Color.White);
+                    }
+
                     break;
 
 
