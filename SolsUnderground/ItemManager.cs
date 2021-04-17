@@ -213,6 +213,7 @@ namespace SolsUnderground
                 {
                     switch (i)
                     {
+                            // Weapons
                         case 0:
                             items.Add(new wStick(itemTextures[i + equipmentStart],
                                 new Rectangle(new Point(50 + 50 * i, 100), size)));
@@ -234,25 +235,26 @@ namespace SolsUnderground
                                 new Rectangle(new Point(50 + 50 * i, 100), size)));
                             break;
 
+                            // Armor
                         case 5:
                             items.Add(new aHoodie(itemTextures[i + equipmentStart],
-                                new Rectangle(new Point(50 + 50 * i, 100), size)));
+                                new Rectangle(new Point(50 + 50 * (i - weaponSpriteCount), 800), size)));
                             break;
                         case 6:
                             items.Add(new aWinterCoat(itemTextures[i + equipmentStart],
-                                new Rectangle(new Point(50 + 50 * i, 100), size)));
+                                new Rectangle(new Point(50 + 50 * (i - weaponSpriteCount), 800), size)));
                             break;
                         case 7:
                             items.Add(new aBandana(itemTextures[i + equipmentStart],
-                                new Rectangle(new Point(50 + 50 * i, 100), size)));
+                                new Rectangle(new Point(50 + 50 * (i - weaponSpriteCount), 800), size)));
                             break;
                         case 8:
                             items.Add(new aSkates(itemTextures[i + equipmentStart],
-                                new Rectangle(new Point(50 + 50 * i, 100), size)));
+                                new Rectangle(new Point(50 + 50 * (i - weaponSpriteCount), 800), size)));
                             break;
                         case 9:
                             items.Add(new aMask(itemTextures[i + equipmentStart],
-                                new Rectangle(new Point(50 + 50 * i, 100), size)));
+                                new Rectangle(new Point(50 + 50 * (i - weaponSpriteCount), 800), size)));
                             break;
 
                     }
