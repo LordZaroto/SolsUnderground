@@ -87,9 +87,12 @@ namespace SolsUnderground
                     Boss boss = (Boss)e;
                     Attack special = boss.BossAttack(player);
 
-                    if (special.Hitbox.Intersects(player.PositionRect) && !(boss.State == EnemyState.dead))
+                    if(!(special == null))
                     {
-                        player.TakeDamage(special.Damage, boss.State, special.Knockback);
+                        if (special.Hitbox.Intersects(player.PositionRect) && !(boss.State == EnemyState.dead))
+                        {
+                            player.TakeDamage(special.Damage, boss.State, special.Knockback);
+                        }
                     }
                 }
                 
