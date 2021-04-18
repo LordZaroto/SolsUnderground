@@ -36,14 +36,14 @@ namespace SolsUnderground
             this.currentHP = health;
             this.attack = attack;
             this.knockback = 32;
-            moveCD = 0.3;
+            moveCD = 0.2;
             moveCounter = moveCD;
             kbCD = 0.1;
             kbCounter = kbCD;
             sp1CD = 7;
-            sp1Counter = 0;
+            sp1Counter = 6;
             sp2CD = 3.5;
-            sp2Counter = 0;
+            sp2Counter = 2;
         }
 
         //properties
@@ -173,13 +173,13 @@ namespace SolsUnderground
                         {
                             texture = textures[1];
                             positionRect.Y -= 2;
-                            enemyState = EnemyState.moveBack;
+                            enemyState = EnemyState.moveForward;
                         }
                         else
                         {
                             texture = textures[0];
                             positionRect.Y += 2;
-                            enemyState = EnemyState.moveForward;
+                            enemyState = EnemyState.moveBack;
                         }
                     }
                 }
@@ -194,15 +194,21 @@ namespace SolsUnderground
         /// <returns></returns>
         public override Attack BossAttack(Player player)
         {
-            //If close to player
-            if(Math.Abs(X - player.X) < 30 || Math.Abs(Y - player.Y) < 30)
+            if(moveCounter >= moveCD)
             {
-                return DragonWrath();
+                //If close to player
+                if ((Math.Abs(X - player.X) < 50 && (State == EnemyState.moveRight || State == EnemyState.moveLeft))
+                    || (Math.Abs(Y - player.Y) < 50 && (State == EnemyState.moveForward || State == EnemyState.moveBack)))
+                {
+                    return DragonWrath();
+                }
+                else
+                {
+                    return DragonDash();
+                }
             }
-            else
-            {
-                return DragonDash();
-            }
+
+            return null;
         }
 
         /// <summary>
@@ -229,8 +235,8 @@ namespace SolsUnderground
                             Y - (Height * 2 + (Height / 2)),
                             Width + (Width * 2 * (3 / 4)),
                             Height * 3 + (Height / 2)),
-                        attack * 2,
-                        knockback * 2);
+                        attack * 3,
+                        knockback * 3);
 
                     Y -= Height * 2;
                     return special;
@@ -245,8 +251,8 @@ namespace SolsUnderground
                             Y - (Height * (3 / 4)),
                             Width * 3 + (Width / 2),
                             Height + (Height * 2 * (3 / 4))),
-                        attack * 2,
-                        knockback * 2);
+                        attack * 3,
+                        knockback * 3);
 
                     X -= Width * 2;
 
@@ -262,8 +268,8 @@ namespace SolsUnderground
                             Y - (Height / 2),
                             Width + (Width * 2 * (3 / 4)),
                             Height * 3 + (Height / 2)),
-                        attack * 2,
-                        knockback * 2);
+                        attack * 3,
+                        knockback * 3);
 
                     Y += Height * 2;
 
@@ -279,8 +285,8 @@ namespace SolsUnderground
                             Y - (Height * (3 / 4)),
                             Width * 3 + (Width / 2),
                             Height + (Height * 2 * (3 / 4))),
-                        attack * 2,
-                        knockback * 2);
+                        attack * 3,
+                        knockback * 3);
 
                     X += Width * 2;
 
@@ -302,6 +308,7 @@ namespace SolsUnderground
             {
                 //Reset the cooldown
                 sp2Counter = 0;
+                moveCounter = 0;
 
                 //Create the attack hitbox in the direction the player is facing
                 if (State == EnemyState.faceForward || State == EnemyState.moveForward)

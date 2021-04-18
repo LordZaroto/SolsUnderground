@@ -130,7 +130,7 @@ namespace SolsUnderground
 
                 Attack special = new Attack(
                     positionRect,
-                    attack / 2,
+                    attack / 2 + 1,
                     knockback / 2);
 
                 player.Y -= player.Height * 5;
@@ -148,7 +148,7 @@ namespace SolsUnderground
 
                 Attack special = new Attack(
                     positionRect,
-                    attack / 2,
+                    attack / 2 + 1,
                     knockback / 2);
 
                 player.X -= player.Width * 5;
@@ -167,7 +167,7 @@ namespace SolsUnderground
 
                 Attack special = new Attack(
                     positionRect,
-                    attack / 2,
+                    attack / 2 + 1,
                     knockback / 2);
 
                 player.Y += player.Height * 5;
@@ -186,7 +186,7 @@ namespace SolsUnderground
 
                 Attack special = new Attack(
                     positionRect,
-                    attack / 2,
+                    attack / 2 + 1,
                     knockback / 2);
 
                 player.X += player.Width * 5;
