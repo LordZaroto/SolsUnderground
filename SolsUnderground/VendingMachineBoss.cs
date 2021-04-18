@@ -27,7 +27,7 @@ namespace SolsUnderground
             this.texture = textures[0];
             this.positionRect = positionRect;
             maxHealth = health;
-            this.health = maxHealth;
+            this.currentHP = maxHealth;
             this.attack = attack;
             this.knockback = 64;
             moveCD = 2;
@@ -103,7 +103,7 @@ namespace SolsUnderground
             {
                 moveCounter = 0;
 
-                health -= damage;
+                currentHP -= damage;
 
                 if (enemyState == EnemyState.faceForward || enemyState == EnemyState.moveForward)
                 {
@@ -122,7 +122,7 @@ namespace SolsUnderground
                     X -= (int)(knockback);
                 }
 
-                if (health <= 0)
+                if (currentHP <= 0)
                 {
                     enemyState = EnemyState.dead;
                 }
@@ -138,11 +138,11 @@ namespace SolsUnderground
             {
                 if (!(enemyState == EnemyState.dead))
                 {
-                    if(health > maxHealth /3 * 2)
+                    if(currentHP > maxHealth /3 * 2)
                     {
 
                     }
-                    else if(health <= maxHealth / 3 * 2 && health > maxHealth/3)
+                    else if(currentHP <= maxHealth / 3 * 2 && currentHP > maxHealth/3)
                     {
 
                     }

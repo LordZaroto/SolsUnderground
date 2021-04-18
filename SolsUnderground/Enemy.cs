@@ -36,7 +36,8 @@ namespace SolsUnderground
     abstract class Enemy : DynamicObject
     {
         //fields
-        protected int health;
+        protected int maxHP;
+        protected int currentHP;
         protected int attack;
         protected int knockback;
 

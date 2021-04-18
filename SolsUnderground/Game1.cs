@@ -93,7 +93,6 @@ namespace SolsUnderground
 
         //HUD items
         private SpriteFont uiText;
-        private Texture2D drawSquare;
         private Rectangle hudWeapon;
         private int enemyAmount;
 
@@ -142,11 +141,11 @@ namespace SolsUnderground
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            //Text
+            // Text
             heading = Content.Load<SpriteFont>("Roboto175");
             text = Content.Load<SpriteFont>("Roboto40");
 
-            //character animations
+            // Player Animations
             Dictionary<string, Animation> animations = new Dictionary<string, Animation>()
             {
                 {"playerMoveForward", new Animation(Content.Load<Texture2D>("playerMovingUp2"), 4) },
@@ -156,7 +155,7 @@ namespace SolsUnderground
                 {"heroDeath", new Animation(Content.Load<Texture2D>("heroDeath"), 4) }
             };
 
-            //character textures
+            // Player Textures
             playerTextures = new Texture2D[] {
                 Content.Load<Texture2D>("heroForward2"),
                 Content.Load<Texture2D>("heroBack2"),
@@ -174,7 +173,7 @@ namespace SolsUnderground
             hoodieTexture = Content.Load<Texture2D>("Hoodie");
             hoodie = new aHoodie(hoodieTexture, new Rectangle(0, 0, 0, 0));
 
-            //Player
+            // Player
             playerRect = new Rectangle(30, 440, playerTextures[0].Width, playerTextures[0].Height);
             player = new Player(playerTextures, playerRect, stick, hoodie, animations);
 
@@ -208,7 +207,7 @@ namespace SolsUnderground
             itemManager.AddArmorSprite(Content.Load<Texture2D>("Skates"));
             itemManager.AddArmorSprite(Content.Load<Texture2D>("Mask"));
 
-            //enemy textures
+            // Enemy Textures
             minionTextures = new Texture2D[] {
                 Content.Load<Texture2D>("minionForward"),
                 Content.Load<Texture2D>("minionBack"),
@@ -216,13 +215,15 @@ namespace SolsUnderground
                 Content.Load<Texture2D>("minionRight") };
             enemyManager.AddEnemyData(minionTextures);
 
-            wandererTextures = new Texture2D[]
-            {
+            wandererTextures = new Texture2D[] {
                 Content.Load<Texture2D>("wandererForward"),
                 Content.Load<Texture2D>("wandererBack"),
                 Content.Load<Texture2D>("wandererLeft"),
                 Content.Load<Texture2D>("wandererRight") };
             enemyManager.AddEnemyData(wandererTextures);
+
+            // Boss Textures
+            enemyManager.AddBossData(wandererTextures);
 
             // Tiles
             List<Texture2D> tileTextures = new List<Texture2D>();
@@ -245,7 +246,7 @@ namespace SolsUnderground
 
             //options/controls buttons
             uiText = Content.Load<SpriteFont>("Roberto20");
-            drawSquare = Content.Load<Texture2D>("BlankRect");
+            Program.drawSquare = Content.Load<Texture2D>("BlankRect");
             returnToMenu = Content.Load<Texture2D>("returnToMenu");
             button5 = new Rectangle(327, 827, 719, 145);
 
@@ -370,9 +371,18 @@ namespace SolsUnderground
                         isRoomCleared = false;
 
                         enemyManager.ClearEnemies();
-                        enemyManager.SpawnEnemies(
-                            mapManager.CurrentRoom.EnemyCount,
-                            mapManager.CurrentRoom.GetOpenTiles());
+
+                        // Check if boss room
+                        if (mapManager.IsBossRoom)
+                        {
+                            enemyManager.SpawnBoss(mapManager.CurrentRoom.GetOpenTiles());
+                        }
+                        else
+                        {
+                            enemyManager.SpawnEnemies(
+                                mapManager.CurrentRoom.EnemyCount,
+                                mapManager.CurrentRoom.GetOpenTiles());
+                        }
 
                         collisionManager.SetBarrierList(mapManager.CurrentRoom.GetBarriers());
                     }
@@ -646,20 +656,20 @@ namespace SolsUnderground
                     enemyManager.Draw(_spriteBatch);
 
                     // Draw HP bar
-                    _spriteBatch.Draw(drawSquare, new Rectangle(0, 0, player.MaxHp * 3 + 10, 40), Color.Black);
-                    _spriteBatch.Draw(drawSquare, new Rectangle(5, 5, player.Hp * 3, 30), Color.DarkRed);
+                    _spriteBatch.Draw(Program.drawSquare, new Rectangle(0, 0, player.MaxHp * 3 + 10, 40), Color.Black);
+                    _spriteBatch.Draw(Program.drawSquare, new Rectangle(5, 5, player.Hp * 3, 30), Color.DarkRed);
 
                     // Draw cooldown bars
                     if (player.BasicCounter < player.CurrentWeapon.BasicCooldown)
                     {
-                        _spriteBatch.Draw(drawSquare, 
+                        _spriteBatch.Draw(Program.drawSquare, 
                             new Rectangle(player.MaxHp * 3 + 10, 0, 
                             (int)(player.CurrentWeapon.BasicCooldown * 50 - player.BasicCounter * 50), 20), 
                             Color.Green);
                     }
                     if (player.SpecialCounter < player.CurrentWeapon.SpecialCooldown)
                     {
-                        _spriteBatch.Draw(drawSquare,
+                        _spriteBatch.Draw(Program.drawSquare,
                             new Rectangle(player.MaxHp * 3 + 10, 20,
                             (int)(player.CurrentWeapon.SpecialCooldown * 20 - player.SpecialCounter * 20), 20),
                             Color.Blue);
@@ -703,7 +713,7 @@ namespace SolsUnderground
                     {
                         infoRect = new Rectangle(prevM.X, prevM.Y, 270, 120);
 
-                        _spriteBatch.Draw(drawSquare, infoRect, Color.DarkGray);
+                        _spriteBatch.Draw(Program.drawSquare, infoRect, Color.DarkGray);
                         _spriteBatch.DrawString(uiText, "Damage: " + player.CurrentWeapon.Attack,
                             new Vector2(infoRect.X + 10, infoRect.Y + 3), Color.White);
                         _spriteBatch.DrawString(uiText, "Knockback: " + player.CurrentWeapon.Knockback,
@@ -720,7 +730,7 @@ namespace SolsUnderground
                     {
                         infoRect = new Rectangle(prevM.X, prevM.Y, 150, 90);
 
-                        _spriteBatch.Draw(drawSquare, infoRect, Color.DarkGray);
+                        _spriteBatch.Draw(Program.drawSquare, infoRect, Color.DarkGray);
                         _spriteBatch.DrawString(uiText, "Defense: " + player.CurrentArmor.Defense,
                             new Vector2(infoRect.X + 10, infoRect.Y + 3), Color.White);
                         _spriteBatch.DrawString(uiText, "Speed: " + player.CurrentArmor.Speed,

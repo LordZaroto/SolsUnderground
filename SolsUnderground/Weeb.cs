@@ -32,7 +32,8 @@ namespace SolsUnderground
             this.textures = textures;
             this.texture = textures[0];
             this.positionRect = positionRect;
-            this.health = health;
+            this.maxHP = health;
+            this.currentHP = health;
             this.attack = attack;
             this.knockback = 32;
             moveCD = 0.3;
@@ -40,9 +41,9 @@ namespace SolsUnderground
             kbCD = 0.1;
             kbCounter = kbCD;
             sp1CD = 7;
-            sp1Counter = sp1CD;
+            sp1Counter = 0;
             sp2CD = 3.5;
-            sp2Counter = sp2CD;
+            sp2Counter = 0;
         }
 
         //properties
@@ -60,8 +61,8 @@ namespace SolsUnderground
 
         public override int Health
         {
-            get { return health; }
-            set { health = value; }
+            get { return currentHP; }
+            set { currentHP = value; }
         }
 
         public override int Attack
@@ -111,7 +112,7 @@ namespace SolsUnderground
             {
                 moveCounter = 0;
 
-                health -= damage;
+                currentHP -= damage;
 
                 if (enemyState == EnemyState.faceForward || enemyState == EnemyState.moveForward)
                 {
@@ -130,7 +131,7 @@ namespace SolsUnderground
                     X -= knockback;
                 }
 
-                if (health <= 0)
+                if (currentHP <= 0)
                 {
                     enemyState = EnemyState.dead;
                 }
@@ -222,14 +223,12 @@ namespace SolsUnderground
                 {
                     State = EnemyState.attackForward;
 
-                    positionRect = new Rectangle(
+                    Attack special = new Attack(
+                        new Rectangle(
                             X - (Width * (3 / 4)),
                             Y - (Height * 2 + (Height / 2)),
                             Width + (Width * 2 * (3 / 4)),
-                            Height * 3 + (Height / 2));
-
-                    Attack special = new Attack(
-                        positionRect,
+                            Height * 3 + (Height / 2)),
                         attack * 2,
                         knockback * 2);
 
@@ -240,14 +239,12 @@ namespace SolsUnderground
                 {
                     State = EnemyState.attackLeft;
 
-                    positionRect = new Rectangle(
+                    Attack special = new Attack(
+                        new Rectangle(
                             X - (Width * 2 + (Width / 2)),
                             Y - (Height * (3 / 4)),
                             Width * 3 + (Width / 2),
-                            Height + (Height * 2 * (3 / 4)));
-
-                    Attack special = new Attack(
-                        positionRect,
+                            Height + (Height * 2 * (3 / 4))),
                         attack * 2,
                         knockback * 2);
 
@@ -259,14 +256,12 @@ namespace SolsUnderground
                 {
                     State = EnemyState.attackBack;
 
-                    positionRect = new Rectangle(
+                    Attack special = new Attack(
+                        new Rectangle(
                             X - (Width * (3 / 4)),
                             Y - (Height / 2),
                             Width + (Width * 2 * (3 / 4)),
-                            Height * 3 + (Height / 2));
-
-                    Attack special = new Attack(
-                        positionRect,
+                            Height * 3 + (Height / 2)),
                         attack * 2,
                         knockback * 2);
 
@@ -278,14 +273,12 @@ namespace SolsUnderground
                 {
                     State = EnemyState.attackRight;
 
-                    positionRect = new Rectangle(
+                    Attack special = new Attack(
+                        new Rectangle(
                             X - (Width / 2),
                             Y - (Height * (3 / 4)),
                             Width * 3 + (Width / 2),
-                            Height + (Height * 2 * (3 / 4)));
-
-                    Attack special = new Attack(
-                        positionRect,
+                            Height + (Height * 2 * (3 / 4))),
                         attack * 2,
                         knockback * 2);
 
@@ -315,14 +308,12 @@ namespace SolsUnderground
                 {
                     State = EnemyState.attackForward;
 
-                    positionRect = new Rectangle(
+                    Attack special = new Attack(
+                        new Rectangle(
                             X - (Width * (3 / 4)),
                             Y - (Height * 5 + (Height / 2)),
                             Width + (Width * 2 * (3 / 4)),
-                            Height * 6 + (Height / 2));
-
-                    Attack special = new Attack(
-                        positionRect,
+                            Height * 6 + (Height / 2)),
                         attack / 2,
                         knockback / 2);
 
@@ -333,14 +324,12 @@ namespace SolsUnderground
                 {
                     State = EnemyState.attackLeft;
 
-                    positionRect = new Rectangle(
+                    Attack special = new Attack(
+                        new Rectangle(
                             X - (Width * 5 + (Width / 2)),
                             Y - (Height * (3 / 4)),
                             Width * 6 + (Width / 2),
-                            Height + (Height * 2 * (3 / 4)));
-
-                    Attack special = new Attack(
-                        positionRect,
+                            Height + (Height * 2 * (3 / 4))),
                         attack / 2,
                         knockback / 2);
 
@@ -352,14 +341,12 @@ namespace SolsUnderground
                 {
                     State = EnemyState.attackBack;
 
-                    positionRect = new Rectangle(
+                    Attack special = new Attack(
+                        new Rectangle(
                             X - (Width * (3 / 4)),
                             Y - (Height / 2),
                             Width + (Width * 2 * (3 / 4)),
-                            Height * 6 + (Height / 2));
-
-                    Attack special = new Attack(
-                        positionRect,
+                            Height * 6 + (Height / 2)),
                         attack / 2,
                         knockback / 2);
 
@@ -371,14 +358,12 @@ namespace SolsUnderground
                 {
                     State = EnemyState.attackRight;
 
-                    positionRect = new Rectangle(
+                    Attack special = new Attack(
+                        new Rectangle(
                             X - (Width / 2),
                             Y - (Height * (3 / 4)),
                             Width * 6 + (Width / 2),
-                            Height + (Height * 2 * (3 / 4)));
-
-                    Attack special = new Attack(
-                        positionRect,
+                            Height + (Height * 2 * (3 / 4))),
                         attack / 2,
                         knockback / 2);
 
@@ -394,6 +379,14 @@ namespace SolsUnderground
         public override void Draw(SpriteBatch sb)
         {
             sb.Draw(texture, positionRect, Color.White);
+
+            // Draw HP bar
+            sb.Draw(Program.drawSquare,
+                new Rectangle(X, Y - 10, Width, 3),
+                Color.Black);
+            sb.Draw(Program.drawSquare,
+                new Rectangle(X, Y - 10, (int)(Width * ((double)currentHP / (double)maxHP)), 3),
+                Color.Red);
         }
     }
 }

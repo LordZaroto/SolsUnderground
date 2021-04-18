@@ -30,6 +30,7 @@ namespace SolsUnderground
         // Fields
         private List<Enemy> enemies;
         private List<Texture2D[]> enemyTextures;
+        private List<Texture2D[]> bossTextures;
         private Player player;
 
 
@@ -39,6 +40,7 @@ namespace SolsUnderground
             this.player = player;
             enemies = new List<Enemy>();
             enemyTextures = new List<Texture2D[]>();
+            bossTextures = new List<Texture2D[]>();
 
             // Hand a reference of enemy list to collision and combat managers
             collisionManager.SetEnemyList(enemies);
@@ -57,6 +59,15 @@ namespace SolsUnderground
         }
 
         /// <summary>
+        /// Adds a set of sprites for a boss type.
+        /// </summary>
+        /// <param name="bossSprites">Texture2D array of boss' sprites</param>
+        public void AddBossData(Texture2D[] bossSprites)
+        {
+            bossTextures.Add(bossSprites);
+        }
+
+        /// <summary>
         /// Creates a number of enemies and adds them to the current active enemies.
         /// Currently only spawns default SkaterBro enemy.
         /// </summary>
@@ -70,30 +81,57 @@ namespace SolsUnderground
             for (int i = 0; i < enemyCount; i++)
             {
                 spawnPoint = Program.rng.Next(openTiles.Count);
-                enemyChoice = Program.rng.Next(2);
+                enemyChoice = Program.rng.Next(enemyTextures.Count);
 
                 // Need to expand and implement spawning multiple enemy types
-                Rectangle skaterRect = new Rectangle(
-                    openTiles[spawnPoint].X,
-                    openTiles[spawnPoint].Y, 
-                    enemyTextures[0][2].Width, 
-                    enemyTextures[0][2].Height);
-                //second enemy 
-                Rectangle fratRect = new Rectangle(
-                    openTiles[spawnPoint].X,
-                    openTiles[spawnPoint].Y,
-                    enemyTextures[1][2].Width,
-                    enemyTextures[1][2].Height);
                 //The type of enemy spawned should be random
                 switch (enemyChoice)
                 {
                     case 0:
-                        enemies.Add(new Minion(enemyTextures[0], skaterRect, 6, 4));
+                        enemies.Add(new Minion(enemyTextures[enemyChoice],
+                            new Rectangle(openTiles[spawnPoint].X, 
+                            openTiles[spawnPoint].Y, 
+                            enemyTextures[enemyChoice][2].Width, 
+                            enemyTextures[enemyChoice][2].Height), 
+                            6, 4));
                         break;
                     case 1:
-                        enemies.Add(new Wanderer(enemyTextures[1], fratRect, 12, 8));
+                        enemies.Add(new Wanderer(enemyTextures[enemyChoice],
+                            new Rectangle(openTiles[spawnPoint].X,
+                            openTiles[spawnPoint].Y,
+                            enemyTextures[enemyChoice][2].Width,
+                            enemyTextures[enemyChoice][2].Height), 
+                            12, 8));
                         break;
                 }
+            }
+        }
+
+        /// <summary>
+        /// Spawns a single boss randomly in the current room.
+        /// </summary>
+        /// <param name="openTiles"></param>
+        public void SpawnBoss(List<Rectangle> openTiles)
+        {
+            // Use to store random index of openTile list
+            int spawnPoint;
+            int bossChoice;
+
+            spawnPoint = Program.rng.Next(openTiles.Count);
+            bossChoice = Program.rng.Next(bossTextures.Count);
+
+            // Need to expand and implement spawning multiple enemy types
+            //The type of enemy spawned should be random
+            switch (bossChoice)
+            {
+                case 0:
+                    enemies.Add(new Weeb(bossTextures[bossChoice],
+                        new Rectangle(openTiles[spawnPoint].X,
+                        openTiles[spawnPoint].Y,
+                        bossTextures[bossChoice][2].Width,
+                        bossTextures[bossChoice][2].Height),
+                        75, 8));
+                    break;
             }
         }
 
