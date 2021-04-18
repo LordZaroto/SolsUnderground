@@ -77,14 +77,27 @@ namespace SolsUnderground
         /// <summary>
         /// If an enemy attack connects with the player, execute the resultant consequences.
         /// </summary>
-        public void EnemyAttacks()
+        public void EnemyAttacks(Player player)
         {
             foreach (Enemy e in enemies)
             {
+                if(e is Boss)
+                {
+                    //Cast the enemy as a boss to use specials
+                    Boss boss = (Boss)e;
+                    Attack special = boss.BossAttack(player);
+
+                    if (special.Hitbox.Intersects(player.PositionRect) && !(boss.State == EnemyState.dead))
+                    {
+                        player.TakeDamage(special.Damage, boss.State, special.Knockback);
+                    }
+                }
+                
                 if (e.PositionRect.Intersects(player.PositionRect) && !(e.State == EnemyState.dead))
                 {
                     player.TakeDamage(e.Attack, e.State, e.Knockback);
                 }
+                
             }
         }
 

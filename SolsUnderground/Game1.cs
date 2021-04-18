@@ -340,7 +340,7 @@ namespace SolsUnderground
                     // Enemies
 
                     enemyManager.MoveEnemies(gameTime);
-                    combatManager.EnemyAttacks();
+                    combatManager.EnemyAttacks(player);
                     combatManager.CleanUp(itemManager);
 
                     //Collisions
