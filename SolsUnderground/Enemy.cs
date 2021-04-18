@@ -70,6 +70,6 @@ namespace SolsUnderground
         //changes health when hit by the player
         public abstract void TakeDamage(int damage, int knockback);
 
-        public abstract void EnemyMove(Player player);
+        public abstract void EnemyMove(Player player, GameTime gameTime);
     }
 }

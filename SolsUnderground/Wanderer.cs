@@ -27,7 +27,7 @@ namespace SolsUnderground
             this.health = health;
             this.attack = attack;
             this.knockback = 64;
-            moveCD = 2;
+            moveCD = 0.1;
             moveCounter = moveCD;
             kbCD = 2;
             kbCounter = kbCD;
@@ -98,7 +98,7 @@ namespace SolsUnderground
         {
             if (!(enemyState == EnemyState.dead))
             {
-                moveCD = 0;
+                moveCounter = 0;
 
                 health -= damage;
 
@@ -129,8 +129,11 @@ namespace SolsUnderground
         /// <summary>
         /// movement AI that will chase the player
         /// </summary>
-        public override void EnemyMove(Player player)
+        public override void EnemyMove(Player player, GameTime gameTime)
         {
+            //Update the cooldowns
+            moveCounter += gameTime.ElapsedGameTime.TotalSeconds;
+
             if (moveCounter >= moveCD)
             {
                 if (!(enemyState == EnemyState.dead))

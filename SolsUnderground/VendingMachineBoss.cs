@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace SolsUnderground
 {
-    class VendingMachineBoss : Enemy
+    class VendingMachineBoss : Boss
     {
         //fields
         private EnemyState enemyState;
@@ -101,7 +101,7 @@ namespace SolsUnderground
         {
             if (!(enemyState == EnemyState.dead))
             {
-                moveCD = 0;
+                moveCounter = 0;
 
                 health -= damage;
 
@@ -129,8 +129,11 @@ namespace SolsUnderground
             }
         }
 
-        public override void EnemyMove(Player player)
+        public override void EnemyMove(Player player, GameTime gameTime)
         {
+            //Update the cooldowns
+            moveCounter += gameTime.ElapsedGameTime.TotalSeconds;
+
             if (moveCounter >= moveCD)
             {
                 if (!(enemyState == EnemyState.dead))
@@ -149,6 +152,11 @@ namespace SolsUnderground
                     }
                 }
             }
+        }
+
+        public override Attack BossAttack(Player player)
+        {
+            return null;
         }
 
         public override void Draw(SpriteBatch sb)

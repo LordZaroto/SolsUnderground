@@ -199,6 +199,7 @@ namespace SolsUnderground
             itemManager.AddWeaponSprite(Content.Load<Texture2D>("BrickBreaker"));
             itemManager.AddWeaponSprite(Content.Load<Texture2D>("HockeyStick"));
             itemManager.AddWeaponSprite(Content.Load<Texture2D>("HotDog"));
+            itemManager.AddWeaponSprite(Content.Load<Texture2D>("thePrecipice"));
 
             // Armor
             itemManager.AddArmorSprite(hoodieTexture);

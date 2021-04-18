@@ -109,7 +109,7 @@ namespace SolsUnderground
                     Wanderer newWander = (Wanderer)enemies[i];
                     newWander.UpdateTimer(gameTime);
                 }
-                enemies[i].EnemyMove(player);
+                enemies[i].EnemyMove(player, gameTime);
             }
         }
 
