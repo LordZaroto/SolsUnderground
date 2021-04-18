@@ -385,7 +385,19 @@ namespace SolsUnderground
 
         public override void Draw(SpriteBatch sb)
         {
-            sb.Draw(texture, positionRect, Color.White);
+            // Use draw colors to give player attack tells
+            if (sp2Counter > sp2CD - 1)
+            {
+                sb.Draw(texture, positionRect, Color.Purple);
+            }
+            else if (sp1Counter > sp1CD - 1)
+            {
+                sb.Draw(texture, positionRect, Color.Green);
+            }
+            else
+            {
+                sb.Draw(texture, positionRect, Color.White);
+            }
 
             // Draw HP bar
             sb.Draw(Program.drawSquare,
