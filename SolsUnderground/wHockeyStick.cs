@@ -21,6 +21,7 @@ namespace SolsUnderground
         private Rectangle hitboxB;
         private Rectangle hitboxR;
         private string name;
+        private double timer;
         //-----------------------------
 
         //---------------------------------------------------------------------
@@ -101,6 +102,12 @@ namespace SolsUnderground
         {
             get { return name; }
         }
+
+        public double Timer
+        {
+            get { return timer; }
+            set { timer = value; }
+        }
         //---------------
         //------------------------------
 
@@ -119,6 +126,7 @@ namespace SolsUnderground
             attack = 5;
             knockback = (int)(1 * 32);
             hitboxScale = new Vector2(0.5f, 4);
+            timer = 0.1;
         }
 
         /// <summary>
@@ -126,26 +134,32 @@ namespace SolsUnderground
         /// </summary>
         public Attack Special(Player player)
         {
+            AttackDirection atkdir = AttackDirection.up;
+
             switch (player.State)
             {
                 case PlayerState.faceForward:
                 case PlayerState.moveForward:
                     player.State = PlayerState.attackForward;
+                    atkdir = AttackDirection.up;
                     break;
 
                 case PlayerState.faceLeft:
                 case PlayerState.moveLeft:
                     player.State = PlayerState.attackLeft;
+                    atkdir = AttackDirection.left;
                     break;
 
                 case PlayerState.faceBack:
                 case PlayerState.moveBack:
                     player.State = PlayerState.attackBack;
+                    atkdir = AttackDirection.down;
                     break;
 
                 case PlayerState.faceRight:
                 case PlayerState.moveRight:
                     player.State = PlayerState.attackRight;
+                    atkdir = AttackDirection.right;
                     break;
             }
 
@@ -156,7 +170,7 @@ namespace SolsUnderground
                 player.Width * 3,
                 player.Height * 3);
 
-            return new Attack(positionRect, (int)(attack * 0.5), (int)(knockback * 3));
+            return new Attack(positionRect, (int)(attack * 0.5), (int)(knockback * 3), texture, atkdir, timer);
         }
 
         public override void Draw(SpriteBatch sb)

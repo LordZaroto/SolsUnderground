@@ -446,7 +446,10 @@ namespace SolsUnderground
                         currentAttack = new Attack(
                             weapon.GetHitbox(X, Y, Width, Height, PlayerState.faceForward),
                             Damage,
-                            Knockback);
+                            Knockback,
+                            weapon.Sprite,
+                            AttackDirection.up,
+                            weapon.Timer);
 
                         return currentAttack;
                     }
@@ -457,7 +460,10 @@ namespace SolsUnderground
                         currentAttack = new Attack(
                             weapon.GetHitbox(X, Y, Width, Height, PlayerState.faceLeft),
                             Damage,
-                            Knockback);
+                            Knockback,
+                            weapon.Sprite,
+                            AttackDirection.left,
+                            weapon.Timer);
 
                         return currentAttack;
                     }
@@ -468,7 +474,10 @@ namespace SolsUnderground
                         currentAttack = new Attack(
                             weapon.GetHitbox(X, Y, Width, Height, PlayerState.faceBack),
                             Damage,
-                            Knockback);
+                            Knockback,
+                            weapon.Sprite,
+                            AttackDirection.down,
+                            weapon.Timer);
 
                         return currentAttack;
                     }
@@ -479,7 +488,10 @@ namespace SolsUnderground
                         currentAttack = new Attack(
                             weapon.GetHitbox(X, Y, Width, Height, PlayerState.faceRight),
                             Damage,
-                            Knockback);
+                            Knockback,
+                            weapon.Sprite,
+                            AttackDirection.right,
+                            weapon.Timer);
 
                         return currentAttack;
                     }

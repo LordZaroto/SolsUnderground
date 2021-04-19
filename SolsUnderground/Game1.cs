@@ -306,7 +306,8 @@ namespace SolsUnderground
                 Content.Load<Texture2D>("weeb_Forward"),
                 Content.Load<Texture2D>("weeb_Back"),
                 Content.Load<Texture2D>("weeb_Left"),
-                Content.Load<Texture2D>("weeb_Right") };
+                Content.Load<Texture2D>("weeb_Right"),
+                Content.Load<Texture2D>("thePrecipice")}; // Boss Attack Texture
             enemyManager.AddBossData(weebTextures);
 
             vmBossTextures = new Texture2D[]
@@ -314,7 +315,8 @@ namespace SolsUnderground
                 Content.Load<Texture2D>("vmBossFront"),
                 Content.Load<Texture2D>("vmBossBack"),
                 Content.Load<Texture2D>("vmBossLeft"),
-                Content.Load<Texture2D>("vmBossRight") };
+                Content.Load<Texture2D>("vmBossRight"),
+                Content.Load<Texture2D>("HotDog")}; // Boss Attack Texture
             enemyManager.AddBossData(vmBossTextures);
 
             // Tiles

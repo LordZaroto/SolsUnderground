@@ -138,7 +138,8 @@ namespace SolsUnderground
                         openTiles[spawnPoint].Y,
                         bossTextures[bossChoice][2].Width,
                         bossTextures[bossChoice][2].Height),
-                        75, 8));
+                        75, 8,
+                        bossTextures[bossChoice][4]));
                     break;
                 case 1:
                     enemies.Add(new VendingMachineBoss(bossTextures[bossChoice],
@@ -146,7 +147,8 @@ namespace SolsUnderground
                         openTiles[spawnPoint].Y,
                         bossTextures[bossChoice][2].Width,
                         bossTextures[bossChoice][2].Height),
-                        75, 8));
+                        75, 8,
+                        bossTextures[bossChoice][4]));
                     break;
             }
         }
