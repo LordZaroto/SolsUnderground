@@ -18,24 +18,33 @@ namespace SolsUnderground
         Texture2D[] textures;
         GameTime gameTime;
         float _timer = 0f;
-        int moveDirection;
-        int maxHealth;
+        float aoeTimer;
+        bool movingUp;
+
+        private double sp1Counter;
+        private double sp1CD;
 
         public VendingMachineBoss(Texture2D[] textures, Rectangle positionRect, int health, int attack)
         {
             this.textures = textures;
             this.texture = textures[0];
             this.positionRect = positionRect;
-            maxHealth = health;
-            this.currentHP = maxHealth;
+            this.maxHP = health;
+            this.currentHP = maxHP;
             this.attack = attack;
             this.knockback = 64;
             moveCD = 2;
             moveCounter = moveCD;
             kbCD = 2;
             kbCounter = kbCD;
-            moveDirection = Program.rng.Next(0, 4);
+            movingUp = true;
+            _timer = 0f;
+            aoeTimer = 0f;
+
+            sp1CD = 7;
+            sp1Counter = 6;
         }
+
 
         //properties
         public int MaxHealth
@@ -96,6 +105,17 @@ namespace SolsUnderground
             set { positionRect = value; }
         }
 
+        public bool IsAOE
+        {
+            get;
+            set;
+        }
+
+        public bool IsShoot
+        {
+            get;
+            set;
+        }
 
         public override void TakeDamage(int damage, int knockback)
         {
@@ -107,19 +127,19 @@ namespace SolsUnderground
 
                 if (enemyState == EnemyState.faceForward || enemyState == EnemyState.moveForward)
                 {
-                    Y += (int)(knockback);
+                    Y += knockback;
                 }
                 if (enemyState == EnemyState.faceLeft || enemyState == EnemyState.moveLeft)
                 {
-                    X += (int)(knockback);
+                    X += knockback;
                 }
                 if (enemyState == EnemyState.faceBack || enemyState == EnemyState.moveBack)
                 {
-                    Y -= (int)(knockback);
+                    Y -= knockback;
                 }
                 if (enemyState == EnemyState.faceRight || enemyState == EnemyState.moveRight)
                 {
-                    X -= (int)(knockback);
+                    X -= knockback;
                 }
 
                 if (currentHP <= 0)
@@ -133,35 +153,191 @@ namespace SolsUnderground
         {
             //Update the cooldowns
             moveCounter += gameTime.ElapsedGameTime.TotalSeconds;
+            sp1Counter += gameTime.ElapsedGameTime.TotalSeconds;
 
             if (moveCounter >= moveCD)
             {
                 if (!(enemyState == EnemyState.dead))
                 {
-                    if(currentHP > maxHealth /3 * 2)
+                    if (currentHP > maxHP / 3 * 2)
                     {
+                        if (!(Math.Abs((positionRect.X +(positionRect.Width/2)) - (player.X + player.Width/2)) < 150 && Math.Abs((positionRect.Y + (positionRect.Height / 2)) - (player.Y + player.Height / 2)) < 150))
+                        {
 
+                            if (movingUp)
+                            {
+                                positionRect.Y += 1;
+                            }
+                            else
+                            {
+                                positionRect.Y -= 1;
+                            }
+                            if (_timer > 3)
+                            {
+                                _timer = 0;
+                                if (movingUp)
+                                {
+                                    movingUp = false;
+                                }
+                                else
+                                {
+                                    movingUp = true;
+                                }
+                            }
+                        }
                     }
-                    else if(currentHP <= maxHealth / 3 * 2 && currentHP > maxHealth/3)
+                    else if (currentHP <= maxHP / 3 * 2 && currentHP > maxHP / 3)
                     {
-
+                        if (!(Math.Abs((positionRect.X + (positionRect.Width / 2)) - (player.X + player.Width / 2)) < 150 && Math.Abs((positionRect.Y + (positionRect.Height / 2)) - (player.Y + player.Height / 2)) < 150))
+                        {
+                            if (movingUp)
+                            {
+                                positionRect.Y += 2;
+                            }
+                            else
+                            {
+                                positionRect.Y -= 2;
+                            }
+                            if (_timer > 2.5)
+                            {
+                                _timer = 0;
+                                if (movingUp)
+                                {
+                                    movingUp = false;
+                                }
+                                else
+                                {
+                                    movingUp = true;
+                                }
+                            }
+                        }
                     }
                     else
                     {
-
+                        
+                            if (Math.Abs(positionRect.X - player.X) >= Math.Abs(positionRect.Y - player.Y))
+                            {
+                                if (positionRect.X >= player.X)
+                                {
+                                    positionRect.X -= 3;
+                                    enemyState = EnemyState.moveLeft;
+                                }
+                                else
+                                {
+                                    positionRect.X += 3;
+                                    enemyState = EnemyState.moveRight;
+                                }
+                            }
+                            else if (Math.Abs(positionRect.X - player.X) < Math.Abs(positionRect.Y - player.Y))
+                            {
+                                if (positionRect.Y >= player.Y)
+                                {
+                                    positionRect.Y -= 3;
+                                    enemyState = EnemyState.moveBack;
+                                }
+                                else
+                                {
+                                    positionRect.Y += 3;
+                                    enemyState = EnemyState.moveForward;
+                                }
+                            }
+                        
                     }
                 }
             }
         }
 
-        public override Attack BossAttack(Player player)
+        public override void Draw(SpriteBatch sb)
         {
+            if (sp1Counter > sp1CD - 1)
+            {
+                sb.Draw(texture, positionRect, Color.Green);
+            }
+            else
+            {
+                sb.Draw(texture, positionRect, Color.White);
+            }
+
+            // Draw HP bar
+            sb.Draw(Program.drawSquare,
+                new Rectangle(X, Y - 10, Width, 3),
+                Color.Black);
+            sb.Draw(Program.drawSquare,
+                new Rectangle(X, Y - 10, (int)(Width * ((double)health / (double)maxHealth)), 3),
+                Color.Red);
+        }
+
+        public void UpdateTimer(GameTime gameTime)
+        {
+                _timer += (float)gameTime.ElapsedGameTime.TotalSeconds;
+            
+        }
+
+        public Attack Shoot()
+        {
+            moveCounter = 0;
+            
             return null;
         }
 
-        public override void Draw(SpriteBatch sb)
+        public Attack AOE()
         {
-            sb.Draw(texture, positionRect, Color.White);
+            if (sp1Counter >= sp1CD)
+            {
+                //Reset the cooldown
+                sp1Counter = 0;
+                moveCounter = 0;
+
+                Attack special = new Attack(
+                        new Rectangle(
+                            X - 50,
+                            Y - 50,
+                            Width + 100,
+                            Height + 100),
+                        attack * 3,
+                        knockback * 3);
+
+                return special;
+            }
+            return null;
+        }
+
+        public override Attack BossAttack(Player player)
+        {
+            if (moveCounter >= moveCD)
+            {
+                //If close to player
+                if ((Math.Abs(X - player.X) < 120 && (Math.Abs(Y - player.Y) < 120)))
+                {
+                    _timer = 0;
+                    if(_timer > 1.5)
+                    {
+                        _timer = 0;
+                        return AOE();
+                    }
+                    
+                }
+                else
+                {
+                    if(currentHP > maxHP / 3 * 2)
+                    {
+                        if (_timer % 2 == 0)
+                        {
+                            return Shoot();
+                        }
+                    }
+                    else
+                    {
+                        if (_timer % 1 == 0)
+                        {
+                            return Shoot();
+                        }
+                    }
+                    
+                }
+            }
+
+            return null;
         }
     }
 }

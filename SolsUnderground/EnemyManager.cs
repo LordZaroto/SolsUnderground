@@ -140,6 +140,14 @@ namespace SolsUnderground
                         bossTextures[bossChoice][2].Height),
                         75, 8));
                     break;
+                case 1:
+                    enemies.Add(new VendingMachineBoss(bossTextures[bossChoice],
+                        new Rectangle(openTiles[spawnPoint].X,
+                        openTiles[spawnPoint].Y,
+                        bossTextures[bossChoice][2].Width,
+                        bossTextures[bossChoice][2].Height),
+                        75, 8));
+                    break;
             }
         }
 
@@ -154,6 +162,10 @@ namespace SolsUnderground
                 {
                     Wanderer newWander = (Wanderer)enemies[i];
                     newWander.UpdateTimer(gameTime);
+                }else if(enemies[i] is VendingMachineBoss)
+                {
+                    VendingMachineBoss vm = (VendingMachineBoss)enemies[i];
+                    vm.UpdateTimer(gameTime);
                 }
                 enemies[i].EnemyMove(player, gameTime);
             }

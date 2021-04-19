@@ -174,10 +174,7 @@ namespace SolsUnderground
             }
         }
 
-        public void Shoot()
-        {
 
-        }
 
         public override void Draw(SpriteBatch sb)
         {
