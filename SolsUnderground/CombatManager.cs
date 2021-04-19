@@ -104,30 +104,6 @@ namespace SolsUnderground
             }
         }
 
-        public void BossAttacks()
-        {
-            VendingMachineBoss vmBoss = null;
-            if (enemies[0] is VendingMachineBoss)
-            {
-                vmBoss = (VendingMachineBoss)enemies[0];
-            }
-            if(vmBoss != null)
-            {
-                if (vmBoss.IsShoot)
-                {
-                    vmBoss.IsShoot = false;
-                }
-                if (vmBoss.IsAOE)
-                {
-                    if(player.PositionRect.Intersects(new Rectangle(vmBoss.X-50, vmBoss.Y-50, vmBoss.Width+100, vmBoss.Height + 100)))
-                    {
-                        player.TakeDamage(vmBoss.Attack, vmBoss.State, vmBoss.Knockback);
-                    }
-                    vmBoss.IsAOE = false;
-                }
-            }
-        }
-
         /// <summary>
         /// Loads enemy list into combat manager.
         /// </summary>

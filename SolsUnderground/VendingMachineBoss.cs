@@ -20,9 +20,11 @@ namespace SolsUnderground
         float _timer = 0f;
         float aoeTimer;
         int maxHealth;
+        int health;
         bool movingUp;
-        bool isAOE;
-        bool isShoot;
+
+        private double sp1Counter;
+        private double sp1CD;
 
         public VendingMachineBoss(Texture2D[] textures, Rectangle positionRect, int health, int attack)
         {
@@ -40,30 +42,11 @@ namespace SolsUnderground
             movingUp = true;
             _timer = 0f;
             aoeTimer = 0f;
-            isAOE = false;
-            isShoot = false;
+
+            sp1CD = 7;
+            sp1Counter = 6;
         }
 
-        public VendingMachineBoss(Texture2D[] textures, Rectangle positionRect, int health, int attack, GameTime gameTime)
-        {
-            this.textures = textures;
-            this.texture = textures[0];
-            this.positionRect = positionRect;
-            maxHealth = health;
-            this.health = maxHealth;
-            this.attack = attack;
-            this.knockback = 64;
-            moveCD = 2;
-            moveCounter = moveCD;
-            kbCD = 2;
-            kbCounter = kbCD;
-            movingUp = true;
-            _timer = 0f;
-            aoeTimer = 0f;
-            this.gameTime = gameTime;
-            isAOE = false;
-            isShoot = false;
-        }
 
         //properties
         public int MaxHealth
@@ -177,29 +160,17 @@ namespace SolsUnderground
             {
                 if (!(enemyState == EnemyState.dead))
                 {
-                    if(currentHP > maxHealth /3 * 2)
+                    if (currentHP > maxHealth / 3 * 2)
                     {
-                        if(Math.Abs(player.PositionRect.X - (positionRect.X+positionRect.Width/2)) <= 80 && Math.Abs(player.PositionRect.Y - (positionRect.Y+positionRect.Height/2)) <= 80)
+                        if (movingUp)
                         {
-                            UpdateAOETimer();
-                            if(aoeTimer >= 1)
-                            {
-                                aoeTimer = 0;
-                                AOE();
-                            }
+                            positionRect.Y += 1;
                         }
                         else
                         {
-                            if (movingUp)
-                            {
-                                positionRect.Y += 1;
-                            }
-                            else
-                            {
-                                positionRect.Y -= 1;
-                            }
+                            positionRect.Y -= 1;
                         }
-                        if(_timer > 1)
+                        if (_timer > 1)
                         {
                             _timer = 0;
                             if (movingUp)
@@ -210,31 +181,17 @@ namespace SolsUnderground
                             {
                                 movingUp = true;
                             }
-                            Shoot();
                         }
                     }
-                    else if(currentHP <= maxHealth / 3 * 2 && currentHP > maxHealth/3)
+                    else if (currentHP <= maxHealth / 3 * 2 && currentHP > maxHealth / 3)
                     {
-                        if(Math.Abs(player.PositionRect.X - (positionRect.X + positionRect.Width / 2)) <= 80 && Math.Abs(player.PositionRect.Y - (positionRect.Y + positionRect.Height / 2)) <= 80)
+                        if (movingUp)
                         {
-                            UpdateAOETimer();
-                            if (aoeTimer >= 1)
-                            {
-                                aoeTimer = 0;
-                                AOE();
-                            }
-
+                            positionRect.Y += 2;
                         }
                         else
                         {
-                            if (movingUp)
-                            {
-                                positionRect.Y += 2;
-                            }
-                            else
-                            {
-                                positionRect.Y -= 2;
-                            }
+                            positionRect.Y -= 2;
                         }
                         if (_timer > .75)
                         {
@@ -247,24 +204,13 @@ namespace SolsUnderground
                             {
                                 movingUp = true;
                             }
-                            Shoot();
                         }
                     }
                     else
                     {
                         if (Math.Abs(player.PositionRect.X - (positionRect.X + positionRect.Width / 2)) <= 80 && Math.Abs(player.PositionRect.Y - (positionRect.Y + positionRect.Height / 2)) <= 80)
                         {
-                            UpdateAOETimer();
-                            if (aoeTimer >= 1)
-                            {
-                                aoeTimer = 0;
-                                AOE();
-                            }
-
-                        }
-                        else
-                        {
-                            if(Math.Abs(positionRect.X - player.X) >= Math.Abs(positionRect.Y - player.Y))
+                            if (Math.Abs(positionRect.X - player.X) >= Math.Abs(positionRect.Y - player.Y))
                             {
                                 if (positionRect.X >= player.X)
                                 {
@@ -290,11 +236,10 @@ namespace SolsUnderground
                                     enemyState = EnemyState.moveForward;
                                 }
                             }
-                        }
-                        if (_timer > .5)
-                        {
-                            _timer = 0;
-                            Shoot();
+                            if (_timer > .5)
+                            {
+                                _timer = 0;
+                            }
                         }
                     }
                 }
@@ -303,27 +248,93 @@ namespace SolsUnderground
 
         public override void Draw(SpriteBatch sb)
         {
-            sb.Draw(texture, positionRect, Color.White);
+            if (sp1Counter > sp1CD - 1)
+            {
+                sb.Draw(texture, positionRect, Color.Green);
+            }
+            else
+            {
+                sb.Draw(texture, positionRect, Color.White);
+            }
+
+            // Draw HP bar
+            sb.Draw(Program.drawSquare,
+                new Rectangle(X, Y - 10, Width, 3),
+                Color.Black);
+            sb.Draw(Program.drawSquare,
+                new Rectangle(X, Y - 10, (int)(Width * ((double)currentHP / (double)maxHP)), 3),
+                Color.Red);
         }
 
-        public void UpdateTimer()
+        public void UpdateTimer(GameTime gameTime)
         {
-            _timer += (float)gameTime.ElapsedGameTime.TotalSeconds;
+                _timer += (float)gameTime.ElapsedGameTime.TotalSeconds;
+            
         }
 
-        public void UpdateAOETimer()
+        public Attack Shoot()
         {
-            aoeTimer += (float)gameTime.ElapsedGameTime.TotalSeconds;
+            return null;
         }
 
-        public void Shoot()
+        public Attack AOE()
         {
-            isShoot = true;
+            if (sp1Counter >= sp1CD)
+            {
+                //Reset the cooldown
+                sp1Counter = 0;
+                moveCounter = 0;
+
+                Attack special = new Attack(
+                        new Rectangle(
+                            X - 50,
+                            Y - 50,
+                            Width + 100,
+                            Height + 100),
+                        attack * 3,
+                        knockback * 3);
+
+                return special;
+            }
+            return null;
         }
 
-        public void AOE()
+        public override Attack BossAttack(Player player)
         {
-            isAOE = true;
+            if (moveCounter >= moveCD)
+            {
+                //If close to player
+                if ((Math.Abs(X - player.X) < 80 && (Math.Abs(Y - player.Y) < 80)))
+                {
+                    aoeTimer = _timer;
+                    if(_timer - aoeTimer > 1.5)
+                    {
+                        _timer = 0;
+                        return AOE();
+                    }
+                    
+                }
+                else
+                {
+                    if(health > maxHealth / 3 * 2)
+                    {
+                        if (_timer % 2 == 0)
+                        {
+                            return Shoot();
+                        }
+                    }
+                    else
+                    {
+                        if (_timer % 1 == 0)
+                        {
+                            return Shoot();
+                        }
+                    }
+                    
+                }
+            }
+
+            return null;
         }
     }
 }
