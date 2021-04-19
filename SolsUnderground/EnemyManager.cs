@@ -103,6 +103,14 @@ namespace SolsUnderground
                             enemyTextures[enemyChoice][2].Height), 
                             12, 8));
                         break;
+                    case 2:
+                        enemies.Add(new Shooter(enemyTextures[enemyChoice],
+                            new Rectangle(openTiles[spawnPoint].X,
+                            openTiles[spawnPoint].Y,
+                            enemyTextures[enemyChoice][2].Width,
+                            enemyTextures[enemyChoice][2].Height),
+                            12, 8));
+                        break;
                 }
             }
         }
