@@ -227,7 +227,7 @@ namespace SolsUnderground
             // Starting weapon
             stickTexture = Content.Load<Texture2D>("stick");
             ritchieClawTexture = Content.Load<Texture2D>("ritchieClaw");
-            brickBreaker = Content.Load<Texture2D>("BrickBreaker2");
+            brickBreakerTexture = Content.Load<Texture2D>("BrickBreaker2");
             
             stick = new wStick(stickTexture, new Rectangle(0, 0, 0, 0));
 
