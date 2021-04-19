@@ -24,10 +24,11 @@ namespace SolsUnderground
             this.textures = textures;
             this.texture = textures[0];
             this.positionRect = positionRect;
-            this.health = health;
+            this.maxHP = health;
+            this.currentHP = health;
             this.attack = attack;
             this.knockback = 64;
-            moveCD = 2;
+            moveCD = 0.1;
             moveCounter = moveCD;
             kbCD = 2;
             kbCounter = kbCD;
@@ -49,8 +50,8 @@ namespace SolsUnderground
 
         public override int Health
         {
-            get { return health; }
-            set { health = value; }
+            get { return currentHP; }
+            set { currentHP = value; }
         }
 
         public override int Attack
@@ -98,13 +99,13 @@ namespace SolsUnderground
         {
             if (!(enemyState == EnemyState.dead))
             {
-                moveCD = 0;
+                moveCounter = 0;
 
-                health -= damage;
+                currentHP -= damage;
 
                 if (enemyState == EnemyState.faceForward || enemyState == EnemyState.moveForward)
                 {
-                    Y += (int)(knockback);
+                    Y -= (int)(knockback);
                 }
                 if (enemyState == EnemyState.faceLeft || enemyState == EnemyState.moveLeft)
                 {
@@ -112,14 +113,14 @@ namespace SolsUnderground
                 }
                 if (enemyState == EnemyState.faceBack || enemyState == EnemyState.moveBack)
                 {
-                    Y -= (int)(knockback);
+                    Y += (int)(knockback);
                 }
                 if (enemyState == EnemyState.faceRight || enemyState == EnemyState.moveRight)
                 {
                     X -= (int)(knockback);
                 }
 
-                if (health <= 0)
+                if (currentHP <= 0)
                 {
                     enemyState = EnemyState.dead;
                 }
@@ -129,15 +130,18 @@ namespace SolsUnderground
         /// <summary>
         /// movement AI that will chase the player
         /// </summary>
-        public override void EnemyMove(Player player)
+        public override void EnemyMove(Player player, GameTime gameTime)
         {
+            //Update the cooldowns
+            moveCounter += gameTime.ElapsedGameTime.TotalSeconds;
+
             if (moveCounter >= moveCD)
             {
                 if (!(enemyState == EnemyState.dead))
                 {
                     if (Math.Abs(positionRect.X - player.X) <= 80 && Math.Abs(positionRect.Y - player.Y) <= 80)
                     {
-                        if (positionRect.X >= player.X)
+                        if (positionRect.X > player.X)
                         {
                             texture = textures[2];
                             positionRect.X -= 1;
@@ -149,7 +153,7 @@ namespace SolsUnderground
                             positionRect.X += 1;
                             enemyState = EnemyState.moveRight;
                         }
-                        if (positionRect.Y >= player.Y)
+                        if (positionRect.Y > player.Y)
                         {
                             texture = textures[1];
                             positionRect.Y -= 1;
@@ -201,6 +205,14 @@ namespace SolsUnderground
         public override void Draw(SpriteBatch sb)
         {
             sb.Draw(texture, positionRect, Color.White);
+
+            // Draw HP bar
+            sb.Draw(Program.drawSquare,
+                new Rectangle(X, Y - 10, Width, 3),
+                Color.Black);
+            sb.Draw(Program.drawSquare,
+                new Rectangle(X, Y - 10, (int)(Width * ((double)currentHP / (double)maxHP)), 3),
+                Color.Red);
         }
 
         public void UpdateTimer(GameTime gameTime)

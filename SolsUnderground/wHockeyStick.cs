@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace SolsUnderground
 {
-    class wBrickBreaker : Item, Weapon
+    class wHockeyStick : Item, Weapon
     {
         //Fields
         //-----------------------------
@@ -101,6 +101,7 @@ namespace SolsUnderground
         {
             get { return name; }
         }
+        //---------------
         //------------------------------
 
         //----------------------------------------
@@ -109,19 +110,19 @@ namespace SolsUnderground
         //||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
         //---------------------------------------------------------------------
 
-        public wBrickBreaker(Texture2D texture, Rectangle positionRect)
-            : base(ItemType.Weapon, 8, texture, positionRect)
+        public wHockeyStick(Texture2D texture, Rectangle positionRect)
+            : base(ItemType.Weapon, 5, texture, positionRect)
         {
-            name = "Brick Breaker";
-            basicCooldown = 0.7;
+            name = "Hockey Stick";
+            basicCooldown = 0.4;
             specialCooldown = 5;
-            attack = 8;
-            knockback = (int)(1.2 * 32);
-            hitboxScale = new Vector2(2, 2);
+            attack = 5;
+            knockback = (int)(1 * 32);
+            hitboxScale = new Vector2(0.5f, 4);
         }
 
         /// <summary>
-        /// The player slams the ground and creates a shockwave.
+        /// The player spins and knocks enemies away.
         /// </summary>
         public Attack Special(Player player)
         {
@@ -150,12 +151,12 @@ namespace SolsUnderground
 
             // w.X = p.X + (p.W - w.W) / 2
             positionRect = new Rectangle(
-                player.X - player.Width * 2,
-                player.Y - player.Height * 2,
-                player.Width * 5,
-                player.Height * 5);
+                player.X - player.Width,
+                player.Y - player.Height,
+                player.Width * 3,
+                player.Height * 3);
 
-            return new Attack(positionRect, (int)(attack * 1.2), (int)(knockback * 1.5));
+            return new Attack(positionRect, (int)(attack * 0.5), (int)(knockback * 3));
         }
 
         public override void Draw(SpriteBatch sb)

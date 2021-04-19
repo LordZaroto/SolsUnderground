@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace SolsUnderground
 {
-    class aWinterCoat : Item, Armor
+    class aMask : Item, Armor
     {
         // Fields
         // Inherits: texture, positionRect, ItemType type, itemValue
@@ -47,13 +47,13 @@ namespace SolsUnderground
         }
 
         // Constructor
-        public aWinterCoat(Texture2D texture, Rectangle positionRect)
+        public aMask(Texture2D texture, Rectangle positionRect)
             : base(ItemType.Armor, 0, texture, positionRect)
         {
-            name = "Winter Coat";
-            defense = 2;
-            speed = -1;
-            hp = 10;
+            name = "Mask";
+            defense = 0;
+            speed = 0;
+            hp = 50;
         }
 
         // Methods

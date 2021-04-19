@@ -493,7 +493,10 @@ namespace SolsUnderground
             {
                 moveCounter = 0;
                 damageCounter = 0;
-                hp -= (damage - Defense);
+
+                // Prevent player from "healing" from negative damage
+                if (damage - Defense > 0)
+                    hp -= (damage - Defense);
 
 
                 //Player knockback - Commented out till reworked
@@ -564,11 +567,7 @@ namespace SolsUnderground
         /// </summary>
         public bool SingleKeyPress(Keys key, KeyboardState kbState, KeyboardState previousKbState)
         {
-            if (previousKbState.IsKeyDown(key) && kbState.IsKeyDown(key))
-            {
-                return false;
-            }
-            else if (kbState.IsKeyDown(key))
+            if (previousKbState.IsKeyUp(key) && kbState.IsKeyDown(key))
             {
                 return true;
             }
@@ -617,6 +616,10 @@ namespace SolsUnderground
         public void EquipArmor(Armor armor)
         {
             this.armor = armor;
+
+            // Clamp health if armor lowers maxHP
+            if (hp > MaxHp)
+                hp = MaxHp;
         }
         
         public void Die()

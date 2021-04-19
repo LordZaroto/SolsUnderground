@@ -11,7 +11,7 @@ namespace SolsUnderground
     {
         // Fields
         // Inherits: texture, positionRect, ItemType type, itemValue
-
+        private string name;
         private int defense;
         private int speed;
         private int hp;
@@ -42,11 +42,16 @@ namespace SolsUnderground
         {
             get { return hp; }
         }
+        public string Name
+        {
+            get { return name; }
+        }
 
         // Constructor
         public aBandana(Texture2D texture, Rectangle positionRect)
             : base(ItemType.Armor, -1, texture, positionRect)
         {
+            name = "Bandana";
             defense = -1;
             speed = 2;
             hp = 0;

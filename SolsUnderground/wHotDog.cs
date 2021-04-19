@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace SolsUnderground
 {
-    class wBrickBreaker : Item, Weapon
+    class wHotDog : Item, Weapon
     {
         //Fields
         //-----------------------------
@@ -101,6 +101,7 @@ namespace SolsUnderground
         {
             get { return name; }
         }
+        //---------------
         //------------------------------
 
         //----------------------------------------
@@ -109,19 +110,19 @@ namespace SolsUnderground
         //||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
         //---------------------------------------------------------------------
 
-        public wBrickBreaker(Texture2D texture, Rectangle positionRect)
-            : base(ItemType.Weapon, 8, texture, positionRect)
+        public wHotDog(Texture2D texture, Rectangle positionRect)
+            : base(ItemType.Weapon, 5, texture, positionRect)
         {
-            name = "Brick Breaker";
-            basicCooldown = 0.7;
-            specialCooldown = 5;
-            attack = 8;
-            knockback = (int)(1.2 * 32);
-            hitboxScale = new Vector2(2, 2);
+            name = "Hot Dog";
+            basicCooldown = 0.4;
+            specialCooldown = 20;
+            attack = 5;
+            knockback = (int)(1 * 32);
+            hitboxScale = new Vector2(2, 1.5f);
         }
 
         /// <summary>
-        /// The player slams the ground and creates a shockwave.
+        /// The player eats the hotdog and recovers health.
         /// </summary>
         public Attack Special(Player player)
         {
@@ -148,14 +149,15 @@ namespace SolsUnderground
                     break;
             }
 
-            // w.X = p.X + (p.W - w.W) / 2
-            positionRect = new Rectangle(
-                player.X - player.Width * 2,
-                player.Y - player.Height * 2,
-                player.Width * 5,
-                player.Height * 5);
+            // Heal player for 50 HP
+            player.Hp += 50;
+            if (player.Hp > player.MaxHp)
+                player.Hp = player.MaxHp;
 
-            return new Attack(positionRect, (int)(attack * 1.2), (int)(knockback * 1.5));
+            // No attack
+            positionRect = new Rectangle(0, 0, 0, 0);
+
+            return new Attack(positionRect, 0, 0);
         }
 
         public override void Draw(SpriteBatch sb)
@@ -177,16 +179,16 @@ namespace SolsUnderground
             if (state == PlayerState.faceForward)
             {
                 positionRect = new Rectangle(
-                    x + (int)(width * (1 - hitboxScale.X) / 2),
-                    y - (int)(height * hitboxScale.Y) + width / 2,
-                    (int)(width * hitboxScale.X),
+                    x + (int)(width * (1 - hitboxScale.X) / 2), 
+                    y - (int)(height * hitboxScale.Y) + width / 2, 
+                    (int)(width * hitboxScale.X), 
                     (int)(height * hitboxScale.Y));
                 return positionRect;
             }
             else if (state == PlayerState.faceLeft)
             {
                 positionRect = new Rectangle(
-                    x - (int)(width * hitboxScale.Y) + width / 2,
+                    x - (int)(width * hitboxScale.Y) + width / 2, 
                     y + (int)(height * (1 - hitboxScale.X) / 2),
                     (int)(width * hitboxScale.Y),
                     (int)(height * hitboxScale.X));

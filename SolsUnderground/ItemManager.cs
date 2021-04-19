@@ -117,7 +117,7 @@ namespace SolsUnderground
         /// <summary>
         /// Activates the effects of picking up an item if its colliding with the player.
         /// </summary>
-        public void ActivateItems()
+        public void ActivateItems(bool isEKeyPressed)
         {
             for (int i = 0; i < items.Count;)
             {
@@ -140,14 +140,22 @@ namespace SolsUnderground
                             continue;
 
                         case ItemType.Weapon:
-                            player.EquipWeapon((Weapon)items[i]);
-                            items.RemoveAt(i);
-                            continue;
+                            if (isEKeyPressed)
+                            {
+                                player.EquipWeapon((Weapon)items[i]);
+                                items.RemoveAt(i);
+                                continue;
+                            }
+                            break;
 
                         case ItemType.Armor:
-                            player.EquipArmor((Armor)items[i]);
-                            items.RemoveAt(i);
-                            continue;
+                            if (isEKeyPressed)
+                            {
+                                player.EquipArmor((Armor)items[i]);
+                                items.RemoveAt(i);
+                                continue;
+                            }
+                            break;
                     }
                 }
 
@@ -184,10 +192,10 @@ namespace SolsUnderground
             // Spawn chests for next room
             foreach(Point p in chestSpawns)
             {
+                // Add percentage chance?
                 chests.Add(new Chest(chestTextures,
                     new Rectangle(p,
-                    new Point(chestTextures[0].Width,
-                    chestTextures[0].Height))));
+                    new Point(40, 40))));
             }
         }
 
@@ -199,12 +207,13 @@ namespace SolsUnderground
             if (Program.godMode)
             {
                 int equipmentStart = moneySpriteCount + healthSpriteCount;
-                Point size = new Point(25, 25);
+                Point size = new Point(40, 40);
 
                 for (int i = 0; i < itemTextures.Count - equipmentStart; i++)
                 {
                     switch (i)
                     {
+                            // Weapons
                         case 0:
                             items.Add(new wStick(itemTextures[i + equipmentStart],
                                 new Rectangle(new Point(50 + 50 * i, 100), size)));
@@ -218,17 +227,40 @@ namespace SolsUnderground
                                 new Rectangle(new Point(50 + 50 * i, 100), size)));
                             break;
                         case 3:
-                            items.Add(new aHoodie(itemTextures[i + equipmentStart],
+                            items.Add(new wHockeyStick(itemTextures[i + equipmentStart],
                                 new Rectangle(new Point(50 + 50 * i, 100), size)));
                             break;
                         case 4:
-                            items.Add(new aWinterCoat(itemTextures[i + equipmentStart],
+                            items.Add(new wHotDog(itemTextures[i + equipmentStart],
                                 new Rectangle(new Point(50 + 50 * i, 100), size)));
                             break;
                         case 5:
-                            items.Add(new aBandana(itemTextures[i + equipmentStart],
+                            items.Add(new wThePrecipice(itemTextures[i + equipmentStart],
                                 new Rectangle(new Point(50 + 50 * i, 100), size)));
                             break;
+
+                        // Armor
+                        case 6:
+                            items.Add(new aHoodie(itemTextures[i + equipmentStart],
+                                new Rectangle(new Point(50 + 50 * (i - weaponSpriteCount), 800), size)));
+                            break;
+                        case 7:
+                            items.Add(new aWinterCoat(itemTextures[i + equipmentStart],
+                                new Rectangle(new Point(50 + 50 * (i - weaponSpriteCount), 800), size)));
+                            break;
+                        case 8:
+                            items.Add(new aBandana(itemTextures[i + equipmentStart],
+                                new Rectangle(new Point(50 + 50 * (i - weaponSpriteCount), 800), size)));
+                            break;
+                        case 9:
+                            items.Add(new aSkates(itemTextures[i + equipmentStart],
+                                new Rectangle(new Point(50 + 50 * (i - weaponSpriteCount), 800), size)));
+                            break;
+                        case 10:
+                            items.Add(new aMask(itemTextures[i + equipmentStart],
+                                new Rectangle(new Point(50 + 50 * (i - weaponSpriteCount), 800), size)));
+                            break;
+
                     }
                 }
             }

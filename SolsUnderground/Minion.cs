@@ -26,7 +26,8 @@ namespace SolsUnderground
             this.textures = textures;
             this.texture = textures[0];
             this.positionRect = positionRect;
-            this.health = health;
+            this.maxHP = health;
+            this.currentHP = health;
             this.attack = attack;
             this.knockback = 32;
             moveCD = 0.3;
@@ -50,8 +51,8 @@ namespace SolsUnderground
 
         public override int Health
         {
-            get { return health; }
-            set { health = value; }
+            get { return currentHP; }
+            set { currentHP = value; }
         }
 
         public override int Attack
@@ -99,9 +100,9 @@ namespace SolsUnderground
         {
             if(!(enemyState == EnemyState.dead))
             {
-                moveCD = 0;
+                moveCounter = 0;
                 
-                health -= damage;
+                currentHP -= damage;
 
                 if (enemyState == EnemyState.faceForward || enemyState == EnemyState.moveForward)
                 {
@@ -120,7 +121,7 @@ namespace SolsUnderground
                     X -= knockback;
                 }
 
-                if (health <= 0)
+                if (currentHP <= 0)
                 {
                     enemyState = EnemyState.dead;
                 }
@@ -130,9 +131,12 @@ namespace SolsUnderground
         /// <summary>
         /// movement AI that will chase the player
         /// </summary>
-        public override void EnemyMove(Player player)
+        public override void EnemyMove(Player player, GameTime gameTime)
         {
-            if(moveCounter >= moveCD)
+            //Update the cooldowns
+            moveCounter += gameTime.ElapsedGameTime.TotalSeconds;
+
+            if (moveCounter >= moveCD)
             {
                 if (!(enemyState == EnemyState.dead))
                 {
@@ -175,6 +179,14 @@ namespace SolsUnderground
         public override void Draw(SpriteBatch sb)
         {
             sb.Draw(texture, positionRect, Color.White);
+
+            // Draw HP bar
+            sb.Draw(Program.drawSquare,
+                new Rectangle(X, Y - 10, Width, 3),
+                Color.Black);
+            sb.Draw(Program.drawSquare,
+                new Rectangle(X, Y - 10, (int)(Width * ((double)currentHP / (double)maxHP)), 3),
+                Color.Red);
         }
     }
 }

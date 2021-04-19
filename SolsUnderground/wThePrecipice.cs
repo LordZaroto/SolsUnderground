@@ -5,9 +5,15 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
+//Preston Gilmore
+
 namespace SolsUnderground
 {
-    class wBrickBreaker : Item, Weapon
+    /// <summary>
+    /// The Weeb's favorite LARP weapon. You feel
+    /// a bizzare force surging within the blade.
+    /// </summary>
+    class wThePrecipice : Item, Weapon
     {
         //Fields
         //-----------------------------
@@ -67,11 +73,6 @@ namespace SolsUnderground
             get { return hitboxR; }
             set { hitboxR = value; }
         }
-
-        public Texture2D Texture
-        {
-            get { return texture; }
-        }
         //------------------------------
 
         //Weapon Stats
@@ -101,6 +102,7 @@ namespace SolsUnderground
         {
             get { return name; }
         }
+        //---------------
         //------------------------------
 
         //----------------------------------------
@@ -109,53 +111,101 @@ namespace SolsUnderground
         //||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
         //---------------------------------------------------------------------
 
-        public wBrickBreaker(Texture2D texture, Rectangle positionRect)
-            : base(ItemType.Weapon, 8, texture, positionRect)
+        public wThePrecipice(Texture2D texture, Rectangle positionRect)
+            : base(ItemType.Weapon, 5, texture, positionRect)
         {
-            name = "Brick Breaker";
-            basicCooldown = 0.7;
-            specialCooldown = 5;
-            attack = 8;
-            knockback = (int)(1.2 * 32);
-            hitboxScale = new Vector2(2, 2);
+            name = "The Precipice";
+            basicCooldown = 0.5;
+            specialCooldown = 6;
+            attack = 9;
+            knockback = (int)(1.5 * 32);
+            hitboxScale = new Vector2(2, 3);
         }
 
         /// <summary>
-        /// The player slams the ground and creates a shockwave.
+        /// The player will dash a long distance, striking enemies along the way.
         /// </summary>
         public Attack Special(Player player)
         {
-            switch (player.State)
+            //Create the attack hitbox in the direction the player is facing
+            if (player.State == PlayerState.faceForward || player.State == PlayerState.moveForward)
             {
-                case PlayerState.faceForward:
-                case PlayerState.moveForward:
-                    player.State = PlayerState.attackForward;
-                    break;
+                player.State = PlayerState.attackForward;
 
-                case PlayerState.faceLeft:
-                case PlayerState.moveLeft:
-                    player.State = PlayerState.attackLeft;
-                    break;
+                player.Y -= player.Height * 2;
 
-                case PlayerState.faceBack:
-                case PlayerState.moveBack:
-                    player.State = PlayerState.attackBack;
-                    break;
+                positionRect = new Rectangle(
+                        player.X - (player.Width * (3 / 4)),
+                        player.Y - (player.Height * 2 + (player.Height / 2)),
+                        player.Width + (player.Width * 2 * (3 / 4)),
+                        player.Height * 3 + (player.Height / 2));
 
-                case PlayerState.faceRight:
-                case PlayerState.moveRight:
-                    player.State = PlayerState.attackRight;
-                    break;
+                Attack special = new Attack(
+                    positionRect,
+                    attack * 2,
+                    knockback * 2);
+
+                return special;
+            }
+            else if (player.State == PlayerState.faceLeft || player.State == PlayerState.moveLeft)
+            {
+                player.State = PlayerState.attackLeft;
+
+                player.X -= player.Width * 2;
+
+                positionRect = new Rectangle(
+                        player.X - (player.Width * 2 + (player.Width / 2)),
+                        player.Y - (player.Height * (3 / 4)),
+                        player.Width * 3 + (player.Width / 2),
+                        player.Height + (player.Height * 2 * (3 / 4)));
+
+                Attack special = new Attack(
+                    positionRect,
+                    attack * 2,
+                    knockback * 2);
+
+                return special;
+            }
+            else if (player.State == PlayerState.faceBack || player.State == PlayerState.moveBack)
+            {
+                player.State = PlayerState.attackBack;
+
+                player.Y += player.Height * 2;
+
+                positionRect = new Rectangle(
+                        player.X - (player.Width * (3 / 4)),
+                        player.Y - (player.Height / 2),
+                        player.Width + (player.Width * 2 * (3 / 4)),
+                        player.Height * 3 + (player.Height / 2));
+
+                Attack special = new Attack(
+                    positionRect,
+                    attack * 2,
+                    knockback * 2);
+
+                return special;
+            }
+            else if (player.State == PlayerState.faceRight || player.State == PlayerState.moveRight)
+            {
+                player.State = PlayerState.attackRight;
+
+                player.X += player.Width * 2;
+
+                positionRect = new Rectangle(
+                        player.X - (player.Width / 2),
+                        player.Y - (player.Height * (3 / 4)),
+                        player.Width * 3 + (player.Width / 2),
+                        player.Height + (player.Height * 2 * (3 / 4)));
+
+                Attack special = new Attack(
+                    positionRect,
+                    attack * 2,
+                    knockback * 2);
+
+                return special;
             }
 
-            // w.X = p.X + (p.W - w.W) / 2
-            positionRect = new Rectangle(
-                player.X - player.Width * 2,
-                player.Y - player.Height * 2,
-                player.Width * 5,
-                player.Height * 5);
-
-            return new Attack(positionRect, (int)(attack * 1.2), (int)(knockback * 1.5));
+            return null;
         }
 
         public override void Draw(SpriteBatch sb)
