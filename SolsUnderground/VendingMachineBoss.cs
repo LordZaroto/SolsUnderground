@@ -263,7 +263,7 @@ namespace SolsUnderground
                 new Rectangle(X, Y - 10, Width, 3),
                 Color.Black);
             sb.Draw(Program.drawSquare,
-                new Rectangle(X, Y - 10, (int)(Width * ((double)health / (double)maxHealth)), 3),
+                new Rectangle(X, Y - 10, (int)(Width * ((double)currentHP / (double)maxHP)), 3),
                 Color.Red);
         }
 
