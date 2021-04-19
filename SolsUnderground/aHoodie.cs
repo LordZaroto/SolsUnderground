@@ -11,7 +11,7 @@ namespace SolsUnderground
     {
         // Fields
         // Inherits: texture, positionRect, ItemType type, itemValue
-
+        private string name;
         private int defense;
         private int speed;
         private int hp;
@@ -19,6 +19,11 @@ namespace SolsUnderground
         // Properties
 
         // Inherits
+
+        public Texture2D Sprite
+        {
+            get { return texture; }
+        }
         public Rectangle Position
         {
             get { return positionRect; }
@@ -35,6 +40,10 @@ namespace SolsUnderground
         public int HP
         {
             get { return hp; }
+        }
+        public string Name
+        {
+            get { return name; }
         }
 
         // Constructor

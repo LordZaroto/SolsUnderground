@@ -24,11 +24,15 @@ namespace SolsUnderground
         private List<Enemy> enemies;
         private List<Item> items;
         private List<Chest> chests;
+        private int windowWidth;
+        private int windowHeight;
 
         // Constructor
-        public CollisionManager(Player player)
+        public CollisionManager(Player player, int windowWidth, int windowHeight)
         {
             this.player = player;
+            this.windowWidth = windowWidth;
+            this.windowHeight = windowHeight;
         }
 
         // Methods
@@ -59,6 +63,17 @@ namespace SolsUnderground
         public void SetBarrierList(List<Rectangle> barriers)
         {
             this.barriers = barriers;
+
+            // Add barrier to right-hand side of screen - to be removed after enemies are cleared
+            barriers.Add(new Rectangle(windowWidth, 0, 50, windowHeight));
+        }
+
+        /// <summary>
+        /// Removes the barrier used to block player from moving into next room.
+        /// </summary>
+        public void OpenNextRoom()
+        {
+            barriers.RemoveAt(barriers.Count - 1);
         }
 
         /// <summary>
