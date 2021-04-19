@@ -309,13 +309,11 @@ namespace SolsUnderground
                 //If close to player
                 if ((Math.Abs(X - player.X) < 120 && (Math.Abs(Y - player.Y) < 120)))
                 {
-                    _timer = 0;
                     if(_timer > 1.5)
                     {
                         _timer = 0;
                         return AOE();
                     }
-                    
                 }
                 else
                 {
