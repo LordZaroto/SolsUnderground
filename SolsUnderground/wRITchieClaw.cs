@@ -15,6 +15,7 @@ namespace SolsUnderground
         private double basicCooldown;
         private double specialCooldown;
         private int knockback;
+        private string name;
         private Rectangle hitboxF;
         private Rectangle hitboxL;
         private Rectangle hitboxB;
@@ -90,6 +91,11 @@ namespace SolsUnderground
         {
             get { return knockback; }
         }
+
+        public string Name
+        {
+            get { return name; }
+        }
         //------------------------------
 
         //----------------------------------------
@@ -108,9 +114,10 @@ namespace SolsUnderground
         //}
 
         //public RITchieClaw(Texture2D texture, Rectangle positionRect)
-        public wRITchieClaw(Texture2D texture, Rectangle positionRect)
+        public wRITchieClaw(string name, Texture2D texture, Rectangle positionRect)
             : base(ItemType.Weapon, 7, texture, positionRect)
         {
+            this.name = name;
             basicCooldown = 0.1;
             specialCooldown = 3;
             attack = 7;
@@ -159,7 +166,7 @@ namespace SolsUnderground
                     attack / 2,
                     knockback / 2);
 
-                if()
+                
                 player.X -= player.Width * 5;
 
                 return special;

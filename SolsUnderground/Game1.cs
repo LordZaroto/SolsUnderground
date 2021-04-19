@@ -177,10 +177,10 @@ namespace SolsUnderground
             stickTexture = Content.Load<Texture2D>("stick");
             ritchieClawTexture = Content.Load<Texture2D>("ritchieClaw");
             itemTextures.Add(stickTexture);
-            stick = new wStick(stickTexture, new Rectangle(0, 0, 0, 0));
+            stick = new wStick("Stick", stickTexture, new Rectangle(0, 0, 0, 0));
 
             //Testing Weapons
-            ritchieClaw = new wRITchieClaw(ritchieClawTexture, new Rectangle(0, 0, 0, 0));
+            ritchieClaw = new wRITchieClaw("Ritchie Claw", ritchieClawTexture, new Rectangle(0, 0, 0, 0));
 
             // Armor
             hoodieTexture = Content.Load<Texture2D>("Hoodie");
@@ -822,6 +822,19 @@ namespace SolsUnderground
                 mapManager.NextRoom();
             }
 
+            string currentWeaponName = fileData[4];
+            switch (currentWeaponName)
+            {
+                case "Stick":
+                    player.EquipWeapon(stick);
+                    break;
+                case "Ritchie Claw":
+                    player.EquipWeapon(ritchieClaw);
+                    break;
+            }
+
+            string currentArmorName = fileData[5];
+
             //Change the GameState
             currentState = GameState.Game;
         }
@@ -836,7 +849,8 @@ namespace SolsUnderground
         private void SaveFile(string fileName)
         {
             StreamWriter writer = new StreamWriter($"../../../Content//SaveFiles//{fileName}");
-            writer.WriteLine($"{player.Hp}|{player.TigerBucks}|{mapManager.CurrentFloor}|{mapManager.CurrentRoomNum}");
+            writer.WriteLine($"{player.Hp}|{player.TigerBucks}|{mapManager.CurrentFloor}|" +
+                $"{mapManager.CurrentRoomNum}|{player.CurrentWeapon.Name}|{player.CurrentArmor.Name}");
             writer.Close();
             currentState = GameState.Saved;
         }

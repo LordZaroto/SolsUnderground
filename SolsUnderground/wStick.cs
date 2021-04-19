@@ -15,6 +15,7 @@ namespace SolsUnderground
         private double basicCooldown;
         private double specialCooldown;
         private int knockback;
+        private string name;
         private Rectangle hitboxF;
         private Rectangle hitboxL;
         private Rectangle hitboxB;
@@ -85,6 +86,11 @@ namespace SolsUnderground
         {
             get { return knockback; }
         }
+
+        public string Name
+        {
+            get { return name; }
+        }
         //------------------------------
 
         //----------------------------------------
@@ -93,9 +99,10 @@ namespace SolsUnderground
         //||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
         //---------------------------------------------------------------------
 
-        public wStick(Texture2D texture, Rectangle positionRect)
+        public wStick(string name, Texture2D texture, Rectangle positionRect)
             : base(ItemType.Weapon, 3, texture, positionRect)
         {
+            this.name = name;
             this.texture = texture;
             this.positionRect = positionRect;
             basicCooldown = 0.3;

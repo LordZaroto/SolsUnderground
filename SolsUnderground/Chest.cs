@@ -93,11 +93,11 @@ namespace SolsUnderground
                     switch (randomPick) // Add weapon items to drop here
                     {
                         case 0:
-                            drop = new wStick(itemTextures[2], positionRect);
+                            drop = new wStick("Stick", itemTextures[2], positionRect);
                             break;
 
                         case 1:
-                            drop = new wRITchieClaw(itemTextures[2], positionRect);
+                            drop = new wRITchieClaw("Ritchie Claw", itemTextures[2], positionRect);
                             break;
 
                     }

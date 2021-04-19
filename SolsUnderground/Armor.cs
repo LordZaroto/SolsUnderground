@@ -26,6 +26,8 @@ namespace SolsUnderground
 
         int Height { get; set; }
 
+        string Name { get; }
+
         Rectangle Position { get; set; }
 
         int Defense { get; }
