@@ -41,7 +41,7 @@ namespace SolsUnderground
             _timer = 0f;
             aoeTimer = 0f;
 
-            sp1CD = 7;
+            sp1CD = 8;
             sp1Counter = 6;
         }
 
@@ -121,11 +121,11 @@ namespace SolsUnderground
         {
             if (!(enemyState == EnemyState.dead))
             {
-                moveCounter = 0;
+                //moveCounter = 0;
 
                 currentHP -= damage;
 
-                if (enemyState == EnemyState.faceForward || enemyState == EnemyState.moveForward)
+                /*if (enemyState == EnemyState.faceForward || enemyState == EnemyState.moveForward)
                 {
                     Y += knockback;
                 }
@@ -140,7 +140,7 @@ namespace SolsUnderground
                 if (enemyState == EnemyState.faceRight || enemyState == EnemyState.moveRight)
                 {
                     X -= knockback;
-                }
+                }*/
 
                 if (currentHP <= 0)
                 {
@@ -309,7 +309,7 @@ namespace SolsUnderground
                 //If close to player
                 if ((Math.Abs(X - player.X) < 120 && (Math.Abs(Y - player.Y) < 120)))
                 {
-                    if(_timer > 1.5)
+                    if(_timer > 1)
                     {
                         _timer = 0;
                         return AOE();
