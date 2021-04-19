@@ -504,7 +504,7 @@ namespace SolsUnderground
                         // Check if boss room
                         if (mapManager.IsBossRoom)
                         {
-                            enemyManager.SpawnBoss(mapManager.CurrentRoom.GetOpenTiles());
+                            enemyManager.SpawnBoss();
                         }
                         else
                         {
@@ -1084,8 +1084,8 @@ namespace SolsUnderground
             collisionManager.SetBarrierList(mapManager.CurrentRoom.GetBarriers());
 
             // Reset player stats
-            player.EquipWeapon(stick);
-            player.EquipArmor(hoodie);
+            player.Equip(stick);
+            player.Equip(hoodie);
             player.MaxHp = 100;
             player.Hp = player.MaxHp;
             player.X = 30;
@@ -1143,7 +1143,7 @@ namespace SolsUnderground
                 // Check if boss room
                 if (mapManager.IsBossRoom)
                 {
-                    enemyManager.SpawnBoss(mapManager.CurrentRoom.GetOpenTiles());
+                    enemyManager.SpawnBoss();
                 }
                 else
                 {
@@ -1159,22 +1159,22 @@ namespace SolsUnderground
             switch (currentWeaponName)
             {
                 case "Stick":
-                    player.EquipWeapon(stick);
+                    player.Equip(stick);
                     break;
                 case "Ritchie Claw":
-                    player.EquipWeapon(ritchieClaw);
+                    player.Equip(ritchieClaw);
                     break;
                 case "Brick Breaker":
-                    player.EquipWeapon(new wBrickBreaker(brickBreakerTexture, new Rectangle(0,0,0,0)));
+                    player.Equip(new wBrickBreaker(brickBreakerTexture, new Rectangle(0,0,0,0)));
                     break;
                 case "Hockey Stick":
-                    player.EquipWeapon(new wHockeyStick(hockeyStickTexture, new Rectangle(0, 0, 0, 0)));
+                    player.Equip(new wHockeyStick(hockeyStickTexture, new Rectangle(0, 0, 0, 0)));
                     break;
                 case "Hot Dog":
-                    player.EquipWeapon(new wHotDog(hotDogTexture, new Rectangle(0, 0, 0, 0)));
+                    player.Equip(new wHotDog(hotDogTexture, new Rectangle(0, 0, 0, 0)));
                     break;
                 case "The Precipice":
-                    player.EquipWeapon(new wThePrecipice(thePrecipiceTexture, new Rectangle(0, 0, 0, 0)));
+                    player.Equip(new wThePrecipice(thePrecipiceTexture, new Rectangle(0, 0, 0, 0)));
                     break;
             }
 
@@ -1182,19 +1182,19 @@ namespace SolsUnderground
             switch (currentArmorName)
             {
                 case "Hoodie":
-                    player.EquipArmor(hoodie);
+                    player.Equip(hoodie);
                     break;
                 case "Mask":
-                    player.EquipArmor(new aMask(maskTexture, new Rectangle(0, 0, 0, 0)));
+                    player.Equip(new aMask(maskTexture, new Rectangle(0, 0, 0, 0)));
                     break;
                 case "Bandana":
-                    player.EquipArmor(new aBandana(bandanaTexture, new Rectangle(0, 0, 0, 0)));
+                    player.Equip(new aBandana(bandanaTexture, new Rectangle(0, 0, 0, 0)));
                     break;
                 case "Skates":
-                    player.EquipArmor(new aSkates(skatesTexture, new Rectangle(0, 0, 0, 0)));
+                    player.Equip(new aSkates(skatesTexture, new Rectangle(0, 0, 0, 0)));
                     break;
                 case "Winter Coat":
-                    player.EquipArmor(new aWinterCoat(winterCoatTexture, new Rectangle(0, 0, 0, 0)));
+                    player.Equip(new aWinterCoat(winterCoatTexture, new Rectangle(0, 0, 0, 0)));
                     break;
             }
 

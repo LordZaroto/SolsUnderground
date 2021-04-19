@@ -116,17 +116,12 @@ namespace SolsUnderground
         }
 
         /// <summary>
-        /// Spawns a single boss randomly in the current room.
+        /// Spawns a single boss in the center of the current room.
         /// </summary>
-        /// <param name="openTiles"></param>
-        public void SpawnBoss(List<Rectangle> openTiles)
+        public void SpawnBoss()
         {
-            // Use to store random index of openTile list
-            int spawnPoint;
-            int bossChoice;
-
-            spawnPoint = Program.rng.Next(openTiles.Count);
-            bossChoice = Program.rng.Next(bossTextures.Count);
+            Point spawnPoint = new Point(640, 480);
+            int bossChoice = Program.rng.Next(bossTextures.Count);
 
             // Need to expand and implement spawning multiple enemy types
             //The type of enemy spawned should be random
@@ -134,16 +129,17 @@ namespace SolsUnderground
             {
                 case 0:
                     enemies.Add(new Weeb(bossTextures[bossChoice],
-                        new Rectangle(openTiles[spawnPoint].X,
-                        openTiles[spawnPoint].Y,
+                        new Rectangle(spawnPoint.X + (40 - bossTextures[bossChoice][2].Width) / 2,
+                        spawnPoint.Y + (40 - bossTextures[bossChoice][2].Height) / 2,
                         bossTextures[bossChoice][2].Width,
                         bossTextures[bossChoice][2].Height),
                         75, 8));
                     break;
+
                 case 1:
                     enemies.Add(new VendingMachineBoss(bossTextures[bossChoice],
-                        new Rectangle(openTiles[spawnPoint].X,
-                        openTiles[spawnPoint].Y,
+                        new Rectangle(spawnPoint.X + (40 - bossTextures[bossChoice][2].Width) / 2,
+                        spawnPoint.Y + (40 - bossTextures[bossChoice][2].Height) / 2,
                         bossTextures[bossChoice][2].Width,
                         bossTextures[bossChoice][2].Height),
                         75, 8));

@@ -92,25 +92,60 @@ namespace SolsUnderground
         /// </summary>
         /// <param name="moneyValue">Value of the money object</param>
         /// <param name="enemyRect">Rectangle</param>
-        public void EnemyDrops(int moneyValue, Point spawn)
+        public void EnemyDrops(Enemy enemy)
         {
-            // Spawn money item in small randomized area
-            items.Add(new Item(ItemType.Money, moneyValue, itemTextures[0],
-                new Rectangle(
-                    spawn.X + (Program.rng.Next(5) - 2), 
-                    spawn.Y + (Program.rng.Next(5) - 2), 
-                    itemTextures[0].Width, 
-                    itemTextures[0].Height)));
+            int moneyValue = enemy.Attack;
 
-            if (Program.rng.Next(100) < 30)
+            if (enemy is Boss)
             {
+                // 40% chance for boss-specific drop
+                if (Program.rng.Next(100) < 40)
+                {
+                    if (enemy is Weeb)
+                    {
+                        // Drop ThePrecipice
+                        items.Add(new wThePrecipice(itemTextures[moneySpriteCount + healthSpriteCount + 5],
+                        new Rectangle(
+                            enemy.X + (Program.rng.Next(5) - 2),
+                            enemy.Y + (Program.rng.Next(5) - 2),
+                            40, 40)));
+                    }
+                    if (enemy is VendingMachineBoss)
+                    {
+                        // Vending Machine drops here
+                    }
+                }
+                else
+                {
+                    // Spawn increased money item in small randomized area
+                    items.Add(new Item(ItemType.Money, moneyValue * 5, itemTextures[0],
+                        new Rectangle(
+                            enemy.X + (Program.rng.Next(5) - 2),
+                            enemy.Y + (Program.rng.Next(5) - 2),
+                            itemTextures[0].Width,
+                            itemTextures[0].Height)));
+                }
+            }
+            else // Normal enemy drops
+            {
+                // Spawn money item in small randomized area
+                items.Add(new Item(ItemType.Money, moneyValue, itemTextures[0],
+                    new Rectangle(
+                        enemy.X + (Program.rng.Next(5) - 2),
+                        enemy.Y + (Program.rng.Next(5) - 2),
+                        itemTextures[0].Width,
+                        itemTextures[0].Height)));
+
                 // 30% chance to spawn health pickup in small randomized area
-                items.Add(new Item(ItemType.HealthPickup, 20, itemTextures[1],
-                     new Rectangle(
-                         spawn.X + (Program.rng.Next(5) - 2), 
-                         spawn.Y + (Program.rng.Next(5) - 2), 
-                         itemTextures[moneySpriteCount].Width, 
-                         itemTextures[moneySpriteCount].Height)));
+                if (Program.rng.Next(100) < 30)
+                {
+                    items.Add(new Item(ItemType.HealthPickup, 20, itemTextures[1],
+                         new Rectangle(
+                             enemy.X + (Program.rng.Next(5) - 2),
+                             enemy.Y + (Program.rng.Next(5) - 2),
+                             itemTextures[moneySpriteCount].Width,
+                             itemTextures[moneySpriteCount].Height)));
+                }
             }
         }
 
@@ -119,6 +154,8 @@ namespace SolsUnderground
         /// </summary>
         public void ActivateItems(bool isEKeyPressed)
         {
+            List<Item> unequipped = new List<Item>();
+
             for (int i = 0; i < items.Count;)
             {
                 if (player.PositionRect.Intersects(items[i].PositionRect))
@@ -142,7 +179,7 @@ namespace SolsUnderground
                         case ItemType.Weapon:
                             if (isEKeyPressed)
                             {
-                                player.EquipWeapon((Weapon)items[i]);
+                                unequipped.Add(player.Equip(items[i]));
                                 items.RemoveAt(i);
                                 continue;
                             }
@@ -151,7 +188,7 @@ namespace SolsUnderground
                         case ItemType.Armor:
                             if (isEKeyPressed)
                             {
-                                player.EquipArmor((Armor)items[i]);
+                                unequipped.Add(player.Equip(items[i]));
                                 items.RemoveAt(i);
                                 continue;
                             }
@@ -161,6 +198,8 @@ namespace SolsUnderground
 
                 i++;
             }
+
+            items.AddRange(unequipped);
         }
 
         /// <summary>
