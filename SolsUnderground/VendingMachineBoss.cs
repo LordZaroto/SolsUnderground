@@ -153,6 +153,7 @@ namespace SolsUnderground
         {
             //Update the cooldowns
             moveCounter += gameTime.ElapsedGameTime.TotalSeconds;
+            sp1Counter += gameTime.ElapsedGameTime.TotalSeconds;
 
             if (moveCounter >= moveCD)
             {
