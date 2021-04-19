@@ -208,8 +208,7 @@ namespace SolsUnderground
                     }
                     else
                     {
-                        if (Math.Abs(player.PositionRect.X - (positionRect.X + positionRect.Width / 2)) <= 80 && Math.Abs(player.PositionRect.Y - (positionRect.Y + positionRect.Height / 2)) <= 80)
-                        {
+                        
                             if (Math.Abs(positionRect.X - player.X) >= Math.Abs(positionRect.Y - player.Y))
                             {
                                 if (positionRect.X >= player.X)
@@ -240,7 +239,7 @@ namespace SolsUnderground
                             {
                                 _timer = 0;
                             }
-                        }
+                        
                     }
                 }
             }
