@@ -58,6 +58,7 @@ namespace SolsUnderground
         //enemy
         private Texture2D[] minionTextures;
         private Texture2D[] wandererTextures;
+        private Texture2D[] vmBossTextures;
 
         // Items
         private List<Texture2D> chestTextures;
@@ -221,6 +222,14 @@ namespace SolsUnderground
                 Content.Load<Texture2D>("wandererLeft"),
                 Content.Load<Texture2D>("wandererRight") };
             enemyManager.AddEnemyData(wandererTextures);
+
+            vmBossTextures = new Texture2D[]
+            {
+                Content.Load<Texture2D>("vmBossFront"),
+                Content.Load<Texture2D>("vmBossBack"),
+                Content.Load<Texture2D>("vmBossLeft"),
+                Content.Load<Texture2D>("vmBossRight") };
+            enemyManager.AddEnemyData(vmBossTextures);
 
             // Tiles
             List<Texture2D> tileTextures = new List<Texture2D>();

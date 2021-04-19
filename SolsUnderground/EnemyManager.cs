@@ -70,7 +70,7 @@ namespace SolsUnderground
             for (int i = 0; i < enemyCount; i++)
             {
                 spawnPoint = Program.rng.Next(openTiles.Count);
-                enemyChoice = Program.rng.Next(2);
+                enemyChoice = Program.rng.Next(3);
 
                 // Need to expand and implement spawning multiple enemy types
                 Rectangle skaterRect = new Rectangle(
@@ -84,6 +84,12 @@ namespace SolsUnderground
                     openTiles[spawnPoint].Y,
                     enemyTextures[1][2].Width,
                     enemyTextures[1][2].Height);
+
+                Rectangle vmBossRect = new Rectangle(
+                    openTiles[spawnPoint].X,
+                    openTiles[spawnPoint].Y,
+                    enemyTextures[2][2].Width,
+                    enemyTextures[2][2].Height);
                 //The type of enemy spawned should be random
                 switch (enemyChoice)
                 {
@@ -92,6 +98,9 @@ namespace SolsUnderground
                         break;
                     case 1:
                         enemies.Add(new Wanderer(enemyTextures[1], fratRect, 12, 8));
+                        break;
+                    case 2:
+                        enemies.Add(new VendingMachineBoss(enemyTextures[2], vmBossRect, 90, 20));
                         break;
                 }
             }

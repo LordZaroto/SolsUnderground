@@ -18,8 +18,11 @@ namespace SolsUnderground
         Texture2D[] textures;
         GameTime gameTime;
         float _timer = 0f;
-        int moveDirection;
+        float aoeTimer;
         int maxHealth;
+        bool movingUp;
+        bool isAOE;
+        bool isShoot;
 
         public VendingMachineBoss(Texture2D[] textures, Rectangle positionRect, int health, int attack)
         {
@@ -34,7 +37,32 @@ namespace SolsUnderground
             moveCounter = moveCD;
             kbCD = 2;
             kbCounter = kbCD;
-            moveDirection = Program.rng.Next(0, 4);
+            movingUp = true;
+            _timer = 0f;
+            aoeTimer = 0f;
+            isAOE = false;
+            isShoot = false;
+        }
+
+        public VendingMachineBoss(Texture2D[] textures, Rectangle positionRect, int health, int attack, GameTime gameTime)
+        {
+            this.textures = textures;
+            this.texture = textures[0];
+            this.positionRect = positionRect;
+            maxHealth = health;
+            this.health = maxHealth;
+            this.attack = attack;
+            this.knockback = 64;
+            moveCD = 2;
+            moveCounter = moveCD;
+            kbCD = 2;
+            kbCounter = kbCD;
+            movingUp = true;
+            _timer = 0f;
+            aoeTimer = 0f;
+            this.gameTime = gameTime;
+            isAOE = false;
+            isShoot = false;
         }
 
         //properties
@@ -96,6 +124,17 @@ namespace SolsUnderground
             set { positionRect = value; }
         }
 
+        public bool IsAOE
+        {
+            get;
+            set;
+        }
+
+        public bool IsShoot
+        {
+            get;
+            set;
+        }
 
         public override void TakeDamage(int damage, int knockback)
         {
@@ -135,17 +174,126 @@ namespace SolsUnderground
             {
                 if (!(enemyState == EnemyState.dead))
                 {
+                    UpdateTimer();
                     if(health > maxHealth /3 * 2)
                     {
-
+                        if(Math.Abs(player.PositionRect.X - (positionRect.X+positionRect.Width/2)) <= 80 && Math.Abs(player.PositionRect.Y - (positionRect.Y+positionRect.Height/2)) <= 80)
+                        {
+                            UpdateAOETimer();
+                            if(aoeTimer >= 1)
+                            {
+                                aoeTimer = 0;
+                                AOE();
+                            }
+                        }
+                        else
+                        {
+                            if (movingUp)
+                            {
+                                positionRect.Y += 1;
+                            }
+                            else
+                            {
+                                positionRect.Y -= 1;
+                            }
+                        }
+                        if(_timer > 1)
+                        {
+                            _timer = 0;
+                            if (movingUp)
+                            {
+                                movingUp = false;
+                            }
+                            else
+                            {
+                                movingUp = true;
+                            }
+                            Shoot();
+                        }
                     }
                     else if(health <= maxHealth / 3 * 2 && health > maxHealth/3)
                     {
+                        if(Math.Abs(player.PositionRect.X - (positionRect.X + positionRect.Width / 2)) <= 80 && Math.Abs(player.PositionRect.Y - (positionRect.Y + positionRect.Height / 2)) <= 80)
+                        {
+                            UpdateAOETimer();
+                            if (aoeTimer >= 1)
+                            {
+                                aoeTimer = 0;
+                                AOE();
+                            }
 
+                        }
+                        else
+                        {
+                            if (movingUp)
+                            {
+                                positionRect.Y += 2;
+                            }
+                            else
+                            {
+                                positionRect.Y -= 2;
+                            }
+                        }
+                        if (_timer > .75)
+                        {
+                            _timer = 0;
+                            if (movingUp)
+                            {
+                                movingUp = false;
+                            }
+                            else
+                            {
+                                movingUp = true;
+                            }
+                            Shoot();
+                        }
                     }
                     else
                     {
+                        if (Math.Abs(player.PositionRect.X - (positionRect.X + positionRect.Width / 2)) <= 80 && Math.Abs(player.PositionRect.Y - (positionRect.Y + positionRect.Height / 2)) <= 80)
+                        {
+                            UpdateAOETimer();
+                            if (aoeTimer >= 1)
+                            {
+                                aoeTimer = 0;
+                                AOE();
+                            }
 
+                        }
+                        else
+                        {
+                            if(Math.Abs(positionRect.X - player.X) >= Math.Abs(positionRect.Y - player.Y))
+                            {
+                                if (positionRect.X >= player.X)
+                                {
+                                    positionRect.X -= 3;
+                                    enemyState = EnemyState.moveLeft;
+                                }
+                                else
+                                {
+                                    positionRect.X += 3;
+                                    enemyState = EnemyState.moveRight;
+                                }
+                            }
+                            else if (Math.Abs(positionRect.X - player.X) < Math.Abs(positionRect.Y - player.Y))
+                            {
+                                if (positionRect.Y >= player.Y)
+                                {
+                                    positionRect.Y -= 3;
+                                    enemyState = EnemyState.moveBack;
+                                }
+                                else
+                                {
+                                    positionRect.Y += 3;
+                                    enemyState = EnemyState.moveForward;
+                                }
+                            }
+                        }
+                        if (_timer > .5)
+                        {
+                            _timer = 0;
+                            Shoot();
+                        }
                     }
                 }
             }
@@ -154,6 +302,26 @@ namespace SolsUnderground
         public override void Draw(SpriteBatch sb)
         {
             sb.Draw(texture, positionRect, Color.White);
+        }
+
+        public void UpdateTimer()
+        {
+            _timer += (float)gameTime.ElapsedGameTime.TotalSeconds;
+        }
+
+        public void UpdateAOETimer()
+        {
+            aoeTimer += (float)gameTime.ElapsedGameTime.TotalSeconds;
+        }
+
+        public void Shoot()
+        {
+            isShoot = true;
+        }
+
+        public void AOE()
+        {
+            isAOE = true;
         }
     }
 }
