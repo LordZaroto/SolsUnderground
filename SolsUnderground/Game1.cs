@@ -227,7 +227,7 @@ namespace SolsUnderground
             // Starting weapon
             stickTexture = Content.Load<Texture2D>("stick");
             ritchieClawTexture = Content.Load<Texture2D>("ritchieClaw");
-            brickBreaker = Content.Load<Texture2D>("BrickBreaker2");
+            brickBreakerTexture = Content.Load<Texture2D>("BrickBreaker2");
             
             stick = new wStick(stickTexture, new Rectangle(0, 0, 0, 0));
 
@@ -260,7 +260,6 @@ namespace SolsUnderground
             // Weapons
             itemManager.AddWeaponSprite(stickTexture);
             itemManager.AddWeaponSprite(ritchieClawTexture);
-            brickBreakerTexture = Content.Load<Texture2D>("BrickBreaker");
             hockeyStickTexture = Content.Load<Texture2D>("HockeyStick");
             hotDogTexture = Content.Load<Texture2D>("HotDog");
             thePrecipiceTexture = Content.Load<Texture2D>("thePrecipice");
@@ -270,8 +269,8 @@ namespace SolsUnderground
             itemManager.AddWeaponSprite(thePrecipiceTexture);
 
             // Armor
-            winterCoatTexture = Content.Load<Texture2D>("WinterCoat");
-            bandanaTexture = Content.Load<Texture2D>("Bandana");
+            winterCoatTexture = Content.Load<Texture2D>("WinterCoat2");
+            bandanaTexture = Content.Load<Texture2D>("Bandana2");
             skatesTexture = Content.Load<Texture2D>("Skates");
             maskTexture = Content.Load<Texture2D>("Mask");
             itemManager.AddArmorSprite(hoodieTexture);
