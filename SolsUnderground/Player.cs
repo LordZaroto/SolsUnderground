@@ -439,7 +439,7 @@ namespace SolsUnderground
                     basicCounter = 0;
 
                     //Create the attack hitbox in the direction the player is facing
-                    if(playerState == PlayerState.faceForward || playerState == PlayerState.moveForward)
+                    if (playerState == PlayerState.faceForward || playerState == PlayerState.moveForward)
                     {
                         playerState = PlayerState.attackForward;
 
@@ -447,9 +447,9 @@ namespace SolsUnderground
                             CurrentWeapon.GetHitbox(X, Y, Width, Height, PlayerState.faceForward),
                             Damage,
                             Knockback,
-                            weapon.Sprite,
+                            CurrentWeapon.Sprite,
                             AttackDirection.up,
-                            weapon.Timer);
+                            CurrentWeapon.Timer);
 
                         return currentAttack;
                     }
@@ -461,9 +461,9 @@ namespace SolsUnderground
                             CurrentWeapon.GetHitbox(X, Y, Width, Height, PlayerState.faceLeft),
                             Damage,
                             Knockback,
-                            weapon.Sprite,
+                            CurrentWeapon.Sprite,
                             AttackDirection.left,
-                            weapon.Timer);
+                            CurrentWeapon.Timer);
 
                         return currentAttack;
                     }
@@ -475,9 +475,9 @@ namespace SolsUnderground
                             CurrentWeapon.GetHitbox(X, Y, Width, Height, PlayerState.faceBack),
                             Damage,
                             Knockback,
-                            weapon.Sprite,
+                            CurrentWeapon.Sprite,
                             AttackDirection.down,
-                            weapon.Timer);
+                            CurrentWeapon.Timer);
 
                         return currentAttack;
                     }
@@ -489,9 +489,9 @@ namespace SolsUnderground
                             CurrentWeapon.GetHitbox(X, Y, Width, Height, PlayerState.faceRight),
                             Damage,
                             Knockback,
-                            weapon.Sprite,
+                            CurrentWeapon.Sprite,
                             AttackDirection.right,
-                            weapon.Timer);
+                            CurrentWeapon.Timer);
 
                         return currentAttack;
                     }
