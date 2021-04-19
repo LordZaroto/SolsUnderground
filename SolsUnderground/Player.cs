@@ -43,8 +43,8 @@ namespace SolsUnderground
         //-----------------------------
         private int hp;
         private int maxHp;
-        private Weapon weapon;
-        private Armor armor;
+        private Item weapon;
+        private Item armor;
         private Attack currentAttack;
         private double specialCounter;
         private double basicCounter;
@@ -117,7 +117,7 @@ namespace SolsUnderground
         /// </summary>
         public int Defense
         {
-            get { return armor.Defense; }
+            get { return CurrentArmor.Defense; }
         }
         /// <summary>
         /// Current hit points
@@ -132,7 +132,7 @@ namespace SolsUnderground
         /// </summary>
         public int MaxHp
         {
-            get { return maxHp + armor.HP; }
+            get { return maxHp + CurrentArmor.HP; }
             set { maxHp = value; }
         }
         /// <summary>
@@ -140,7 +140,7 @@ namespace SolsUnderground
         /// </summary>
         public int Damage
         {
-            get { return weapon.Attack; }
+            get { return CurrentWeapon.Attack; }
         }
         /// <summary>
         /// Counter for basic attack cooldown.
@@ -161,7 +161,7 @@ namespace SolsUnderground
         /// </summary>
         public int Knockback
         {
-            get { return weapon.Knockback; }
+            get { return CurrentWeapon.Knockback; }
         }
         /// <summary>
         /// Currency gained upon enemy kill.
@@ -174,12 +174,12 @@ namespace SolsUnderground
 
         public Weapon CurrentWeapon
         {
-            get { return weapon; }
+            get { return (Weapon)weapon; }
         }
 
         public Armor CurrentArmor
         {
-            get { return armor; }
+            get { return (Armor)armor; }
         }
         //------------------------------
 
@@ -192,7 +192,7 @@ namespace SolsUnderground
         //Constructor
         //----------------------------------------------------------
         public Player(Texture2D[] textures, Rectangle positionRect, 
-            Weapon startWeapon, Armor startArmor, Dictionary<string, Animation> animations)
+            Item startWeapon, Item startArmor, Dictionary<string, Animation> animations)
         {
             this.textures = textures;
             this.texture = textures[0];
@@ -201,8 +201,8 @@ namespace SolsUnderground
             hp = maxHp;
             weapon = startWeapon;
             currentAttack = null;
-            basicCounter = weapon.BasicCooldown;
-            specialCounter = weapon.SpecialCooldown;
+            basicCounter = CurrentWeapon.BasicCooldown;
+            specialCounter = CurrentWeapon.SpecialCooldown;
             armor = startArmor;
             damageCD = 0.6;
             damageCounter = damageCD;
@@ -274,7 +274,7 @@ namespace SolsUnderground
                         //to accomadate for adjustments to both axis.
                         if (kbState.IsKeyDown(Keys.D))
                         {
-                            X += (3 + armor.Speed);
+                            X += (3 + CurrentArmor.Speed);
 
                             //Two trues will make a false!
                             if (test == true)
@@ -288,7 +288,7 @@ namespace SolsUnderground
                         }
                         if (kbState.IsKeyDown(Keys.A))
                         {
-                            X -= (3 + armor.Speed);
+                            X -= (3 + CurrentArmor.Speed);
 
                             if (test == true)
                             {
@@ -323,14 +323,14 @@ namespace SolsUnderground
                             else if (kbState.IsKeyDown(Keys.W))
                             {
                                 _animationManager.Play(_animations["playerMoveForward"]);
-                                Y -= (3 + armor.Speed);
+                                Y -= (3 + CurrentArmor.Speed);
                                 playerState = PlayerState.moveForward;
 
                             }
                             else if (kbState.IsKeyDown(Keys.S))
                             {
                                 _animationManager.Play(_animations["playerMoveBack"]);
-                                Y += (3 + armor.Speed);
+                                Y += (3 + CurrentArmor.Speed);
                                 playerState = PlayerState.moveBack;
 
                             }
@@ -358,14 +358,14 @@ namespace SolsUnderground
                             else if (kbState.IsKeyDown(Keys.W))
                             {
                                 _animationManager.Play(_animations["playerMoveForward"]);
-                                Y -= (4 + armor.Speed);
+                                Y -= (4 + CurrentArmor.Speed);
                                 playerState = PlayerState.moveForward;
 
                             }
                             else if (kbState.IsKeyDown(Keys.S))
                             {
                                 _animationManager.Play(_animations["playerMoveBack"]);
-                                Y += (4 + armor.Speed);
+                                Y += (4 + CurrentArmor.Speed);
                                 playerState = PlayerState.moveBack;
 
                             }
@@ -374,14 +374,14 @@ namespace SolsUnderground
                     if (kbState.IsKeyDown(Keys.A) && test == false)
                     {
                         _animationManager.Play(_animations["playerMoveLeft"]);
-                        X -= (4 + armor.Speed);
+                        X -= (4 + CurrentArmor.Speed);
                         playerState = PlayerState.moveLeft;
 
                     }
                     if (kbState.IsKeyDown(Keys.D) && test == false)
                     {
                         _animationManager.Play(_animations["playerMoveRight"]);
-                        X += (4 + armor.Speed);
+                        X += (4 + CurrentArmor.Speed);
                         playerState = PlayerState.moveRight;
 
                     }
@@ -395,7 +395,7 @@ namespace SolsUnderground
         {
             if (SingleRButtonPress(rButton, previousRightBState))
             {
-                if (specialCounter >= weapon.SpecialCooldown)
+                if (specialCounter >= CurrentWeapon.SpecialCooldown)
                 {
                     //Reset the cooldown
                     specialCounter = 0;
@@ -433,7 +433,7 @@ namespace SolsUnderground
         {
             if(SingleLButtonPress(lButton, previousLeftBState))
             {
-                if (basicCounter >= weapon.BasicCooldown)
+                if (basicCounter >= CurrentWeapon.BasicCooldown)
                 {
                     //Reset the cooldown
                     basicCounter = 0;
@@ -444,7 +444,7 @@ namespace SolsUnderground
                         playerState = PlayerState.attackForward;
 
                         currentAttack = new Attack(
-                            weapon.GetHitbox(X, Y, Width, Height, PlayerState.faceForward),
+                            CurrentWeapon.GetHitbox(X, Y, Width, Height, PlayerState.faceForward),
                             Damage,
                             Knockback,
                             weapon.Sprite,
@@ -458,7 +458,7 @@ namespace SolsUnderground
                         playerState = PlayerState.attackLeft;
 
                         currentAttack = new Attack(
-                            weapon.GetHitbox(X, Y, Width, Height, PlayerState.faceLeft),
+                            CurrentWeapon.GetHitbox(X, Y, Width, Height, PlayerState.faceLeft),
                             Damage,
                             Knockback,
                             weapon.Sprite,
@@ -472,7 +472,7 @@ namespace SolsUnderground
                         playerState = PlayerState.attackBack;
 
                         currentAttack = new Attack(
-                            weapon.GetHitbox(X, Y, Width, Height, PlayerState.faceBack),
+                            CurrentWeapon.GetHitbox(X, Y, Width, Height, PlayerState.faceBack),
                             Damage,
                             Knockback,
                             weapon.Sprite,
@@ -486,7 +486,7 @@ namespace SolsUnderground
                         playerState = PlayerState.attackRight;
 
                         currentAttack = new Attack(
-                            weapon.GetHitbox(X, Y, Width, Height, PlayerState.faceRight),
+                            CurrentWeapon.GetHitbox(X, Y, Width, Height, PlayerState.faceRight),
                             Damage,
                             Knockback,
                             weapon.Sprite,
@@ -618,25 +618,29 @@ namespace SolsUnderground
         }
 
         /// <summary>
-        /// The player equips the given weapon.
+        /// The player equips the given weapon or armor piece.
         /// </summary>
-        /// <param name="weapon"></param>
-        public void EquipWeapon(Weapon weapon)
+        public Item Equip(Item equipment)
         {
-            this.weapon = weapon;
-        }
+            Item drop = null;
 
-        /// <summary>
-        /// Player equips the given armor piece.
-        /// </summary>
-        /// <param name="armor"></param>
-        public void EquipArmor(Armor armor)
-        {
-            this.armor = armor;
+            if (equipment.Type == ItemType.Weapon)
+            {
+                drop = weapon;
+                weapon = equipment;
+            }
+            else if (equipment.Type == ItemType.Armor)
+            {
+                drop = armor;
+                armor = equipment;
 
-            // Clamp health if armor lowers maxHP
-            if (hp > MaxHp)
-                hp = MaxHp;
+                // Clamp health if armor lowers maxHP
+                if (hp > MaxHp)
+                    hp = MaxHp;
+            }
+
+            drop.PositionRect = new Rectangle(X, Y, 40, 40);
+            return drop;
         }
         
         public void Die()

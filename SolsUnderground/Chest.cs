@@ -86,7 +86,7 @@ namespace SolsUnderground
         /// <returns>Newly generated Item</returns>
         public Item Open(List<Texture2D> itemTextures, int mSpriteCount, int hSpriteCount, int wSpriteCount, int aSpriteCount)
         {
-            int randomPick = Program.rng.Next(3);
+            int randomPick = Program.rng.Next(2);
             int textureID = 0;
             Item drop = null;
 
@@ -98,34 +98,34 @@ namespace SolsUnderground
                         randomPick = Program.rng.Next(wSpriteCount);
                         textureID = mSpriteCount + hSpriteCount + randomPick;
 
-
                     switch (randomPick) // Add weapon items to drop here
                     {
                         case 0:
                             drop = new wStick(itemTextures[2], positionRect);
                             break;
 
-                            case 1:
-                                drop = new wRITchieClaw(itemTextures[textureID], positionRect);
-                                break;
+                        case 1:
+                            drop = new wRITchieClaw(itemTextures[textureID], positionRect);
+                            break;
 
-                            case 2:
-                                drop = new wBrickBreaker(itemTextures[textureID], positionRect);
-                                break;
+                        case 2:
+                            drop = new wBrickBreaker(itemTextures[textureID], positionRect);
+                            break;
 
-                            case 3:
-                                drop = new wHockeyStick(itemTextures[textureID], positionRect);
-                                break;
+                        case 3:
+                            drop = new wHockeyStick(itemTextures[textureID], positionRect);
+                            break;
 
-                            case 4:
-                                drop = new wHotDog(itemTextures[textureID], positionRect);
-                                break;
+                        case 4:
+                            drop = new wHotDog(itemTextures[textureID], positionRect);
+                            break;
 
-                            case 5:
-                                // ThePrecipice is a boss drop, not found in chests
-                                break;
-                        }
-                        break;
+                        case 5:
+                            // ThePrecipice is a boss drop, not found in chests
+                            break;
+                    }
+                    break;
+
 
                     case 1: // Armor
                         randomPick = Program.rng.Next(aSpriteCount);
@@ -153,11 +153,6 @@ namespace SolsUnderground
                                 drop = new aMask(itemTextures[textureID], positionRect);
                                 break;
                         }
-                        break;
-
-                    case 2: // Health pickup
-                        drop = new Item(ItemType.HealthPickup,
-                            100, itemTextures[mSpriteCount], PositionRect);
                         break;
                 }
             }
