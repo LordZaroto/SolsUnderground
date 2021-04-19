@@ -58,6 +58,7 @@ namespace SolsUnderground
         //enemy
         private Texture2D[] minionTextures;
         private Texture2D[] wandererTextures;
+        private Texture2D[] vmBossTextures;
 
         //Bosses
         private Texture2D[] weebTextures;
@@ -70,6 +71,7 @@ namespace SolsUnderground
         private Texture2D stickTexture;
         private wRITchieClaw ritchieClaw;
         private Texture2D ritchieClawTexture;
+        private Texture2D brickBreaker;
 
         // Armor
         private aHoodie hoodie;
@@ -173,6 +175,7 @@ namespace SolsUnderground
             // Starting weapon
             stickTexture = Content.Load<Texture2D>("stick");
             ritchieClawTexture = Content.Load<Texture2D>("ritchieClaw");
+            brickBreaker = Content.Load<Texture2D>("BrickBreaker2");
             
             stick = new wStick(stickTexture, new Rectangle(0, 0, 0, 0));
 
@@ -205,15 +208,15 @@ namespace SolsUnderground
             // Weapons
             itemManager.AddWeaponSprite(stickTexture);
             itemManager.AddWeaponSprite(Content.Load<Texture2D>("ritchieClaw"));
-            itemManager.AddWeaponSprite(Content.Load<Texture2D>("BrickBreaker"));
+            itemManager.AddWeaponSprite(brickBreaker);
             itemManager.AddWeaponSprite(Content.Load<Texture2D>("HockeyStick"));
             itemManager.AddWeaponSprite(Content.Load<Texture2D>("HotDog"));
             itemManager.AddWeaponSprite(Content.Load<Texture2D>("thePrecipice"));
 
             // Armor
             itemManager.AddArmorSprite(hoodieTexture);
-            itemManager.AddArmorSprite(Content.Load<Texture2D>("WinterCoat"));
-            itemManager.AddArmorSprite(Content.Load<Texture2D>("Bandana"));
+            itemManager.AddArmorSprite(Content.Load<Texture2D>("WinterCoat2"));
+            itemManager.AddArmorSprite(Content.Load<Texture2D>("Bandana2"));
             itemManager.AddArmorSprite(Content.Load<Texture2D>("Skates"));
             itemManager.AddArmorSprite(Content.Load<Texture2D>("Mask"));
 
@@ -240,6 +243,14 @@ namespace SolsUnderground
                 Content.Load<Texture2D>("weeb_Right") };
             enemyManager.AddBossData(weebTextures);
 
+            vmBossTextures = new Texture2D[]
+            {
+                Content.Load<Texture2D>("vmBossFront"),
+                Content.Load<Texture2D>("vmBossBack"),
+                Content.Load<Texture2D>("vmBossLeft"),
+                Content.Load<Texture2D>("vmBossRight") };
+            enemyManager.AddBossData(vmBossTextures);
+
             // Tiles
             List<Texture2D> tileTextures = new List<Texture2D>();
             tileTextures.Add(Content.Load<Texture2D>("BrickSprite"));
@@ -260,8 +271,8 @@ namespace SolsUnderground
             button4 = new Rectangle(349, 847, 709, 153);
 
             //options/controls buttons
-            uiText = Content.Load<SpriteFont>("Roberto20");
-            Program.drawSquare = Content.Load<Texture2D>("BlankRect");
+            uiText = Content.Load<SpriteFont>("Roberto20a");
+            Program.drawSquare = Content.Load<Texture2D>("BlankRect2");
             returnToMenu = Content.Load<Texture2D>("returnToMenu");
             button5 = new Rectangle(327, 827, 719, 145);
 
