@@ -58,6 +58,7 @@ namespace SolsUnderground
         //enemy
         private Texture2D[] minionTextures;
         private Texture2D[] wandererTextures;
+        private Texture2D[] shooterTextures;
         private Texture2D[] vmBossTextures;
 
         //Bosses
@@ -71,11 +72,26 @@ namespace SolsUnderground
         private Texture2D stickTexture;
         private wRITchieClaw ritchieClaw;
         private Texture2D ritchieClawTexture;
-        private Texture2D brickBreaker;
+        //private wHockeyStick hockeyStick;
+        private Texture2D hockeyStickTexture;
+        //private wBrickBreaker brickBreaker;
+        private Texture2D brickBreakerTexture;
+        //private wHotDog hotDog;
+        private Texture2D hotDogTexture;
+        //private wThePrecipice thePrecipice;
+        private Texture2D thePrecipiceTexture;
 
         // Armor
         private aHoodie hoodie;
         private Texture2D hoodieTexture;
+        //private aMask mask;
+        private Texture2D maskTexture;
+        //private aSkates skates;
+        private Texture2D skatesTexture;
+        //private aWinterCoat winterCoat;
+        private Texture2D winterCoatTexture;
+        //private aBandana bandana;
+        private Texture2D bandanaTexture;
 
         // Managers
         private MapManager mapManager;
@@ -136,6 +152,7 @@ namespace SolsUnderground
         private Rectangle weaponIcon;
         private Rectangle armorIcon;
         private Rectangle infoRect;
+        private Rectangle currentWeapon;
 
         //save/load items
         private Texture2D file1;
@@ -210,7 +227,7 @@ namespace SolsUnderground
             // Starting weapon
             stickTexture = Content.Load<Texture2D>("stick");
             ritchieClawTexture = Content.Load<Texture2D>("ritchieClaw");
-            brickBreaker = Content.Load<Texture2D>("BrickBreaker2");
+            brickBreakerTexture = Content.Load<Texture2D>("BrickBreaker2");
             
             stick = new wStick(stickTexture, new Rectangle(0, 0, 0, 0));
 
@@ -242,18 +259,25 @@ namespace SolsUnderground
 
             // Weapons
             itemManager.AddWeaponSprite(stickTexture);
-            itemManager.AddWeaponSprite(Content.Load<Texture2D>("ritchieClaw"));
-            itemManager.AddWeaponSprite(brickBreaker);
-            itemManager.AddWeaponSprite(Content.Load<Texture2D>("HockeyStick"));
-            itemManager.AddWeaponSprite(Content.Load<Texture2D>("HotDog"));
-            itemManager.AddWeaponSprite(Content.Load<Texture2D>("thePrecipice"));
+            itemManager.AddWeaponSprite(ritchieClawTexture);
+            hockeyStickTexture = Content.Load<Texture2D>("HockeyStick");
+            hotDogTexture = Content.Load<Texture2D>("HotDog");
+            thePrecipiceTexture = Content.Load<Texture2D>("thePrecipice");
+            itemManager.AddWeaponSprite(brickBreakerTexture);
+            itemManager.AddWeaponSprite(hockeyStickTexture);
+            itemManager.AddWeaponSprite(hotDogTexture);
+            itemManager.AddWeaponSprite(thePrecipiceTexture);
 
             // Armor
+            winterCoatTexture = Content.Load<Texture2D>("WinterCoat2");
+            bandanaTexture = Content.Load<Texture2D>("Bandana2");
+            skatesTexture = Content.Load<Texture2D>("Skates");
+            maskTexture = Content.Load<Texture2D>("Mask");
             itemManager.AddArmorSprite(hoodieTexture);
-            itemManager.AddArmorSprite(Content.Load<Texture2D>("WinterCoat2"));
-            itemManager.AddArmorSprite(Content.Load<Texture2D>("Bandana2"));
-            itemManager.AddArmorSprite(Content.Load<Texture2D>("Skates"));
-            itemManager.AddArmorSprite(Content.Load<Texture2D>("Mask"));
+            itemManager.AddArmorSprite(winterCoatTexture);
+            itemManager.AddArmorSprite(bandanaTexture);
+            itemManager.AddArmorSprite(skatesTexture);
+            itemManager.AddArmorSprite(maskTexture);
 
             // Enemy Textures
             minionTextures = new Texture2D[] {
@@ -270,6 +294,13 @@ namespace SolsUnderground
                 Content.Load<Texture2D>("wandererRight") };
             enemyManager.AddEnemyData(wandererTextures);
 
+            shooterTextures = new Texture2D[]
+            {
+                Content.Load<Texture2D>("ShooterFront"),
+                Content.Load<Texture2D>("ShooterBack"),
+                Content.Load<Texture2D>("ShooterLeft"),
+                Content.Load<Texture2D>("ShooterRight") };
+            enemyManager.AddEnemyData(shooterTextures);
             // Boss Textures
             weebTextures = new Texture2D[] {
                 Content.Load<Texture2D>("weeb_Forward"),
@@ -1089,15 +1120,39 @@ namespace SolsUnderground
             player.TigerBucks = int.Parse(fileData[1]);
 
             int numFloors = int.Parse(fileData[2]);
-            for(int i = 0; i <= numFloors; i++)
+            for(int i = 0; i < numFloors; i++)
             {
                 mapManager.NewFloor();
             }
 
             int roomNum = int.Parse(fileData[3]);
-            for(int j = 0; j <= roomNum; j++)
+            for(int j = 0; j < roomNum; j++)
             {
+                player.X = 0;
                 mapManager.NextRoom();
+                if (mapManager.CurrentFloor > 6)
+                {
+                    currentState = GameState.Win;
+                }
+
+                itemManager.NextRoom(mapManager.CurrentRoom.ChestSpawns);
+                isRoomCleared = false;
+
+                enemyManager.ClearEnemies();
+
+                // Check if boss room
+                if (mapManager.IsBossRoom)
+                {
+                    enemyManager.SpawnBoss(mapManager.CurrentRoom.GetOpenTiles());
+                }
+                else
+                {
+                    enemyManager.SpawnEnemies(
+                        mapManager.CurrentRoom.EnemyCount,
+                        mapManager.CurrentRoom.GetOpenTiles());
+                }
+
+                collisionManager.SetBarrierList(mapManager.CurrentRoom.GetBarriers());
             }
 
             string currentWeaponName = fileData[4];
@@ -1110,13 +1165,16 @@ namespace SolsUnderground
                     player.EquipWeapon(ritchieClaw);
                     break;
                 case "Brick Breaker":
-                    //player.EquipWeapon(brickBreaker);
+                    player.EquipWeapon(new wBrickBreaker(brickBreakerTexture, new Rectangle(0,0,0,0)));
                     break;
                 case "Hockey Stick":
-                    //player.EquipWeapon(hockeyStick);
+                    player.EquipWeapon(new wHockeyStick(hockeyStickTexture, new Rectangle(0, 0, 0, 0)));
                     break;
                 case "Hot Dog":
-                    //player.EquipWeapon(hotDog);
+                    player.EquipWeapon(new wHotDog(hotDogTexture, new Rectangle(0, 0, 0, 0)));
+                    break;
+                case "The Precipice":
+                    player.EquipWeapon(new wThePrecipice(thePrecipiceTexture, new Rectangle(0, 0, 0, 0)));
                     break;
             }
 
@@ -1127,16 +1185,16 @@ namespace SolsUnderground
                     player.EquipArmor(hoodie);
                     break;
                 case "Mask":
-                    //player.EquipArmor(mask);
+                    player.EquipArmor(new aMask(maskTexture, new Rectangle(0, 0, 0, 0)));
                     break;
                 case "Bandana":
-                    //player.EquipArmor(bandana);
+                    player.EquipArmor(new aBandana(bandanaTexture, new Rectangle(0, 0, 0, 0)));
                     break;
                 case "Skates":
-                   //player.EquipArmor(skates);
+                    player.EquipArmor(new aSkates(skatesTexture, new Rectangle(0, 0, 0, 0)));
                     break;
                 case "Winter Coat":
-                    //player.EquipArmor(winterCoat);
+                    player.EquipArmor(new aWinterCoat(winterCoatTexture, new Rectangle(0, 0, 0, 0)));
                     break;
             }
 
