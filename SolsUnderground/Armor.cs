@@ -28,6 +28,8 @@ namespace SolsUnderground
 
         string Name { get; }
 
+        Texture2D Sprite { get; }
+
         Rectangle Position { get; set; }
 
         int Defense { get; }

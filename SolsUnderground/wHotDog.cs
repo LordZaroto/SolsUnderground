@@ -5,11 +5,9 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-//Preston Gilmore
-
 namespace SolsUnderground
 {
-    class wRITchieClaw : Item, Weapon
+    class wHotDog : Item, Weapon
     {
         //Fields
         //-----------------------------
@@ -17,7 +15,6 @@ namespace SolsUnderground
         private double basicCooldown;
         private double specialCooldown;
         private int knockback;
-        private string name;
         private Vector2 hitboxScale;
         private Rectangle hitboxF;
         private Rectangle hitboxL;
@@ -69,6 +66,11 @@ namespace SolsUnderground
             get { return hitboxR; }
             set { hitboxR = value; }
         }
+
+        public Texture2D Texture
+        {
+            get { return texture; }
+        }
         //------------------------------
 
         //Weapon Stats
@@ -94,11 +96,6 @@ namespace SolsUnderground
         {
             get { return knockback; }
         }
-
-        public string Name
-        {
-            get { return name; }
-        }
         //------------------------------
 
         //----------------------------------------
@@ -107,102 +104,53 @@ namespace SolsUnderground
         //||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
         //---------------------------------------------------------------------
 
-        //public RITchieClaw(Texture2D texture, Rectangle positionRect)
-        public wRITchieClaw(string name, Texture2D texture, Rectangle positionRect)
-            : base(ItemType.Weapon, 7, texture, positionRect)
+        public wHotDog(Texture2D texture, Rectangle positionRect)
+            : base(ItemType.Weapon, 5, texture, positionRect)
         {
-            this.name = name;
-            basicCooldown = 0.1;
-            specialCooldown = 3;
+            basicCooldown = 0.4;
+            specialCooldown = 20;
             attack = 5;
-            knockback = (int)(0.8 * 32);
-            hitboxScale = new Vector2(2, 1);
+            knockback = (int)(1 * 32);
+            hitboxScale = new Vector2(2, 1.5f);
         }
 
         /// <summary>
-        /// The player will dash a long distance, striking enemies along the way.
+        /// The player eats the hotdog and recovers health.
         /// </summary>
         public Attack Special(Player player)
         {
-            //Create the attack hitbox in the direction the player is facing
-            if (player.State == PlayerState.faceForward || player.State == PlayerState.moveForward)
+            switch (player.State)
             {
-                player.State = PlayerState.attackForward;
+                case PlayerState.faceForward:
+                case PlayerState.moveForward:
+                    player.State = PlayerState.attackForward;
+                    break;
 
-                positionRect = new Rectangle(
-                        player.X - (player.Width * (3 / 4)),
-                        player.Y - (player.Height * 5 + (player.Height / 2)),
-                        player.Width + (player.Width * 2 * (3 / 4)),
-                        player.Height * 6 + (player.Height / 2));
+                case PlayerState.faceLeft:
+                case PlayerState.moveLeft:
+                    player.State = PlayerState.attackLeft;
+                    break;
 
-                Attack special = new Attack(
-                    positionRect,
-                    attack / 2 + 1,
-                    knockback / 2);
+                case PlayerState.faceBack:
+                case PlayerState.moveBack:
+                    player.State = PlayerState.attackBack;
+                    break;
 
-                player.Y -= player.Height * 5;
-                return special;
-            }
-            else if (player.State == PlayerState.faceLeft || player.State == PlayerState.moveLeft)
-            {
-                player.State = PlayerState.attackLeft;
-
-                positionRect = new Rectangle(
-                        player.X - (player.Width * 5 + (player.Width / 2)),
-                        player.Y - (player.Height * (3 / 4)),
-                        player.Width * 6 + (player.Width / 2),
-                        player.Height + (player.Height * 2 * (3 / 4)));
-
-                Attack special = new Attack(
-                    positionRect,
-                    attack / 2 + 1,
-                    knockback / 2);
-
-                
-                player.X -= player.Width * 5;
-
-                return special;
-            }
-            else if (player.State == PlayerState.faceBack || player.State == PlayerState.moveBack)
-            {
-                player.State = PlayerState.attackBack;
-
-                positionRect = new Rectangle(
-                        player.X - (player.Width * (3 / 4)),
-                        player.Y - (player.Height / 2),
-                        player.Width + (player.Width * 2 * (3 / 4)),
-                        player.Height * 6 + (player.Height / 2));
-
-                Attack special = new Attack(
-                    positionRect,
-                    attack / 2 + 1,
-                    knockback / 2);
-
-                player.Y += player.Height * 5;
-
-                return special;
-            }
-            else if (player.State == PlayerState.faceRight || player.State == PlayerState.moveRight)
-            {
-                player.State = PlayerState.attackRight;
-
-                positionRect = new Rectangle(
-                        player.X - (player.Width / 2),
-                        player.Y - (player.Height * (3 / 4)),
-                        player.Width * 6 + (player.Width / 2),
-                        player.Height + (player.Height * 2 * (3 / 4)));
-
-                Attack special = new Attack(
-                    positionRect,
-                    attack / 2 + 1,
-                    knockback / 2);
-
-                player.X += player.Width * 5;
-
-                return special;
+                case PlayerState.faceRight:
+                case PlayerState.moveRight:
+                    player.State = PlayerState.attackRight;
+                    break;
             }
 
-            return null;
+            // Heal player for 50 HP
+            player.Hp += 50;
+            if (player.Hp > player.MaxHp)
+                player.Hp = player.MaxHp;
+
+            // No attack
+            positionRect = new Rectangle(0, 0, 0, 0);
+
+            return new Attack(positionRect, 0, 0);
         }
 
         public override void Draw(SpriteBatch sb)
@@ -224,16 +172,16 @@ namespace SolsUnderground
             if (state == PlayerState.faceForward)
             {
                 positionRect = new Rectangle(
-                    x + (int)(width * (1 - hitboxScale.X) / 2),
-                    y - (int)(height * hitboxScale.Y) + width / 2,
-                    (int)(width * hitboxScale.X),
+                    x + (int)(width * (1 - hitboxScale.X) / 2), 
+                    y - (int)(height * hitboxScale.Y) + width / 2, 
+                    (int)(width * hitboxScale.X), 
                     (int)(height * hitboxScale.Y));
                 return positionRect;
             }
             else if (state == PlayerState.faceLeft)
             {
                 positionRect = new Rectangle(
-                    x - (int)(width * hitboxScale.Y) + width / 2,
+                    x - (int)(width * hitboxScale.Y) + width / 2, 
                     y + (int)(height * (1 - hitboxScale.X) / 2),
                     (int)(width * hitboxScale.Y),
                     (int)(height * hitboxScale.X));

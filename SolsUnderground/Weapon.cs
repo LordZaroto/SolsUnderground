@@ -26,6 +26,8 @@ namespace SolsUnderground
 
         int Height { get; set; }
 
+        Texture2D Sprite { get; }
+
         string Name { get; }
 
         Rectangle Position { get; set; }

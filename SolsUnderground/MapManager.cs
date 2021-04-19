@@ -50,6 +50,10 @@ namespace SolsUnderground
         {
             get { return floor[currentRoom]; }
         }
+        public bool IsBossRoom
+        {
+            get { return (CurrentRoomNum == floor.Count - 1); }
+        }
 
         // Constructor
         public MapManager(List<Texture2D> tileTextures, int windowWidth, int windowHeight)

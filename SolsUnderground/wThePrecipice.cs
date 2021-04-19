@@ -9,7 +9,11 @@ using Microsoft.Xna.Framework.Input;
 
 namespace SolsUnderground
 {
-    class wRITchieClaw : Item, Weapon
+    /// <summary>
+    /// The Weeb's favorite LARP weapon. You feel
+    /// a bizzare force surging within the blade.
+    /// </summary>
+    class wThePrecipice : Item, Weapon
     {
         //Fields
         //-----------------------------
@@ -17,7 +21,6 @@ namespace SolsUnderground
         private double basicCooldown;
         private double specialCooldown;
         private int knockback;
-        private string name;
         private Vector2 hitboxScale;
         private Rectangle hitboxF;
         private Rectangle hitboxL;
@@ -94,11 +97,6 @@ namespace SolsUnderground
         {
             get { return knockback; }
         }
-
-        public string Name
-        {
-            get { return name; }
-        }
         //------------------------------
 
         //----------------------------------------
@@ -107,16 +105,14 @@ namespace SolsUnderground
         //||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
         //---------------------------------------------------------------------
 
-        //public RITchieClaw(Texture2D texture, Rectangle positionRect)
-        public wRITchieClaw(string name, Texture2D texture, Rectangle positionRect)
-            : base(ItemType.Weapon, 7, texture, positionRect)
+        public wThePrecipice(Texture2D texture, Rectangle positionRect)
+            : base(ItemType.Weapon, 5, texture, positionRect)
         {
-            this.name = name;
-            basicCooldown = 0.1;
-            specialCooldown = 3;
-            attack = 5;
-            knockback = (int)(0.8 * 32);
-            hitboxScale = new Vector2(2, 1);
+            basicCooldown = 0.5;
+            specialCooldown = 6;
+            attack = 9;
+            knockback = (int)(1.5 * 32);
+            hitboxScale = new Vector2(2, 3);
         }
 
         /// <summary>
@@ -129,37 +125,37 @@ namespace SolsUnderground
             {
                 player.State = PlayerState.attackForward;
 
+                player.Y -= player.Height * 2;
+
                 positionRect = new Rectangle(
                         player.X - (player.Width * (3 / 4)),
-                        player.Y - (player.Height * 5 + (player.Height / 2)),
+                        player.Y - (player.Height * 2 + (player.Height / 2)),
                         player.Width + (player.Width * 2 * (3 / 4)),
-                        player.Height * 6 + (player.Height / 2));
+                        player.Height * 3 + (player.Height / 2));
 
                 Attack special = new Attack(
                     positionRect,
-                    attack / 2 + 1,
-                    knockback / 2);
+                    attack * 2,
+                    knockback * 2);
 
-                player.Y -= player.Height * 5;
                 return special;
             }
             else if (player.State == PlayerState.faceLeft || player.State == PlayerState.moveLeft)
             {
                 player.State = PlayerState.attackLeft;
 
+                player.X -= player.Width * 2;
+
                 positionRect = new Rectangle(
-                        player.X - (player.Width * 5 + (player.Width / 2)),
+                        player.X - (player.Width * 2 + (player.Width / 2)),
                         player.Y - (player.Height * (3 / 4)),
-                        player.Width * 6 + (player.Width / 2),
+                        player.Width * 3 + (player.Width / 2),
                         player.Height + (player.Height * 2 * (3 / 4)));
 
                 Attack special = new Attack(
                     positionRect,
-                    attack / 2 + 1,
-                    knockback / 2);
-
-                
-                player.X -= player.Width * 5;
+                    attack * 2,
+                    knockback * 2);
 
                 return special;
             }
@@ -167,18 +163,18 @@ namespace SolsUnderground
             {
                 player.State = PlayerState.attackBack;
 
+                player.Y += player.Height * 2;
+
                 positionRect = new Rectangle(
                         player.X - (player.Width * (3 / 4)),
                         player.Y - (player.Height / 2),
                         player.Width + (player.Width * 2 * (3 / 4)),
-                        player.Height * 6 + (player.Height / 2));
+                        player.Height * 3 + (player.Height / 2));
 
                 Attack special = new Attack(
                     positionRect,
-                    attack / 2 + 1,
-                    knockback / 2);
-
-                player.Y += player.Height * 5;
+                    attack * 2,
+                    knockback * 2);
 
                 return special;
             }
@@ -186,18 +182,18 @@ namespace SolsUnderground
             {
                 player.State = PlayerState.attackRight;
 
+                player.X += player.Width * 2;
+
                 positionRect = new Rectangle(
                         player.X - (player.Width / 2),
                         player.Y - (player.Height * (3 / 4)),
-                        player.Width * 6 + (player.Width / 2),
+                        player.Width * 3 + (player.Width / 2),
                         player.Height + (player.Height * 2 * (3 / 4)));
 
                 Attack special = new Attack(
                     positionRect,
-                    attack / 2 + 1,
-                    knockback / 2);
-
-                player.X += player.Width * 5;
+                    attack * 2,
+                    knockback * 2);
 
                 return special;
             }
