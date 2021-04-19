@@ -59,6 +59,9 @@ namespace SolsUnderground
         private Texture2D[] minionTextures;
         private Texture2D[] wandererTextures;
 
+        //Bosses
+        private Texture2D[] weebTextures;
+
         // Items
         private List<Texture2D> chestTextures;
 
@@ -230,7 +233,12 @@ namespace SolsUnderground
             enemyManager.AddEnemyData(wandererTextures);
 
             // Boss Textures
-            enemyManager.AddBossData(wandererTextures);
+            weebTextures = new Texture2D[] {
+                Content.Load<Texture2D>("weeb_Forward"),
+                Content.Load<Texture2D>("weeb_Back"),
+                Content.Load<Texture2D>("weeb_Left"),
+                Content.Load<Texture2D>("weeb_Right") };
+            enemyManager.AddBossData(weebTextures);
 
             // Tiles
             List<Texture2D> tileTextures = new List<Texture2D>();
