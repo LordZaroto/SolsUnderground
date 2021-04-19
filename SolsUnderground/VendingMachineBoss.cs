@@ -162,47 +162,54 @@ namespace SolsUnderground
                 {
                     if (currentHP > maxHealth / 3 * 2)
                     {
-                        if (movingUp)
+                        if (!(Math.Abs((positionRect.X +(positionRect.Width/2)) - (player.X + player.Width/2)) < 150 && Math.Abs((positionRect.Y + (positionRect.Height / 2)) - (player.Y + player.Height / 2)) < 150))
                         {
-                            positionRect.Y += 1;
-                        }
-                        else
-                        {
-                            positionRect.Y -= 1;
-                        }
-                        if (_timer > 1)
-                        {
-                            _timer = 0;
+
                             if (movingUp)
                             {
-                                movingUp = false;
+                                positionRect.Y += 1;
                             }
                             else
                             {
-                                movingUp = true;
+                                positionRect.Y -= 1;
+                            }
+                            if (_timer > 3)
+                            {
+                                _timer = 0;
+                                if (movingUp)
+                                {
+                                    movingUp = false;
+                                }
+                                else
+                                {
+                                    movingUp = true;
+                                }
                             }
                         }
                     }
                     else if (currentHP <= maxHealth / 3 * 2 && currentHP > maxHealth / 3)
                     {
-                        if (movingUp)
+                        if (!(Math.Abs((positionRect.X + (positionRect.Width / 2)) - (player.X + player.Width / 2)) < 150 && Math.Abs((positionRect.Y + (positionRect.Height / 2)) - (player.Y + player.Height / 2)) < 150))
                         {
-                            positionRect.Y += 2;
-                        }
-                        else
-                        {
-                            positionRect.Y -= 2;
-                        }
-                        if (_timer > .75)
-                        {
-                            _timer = 0;
                             if (movingUp)
                             {
-                                movingUp = false;
+                                positionRect.Y += 2;
                             }
                             else
                             {
-                                movingUp = true;
+                                positionRect.Y -= 2;
+                            }
+                            if (_timer > 2.5)
+                            {
+                                _timer = 0;
+                                if (movingUp)
+                                {
+                                    movingUp = false;
+                                }
+                                else
+                                {
+                                    movingUp = true;
+                                }
                             }
                         }
                     }
@@ -235,10 +242,6 @@ namespace SolsUnderground
                                     enemyState = EnemyState.moveForward;
                                 }
                             }
-                            if (_timer > .5)
-                            {
-                                _timer = 0;
-                            }
                         
                     }
                 }
@@ -261,7 +264,7 @@ namespace SolsUnderground
                 new Rectangle(X, Y - 10, Width, 3),
                 Color.Black);
             sb.Draw(Program.drawSquare,
-                new Rectangle(X, Y - 10, (int)(Width * ((double)currentHP / (double)maxHP)), 3),
+                new Rectangle(X, Y - 10, (int)(Width * ((double)health / (double)maxHealth)), 3),
                 Color.Red);
         }
 
@@ -303,10 +306,10 @@ namespace SolsUnderground
             if (moveCounter >= moveCD)
             {
                 //If close to player
-                if ((Math.Abs(X - player.X) < 80 && (Math.Abs(Y - player.Y) < 80)))
+                if ((Math.Abs(X - player.X) < 120 && (Math.Abs(Y - player.Y) < 120)))
                 {
-                    aoeTimer = _timer;
-                    if(_timer - aoeTimer > 1.5)
+                    _timer = 0;
+                    if(_timer > 1.5)
                     {
                         _timer = 0;
                         return AOE();
