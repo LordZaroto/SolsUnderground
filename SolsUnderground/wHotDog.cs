@@ -20,6 +20,7 @@ namespace SolsUnderground
         private Rectangle hitboxL;
         private Rectangle hitboxB;
         private Rectangle hitboxR;
+        private string name;
         //-----------------------------
 
         //---------------------------------------------------------------------
@@ -96,6 +97,11 @@ namespace SolsUnderground
         {
             get { return knockback; }
         }
+        public string Name
+        {
+            get { return name; }
+        }
+        //---------------
         //------------------------------
 
         //----------------------------------------
@@ -107,6 +113,7 @@ namespace SolsUnderground
         public wHotDog(Texture2D texture, Rectangle positionRect)
             : base(ItemType.Weapon, 5, texture, positionRect)
         {
+            name = "Hot Dog";
             basicCooldown = 0.4;
             specialCooldown = 20;
             attack = 5;

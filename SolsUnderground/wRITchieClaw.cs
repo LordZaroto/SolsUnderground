@@ -108,10 +108,10 @@ namespace SolsUnderground
         //---------------------------------------------------------------------
 
         //public RITchieClaw(Texture2D texture, Rectangle positionRect)
-        public wRITchieClaw(string name, Texture2D texture, Rectangle positionRect)
+        public wRITchieClaw(Texture2D texture, Rectangle positionRect)
             : base(ItemType.Weapon, 7, texture, positionRect)
         {
-            this.name = name;
+            name = "Ritchie Claw";
             basicCooldown = 0.1;
             specialCooldown = 3;
             attack = 5;

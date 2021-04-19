@@ -98,8 +98,6 @@ namespace SolsUnderground
                         randomPick = Program.rng.Next(wSpriteCount);
                         textureID = mSpriteCount + hSpriteCount + randomPick;
 
-                case 1: // Weapon
-                    randomPick = Program.rng.Next(2);
 
                     switch (randomPick) // Add weapon items to drop here
                     {

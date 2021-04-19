@@ -105,10 +105,10 @@ namespace SolsUnderground
         //||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
         //---------------------------------------------------------------------
 
-        public wStick(string name, Texture2D texture, Rectangle positionRect)
+        public wStick(Texture2D texture, Rectangle positionRect)
             : base(ItemType.Weapon, 3, texture, positionRect)
         {
-            this.name = name;
+            name = "Stick";
             this.texture = texture;
             this.positionRect = positionRect;
             basicCooldown = 0.3;

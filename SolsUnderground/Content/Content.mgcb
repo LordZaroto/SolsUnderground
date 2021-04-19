@@ -487,9 +487,6 @@
 #begin Rooms/CrosshairRoom.level
 /copy:Rooms/CrosshairRoom.level
 
-#begin Rooms/EatShit.level
-/copy:Rooms/EatShit.level
-
 #begin Rooms/EmptyRoom.level
 /copy:Rooms/EmptyRoom.level
 

@@ -65,6 +65,8 @@ namespace SolsUnderground
         //Weapons
         private wStick stick;
         private Texture2D stickTexture;
+        private wRITchieClaw ritchieClaw;
+        private Texture2D ritchieClawTexture;
 
         // Armor
         private aHoodie hoodie;
@@ -168,11 +170,11 @@ namespace SolsUnderground
             // Starting weapon
             stickTexture = Content.Load<Texture2D>("stick");
             ritchieClawTexture = Content.Load<Texture2D>("ritchieClaw");
-            itemTextures.Add(stickTexture);
-            stick = new wStick("Stick", stickTexture, new Rectangle(0, 0, 0, 0));
+            
+            stick = new wStick(stickTexture, new Rectangle(0, 0, 0, 0));
 
             //Testing Weapons
-            ritchieClaw = new wRITchieClaw("Ritchie Claw", ritchieClawTexture, new Rectangle(0, 0, 0, 0));
+            ritchieClaw = new wRITchieClaw(ritchieClawTexture, new Rectangle(0, 0, 0, 0));
 
             // Armor
             hoodieTexture = Content.Load<Texture2D>("Hoodie");
@@ -927,9 +929,36 @@ namespace SolsUnderground
                 case "Ritchie Claw":
                     player.EquipWeapon(ritchieClaw);
                     break;
+                case "Brick Breaker":
+                    //player.EquipWeapon(brickBreaker);
+                    break;
+                case "Hockey Stick":
+                    //player.EquipWeapon(hockeyStick);
+                    break;
+                case "Hot Dog":
+                    //player.EquipWeapon(hotDog);
+                    break;
             }
 
             string currentArmorName = fileData[5];
+            switch (currentArmorName)
+            {
+                case "Hoodie":
+                    player.EquipArmor(hoodie);
+                    break;
+                case "Mask":
+                    //player.EquipArmor(mask);
+                    break;
+                case "Bandana":
+                    //player.EquipArmor(bandana);
+                    break;
+                case "Skates":
+                   //player.EquipArmor(skates);
+                    break;
+                case "Winter Coat":
+                    //player.EquipArmor(winterCoat);
+                    break;
+            }
 
             //Change the GameState
             currentState = GameState.Game;

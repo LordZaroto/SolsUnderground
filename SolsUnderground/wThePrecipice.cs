@@ -26,6 +26,7 @@ namespace SolsUnderground
         private Rectangle hitboxL;
         private Rectangle hitboxB;
         private Rectangle hitboxR;
+        private string name;
         //-----------------------------
 
         //---------------------------------------------------------------------
@@ -97,6 +98,11 @@ namespace SolsUnderground
         {
             get { return knockback; }
         }
+        public string Name
+        {
+            get { return name; }
+        }
+        //---------------
         //------------------------------
 
         //----------------------------------------
@@ -108,6 +114,7 @@ namespace SolsUnderground
         public wThePrecipice(Texture2D texture, Rectangle positionRect)
             : base(ItemType.Weapon, 5, texture, positionRect)
         {
+            name = "The Precipice";
             basicCooldown = 0.5;
             specialCooldown = 6;
             attack = 9;

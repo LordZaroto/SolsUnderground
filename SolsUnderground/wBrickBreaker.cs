@@ -20,6 +20,7 @@ namespace SolsUnderground
         private Rectangle hitboxL;
         private Rectangle hitboxB;
         private Rectangle hitboxR;
+        private string name;
         //-----------------------------
 
         //---------------------------------------------------------------------
@@ -96,6 +97,10 @@ namespace SolsUnderground
         {
             get { return knockback; }
         }
+        public string Name
+        {
+            get { return name; }
+        }
         //------------------------------
 
         //----------------------------------------
@@ -107,6 +112,7 @@ namespace SolsUnderground
         public wBrickBreaker(Texture2D texture, Rectangle positionRect)
             : base(ItemType.Weapon, 8, texture, positionRect)
         {
+            name = "Brick Breaker";
             basicCooldown = 0.7;
             specialCooldown = 5;
             attack = 8;
