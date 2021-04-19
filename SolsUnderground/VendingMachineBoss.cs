@@ -19,8 +19,6 @@ namespace SolsUnderground
         GameTime gameTime;
         float _timer = 0f;
         float aoeTimer;
-        int maxHealth;
-        int health;
         bool movingUp;
 
         private double sp1Counter;
@@ -31,8 +29,8 @@ namespace SolsUnderground
             this.textures = textures;
             this.texture = textures[0];
             this.positionRect = positionRect;
-            maxHealth = health;
-            this.currentHP = maxHealth;
+            this.maxHP = health;
+            this.currentHP = maxHP;
             this.attack = attack;
             this.knockback = 64;
             moveCD = 2;
@@ -129,19 +127,19 @@ namespace SolsUnderground
 
                 if (enemyState == EnemyState.faceForward || enemyState == EnemyState.moveForward)
                 {
-                    Y += (int)(knockback);
+                    Y += knockback;
                 }
                 if (enemyState == EnemyState.faceLeft || enemyState == EnemyState.moveLeft)
                 {
-                    X += (int)(knockback);
+                    X += knockback;
                 }
                 if (enemyState == EnemyState.faceBack || enemyState == EnemyState.moveBack)
                 {
-                    Y -= (int)(knockback);
+                    Y -= knockback;
                 }
                 if (enemyState == EnemyState.faceRight || enemyState == EnemyState.moveRight)
                 {
-                    X -= (int)(knockback);
+                    X -= knockback;
                 }
 
                 if (currentHP <= 0)
@@ -155,12 +153,13 @@ namespace SolsUnderground
         {
             //Update the cooldowns
             moveCounter += gameTime.ElapsedGameTime.TotalSeconds;
+            sp1Counter += gameTime.ElapsedGameTime.TotalSeconds;
 
             if (moveCounter >= moveCD)
             {
                 if (!(enemyState == EnemyState.dead))
                 {
-                    if (currentHP > maxHealth / 3 * 2)
+                    if (currentHP > maxHP / 3 * 2)
                     {
                         if (!(Math.Abs((positionRect.X +(positionRect.Width/2)) - (player.X + player.Width/2)) < 150 && Math.Abs((positionRect.Y + (positionRect.Height / 2)) - (player.Y + player.Height / 2)) < 150))
                         {
@@ -187,7 +186,7 @@ namespace SolsUnderground
                             }
                         }
                     }
-                    else if (currentHP <= maxHealth / 3 * 2 && currentHP > maxHealth / 3)
+                    else if (currentHP <= maxHP / 3 * 2 && currentHP > maxHP / 3)
                     {
                         if (!(Math.Abs((positionRect.X + (positionRect.Width / 2)) - (player.X + player.Width / 2)) < 150 && Math.Abs((positionRect.Y + (positionRect.Height / 2)) - (player.Y + player.Height / 2)) < 150))
                         {
@@ -276,6 +275,8 @@ namespace SolsUnderground
 
         public Attack Shoot()
         {
+            moveCounter = 0;
+            
             return null;
         }
 
@@ -318,7 +319,7 @@ namespace SolsUnderground
                 }
                 else
                 {
-                    if(health > maxHealth / 3 * 2)
+                    if(currentHP > maxHP / 3 * 2)
                     {
                         if (_timer % 2 == 0)
                         {

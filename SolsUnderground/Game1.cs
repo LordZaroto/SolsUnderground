@@ -60,6 +60,9 @@ namespace SolsUnderground
         private Texture2D[] wandererTextures;
         private Texture2D[] vmBossTextures;
 
+        //Bosses
+        private Texture2D[] weebTextures;
+
         // Items
         private List<Texture2D> chestTextures;
 
@@ -83,40 +86,76 @@ namespace SolsUnderground
 
         //menu items
         private Texture2D startGame;
+        private Texture2D startGameClicked;
         private Rectangle button1;
         private Texture2D loadGame;
+        private Texture2D loadGameClicked;
         private Rectangle button2;
         private Texture2D controls;
+        private Texture2D controlsClicked;
         private Rectangle button3;
         private Texture2D instructions;
+        private Texture2D instructionsClicked;
         private Rectangle button4;
 
         //options/instruction items
         private Texture2D returnToMenu;
+        private Texture2D returnToMenuClicked;
         private Rectangle button5;
 
         //HUD items
         private SpriteFont uiText;
         private Rectangle hudWeapon;
         private int enemyAmount;
+        private Texture2D heart0;
+        private Texture2D heart10;
+        private Texture2D heart20;
+        private Texture2D heart30;
+        private Texture2D heart40;
+        private Texture2D heart50;
+        private Texture2D heart60;
+        private Texture2D heart70;
+        private Texture2D heart80;
+        private Texture2D heart90;
+        private Texture2D heart100;
+        private Rectangle hearts;
+        private Texture2D tigerBucks;
+        private Rectangle money;
+
 
         //pause items
         private Texture2D returnToGame;
+        private Texture2D returnToGameClicked;
         private Rectangle button6;
         private Texture2D saveGame;
-        private Rectangle button7;
-        private Texture2D loadGame2;
+        private Texture2D saveGameClicked;
         private Rectangle button8;
         private Texture2D exitToMenu;
+        private Texture2D exitToMenuClicked;
         private Rectangle button9;
         private Rectangle weaponIcon;
         private Rectangle armorIcon;
         private Rectangle infoRect;
+        private Rectangle currentWeapon;
+
+        //save/load items
+        private Texture2D file1;
+        private Texture2D file1Clicked;
+        private Rectangle file1Rect;
+        private Texture2D file2;
+        private Texture2D file2Clicked;
+        private Rectangle file2Rect;
+        private Texture2D file3;
+        private Texture2D file3Clicked;
+        private Rectangle file3Rect;
 
         //gameover items
         private Texture2D newGame;
+        private Texture2D newGameClicked;
         private Rectangle button10;
         private Rectangle button11;
+        private Texture2D grave;
+        private Rectangle tombstone;
 
 
         //game time
@@ -233,7 +272,12 @@ namespace SolsUnderground
             enemyManager.AddEnemyData(wandererTextures);
 
             // Boss Textures
-            enemyManager.AddBossData(wandererTextures);
+            weebTextures = new Texture2D[] {
+                Content.Load<Texture2D>("weeb_Forward"),
+                Content.Load<Texture2D>("weeb_Back"),
+                Content.Load<Texture2D>("weeb_Left"),
+                Content.Load<Texture2D>("weeb_Right") };
+            enemyManager.AddBossData(weebTextures);
 
             vmBossTextures = new Texture2D[]
             {
@@ -253,38 +297,76 @@ namespace SolsUnderground
                 _graphics.PreferredBackBufferHeight);
 
             //menu items
-            startGame = Content.Load<Texture2D>("startGame");
-            button1 = new Rectangle(349, 345, 709, 153);
-            loadGame = Content.Load<Texture2D>("LoadGame");
-            button2 = new Rectangle(349, 512, 709, 153);
+            startGame = Content.Load<Texture2D>("StartGame1");
+            startGameClicked = Content.Load<Texture2D>("StartGameClicked");
+            button1 = new Rectangle(305, 345, 709, 153);
+            loadGame = Content.Load<Texture2D>("Load1");
+            loadGameClicked = Content.Load<Texture2D>("Load1Clicked");
+            button2 = new Rectangle(305, 512, 709, 153);
             controls = Content.Load<Texture2D>("Controls");
-            button3 = new Rectangle(349, 679, 709, 153);
-            instructions = Content.Load<Texture2D>("instructions");
-            button4 = new Rectangle(349, 847, 709, 153);
+            controlsClicked = Content.Load<Texture2D>("ControlsClicked");
+            button3 = new Rectangle(305, 679, 709, 153);
+            instructions = Content.Load<Texture2D>("Instructions");
+            instructionsClicked = Content.Load<Texture2D>("InstructionsClicked");
+            button4 = new Rectangle(305, 847, 709, 153);
 
             //options/controls buttons
             uiText = Content.Load<SpriteFont>("Roberto20a");
             Program.drawSquare = Content.Load<Texture2D>("BlankRect2");
-            returnToMenu = Content.Load<Texture2D>("returnToMenu");
-            button5 = new Rectangle(327, 827, 719, 145);
+            returnToMenu = Content.Load<Texture2D>("ReturnToMenu");
+            returnToMenuClicked = Content.Load<Texture2D>("ReturnToMenuClicked");
+            button5 = new Rectangle(305, 827, 709, 153);
+
+            //health and money for game
+            heart0 = Content.Load<Texture2D>("heart0");
+            heart10 = Content.Load<Texture2D>("heart10");
+            heart20 = Content.Load<Texture2D>("heart20");
+            heart30 = Content.Load<Texture2D>("heart30");
+            heart40 = Content.Load<Texture2D>("heart40");
+            heart50 = Content.Load<Texture2D>("heart50");
+            heart60 = Content.Load<Texture2D>("heart60");
+            heart70 = Content.Load<Texture2D>("heart70");
+            heart80 = Content.Load<Texture2D>("heart80");
+            heart90 = Content.Load<Texture2D>("heart90");
+            heart100 = Content.Load<Texture2D>("heart100");
+            hearts = new Rectangle(0, 0, 400, 40);
+            tigerBucks = Content.Load<Texture2D>("TigerBuck");
+            money = new Rectangle(550, -15, 40, 50);
 
             //paused buttons
-            returnToGame = Content.Load<Texture2D>("return");
-            button6 = new Rectangle( 0, 372, 914, 141);
-            loadGame2 = Content.Load<Texture2D>("load");
-            button7 = new Rectangle( 0, 513, 914, 141);
+            returnToGame = Content.Load<Texture2D>("ReturnToGame");
+            returnToGameClicked = Content.Load<Texture2D>("ReturnToGameClicked");
+            button6 = new Rectangle( 0, 413, 709, 153);
             saveGame = Content.Load<Texture2D>("Save");
-            button8 = new Rectangle( 0, 653, 914, 141);
-            exitToMenu = Content.Load<Texture2D>("Exit");
-            button9 = new Rectangle( 0, 792, 914, 141);
             weaponIcon = new Rectangle(961, 398, 139, 113);
             armorIcon = new Rectangle(961, 515, 139, 113);
             infoRect = new Rectangle(0, 0, 0, 0);
+            saveGameClicked = Content.Load<Texture2D>("SaveClicked");
+            button8 = new Rectangle( 0, 576, 709, 153);
+            exitToMenu = Content.Load<Texture2D>("ExitToMenu");
+            exitToMenuClicked = Content.Load<Texture2D>("ExitToMenuClicked");
+            button9 = new Rectangle( 0, 739, 709, 153);
+            currentWeapon = new Rectangle(1000, 200, 139, 113);
+
+            //save/load buttons
+            file1 = Content.Load<Texture2D>("file1");
+            file1Clicked = Content.Load<Texture2D>("file1Clicked");
+            file1Rect = new Rectangle(112, 500, 290, 300);
+            file2 = Content.Load<Texture2D>("file2");
+            file2Clicked = Content.Load<Texture2D>("file2Clicked");
+            file2Rect = new Rectangle(515, 500, 290, 300);
+            file3 = Content.Load<Texture2D>("file1");
+            file3Clicked = Content.Load<Texture2D>("file1Clicked");
+            file3Rect = new Rectangle(918, 500, 290, 300);
+
 
             //Game Over Buttons
-            newGame = Content.Load<Texture2D>("newGameGO");
-            button10 = new Rectangle(233, 643, 914, 139);
-            button11 = new Rectangle(233, 782, 914, 139);
+            newGame = Content.Load<Texture2D>("NewGame");
+            newGameClicked = Content.Load<Texture2D>("NewGameCLicked");
+            button10 = new Rectangle(305, 623, 709, 153);
+            button11 = new Rectangle(305, 782, 709, 153);
+            grave = Content.Load<Texture2D>("grave");
+            tombstone = new Rectangle(460, 255, 400, 400);
 
             
         }
@@ -321,7 +403,7 @@ namespace SolsUnderground
                         currentState = GameState.Instructions;
                     else if (SingleKeyPress(Keys.Escape, kb, prevKB))
                         Exit();
-                    else if (SingleKeyPress(Keys.L, kb, prevKB))
+                    else if (SingleKeyPress(Keys.L, kb, prevKB) || MouseClick(button2, mouse, prevM) == true)
                     {
                         currentState = GameState.LoadChoice;
                     }
@@ -444,7 +526,7 @@ namespace SolsUnderground
                     if (kb.IsKeyDown(Keys.Q) || MouseClick(button9, mouse, prevM) == true)
                         currentState = GameState.Menu;
 
-                    if (SingleKeyPress(Keys.S, kb, prevKB) || MouseClick(button7, mouse, prevM) == true)
+                    if (SingleKeyPress(Keys.S, kb, prevKB) || MouseClick(button8, mouse, prevM) == true)
                     {
                         currentState = GameState.SaveChoice;
                     }
@@ -468,15 +550,15 @@ namespace SolsUnderground
                 case GameState.SaveChoice:
                     //Saves player stats to the SaveFiles folder in Content
                     //The user chooses one of three available save files
-                    if (SingleKeyPress(Keys.NumPad2, kb, prevKB))
+                    if (SingleKeyPress(Keys.NumPad2, kb, prevKB) || MouseClick(file1Rect, mouse, prevM) == true)
                     {
                         SaveFile("saveFile2");
                     }
-                    else if(SingleKeyPress(Keys.NumPad3, kb, prevKB))
+                    else if(SingleKeyPress(Keys.NumPad3, kb, prevKB) || MouseClick(file2Rect, mouse, prevM) == true)
                     {
                         SaveFile("saveFile3");
                     }
-                    else if(SingleKeyPress(Keys.NumPad1, kb, prevKB))
+                    else if(SingleKeyPress(Keys.NumPad1, kb, prevKB) || MouseClick(file3Rect, mouse, prevM) == true)
                     {
                         SaveFile("saveFile1");
                     }
@@ -495,7 +577,7 @@ namespace SolsUnderground
                     break;
                 case GameState.LoadChoice:
                     //The user chooses one of three available save files
-                    if (SingleKeyPress(Keys.NumPad2, kb, prevKB))
+                    if (SingleKeyPress(Keys.NumPad2, kb, prevKB) || MouseClick(file1Rect, mouse, prevM) == true)
                     {
                         try
                         {
@@ -506,7 +588,7 @@ namespace SolsUnderground
                             currentState = GameState.LoadFailed;
                         }
                     }
-                    else if (SingleKeyPress(Keys.NumPad3, kb, prevKB))
+                    else if (SingleKeyPress(Keys.NumPad3, kb, prevKB) || MouseClick(file2Rect, mouse, prevM) == true)
                     {
                         try
                         {
@@ -517,7 +599,7 @@ namespace SolsUnderground
                             currentState = GameState.LoadFailed;
                         }
                     }
-                    else if (SingleKeyPress(Keys.NumPad1, kb, prevKB))
+                    else if (SingleKeyPress(Keys.NumPad1, kb, prevKB) || MouseClick(file3Rect, mouse, prevM) == true)
                     {
                         try
                         {
@@ -551,15 +633,15 @@ namespace SolsUnderground
                         currentState = GameState.Menu;
                     }
                     //The user chooses one of three available save files
-                    if (SingleKeyPress(Keys.NumPad2, kb, prevKB))
+                    if (SingleKeyPress(Keys.NumPad2, kb, prevKB) || MouseClick(file1Rect, mouse, prevM) == true)
                     {
                         ClearFile("saveFile2");
                     }
-                    else if (SingleKeyPress(Keys.NumPad3, kb, prevKB))
+                    else if (SingleKeyPress(Keys.NumPad3, kb, prevKB) || MouseClick(file2Rect, mouse, prevM) == true)
                     {
                         ClearFile("saveFile3");
                     }
-                    else if (SingleKeyPress(Keys.NumPad1, kb, prevKB))
+                    else if (SingleKeyPress(Keys.NumPad1, kb, prevKB) || MouseClick(file3Rect, mouse, prevM) == true)
                     {
                         ClearFile("saveFile1");
                     }
@@ -585,7 +667,7 @@ namespace SolsUnderground
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.Black);
-
+            MouseState mouse = Mouse.GetState();
             _spriteBatch.Begin();
             switch (currentState)
             {
@@ -596,10 +678,25 @@ namespace SolsUnderground
                         "Sols UnderGround",
                         new Vector2(0, 0),
                         Color.White);
-                    _spriteBatch.Draw(startGame, button1, Color.White);
-                    _spriteBatch.Draw(loadGame, button2, Color.White);
-                    _spriteBatch.Draw(controls, button3, Color.White);
-                    _spriteBatch.Draw(instructions, button4, Color.White);
+                    if(MouseOver(button1, mouse) == true)
+                        _spriteBatch.Draw(startGameClicked, button1, Color.White);
+                    else
+                        _spriteBatch.Draw(startGame, button1, Color.White);
+
+                    if (MouseOver(button2, mouse) == true)
+                        _spriteBatch.Draw(loadGameClicked, button2, Color.White);
+                    else
+                        _spriteBatch.Draw(loadGame, button2, Color.White);
+
+                    if (MouseOver(button3, mouse) == true)
+                        _spriteBatch.Draw(controlsClicked, button3, Color.White);
+                    else
+                        _spriteBatch.Draw(controls, button3, Color.White);
+
+                    if (MouseOver(button4, mouse) == true)
+                        _spriteBatch.Draw(instructionsClicked, button4, Color.White);
+                    else
+                         _spriteBatch.Draw(instructions, button4, Color.White);
 
                     // Draw godMode toggle
                     if (Program.godMode)
@@ -619,34 +716,37 @@ namespace SolsUnderground
                       _spriteBatch.DrawString(
                         text,
                         "Forward - W",
-                        new Vector2(550, 250),
+                        new Vector2(500, 250),
                         Color.White);
                     _spriteBatch.DrawString(
                         text,
                         "Backwards - S",
-                        new Vector2(550, 350),
+                        new Vector2(500, 350),
                         Color.White);
                     _spriteBatch.DrawString(
                         text,
                         " Left - A ",
-                        new Vector2(550, 450),
+                        new Vector2(500, 450),
                         Color.White);
                     _spriteBatch.DrawString(
                         text,
                         "Right - D ",
-                        new Vector2(550, 550),
+                        new Vector2(500, 550),
                         Color.White);
                     _spriteBatch.DrawString(
                         text,
                         "Attack - Left Click",
-                        new Vector2(550, 650),
+                        new Vector2(500, 650),
                         Color.White);
                     _spriteBatch.DrawString(
                         text,
                         "Pause - ESC",
-                        new Vector2(550, 750),
+                        new Vector2(500, 750),
                         Color.White);
-                    _spriteBatch.Draw(returnToMenu, button5, Color.White);
+                    if (MouseOver(button5, mouse) == true)
+                        _spriteBatch.Draw(returnToMenuClicked, button5, Color.White);
+                    else
+                        _spriteBatch.Draw(returnToMenu, button5, Color.White);
                     break;
 
 
@@ -662,7 +762,10 @@ namespace SolsUnderground
                         "defeat all enemies to go on to the next room",
                         new Vector2(150, 250),
                         Color.White);
-                    _spriteBatch.Draw(returnToMenu, button5, Color.White);
+                    if (MouseOver(button5, mouse) == true)
+                        _spriteBatch.Draw(returnToMenuClicked, button5, Color.White);
+                    else
+                        _spriteBatch.Draw(returnToMenu, button5, Color.White);
                     break;
 
 
@@ -672,6 +775,14 @@ namespace SolsUnderground
                     itemManager.Draw(_spriteBatch);
                     player.Draw(_spriteBatch);
                     enemyManager.Draw(_spriteBatch);
+
+                    Health(_spriteBatch, player.Hp);
+                    _spriteBatch.Draw(tigerBucks, money, Color.White);
+                    _spriteBatch.DrawString(
+                        text,
+                        "-" + player.TigerBucks,
+                        new Vector2(590, -10),
+                        Color.White);
 
                     // Draw HP bar
                     _spriteBatch.Draw(Program.drawSquare, new Rectangle(0, 0, player.MaxHp * 3 + 10, 40), Color.Black);
@@ -695,16 +806,6 @@ namespace SolsUnderground
 
                     _spriteBatch.DrawString(
                         uiText,
-                        player.Hp + "/" + player.MaxHp,
-                        new Vector2(10, 5),
-                        Color.White);
-                    _spriteBatch.DrawString(
-                        uiText,
-                        "Tiger Bucks: " + player.TigerBucks,
-                        new Vector2(5, _graphics.PreferredBackBufferHeight - 35),
-                        Color.Orange);
-                    _spriteBatch.DrawString(
-                        uiText,
                         mapManager.CurrentFloor + "-" + mapManager.CurrentRoomNum,
                         new Vector2(1275, 5),
                         Color.White);
@@ -718,12 +819,7 @@ namespace SolsUnderground
                         "Paused",
                         new Vector2(0, 60),
                         Color.White);
-                    _spriteBatch.Draw(returnToGame, button6, Color.White);
-                    _spriteBatch.Draw(saveGame, button7, Color.White);
-                    _spriteBatch.Draw(loadGame2, button8, Color.White);
-                    _spriteBatch.Draw(exitToMenu, button9, Color.White);
-                    _spriteBatch.Draw(player.CurrentWeapon.Sprite, weaponIcon, Color.White);
-                    _spriteBatch.Draw(player.CurrentArmor.Sprite, armorIcon, Color.White);
+
                     
                     // Draw weapon info if mouse hovers over weapon icon
                     if (prevM.X > weaponIcon.X && prevM.X < weaponIcon.X + weaponIcon.Width
@@ -767,17 +863,40 @@ namespace SolsUnderground
                         "Game Over",
                         new Vector2(280, 60),
                         Color.White);
-                    _spriteBatch.Draw(newGame, button10, Color.White);
-                    _spriteBatch.Draw(exitToMenu, button11, Color.White);
+                    if (MouseOver(button10, mouse) == true)
+                        _spriteBatch.Draw(newGameClicked, button10, Color.White);
+                    else
+                        _spriteBatch.Draw(newGame, button10, Color.White);
+
+                    if (MouseOver(button11, mouse) == true)
+                        _spriteBatch.Draw(exitToMenuClicked, button11, Color.White);
+                    else
+                        _spriteBatch.Draw(exitToMenu, button11, Color.White);
+                    _spriteBatch.Draw(grave, tombstone, Color.White);
                     break;
 
                 //Save file choice screen
                 case GameState.SaveChoice:
+                    if(MouseOver(file1Rect, mouse) == true)
+                        _spriteBatch.Draw(file1Clicked, file1Rect, Color.White);
+                    else
+                        _spriteBatch.Draw(file1, file1Rect, Color.White);
+
+                    if (MouseOver(file2Rect, mouse) == true)
+                        _spriteBatch.Draw(file2Clicked, file2Rect, Color.White);
+                    else
+                        _spriteBatch.Draw(file2, file2Rect, Color.White);
+
+                    if (MouseOver(file3Rect, mouse) == true)
+                        _spriteBatch.Draw(file3Clicked, file3Rect, Color.White);
+                    else
+                        _spriteBatch.Draw(file3, file3Rect, Color.White);
+
                     _spriteBatch.DrawString(
-                        text,
-                        "Save File 1,   2,  or 3\n" +
+                        heading,
+                        "Save File" +
                         "Press esc to return",
-                        new Vector2(0, 0),
+                        new Vector2(550, 0),
                         Color.White);
                     break;
 
@@ -791,10 +910,24 @@ namespace SolsUnderground
                         Color.White);
                     break;
                 case GameState.LoadChoice:
+                    if (MouseOver(file1Rect, mouse) == true)
+                        _spriteBatch.Draw(file1Clicked, file1Rect, Color.White);
+                    else
+                        _spriteBatch.Draw(file1, file1Rect, Color.White);
+
+                    if (MouseOver(file2Rect, mouse) == true)
+                        _spriteBatch.Draw(file2Clicked, file2Rect, Color.White);
+                    else
+                        _spriteBatch.Draw(file2, file2Rect, Color.White);
+
+                    if (MouseOver(file3Rect, mouse) == true)
+                        _spriteBatch.Draw(file3Clicked, file3Rect, Color.White);
+                    else
+                        _spriteBatch.Draw(file3, file3Rect, Color.White);
                     _spriteBatch.DrawString(
-                        text,
-                        "Load File 1,   2,  or 3",
-                        new Vector2(0, 0),
+                        heading,
+                        "Load File",
+                        new Vector2(350, 0),
                         Color.White);
                     break;
                 case GameState.LoadFailed:
@@ -814,6 +947,20 @@ namespace SolsUnderground
                        Color.White);
                     break;
                 case GameState.ClearSave:
+                    if (MouseOver(file1Rect, mouse) == true)
+                        _spriteBatch.Draw(file1Clicked, file1Rect, Color.White);
+                    else
+                        _spriteBatch.Draw(file1, file1Rect, Color.White);
+
+                    if (MouseOver(file2Rect, mouse) == true)
+                        _spriteBatch.Draw(file2Clicked, file2Rect, Color.White);
+                    else
+                        _spriteBatch.Draw(file2, file2Rect, Color.White);
+
+                    if (MouseOver(file3Rect, mouse) == true)
+                        _spriteBatch.Draw(file3Clicked, file3Rect, Color.White);
+                    else
+                        _spriteBatch.Draw(file3, file3Rect, Color.White);
                     _spriteBatch.DrawString(
                        text,
                        "Would you like to clear file 1,   2,   or 3?\n" +
@@ -842,6 +989,17 @@ namespace SolsUnderground
         {
             MouseState mouse = Mouse.GetState();
             if ((currentMouse.X >= button.Left && currentMouse.X <= button.Right) && (currentMouse.Y >= button.Top && currentMouse.Y <= button.Bottom) && currentMouse.LeftButton == ButtonState.Released && previousMouse.LeftButton == ButtonState.Pressed)
+            {
+                return true;
+            }
+            else
+                return false;
+        }
+
+        protected bool MouseOver(Rectangle button, MouseState currentMouse)
+        {
+            MouseState mouse = Mouse.GetState();
+            if ((currentMouse.X >= button.Left && currentMouse.X <= button.Right) && (currentMouse.Y >= button.Top && currentMouse.Y <= button.Bottom))
             {
                 return true;
             }
@@ -1002,6 +1160,33 @@ namespace SolsUnderground
         {
             File.Delete($"../../../Content//SaveFiles//{fileName}");
             currentState = GameState.SaveCleared;
+        }
+
+        private void Health(SpriteBatch spriteBatch, int health)
+        {
+            if (health > 90)
+                spriteBatch.Draw(heart100, hearts, Color.White);
+            else if(health <= 90 && health > 80)
+                spriteBatch.Draw(heart90, hearts, Color.White);
+            else if (health <= 80 && health > 70)
+                spriteBatch.Draw(heart80, hearts, Color.White);
+            else if (health <= 70 && health > 60)
+                spriteBatch.Draw(heart70, hearts, Color.White);
+            else if (health <= 60 && health > 50)
+                spriteBatch.Draw(heart60, hearts, Color.White);
+            else if (health <= 50 && health > 40)
+                spriteBatch.Draw(heart50, hearts, Color.White);
+            else if (health <= 40 && health > 30)
+                spriteBatch.Draw(heart40, hearts, Color.White);
+            else if (health <= 30 && health > 20)
+                spriteBatch.Draw(heart30, hearts, Color.White);
+            else if (health <= 20 && health > 10)
+                spriteBatch.Draw(heart20, hearts, Color.White);
+            else if (health <= 10 && health > 0)
+                spriteBatch.Draw(heart10, hearts, Color.White);
+            else if (health <= 0)
+               spriteBatch.Draw(heart0, hearts, Color.White);
+
         }
     }
 }

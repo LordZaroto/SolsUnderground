@@ -110,25 +110,26 @@ namespace SolsUnderground
         {
             if (!(enemyState == EnemyState.dead))
             {
-                moveCounter = 0;
+                //moveCounter = 0; Testing no knockback on bosses
 
                 currentHP -= damage;
 
+                //Reduces knockback recieved by 50%
                 if (enemyState == EnemyState.faceForward || enemyState == EnemyState.moveForward)
                 {
-                    Y += knockback;
+                    Y += knockback / 2;
                 }
                 if (enemyState == EnemyState.faceLeft || enemyState == EnemyState.moveLeft)
                 {
-                    X += knockback;
+                    X += knockback / 2;
                 }
                 if (enemyState == EnemyState.faceBack || enemyState == EnemyState.moveBack)
                 {
-                    Y -= knockback;
+                    Y -= knockback / 2;
                 }
                 if (enemyState == EnemyState.faceRight || enemyState == EnemyState.moveRight)
                 {
-                    X -= knockback;
+                    X -= knockback / 2;
                 }
 
                 if (currentHP <= 0)
@@ -232,13 +233,13 @@ namespace SolsUnderground
                     Attack special = new Attack(
                         new Rectangle(
                             X - (Width * (3 / 4)),
-                            Y - (Height * 2 + (Height / 2)),
+                            Y - (Height + (Height / 2)),
                             Width + (Width * 2 * (3 / 4)),
-                            Height * 3 + (Height / 2)),
+                            Height * 2 + (Height / 2)),
                         attack * 3,
                         knockback * 3);
 
-                    Y -= Height * 2;
+                    Y -= Height;
                     return special;
                 }
                 else if (State == EnemyState.faceLeft || State == EnemyState.moveLeft)
@@ -247,14 +248,14 @@ namespace SolsUnderground
 
                     Attack special = new Attack(
                         new Rectangle(
-                            X - (Width * 2 + (Width / 2)),
+                            X - (Width + (Width / 2)),
                             Y - (Height * (3 / 4)),
-                            Width * 3 + (Width / 2),
+                            Width * 2 + (Width / 2),
                             Height + (Height * 2 * (3 / 4))),
                         attack * 3,
                         knockback * 3);
 
-                    X -= Width * 2;
+                    X -= Width;
 
                     return special;
                 }
@@ -267,11 +268,11 @@ namespace SolsUnderground
                             X - (Width * (3 / 4)),
                             Y - (Height / 2),
                             Width + (Width * 2 * (3 / 4)),
-                            Height * 3 + (Height / 2)),
+                            Height * 2 + (Height / 2)),
                         attack * 3,
                         knockback * 3);
 
-                    Y += Height * 2;
+                    Y += Height;
 
                     return special;
                 }
@@ -283,12 +284,12 @@ namespace SolsUnderground
                         new Rectangle(
                             X - (Width / 2),
                             Y - (Height * (3 / 4)),
-                            Width * 3 + (Width / 2),
+                            Width * 2 + (Width / 2),
                             Height + (Height * 2 * (3 / 4))),
                         attack * 3,
                         knockback * 3);
 
-                    X += Width * 2;
+                    X += Width;
 
                     return special;
                 }
@@ -318,13 +319,13 @@ namespace SolsUnderground
                     Attack special = new Attack(
                         new Rectangle(
                             X - (Width * (3 / 4)),
-                            Y - (Height * 5 + (Height / 2)),
+                            Y - (Height * 3 + (Height / 2)),
                             Width + (Width * 2 * (3 / 4)),
-                            Height * 6 + (Height / 2)),
+                            Height * 4 + (Height / 2)),
                         attack / 2,
                         knockback / 2);
 
-                    Y -= Height * 5;
+                    Y -= Height * 3;
                     return special;
                 }
                 else if (State == EnemyState.faceLeft || State == EnemyState.moveLeft)
@@ -333,14 +334,14 @@ namespace SolsUnderground
 
                     Attack special = new Attack(
                         new Rectangle(
-                            X - (Width * 5 + (Width / 2)),
+                            X - (Width * 3 + (Width / 2)),
                             Y - (Height * (3 / 4)),
-                            Width * 6 + (Width / 2),
+                            Width * 4 + (Width / 2),
                             Height + (Height * 2 * (3 / 4))),
                         attack / 2,
                         knockback / 2);
 
-                    X -= Width * 5;
+                    X -= Width * 3;
 
                     return special;
                 }
@@ -353,11 +354,11 @@ namespace SolsUnderground
                             X - (Width * (3 / 4)),
                             Y - (Height / 2),
                             Width + (Width * 2 * (3 / 4)),
-                            Height * 6 + (Height / 2)),
+                            Height * 4 + (Height / 2)),
                         attack / 2,
                         knockback / 2);
 
-                    Y += Height * 5;
+                    Y += Height * 3;
 
                     return special;
                 }
@@ -369,12 +370,12 @@ namespace SolsUnderground
                         new Rectangle(
                             X - (Width / 2),
                             Y - (Height * (3 / 4)),
-                            Width * 6 + (Width / 2),
+                            Width * 4 + (Width / 2),
                             Height + (Height * 2 * (3 / 4))),
                         attack / 2,
                         knockback / 2);
 
-                    X += Width * 5;
+                    X += Width * 3;
 
                     return special;
                 }

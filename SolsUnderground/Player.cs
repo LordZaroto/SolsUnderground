@@ -55,6 +55,11 @@ namespace SolsUnderground
         private PlayerState playerState;
         private Texture2D[] textures;
         private int tigerBucks;
+        private char forward;
+        private char backward;
+        private char left;
+        private char right;
+        private char attack;
 
         private AnimationManager _animationManager;
         private Dictionary<string, Animation> _animations;
