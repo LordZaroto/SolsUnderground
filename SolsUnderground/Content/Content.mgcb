@@ -49,6 +49,18 @@
 /processorParam:TextureFormat=Color
 /build:BlankRect2.png
 
+#begin BrickBreaker.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:BrickBreaker.png
+
 #begin BrickBreaker2.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -229,7 +241,7 @@
 /processorParam:TextureFormat=Color
 /build:file3.png
 
-#begin grave.jpg
+#begin file3Clicked.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -239,7 +251,7 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:grave.jpg
+/build:file3Clicked.png
 
 #begin grave.jpg
 /importer:TextureImporter
@@ -252,18 +264,6 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:grave.jpg
-
-#begin heart0.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:heart0.png
 
 #begin heart10.png
 /importer:TextureImporter
@@ -385,6 +385,18 @@
 /processorParam:TextureFormat=Color
 /build:heart90.png
 
+#begin hearts0.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:hearts0.png
+
 #begin heroBack2.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -469,6 +481,18 @@
 /processorParam:TextureFormat=Color
 /build:Hoodie.png
 
+#begin HotDog.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:HotDog.png
+
 #begin Instructions.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -482,19 +506,6 @@
 /build:Instructions.png
 
 #begin InstructionsClicked.png
-#begin HotDog.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:HotDog.png
-
-#begin instructions.PNG
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -758,14 +769,8 @@
 #begin Rooms/BlueMaze.level
 /copy:Rooms/BlueMaze.level
 
-#begin Rooms/BossRooms/arenaBossRoom.level
-/copy:Rooms/BossRooms/arenaBossRoom.level
-
 #begin Rooms/BossRooms/basicBossRoom.level
 /copy:Rooms/BossRooms/basicBossRoom.level
-
-#begin Rooms/BossRooms/shootoutBossRoom.level
-/copy:Rooms/BossRooms/shootoutBossRoom.level
 
 #begin Rooms/BrokenPillars.level
 /copy:Rooms/BrokenPillars.level
@@ -782,17 +787,11 @@
 #begin Rooms/EyeRoom.level
 /copy:Rooms/EyeRoom.level
 
-#begin Rooms/RaceTrackRoom.level
-/copy:Rooms/RaceTrackRoom.level
-
 #begin Rooms/SimpleRoom.level
 /copy:Rooms/SimpleRoom.level
 
 #begin Rooms/SkullRoom.level
 /copy:Rooms/SkullRoom.level
-
-#begin Rooms/SplitRoom.level
-/copy:Rooms/SplitRoom.level
 
 #begin Rooms/StartRooms/basicStartRoom.level
 /copy:Rooms/StartRooms/basicStartRoom.level
@@ -824,7 +823,7 @@
 /processorParam:TextureFormat=Color
 /build:SaveClicked.png
 
-#begin StartGame1.png
+#begin Skates.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -834,7 +833,7 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:StartGame1.png
+/build:Skates.png
 
 #begin ShooterBack.png
 /importer:TextureImporter
@@ -885,6 +884,7 @@
 /build:ShooterRight.png
 
 #begin Skates.png
+#begin StartGame1.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -894,9 +894,8 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Skates.png
+/build:StartGame1.png
 
-#begin startGame.PNG
 #begin StartGameClicked.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -1101,7 +1100,55 @@
 /processorParam:TextureFormat=Color
 /build:weeb_Right.png
 
-#begin WinterCoat.png
+#begin weebBack.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:weebBack.png
+
+#begin weebForward.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:weebForward.png
+
+#begin weebLeft.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:weebLeft.png
+
+#begin weebRight.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:weebRight.png
+
+#begin WinterCoat2.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
