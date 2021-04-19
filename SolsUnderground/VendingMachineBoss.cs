@@ -263,7 +263,7 @@ namespace SolsUnderground
                 new Rectangle(X, Y - 10, Width, 3),
                 Color.Black);
             sb.Draw(Program.drawSquare,
-                new Rectangle(X, Y - 10, (int)(Width * ((double)health / (double)maxHealth)), 3),
+                new Rectangle(X, Y - 10, (int)(Width * ((double)currentHP / (double)maxHP)), 3),
                 Color.Red);
         }
 
@@ -309,13 +309,11 @@ namespace SolsUnderground
                 //If close to player
                 if ((Math.Abs(X - player.X) < 120 && (Math.Abs(Y - player.Y) < 120)))
                 {
-                    _timer = 0;
                     if(_timer > 1.5)
                     {
                         _timer = 0;
                         return AOE();
                     }
-                    
                 }
                 else
                 {
