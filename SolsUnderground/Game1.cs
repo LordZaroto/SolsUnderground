@@ -136,6 +136,7 @@ namespace SolsUnderground
         private Rectangle weaponIcon;
         private Rectangle armorIcon;
         private Rectangle infoRect;
+        private Rectangle currentWeapon;
 
         //save/load items
         private Texture2D file1;
@@ -781,6 +782,8 @@ namespace SolsUnderground
                         text,
                         "-" + player.TigerBucks,
                         new Vector2(590, -10),
+                        Color.White);
+
                     // Draw HP bar
                     _spriteBatch.Draw(Program.drawSquare, new Rectangle(0, 0, player.MaxHp * 3 + 10, 40), Color.Black);
                     _spriteBatch.Draw(Program.drawSquare, new Rectangle(5, 5, player.Hp * 3, 30), Color.DarkRed);
@@ -800,9 +803,6 @@ namespace SolsUnderground
                             (int)(player.CurrentWeapon.SpecialCooldown * 20 - player.SpecialCounter * 20), 20),
                             Color.Blue);
                     }
-
-                  
-                        Color.White);
 
                     _spriteBatch.DrawString(
                         uiText,
