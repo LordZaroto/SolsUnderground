@@ -260,7 +260,6 @@ namespace SolsUnderground
             // Weapons
             itemManager.AddWeaponSprite(stickTexture);
             itemManager.AddWeaponSprite(ritchieClawTexture);
-            brickBreakerTexture = Content.Load<Texture2D>("BrickBreaker");
             hockeyStickTexture = Content.Load<Texture2D>("HockeyStick");
             hotDogTexture = Content.Load<Texture2D>("HotDog");
             thePrecipiceTexture = Content.Load<Texture2D>("thePrecipice");
@@ -270,8 +269,8 @@ namespace SolsUnderground
             itemManager.AddWeaponSprite(thePrecipiceTexture);
 
             // Armor
-            winterCoatTexture = Content.Load<Texture2D>("WinterCoat");
-            bandanaTexture = Content.Load<Texture2D>("Bandana");
+            winterCoatTexture = Content.Load<Texture2D>("WinterCoat2");
+            bandanaTexture = Content.Load<Texture2D>("Bandana2");
             skatesTexture = Content.Load<Texture2D>("Skates");
             maskTexture = Content.Load<Texture2D>("Mask");
             itemManager.AddArmorSprite(hoodieTexture);
@@ -377,7 +376,6 @@ namespace SolsUnderground
             exitToMenu = Content.Load<Texture2D>("ExitToMenu");
             exitToMenuClicked = Content.Load<Texture2D>("ExitToMenuClicked");
             button9 = new Rectangle( 0, 739, 709, 153);
-            currentWeapon = new Rectangle(1000, 200, 139, 113);
 
             //save/load buttons
             file1 = Content.Load<Texture2D>("file1");
@@ -850,9 +848,22 @@ namespace SolsUnderground
                         "Paused",
                         new Vector2(0, 60),
                         Color.White);
+                    if (MouseOver(button6, mouse) == true)
+                        _spriteBatch.Draw(returnToGameClicked, button6, Color.White);
+                    else
+                        _spriteBatch.Draw(returnToGame, button6, Color.White);
+                    if (MouseOver(button8, mouse) == true)
+                        _spriteBatch.Draw(saveGameClicked, button8, Color.White);
+                    else
+                        _spriteBatch.Draw(saveGame, button8, Color.White);
+                    if (MouseOver(button9, mouse) == true)
+                        _spriteBatch.Draw(exitToMenuClicked, button9, Color.White);
+                    else
+                        _spriteBatch.Draw(exitToMenu, button9, Color.White);
 
-                    
+
                     // Draw weapon info if mouse hovers over weapon icon
+                    //_spriteBatch.Draw()
                     if (prevM.X > weaponIcon.X && prevM.X < weaponIcon.X + weaponIcon.Width
                         && prevM.Y > weaponIcon.Y && prevM.Y < weaponIcon.Y + weaponIcon.Height)
                     {
