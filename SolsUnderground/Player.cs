@@ -55,11 +55,11 @@ namespace SolsUnderground
         private PlayerState playerState;
         private Texture2D[] textures;
         private int tigerBucks;
-        private char forward;
-        private char backward;
-        private char left;
-        private char right;
-        private char attack;
+        private Keys forward;
+        private Keys backward;
+        private Keys left;
+        private Keys right;
+        private Keys equip;
 
         private AnimationManager _animationManager;
         private Dictionary<string, Animation> _animations;
@@ -106,6 +106,32 @@ namespace SolsUnderground
         {
             get { return playerState; }
             set { playerState = value; }
+        }
+
+        public Keys Forward
+        {
+            get { return forward; }
+            set { forward = (Keys)value; }
+        }
+        public Keys Backward
+        {
+            get { return backward; }
+            set { backward = (Keys)value; }
+        }
+        public Keys Left
+        {
+            get { return left; }
+            set { left = (Keys)value; }
+        }
+        public Keys Right
+        {
+            get { return right; }
+            set { right = (Keys)value; }
+        }
+        public Keys Equips
+        {
+            get { return equip; }
+            set { equip = (Keys)value; }
         }
 
         //------------------------------
@@ -237,7 +263,7 @@ namespace SolsUnderground
                     //idle direction. Then end the method.
 
                     //changes texture according to direction
-                    if (!(kbState.IsKeyDown(Keys.W) || kbState.IsKeyDown(Keys.A) || kbState.IsKeyDown(Keys.S) || kbState.IsKeyDown(Keys.D)))
+                    if (!(kbState.IsKeyDown(forward) || kbState.IsKeyDown(left) || kbState.IsKeyDown(backward) || kbState.IsKeyDown(right)))
                     {
 
                         if (playerState == PlayerState.moveForward || playerState == PlayerState.attackForward)
@@ -268,11 +294,11 @@ namespace SolsUnderground
                         return;
                     }
 
-                    if (kbState.IsKeyDown(Keys.W) || kbState.IsKeyDown(Keys.S))
+                    if (kbState.IsKeyDown(forward) || kbState.IsKeyDown(backward))
                     {
                         //The values adjustments are lower when traveling diagonally
                         //to accomadate for adjustments to both axis.
-                        if (kbState.IsKeyDown(Keys.D))
+                        if (kbState.IsKeyDown(right))
                         {
                             X += (3 + CurrentArmor.Speed);
 
@@ -286,7 +312,7 @@ namespace SolsUnderground
                                 test = true;
                             }
                         }
-                        if (kbState.IsKeyDown(Keys.A))
+                        if (kbState.IsKeyDown(right))
                         {
                             X -= (3 + CurrentArmor.Speed);
 
@@ -302,32 +328,32 @@ namespace SolsUnderground
                         //Determine the vertical displacement
                         if (test == true)
                         {
-                            if (kbState.IsKeyDown(Keys.W) && kbState.IsKeyDown(Keys.S))
+                            if (kbState.IsKeyDown(forward) && kbState.IsKeyDown(backward))
                             {
                                 Y += 0;
 
                                 //Is there horizontal movement? If so, change player state accordingly.
-                                if (kbState.IsKeyDown(Keys.A) && test == true)
+                                if (kbState.IsKeyDown(left) && test == true)
                                 {
                                     _animationManager.Play(_animations["playerMoveLeft"]);
                                     playerState = PlayerState.moveLeft;
 
                                 }
-                                else if (kbState.IsKeyDown(Keys.D) && test == true)
+                                else if (kbState.IsKeyDown(right) && test == true)
                                 {
                                     _animationManager.Play(_animations["playerMoveRight"]);
                                     playerState = PlayerState.moveRight;
 
                                 }
                             }
-                            else if (kbState.IsKeyDown(Keys.W))
+                            else if (kbState.IsKeyDown(forward))
                             {
                                 _animationManager.Play(_animations["playerMoveForward"]);
                                 Y -= (3 + CurrentArmor.Speed);
                                 playerState = PlayerState.moveForward;
 
                             }
-                            else if (kbState.IsKeyDown(Keys.S))
+                            else if (kbState.IsKeyDown(backward))
                             {
                                 _animationManager.Play(_animations["playerMoveBack"]);
                                 Y += (3 + CurrentArmor.Speed);
@@ -337,32 +363,32 @@ namespace SolsUnderground
                         }
                         else
                         {
-                            if (kbState.IsKeyDown(Keys.W) && kbState.IsKeyDown(Keys.S))
+                            if (kbState.IsKeyDown(forward) && kbState.IsKeyDown(backward))
                             {
                                 Y += 0;
 
                                 //Is there horizontal movement? If so, change player state accordingly.
-                                if (kbState.IsKeyDown(Keys.A) && test == true)
+                                if (kbState.IsKeyDown(left) && test == true)
                                 {
                                     _animationManager.Play(_animations["playerMoveLeft"]);
                                     playerState = PlayerState.moveLeft;
 
                                 }
-                                else if (kbState.IsKeyDown(Keys.D) && test == true)
+                                else if (kbState.IsKeyDown(right) && test == true)
                                 {
                                     _animationManager.Play(_animations["playerMoveRight"]);
                                     playerState = PlayerState.moveRight;
 
                                 }
                             }
-                            else if (kbState.IsKeyDown(Keys.W))
+                            else if (kbState.IsKeyDown(forward))
                             {
                                 _animationManager.Play(_animations["playerMoveForward"]);
                                 Y -= (4 + CurrentArmor.Speed);
                                 playerState = PlayerState.moveForward;
 
                             }
-                            else if (kbState.IsKeyDown(Keys.S))
+                            else if (kbState.IsKeyDown(backward))
                             {
                                 _animationManager.Play(_animations["playerMoveBack"]);
                                 Y += (4 + CurrentArmor.Speed);
@@ -371,14 +397,14 @@ namespace SolsUnderground
                             }
                         }
                     }
-                    if (kbState.IsKeyDown(Keys.A) && test == false)
+                    if (kbState.IsKeyDown(left) && test == false)
                     {
                         _animationManager.Play(_animations["playerMoveLeft"]);
                         X -= (4 + CurrentArmor.Speed);
                         playerState = PlayerState.moveLeft;
 
                     }
-                    if (kbState.IsKeyDown(Keys.D) && test == false)
+                    if (kbState.IsKeyDown(right) && test == false)
                     {
                         _animationManager.Play(_animations["playerMoveRight"]);
                         X += (4 + CurrentArmor.Speed);
