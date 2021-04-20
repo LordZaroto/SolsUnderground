@@ -771,7 +771,7 @@ namespace SolsUnderground
                         Color.White);
                     _spriteBatch.DrawString(
                         text,
-                        "Pause - ESC",
+                        "Equip - E",
                         new Vector2(500, 750),
                         Color.White);
                     if (MouseOver(button5, mouse) == true)
@@ -938,9 +938,8 @@ namespace SolsUnderground
 
                     _spriteBatch.DrawString(
                         heading,
-                        "Save File" +
-                        "Press esc to return",
-                        new Vector2(550, 0),
+                        "Save File",
+                        new Vector2(350, 0),
                         Color.White);
                     break;
 
