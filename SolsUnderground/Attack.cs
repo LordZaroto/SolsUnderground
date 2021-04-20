@@ -18,18 +18,45 @@ namespace SolsUnderground
     /// <summary>
     /// Holds a hitbox, damage, and knockback value.
     /// </summary>
-    class Attack
+    class Attack : GameObject
     {
-        private Rectangle hitbox;
         private int knockback;
         private int damage;
-        private Texture2D texture;
         private AttackDirection attackDirection;
         private double timer;
 
         public Rectangle Hitbox
         {
-            get { return hitbox; }
+            get { return positionRect; }
+        }
+
+        public override int X
+        {
+            get { return positionRect.X; }
+            set { positionRect.X = value; }
+        }
+
+        public override int Y
+        {
+            get { return positionRect.Y; }
+            set { positionRect.Y = value; }
+        }
+        public override int Width
+        {
+            get { return positionRect.Width; }
+            set { positionRect.Width = value; }
+        }
+
+        public override int Height
+        {
+            get { return positionRect.Height; }
+            set { positionRect.Height = value; }
+        }
+
+        public override Rectangle PositionRect
+        {
+            get { return positionRect; }
+            set { positionRect = value; }
         }
 
         public int Knockback
@@ -42,9 +69,21 @@ namespace SolsUnderground
             get { return damage; }
         }
 
+        public AttackDirection AttackDirection
+        {
+            get { return attackDirection; }
+            set { attackDirection = value; }
+        }
+
+        public double Timer
+        {
+            get { return timer; }
+            set { timer = value; }
+        }
+
         public Attack(Rectangle hitbox, int damage, int knockback, Texture2D texture, AttackDirection atkDir, double timer)
         {
-            this.hitbox = hitbox;
+            this.positionRect = hitbox;
             this.damage = damage;
             this.knockback = knockback;
             this.texture = texture;
