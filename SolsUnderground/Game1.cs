@@ -118,6 +118,11 @@ namespace SolsUnderground
         private Texture2D returnToMenu;
         private Texture2D returnToMenuClicked;
         private Rectangle button5;
+        private char forward = 'w';
+        private char backward = 's';
+        private char left = 'a';
+        private char right = 'd';
+        private char equip = 'e';
 
         //HUD items
         private SpriteFont uiText;
@@ -371,7 +376,7 @@ namespace SolsUnderground
             button6 = new Rectangle( 0, 413, 709, 153);
             saveGame = Content.Load<Texture2D>("Save");
             weaponIcon = new Rectangle(961, 398, 139, 113);
-            armorIcon = new Rectangle(961, 515, 139, 113);
+            armorIcon = new Rectangle(961, 665, 139, 113);
             infoRect = new Rectangle(0, 0, 0, 0);
             saveGameClicked = Content.Load<Texture2D>("SaveClicked");
             button8 = new Rectangle( 0, 576, 709, 153);
@@ -386,7 +391,7 @@ namespace SolsUnderground
             file2 = Content.Load<Texture2D>("file2");
             file2Clicked = Content.Load<Texture2D>("file2Clicked");
             file2Rect = new Rectangle(515, 500, 290, 300);
-            file3 = Content.Load<Texture2D>("file1");
+            file3 = Content.Load<Texture2D>("file3");
             file3Clicked = Content.Load<Texture2D>("file1Clicked");
             file3Rect = new Rectangle(918, 500, 290, 300);
 
@@ -699,6 +704,7 @@ namespace SolsUnderground
         {
             GraphicsDevice.Clear(Color.Black);
             MouseState mouse = Mouse.GetState();
+            KeyboardState keyboard = Keyboard.GetState();
             _spriteBatch.Begin();
             switch (currentState)
             {
@@ -739,39 +745,53 @@ namespace SolsUnderground
 
                 // Controls Screen
                 case GameState.Controls:
+
                      _spriteBatch.DrawString(
                         heading,
                         "Controls",
                         new Vector2(390, 0),
                         Color.White);
-                      _spriteBatch.DrawString(
-                        text,
-                        "Forward - W",
-                        new Vector2(500, 250),
-                        Color.White);
+
+                    Rectangle forwardRect = new Rectangle(500, 250, 300, 40);
+                    _spriteBatch.DrawString(
+                      text,
+                      "Forward - " + char.ToUpper(forward),
+                      new Vector2(500, 250),
+                      Color.White); ;
+
+                    Rectangle backwardRect = new Rectangle(500, 350, 300, 40);
                     _spriteBatch.DrawString(
                         text,
-                        "Backwards - S",
+                        "Backwards - " + char.ToUpper(backward),
                         new Vector2(500, 350),
                         Color.White);
+
+                    Rectangle leftRect = new Rectangle(500, 450, 300, 40);
                     _spriteBatch.DrawString(
                         text,
-                        " Left - A ",
+                        " Left - " + char.ToUpper(left),
                         new Vector2(500, 450),
                         Color.White);
+
+                    Rectangle rightRect = new Rectangle(500, 550, 300, 40);
                     _spriteBatch.DrawString(
                         text,
-                        "Right - D ",
+                        "Right - " + char.ToUpper(right),
                         new Vector2(500, 550),
                         Color.White);
+
                     _spriteBatch.DrawString(
                         text,
                         "Attack - Left Click",
                         new Vector2(500, 650),
                         Color.White);
+
+                    Rectangle equipRect = new Rectangle(500, 650, 300, 40);
+                    if (MouseClick(equipRect, mouse, prevM) == true) ;
+
                     _spriteBatch.DrawString(
                         text,
-                        "Equip - E",
+                        "Equip - " + char.ToUpper(equip),
                         new Vector2(500, 750),
                         Color.White);
                     if (MouseOver(button5, mouse) == true)
@@ -790,7 +810,9 @@ namespace SolsUnderground
                         Color.White);
                     _spriteBatch.DrawString(
                         text,
-                        "defeat all enemies to go on to the next room",
+                        "defeat all enemies to go on to the next room, go till you face the boss\n" +
+                        "there are 7 floors and you must beat the boss of the floor to go to the next\n"+
+                        "in the ",
                         new Vector2(150, 250),
                         Color.White);
                     if (MouseOver(button5, mouse) == true)
@@ -816,8 +838,16 @@ namespace SolsUnderground
                         Color.White);
 
                     // Draw HP bar
+                    if (player.Hp < 0)
+                        player.Hp = 0;
                     _spriteBatch.Draw(Program.drawSquare, new Rectangle(0, 0, player.MaxHp * 3 + 10, 40), Color.Black);
                     _spriteBatch.Draw(Program.drawSquare, new Rectangle(5, 5, player.Hp * 3, 30), Color.DarkRed);
+                    _spriteBatch.DrawString(
+                        uiText,
+                        "" + player.Hp,
+                        new Vector2(((player.MaxHp * 3 )/2) -10, 5),
+                        Color.White);
+                    
 
                     // Draw cooldown bars
                     if (player.BasicCounter < player.CurrentWeapon.BasicCooldown)
@@ -863,9 +893,11 @@ namespace SolsUnderground
                     else
                         _spriteBatch.Draw(exitToMenu, button9, Color.White);
 
+                    //icons
+                    _spriteBatch.Draw(player.CurrentWeapon.Sprite, weaponIcon, Color.White);
+                    _spriteBatch.Draw(player.CurrentArmor.Sprite, armorIcon, Color.White);
 
                     // Draw weapon info if mouse hovers over weapon icon
-                    //_spriteBatch.Draw()
                     if (prevM.X > weaponIcon.X && prevM.X < weaponIcon.X + weaponIcon.Width
                         && prevM.Y > weaponIcon.Y && prevM.Y < weaponIcon.Y + weaponIcon.Height)
                     {
@@ -896,6 +928,7 @@ namespace SolsUnderground
                         _spriteBatch.DrawString(uiText, "HP: " + player.CurrentArmor.HP,
                             new Vector2(infoRect.X + 10, infoRect.Y + 55), Color.White);
                     }
+
 
                     break;
 
