@@ -7,14 +7,25 @@ using Microsoft.Xna.Framework.Input;
 
 namespace SolsUnderground
 {
+    public enum AttackDirection
+    {
+        up,
+        down,
+        right,
+        left
+    }
+    
     /// <summary>
     /// Holds a hitbox, damage, and knockback value.
     /// </summary>
     class Attack
     {
-        protected Rectangle hitbox;
-        protected int knockback;
-        protected int damage;
+        private Rectangle hitbox;
+        private int knockback;
+        private int damage;
+        private Texture2D texture;
+        private AttackDirection attackDirection;
+        private double timer;
 
         public Rectangle Hitbox
         {
@@ -31,11 +42,14 @@ namespace SolsUnderground
             get { return damage; }
         }
 
-        public Attack(Rectangle hitbox, int damage, int knockback)
+        public Attack(Rectangle hitbox, int damage, int knockback, Texture2D texture, AttackDirection atkDir, double timer)
         {
             this.hitbox = hitbox;
             this.damage = damage;
             this.knockback = knockback;
+            this.texture = texture;
+            this.timer = timer;
+            attackDirection = atkDir;
         }
     }
 }

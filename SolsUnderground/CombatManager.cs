@@ -123,9 +123,8 @@ namespace SolsUnderground
             {
                 if (enemies[i].State == EnemyState.dead)
                 {
-                    // Create money item in enemy's place using attack value
-                    // Also chance to drop health pickup
-                    itemManager.EnemyDrops(enemies[i].Attack, enemies[i].PositionRect.Location);
+                    // Activate enemy item drops
+                    itemManager.EnemyDrops(enemies[i]);
 
                     enemies.RemoveAt(i);
                     continue;

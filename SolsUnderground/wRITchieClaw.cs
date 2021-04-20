@@ -18,6 +18,7 @@ namespace SolsUnderground
         private double specialCooldown;
         private int knockback;
         private string name;
+        private double timer;
         private Vector2 hitboxScale;
         private Rectangle hitboxF;
         private Rectangle hitboxL;
@@ -99,6 +100,12 @@ namespace SolsUnderground
         {
             get { return name; }
         }
+
+        public double Timer
+        {
+            get { return timer; }
+            set { timer = value; }
+        }
         //------------------------------
 
         //----------------------------------------
@@ -117,6 +124,7 @@ namespace SolsUnderground
             attack = 5;
             knockback = (int)(0.8 * 32);
             hitboxScale = new Vector2(2, 1);
+            timer = 0.1;
         }
 
         /// <summary>
@@ -138,7 +146,10 @@ namespace SolsUnderground
                 Attack special = new Attack(
                     positionRect,
                     attack / 2 + 1,
-                    knockback / 2);
+                    knockback / 2,
+                    texture,
+                    AttackDirection.up,
+                    timer);
 
                 player.Y -= player.Height * 5;
                 return special;
@@ -156,9 +167,12 @@ namespace SolsUnderground
                 Attack special = new Attack(
                     positionRect,
                     attack / 2 + 1,
-                    knockback / 2);
+                    knockback / 2,
+                    texture,
+                    AttackDirection.left,
+                    timer);
 
-                
+
                 player.X -= player.Width * 5;
 
                 return special;
@@ -176,7 +190,10 @@ namespace SolsUnderground
                 Attack special = new Attack(
                     positionRect,
                     attack / 2 + 1,
-                    knockback / 2);
+                    knockback / 2,
+                    texture,
+                    AttackDirection.down,
+                    timer);
 
                 player.Y += player.Height * 5;
 
@@ -195,7 +212,10 @@ namespace SolsUnderground
                 Attack special = new Attack(
                     positionRect,
                     attack / 2 + 1,
-                    knockback / 2);
+                    knockback / 2,
+                    texture,
+                    AttackDirection.right,
+                    timer);
 
                 player.X += player.Width * 5;
 

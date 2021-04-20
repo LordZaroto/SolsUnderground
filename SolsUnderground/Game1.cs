@@ -306,7 +306,8 @@ namespace SolsUnderground
                 Content.Load<Texture2D>("weeb_Forward"),
                 Content.Load<Texture2D>("weeb_Back"),
                 Content.Load<Texture2D>("weeb_Left"),
-                Content.Load<Texture2D>("weeb_Right") };
+                Content.Load<Texture2D>("weeb_Right"),
+                Content.Load<Texture2D>("thePrecipice")}; // Boss Attack Texture
             enemyManager.AddBossData(weebTextures);
 
             vmBossTextures = new Texture2D[]
@@ -314,7 +315,8 @@ namespace SolsUnderground
                 Content.Load<Texture2D>("vmBossFront"),
                 Content.Load<Texture2D>("vmBossBack"),
                 Content.Load<Texture2D>("vmBossLeft"),
-                Content.Load<Texture2D>("vmBossRight") };
+                Content.Load<Texture2D>("vmBossRight"),
+                Content.Load<Texture2D>("HotDog")}; // Boss Attack Texture
             enemyManager.AddBossData(vmBossTextures);
 
             // Tiles
@@ -348,7 +350,7 @@ namespace SolsUnderground
             button5 = new Rectangle(305, 827, 709, 153);
 
             //health and money for game
-            heart0 = Content.Load<Texture2D>("heart0");
+            /*heart0 = Content.Load<Texture2D>("heart0a");
             heart10 = Content.Load<Texture2D>("heart10");
             heart20 = Content.Load<Texture2D>("heart20");
             heart30 = Content.Load<Texture2D>("heart30");
@@ -358,7 +360,7 @@ namespace SolsUnderground
             heart70 = Content.Load<Texture2D>("heart70");
             heart80 = Content.Load<Texture2D>("heart80");
             heart90 = Content.Load<Texture2D>("heart90");
-            heart100 = Content.Load<Texture2D>("heart100");
+            heart100 = Content.Load<Texture2D>("heart100");*/
             hearts = new Rectangle(0, 0, 400, 40);
             tigerBucks = Content.Load<Texture2D>("TigerBuck");
             money = new Rectangle(550, -15, 40, 50);
@@ -504,7 +506,7 @@ namespace SolsUnderground
                         // Check if boss room
                         if (mapManager.IsBossRoom)
                         {
-                            enemyManager.SpawnBoss(mapManager.CurrentRoom.GetOpenTiles());
+                            enemyManager.SpawnBoss();
                         }
                         else
                         {
@@ -805,7 +807,7 @@ namespace SolsUnderground
                     player.Draw(_spriteBatch);
                     enemyManager.Draw(_spriteBatch);
 
-                    Health(_spriteBatch, player.Hp);
+                    //Health(_spriteBatch, player.Hp);
                     _spriteBatch.Draw(tigerBucks, money, Color.White);
                     _spriteBatch.DrawString(
                         text,
@@ -1083,8 +1085,8 @@ namespace SolsUnderground
             collisionManager.SetBarrierList(mapManager.CurrentRoom.GetBarriers());
 
             // Reset player stats
-            player.EquipWeapon(stick);
-            player.EquipArmor(hoodie);
+            player.Equip(stick);
+            player.Equip(hoodie);
             player.MaxHp = 100;
             player.Hp = player.MaxHp;
             player.X = 30;
@@ -1142,7 +1144,7 @@ namespace SolsUnderground
                 // Check if boss room
                 if (mapManager.IsBossRoom)
                 {
-                    enemyManager.SpawnBoss(mapManager.CurrentRoom.GetOpenTiles());
+                    enemyManager.SpawnBoss();
                 }
                 else
                 {
@@ -1158,22 +1160,22 @@ namespace SolsUnderground
             switch (currentWeaponName)
             {
                 case "Stick":
-                    player.EquipWeapon(stick);
+                    player.Equip(stick);
                     break;
                 case "Ritchie Claw":
-                    player.EquipWeapon(ritchieClaw);
+                    player.Equip(ritchieClaw);
                     break;
                 case "Brick Breaker":
-                    player.EquipWeapon(new wBrickBreaker(brickBreakerTexture, new Rectangle(0,0,0,0)));
+                    player.Equip(new wBrickBreaker(brickBreakerTexture, new Rectangle(0,0,0,0)));
                     break;
                 case "Hockey Stick":
-                    player.EquipWeapon(new wHockeyStick(hockeyStickTexture, new Rectangle(0, 0, 0, 0)));
+                    player.Equip(new wHockeyStick(hockeyStickTexture, new Rectangle(0, 0, 0, 0)));
                     break;
                 case "Hot Dog":
-                    player.EquipWeapon(new wHotDog(hotDogTexture, new Rectangle(0, 0, 0, 0)));
+                    player.Equip(new wHotDog(hotDogTexture, new Rectangle(0, 0, 0, 0)));
                     break;
                 case "The Precipice":
-                    player.EquipWeapon(new wThePrecipice(thePrecipiceTexture, new Rectangle(0, 0, 0, 0)));
+                    player.Equip(new wThePrecipice(thePrecipiceTexture, new Rectangle(0, 0, 0, 0)));
                     break;
             }
 
@@ -1181,19 +1183,19 @@ namespace SolsUnderground
             switch (currentArmorName)
             {
                 case "Hoodie":
-                    player.EquipArmor(hoodie);
+                    player.Equip(hoodie);
                     break;
                 case "Mask":
-                    player.EquipArmor(new aMask(maskTexture, new Rectangle(0, 0, 0, 0)));
+                    player.Equip(new aMask(maskTexture, new Rectangle(0, 0, 0, 0)));
                     break;
                 case "Bandana":
-                    player.EquipArmor(new aBandana(bandanaTexture, new Rectangle(0, 0, 0, 0)));
+                    player.Equip(new aBandana(bandanaTexture, new Rectangle(0, 0, 0, 0)));
                     break;
                 case "Skates":
-                    player.EquipArmor(new aSkates(skatesTexture, new Rectangle(0, 0, 0, 0)));
+                    player.Equip(new aSkates(skatesTexture, new Rectangle(0, 0, 0, 0)));
                     break;
                 case "Winter Coat":
-                    player.EquipArmor(new aWinterCoat(winterCoatTexture, new Rectangle(0, 0, 0, 0)));
+                    player.Equip(new aWinterCoat(winterCoatTexture, new Rectangle(0, 0, 0, 0)));
                     break;
             }
 
@@ -1230,7 +1232,7 @@ namespace SolsUnderground
             currentState = GameState.SaveCleared;
         }
 
-        private void Health(SpriteBatch spriteBatch, int health)
+        /*private void Health(SpriteBatch spriteBatch, int health)
         {
             if (health > 90)
                 spriteBatch.Draw(heart100, hearts, Color.White);
@@ -1255,6 +1257,6 @@ namespace SolsUnderground
             else if (health <= 0)
                spriteBatch.Draw(heart0, hearts, Color.White);
 
-        }
+        }*/
     }
 }

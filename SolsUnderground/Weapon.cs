@@ -59,6 +59,11 @@ namespace SolsUnderground
         /// A multiplier for how far enemies will be knocked back
         /// </summary>
         int Knockback { get; }
+
+        /// <summary>
+        /// The amount of time that the Hitbox lingers for
+        /// </summary>
+        double Timer { get; set; }
         //----------------------------------------
 
         //Methods
