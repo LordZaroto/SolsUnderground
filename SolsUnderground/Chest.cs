@@ -86,12 +86,13 @@ namespace SolsUnderground
         /// <returns>Newly generated Item</returns>
         public Item Open(List<Texture2D> itemTextures, int mSpriteCount, int hSpriteCount, int wSpriteCount, int aSpriteCount)
         {
-            int randomPick = Program.rng.Next(2);
             int textureID = 0;
             Item drop = null;
 
             while (drop == null)
             {
+                int randomPick = Program.rng.Next(2);
+
                 switch (randomPick)
                 {
                     case 0: // Weapon
