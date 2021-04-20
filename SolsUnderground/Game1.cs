@@ -346,6 +346,7 @@ namespace SolsUnderground
             instructions = Content.Load<Texture2D>("Instructions");
             instructionsClicked = Content.Load<Texture2D>("InstructionsClicked");
             button4 = new Rectangle(305, 847, 709, 153);
+            tigerBucks = Content.Load<Texture2D>("TigerBuck");
 
             //options/controls buttons
             uiText = Content.Load<SpriteFont>("Roberto20a");
