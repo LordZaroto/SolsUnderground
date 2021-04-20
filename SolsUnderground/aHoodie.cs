@@ -50,6 +50,7 @@ namespace SolsUnderground
         public aHoodie(Texture2D texture, Rectangle positionRect)
             : base(ItemType.Armor, 0, texture, positionRect)
         {
+            name = "Hoodie";
             defense = 0;
             speed = 0;
             hp = 0;

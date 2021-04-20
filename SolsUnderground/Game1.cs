@@ -118,6 +118,11 @@ namespace SolsUnderground
         private Texture2D returnToMenu;
         private Texture2D returnToMenuClicked;
         private Rectangle button5;
+        private char forward = 'w';
+        private char backward = 's';
+        private char left = 'a';
+        private char right = 'd';
+        private char equip = 'e';
 
         //HUD items
         private SpriteFont uiText;
@@ -306,7 +311,8 @@ namespace SolsUnderground
                 Content.Load<Texture2D>("weeb_Forward"),
                 Content.Load<Texture2D>("weeb_Back"),
                 Content.Load<Texture2D>("weeb_Left"),
-                Content.Load<Texture2D>("weeb_Right") };
+                Content.Load<Texture2D>("weeb_Right"),
+                Content.Load<Texture2D>("thePrecipice")}; // Boss Attack Texture
             enemyManager.AddBossData(weebTextures);
 
             vmBossTextures = new Texture2D[]
@@ -314,7 +320,8 @@ namespace SolsUnderground
                 Content.Load<Texture2D>("vmBossFront"),
                 Content.Load<Texture2D>("vmBossBack"),
                 Content.Load<Texture2D>("vmBossLeft"),
-                Content.Load<Texture2D>("vmBossRight") };
+                Content.Load<Texture2D>("vmBossRight"),
+                Content.Load<Texture2D>("HotDog")}; // Boss Attack Texture
             enemyManager.AddBossData(vmBossTextures);
 
             // Tiles
@@ -349,20 +356,20 @@ namespace SolsUnderground
             button5 = new Rectangle(305, 827, 709, 153);
 
             //health and money for game
-            //heart0 = Content.Load<Texture2D>("heart0");
-            //heart10 = Content.Load<Texture2D>("heart10");
-            //heart20 = Content.Load<Texture2D>("heart20");
-            //heart30 = Content.Load<Texture2D>("heart30");
-            //heart40 = Content.Load<Texture2D>("heart40");
-            //heart50 = Content.Load<Texture2D>("heart50");
-            //heart60 = Content.Load<Texture2D>("heart60");
-            //heart70 = Content.Load<Texture2D>("heart70");
-            //heart80 = Content.Load<Texture2D>("heart80");
-            //heart90 = Content.Load<Texture2D>("heart90");
-            //heart100 = Content.Load<Texture2D>("heart100");
-            //hearts = new Rectangle(0, 0, 400, 40);
-            //tigerBucks = Content.Load<Texture2D>("TigerBuck");
-            //money = new Rectangle(550, -15, 40, 50);
+            /*heart0 = Content.Load<Texture2D>("heart0a");
+            heart10 = Content.Load<Texture2D>("heart10");
+            heart20 = Content.Load<Texture2D>("heart20");
+            heart30 = Content.Load<Texture2D>("heart30");
+            heart40 = Content.Load<Texture2D>("heart40");
+            heart50 = Content.Load<Texture2D>("heart50");
+            heart60 = Content.Load<Texture2D>("heart60");
+            heart70 = Content.Load<Texture2D>("heart70");
+            heart80 = Content.Load<Texture2D>("heart80");
+            heart90 = Content.Load<Texture2D>("heart90");
+            heart100 = Content.Load<Texture2D>("heart100");*/
+            hearts = new Rectangle(0, 0, 400, 40);
+            tigerBucks = Content.Load<Texture2D>("TigerBuck");
+            money = new Rectangle(550, -15, 40, 50);
 
             //paused buttons
             returnToGame = Content.Load<Texture2D>("ReturnToGame");
@@ -370,7 +377,7 @@ namespace SolsUnderground
             button6 = new Rectangle( 0, 413, 709, 153);
             saveGame = Content.Load<Texture2D>("Save");
             weaponIcon = new Rectangle(961, 398, 139, 113);
-            armorIcon = new Rectangle(961, 515, 139, 113);
+            armorIcon = new Rectangle(961, 665, 139, 113);
             infoRect = new Rectangle(0, 0, 0, 0);
             saveGameClicked = Content.Load<Texture2D>("SaveClicked");
             button8 = new Rectangle( 0, 576, 709, 153);
@@ -385,7 +392,7 @@ namespace SolsUnderground
             file2 = Content.Load<Texture2D>("file2");
             file2Clicked = Content.Load<Texture2D>("file2Clicked");
             file2Rect = new Rectangle(515, 500, 290, 300);
-            file3 = Content.Load<Texture2D>("file1");
+            file3 = Content.Load<Texture2D>("file3");
             file3Clicked = Content.Load<Texture2D>("file1Clicked");
             file3Rect = new Rectangle(918, 500, 290, 300);
 
@@ -505,7 +512,7 @@ namespace SolsUnderground
                         // Check if boss room
                         if (mapManager.IsBossRoom)
                         {
-                            enemyManager.SpawnBoss(mapManager.CurrentRoom.GetOpenTiles());
+                            enemyManager.SpawnBoss();
                         }
                         else
                         {
@@ -698,6 +705,7 @@ namespace SolsUnderground
         {
             GraphicsDevice.Clear(Color.Black);
             MouseState mouse = Mouse.GetState();
+            KeyboardState keyboard = Keyboard.GetState();
             _spriteBatch.Begin();
             switch (currentState)
             {
@@ -738,39 +746,53 @@ namespace SolsUnderground
 
                 // Controls Screen
                 case GameState.Controls:
+
                      _spriteBatch.DrawString(
                         heading,
                         "Controls",
                         new Vector2(390, 0),
                         Color.White);
-                      _spriteBatch.DrawString(
-                        text,
-                        "Forward - W",
-                        new Vector2(500, 250),
-                        Color.White);
+
+                    Rectangle forwardRect = new Rectangle(500, 250, 300, 40);
+                    _spriteBatch.DrawString(
+                      text,
+                      "Forward - " + char.ToUpper(forward),
+                      new Vector2(500, 250),
+                      Color.White); ;
+
+                    Rectangle backwardRect = new Rectangle(500, 350, 300, 40);
                     _spriteBatch.DrawString(
                         text,
-                        "Backwards - S",
+                        "Backwards - " + char.ToUpper(backward),
                         new Vector2(500, 350),
                         Color.White);
+
+                    Rectangle leftRect = new Rectangle(500, 450, 300, 40);
                     _spriteBatch.DrawString(
                         text,
-                        " Left - A ",
+                        " Left - " + char.ToUpper(left),
                         new Vector2(500, 450),
                         Color.White);
+
+                    Rectangle rightRect = new Rectangle(500, 550, 300, 40);
                     _spriteBatch.DrawString(
                         text,
-                        "Right - D ",
+                        "Right - " + char.ToUpper(right),
                         new Vector2(500, 550),
                         Color.White);
+
                     _spriteBatch.DrawString(
                         text,
                         "Attack - Left Click",
                         new Vector2(500, 650),
                         Color.White);
+
+                    Rectangle equipRect = new Rectangle(500, 650, 300, 40);
+                    if (MouseClick(equipRect, mouse, prevM) == true) ;
+
                     _spriteBatch.DrawString(
                         text,
-                        "Pause - ESC",
+                        "Equip - " + char.ToUpper(equip),
                         new Vector2(500, 750),
                         Color.White);
                     if (MouseOver(button5, mouse) == true)
@@ -789,7 +811,9 @@ namespace SolsUnderground
                         Color.White);
                     _spriteBatch.DrawString(
                         text,
-                        "defeat all enemies to go on to the next room",
+                        "defeat all enemies to go on to the next room, go till you face the boss\n" +
+                        "there are 7 floors and you must beat the boss of the floor to go to the next\n"+
+                        "in the ",
                         new Vector2(150, 250),
                         Color.White);
                     if (MouseOver(button5, mouse) == true)
@@ -815,8 +839,16 @@ namespace SolsUnderground
                         Color.White);
 
                     // Draw HP bar
+                    if (player.Hp < 0)
+                        player.Hp = 0;
                     _spriteBatch.Draw(Program.drawSquare, new Rectangle(0, 0, player.MaxHp * 3 + 10, 40), Color.Black);
                     _spriteBatch.Draw(Program.drawSquare, new Rectangle(5, 5, player.Hp * 3, 30), Color.DarkRed);
+                    _spriteBatch.DrawString(
+                        uiText,
+                        "" + player.Hp,
+                        new Vector2(((player.MaxHp * 3 )/2) -10, 5),
+                        Color.White);
+                    
 
                     // Draw cooldown bars
                     if (player.BasicCounter < player.CurrentWeapon.BasicCooldown)
@@ -862,9 +894,11 @@ namespace SolsUnderground
                     else
                         _spriteBatch.Draw(exitToMenu, button9, Color.White);
 
+                    //icons
+                    _spriteBatch.Draw(player.CurrentWeapon.Sprite, weaponIcon, Color.White);
+                    _spriteBatch.Draw(player.CurrentArmor.Sprite, armorIcon, Color.White);
 
                     // Draw weapon info if mouse hovers over weapon icon
-                    //_spriteBatch.Draw()
                     if (prevM.X > weaponIcon.X && prevM.X < weaponIcon.X + weaponIcon.Width
                         && prevM.Y > weaponIcon.Y && prevM.Y < weaponIcon.Y + weaponIcon.Height)
                     {
@@ -895,6 +929,7 @@ namespace SolsUnderground
                         _spriteBatch.DrawString(uiText, "HP: " + player.CurrentArmor.HP,
                             new Vector2(infoRect.X + 10, infoRect.Y + 55), Color.White);
                     }
+
 
                     break;
 
@@ -937,9 +972,8 @@ namespace SolsUnderground
 
                     _spriteBatch.DrawString(
                         heading,
-                        "Save File" +
-                        "Press esc to return",
-                        new Vector2(550, 0),
+                        "Save File",
+                        new Vector2(350, 0),
                         Color.White);
                     break;
 
@@ -1085,8 +1119,8 @@ namespace SolsUnderground
             collisionManager.SetBarrierList(mapManager.CurrentRoom.GetBarriers());
 
             // Reset player stats
-            player.EquipWeapon(stick);
-            player.EquipArmor(hoodie);
+            player.Equip(stick);
+            player.Equip(hoodie);
             player.MaxHp = 100;
             player.Hp = player.MaxHp;
             player.X = 30;
@@ -1144,7 +1178,7 @@ namespace SolsUnderground
                 // Check if boss room
                 if (mapManager.IsBossRoom)
                 {
-                    enemyManager.SpawnBoss(mapManager.CurrentRoom.GetOpenTiles());
+                    enemyManager.SpawnBoss();
                 }
                 else
                 {
@@ -1160,22 +1194,22 @@ namespace SolsUnderground
             switch (currentWeaponName)
             {
                 case "Stick":
-                    player.EquipWeapon(stick);
+                    player.Equip(stick);
                     break;
                 case "Ritchie Claw":
-                    player.EquipWeapon(ritchieClaw);
+                    player.Equip(ritchieClaw);
                     break;
                 case "Brick Breaker":
-                    player.EquipWeapon(new wBrickBreaker(brickBreakerTexture, new Rectangle(0,0,0,0)));
+                    player.Equip(new wBrickBreaker(brickBreakerTexture, new Rectangle(0,0,0,0)));
                     break;
                 case "Hockey Stick":
-                    player.EquipWeapon(new wHockeyStick(hockeyStickTexture, new Rectangle(0, 0, 0, 0)));
+                    player.Equip(new wHockeyStick(hockeyStickTexture, new Rectangle(0, 0, 0, 0)));
                     break;
                 case "Hot Dog":
-                    player.EquipWeapon(new wHotDog(hotDogTexture, new Rectangle(0, 0, 0, 0)));
+                    player.Equip(new wHotDog(hotDogTexture, new Rectangle(0, 0, 0, 0)));
                     break;
                 case "The Precipice":
-                    player.EquipWeapon(new wThePrecipice(thePrecipiceTexture, new Rectangle(0, 0, 0, 0)));
+                    player.Equip(new wThePrecipice(thePrecipiceTexture, new Rectangle(0, 0, 0, 0)));
                     break;
             }
 
@@ -1183,19 +1217,19 @@ namespace SolsUnderground
             switch (currentArmorName)
             {
                 case "Hoodie":
-                    player.EquipArmor(hoodie);
+                    player.Equip(hoodie);
                     break;
                 case "Mask":
-                    player.EquipArmor(new aMask(maskTexture, new Rectangle(0, 0, 0, 0)));
+                    player.Equip(new aMask(maskTexture, new Rectangle(0, 0, 0, 0)));
                     break;
                 case "Bandana":
-                    player.EquipArmor(new aBandana(bandanaTexture, new Rectangle(0, 0, 0, 0)));
+                    player.Equip(new aBandana(bandanaTexture, new Rectangle(0, 0, 0, 0)));
                     break;
                 case "Skates":
-                    player.EquipArmor(new aSkates(skatesTexture, new Rectangle(0, 0, 0, 0)));
+                    player.Equip(new aSkates(skatesTexture, new Rectangle(0, 0, 0, 0)));
                     break;
                 case "Winter Coat":
-                    player.EquipArmor(new aWinterCoat(winterCoatTexture, new Rectangle(0, 0, 0, 0)));
+                    player.Equip(new aWinterCoat(winterCoatTexture, new Rectangle(0, 0, 0, 0)));
                     break;
             }
 
@@ -1232,31 +1266,31 @@ namespace SolsUnderground
             currentState = GameState.SaveCleared;
         }
 
-        //private void Health(SpriteBatch spriteBatch, int health)
-        //{
-        //    if (health > 90)
-        //        spriteBatch.Draw(heart100, hearts, Color.White);
-        //    else if(health <= 90 && health > 80)
-        //        spriteBatch.Draw(heart90, hearts, Color.White);
-        //    else if (health <= 80 && health > 70)
-        //        spriteBatch.Draw(heart80, hearts, Color.White);
-        //    else if (health <= 70 && health > 60)
-        //        spriteBatch.Draw(heart70, hearts, Color.White);
-        //    else if (health <= 60 && health > 50)
-        //        spriteBatch.Draw(heart60, hearts, Color.White);
-        //    else if (health <= 50 && health > 40)
-        //        spriteBatch.Draw(heart50, hearts, Color.White);
-        //    else if (health <= 40 && health > 30)
-        //        spriteBatch.Draw(heart40, hearts, Color.White);
-        //    else if (health <= 30 && health > 20)
-        //        spriteBatch.Draw(heart30, hearts, Color.White);
-        //    else if (health <= 20 && health > 10)
-        //        spriteBatch.Draw(heart20, hearts, Color.White);
-        //    else if (health <= 10 && health > 0)
-        //        spriteBatch.Draw(heart10, hearts, Color.White);
-        //    else if (health <= 0)
-        //       spriteBatch.Draw(heart0, hearts, Color.White);
+        /*private void Health(SpriteBatch spriteBatch, int health)
+        {
+            if (health > 90)
+                spriteBatch.Draw(heart100, hearts, Color.White);
+            else if(health <= 90 && health > 80)
+                spriteBatch.Draw(heart90, hearts, Color.White);
+            else if (health <= 80 && health > 70)
+                spriteBatch.Draw(heart80, hearts, Color.White);
+            else if (health <= 70 && health > 60)
+                spriteBatch.Draw(heart70, hearts, Color.White);
+            else if (health <= 60 && health > 50)
+                spriteBatch.Draw(heart60, hearts, Color.White);
+            else if (health <= 50 && health > 40)
+                spriteBatch.Draw(heart50, hearts, Color.White);
+            else if (health <= 40 && health > 30)
+                spriteBatch.Draw(heart40, hearts, Color.White);
+            else if (health <= 30 && health > 20)
+                spriteBatch.Draw(heart30, hearts, Color.White);
+            else if (health <= 20 && health > 10)
+                spriteBatch.Draw(heart20, hearts, Color.White);
+            else if (health <= 10 && health > 0)
+                spriteBatch.Draw(heart10, hearts, Color.White);
+            else if (health <= 0)
+               spriteBatch.Draw(heart0, hearts, Color.White);
 
-        //}
+        }*/
     }
 }

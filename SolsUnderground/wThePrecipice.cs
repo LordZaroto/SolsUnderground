@@ -27,6 +27,7 @@ namespace SolsUnderground
         private Rectangle hitboxB;
         private Rectangle hitboxR;
         private string name;
+        private double timer;
         //-----------------------------
 
         //---------------------------------------------------------------------
@@ -102,6 +103,12 @@ namespace SolsUnderground
         {
             get { return name; }
         }
+
+        public double Timer
+        {
+            get { return timer; }
+            set { timer = value; }
+        }
         //---------------
         //------------------------------
 
@@ -120,6 +127,7 @@ namespace SolsUnderground
             attack = 9;
             knockback = (int)(1.5 * 32);
             hitboxScale = new Vector2(2, 3);
+            timer = 0.1;
         }
 
         /// <summary>
@@ -143,7 +151,10 @@ namespace SolsUnderground
                 Attack special = new Attack(
                     positionRect,
                     attack * 2,
-                    knockback * 2);
+                    knockback * 2,
+                    texture,
+                    AttackDirection.up,
+                    timer);
 
                 return special;
             }
@@ -162,7 +173,10 @@ namespace SolsUnderground
                 Attack special = new Attack(
                     positionRect,
                     attack * 2,
-                    knockback * 2);
+                    knockback * 2,
+                    texture,
+                    AttackDirection.left,
+                    timer);
 
                 return special;
             }
@@ -181,7 +195,10 @@ namespace SolsUnderground
                 Attack special = new Attack(
                     positionRect,
                     attack * 2,
-                    knockback * 2);
+                    knockback * 2,
+                    texture,
+                    AttackDirection.down,
+                    timer);
 
                 return special;
             }
@@ -200,7 +217,10 @@ namespace SolsUnderground
                 Attack special = new Attack(
                     positionRect,
                     attack * 2,
-                    knockback * 2);
+                    knockback * 2,
+                    texture,
+                    AttackDirection.right,
+                    timer);
 
                 return special;
             }
