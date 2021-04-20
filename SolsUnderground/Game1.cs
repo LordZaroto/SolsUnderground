@@ -348,7 +348,7 @@ namespace SolsUnderground
             button5 = new Rectangle(305, 827, 709, 153);
 
             //health and money for game
-            heart0 = Content.Load<Texture2D>("heart0");
+            /*heart0 = Content.Load<Texture2D>("heart0a");
             heart10 = Content.Load<Texture2D>("heart10");
             heart20 = Content.Load<Texture2D>("heart20");
             heart30 = Content.Load<Texture2D>("heart30");
@@ -358,7 +358,7 @@ namespace SolsUnderground
             heart70 = Content.Load<Texture2D>("heart70");
             heart80 = Content.Load<Texture2D>("heart80");
             heart90 = Content.Load<Texture2D>("heart90");
-            heart100 = Content.Load<Texture2D>("heart100");
+            heart100 = Content.Load<Texture2D>("heart100");*/
             hearts = new Rectangle(0, 0, 400, 40);
             tigerBucks = Content.Load<Texture2D>("TigerBuck");
             money = new Rectangle(550, -15, 40, 50);
@@ -805,7 +805,7 @@ namespace SolsUnderground
                     player.Draw(_spriteBatch);
                     enemyManager.Draw(_spriteBatch);
 
-                    Health(_spriteBatch, player.Hp);
+                    //Health(_spriteBatch, player.Hp);
                     _spriteBatch.Draw(tigerBucks, money, Color.White);
                     _spriteBatch.DrawString(
                         text,
@@ -1231,7 +1231,7 @@ namespace SolsUnderground
             currentState = GameState.SaveCleared;
         }
 
-        private void Health(SpriteBatch spriteBatch, int health)
+        /*private void Health(SpriteBatch spriteBatch, int health)
         {
             if (health > 90)
                 spriteBatch.Draw(heart100, hearts, Color.White);
@@ -1256,6 +1256,6 @@ namespace SolsUnderground
             else if (health <= 0)
                spriteBatch.Draw(heart0, hearts, Color.White);
 
-        }
+        }*/
     }
 }
