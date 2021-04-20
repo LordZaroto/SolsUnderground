@@ -81,8 +81,8 @@ namespace SolsUnderground
 
         public override EnemyState State
         {
-            get;
-            set;
+            get { return enemyState; }
+            set { enemyState = value; }
         }
 
         public override int X
@@ -321,7 +321,8 @@ namespace SolsUnderground
                 //If close to player
                 if ((Math.Abs(X - player.X) < 120 && (Math.Abs(Y - player.Y) < 120)))
                 {
-                    if(_timer > 1)
+                    
+                    if (_timer > 1)
                     {
                         _timer = 0; 
                         return AOE();

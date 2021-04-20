@@ -439,7 +439,7 @@ namespace SolsUnderground
                     basicCounter = 0;
 
                     //Create the attack hitbox in the direction the player is facing
-                    if(playerState == PlayerState.faceForward || playerState == PlayerState.moveForward)
+                    if (playerState == PlayerState.faceForward || playerState == PlayerState.moveForward)
                     {
                         playerState = PlayerState.attackForward;
 
