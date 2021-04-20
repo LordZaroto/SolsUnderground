@@ -339,6 +339,7 @@ namespace SolsUnderground
             instructions = Content.Load<Texture2D>("Instructions");
             instructionsClicked = Content.Load<Texture2D>("InstructionsClicked");
             button4 = new Rectangle(305, 847, 709, 153);
+            tigerBucks = Content.Load<Texture2D>("TigerBuck");
 
             //options/controls buttons
             uiText = Content.Load<SpriteFont>("Roberto20a");
@@ -348,20 +349,20 @@ namespace SolsUnderground
             button5 = new Rectangle(305, 827, 709, 153);
 
             //health and money for game
-            heart0 = Content.Load<Texture2D>("heart0");
-            heart10 = Content.Load<Texture2D>("heart10");
-            heart20 = Content.Load<Texture2D>("heart20");
-            heart30 = Content.Load<Texture2D>("heart30");
-            heart40 = Content.Load<Texture2D>("heart40");
-            heart50 = Content.Load<Texture2D>("heart50");
-            heart60 = Content.Load<Texture2D>("heart60");
-            heart70 = Content.Load<Texture2D>("heart70");
-            heart80 = Content.Load<Texture2D>("heart80");
-            heart90 = Content.Load<Texture2D>("heart90");
-            heart100 = Content.Load<Texture2D>("heart100");
-            hearts = new Rectangle(0, 0, 400, 40);
-            tigerBucks = Content.Load<Texture2D>("TigerBuck");
-            money = new Rectangle(550, -15, 40, 50);
+            //heart0 = Content.Load<Texture2D>("heart0");
+            //heart10 = Content.Load<Texture2D>("heart10");
+            //heart20 = Content.Load<Texture2D>("heart20");
+            //heart30 = Content.Load<Texture2D>("heart30");
+            //heart40 = Content.Load<Texture2D>("heart40");
+            //heart50 = Content.Load<Texture2D>("heart50");
+            //heart60 = Content.Load<Texture2D>("heart60");
+            //heart70 = Content.Load<Texture2D>("heart70");
+            //heart80 = Content.Load<Texture2D>("heart80");
+            //heart90 = Content.Load<Texture2D>("heart90");
+            //heart100 = Content.Load<Texture2D>("heart100");
+            //hearts = new Rectangle(0, 0, 400, 40);
+            //tigerBucks = Content.Load<Texture2D>("TigerBuck");
+            //money = new Rectangle(550, -15, 40, 50);
 
             //paused buttons
             returnToGame = Content.Load<Texture2D>("ReturnToGame");
@@ -805,7 +806,7 @@ namespace SolsUnderground
                     player.Draw(_spriteBatch);
                     enemyManager.Draw(_spriteBatch);
 
-                    Health(_spriteBatch, player.Hp);
+                    //Health(_spriteBatch, player.Hp);
                     _spriteBatch.Draw(tigerBucks, money, Color.White);
                     _spriteBatch.DrawString(
                         text,
@@ -1231,31 +1232,31 @@ namespace SolsUnderground
             currentState = GameState.SaveCleared;
         }
 
-        private void Health(SpriteBatch spriteBatch, int health)
-        {
-            if (health > 90)
-                spriteBatch.Draw(heart100, hearts, Color.White);
-            else if(health <= 90 && health > 80)
-                spriteBatch.Draw(heart90, hearts, Color.White);
-            else if (health <= 80 && health > 70)
-                spriteBatch.Draw(heart80, hearts, Color.White);
-            else if (health <= 70 && health > 60)
-                spriteBatch.Draw(heart70, hearts, Color.White);
-            else if (health <= 60 && health > 50)
-                spriteBatch.Draw(heart60, hearts, Color.White);
-            else if (health <= 50 && health > 40)
-                spriteBatch.Draw(heart50, hearts, Color.White);
-            else if (health <= 40 && health > 30)
-                spriteBatch.Draw(heart40, hearts, Color.White);
-            else if (health <= 30 && health > 20)
-                spriteBatch.Draw(heart30, hearts, Color.White);
-            else if (health <= 20 && health > 10)
-                spriteBatch.Draw(heart20, hearts, Color.White);
-            else if (health <= 10 && health > 0)
-                spriteBatch.Draw(heart10, hearts, Color.White);
-            else if (health <= 0)
-               spriteBatch.Draw(heart0, hearts, Color.White);
+        //private void Health(SpriteBatch spriteBatch, int health)
+        //{
+        //    if (health > 90)
+        //        spriteBatch.Draw(heart100, hearts, Color.White);
+        //    else if(health <= 90 && health > 80)
+        //        spriteBatch.Draw(heart90, hearts, Color.White);
+        //    else if (health <= 80 && health > 70)
+        //        spriteBatch.Draw(heart80, hearts, Color.White);
+        //    else if (health <= 70 && health > 60)
+        //        spriteBatch.Draw(heart70, hearts, Color.White);
+        //    else if (health <= 60 && health > 50)
+        //        spriteBatch.Draw(heart60, hearts, Color.White);
+        //    else if (health <= 50 && health > 40)
+        //        spriteBatch.Draw(heart50, hearts, Color.White);
+        //    else if (health <= 40 && health > 30)
+        //        spriteBatch.Draw(heart40, hearts, Color.White);
+        //    else if (health <= 30 && health > 20)
+        //        spriteBatch.Draw(heart30, hearts, Color.White);
+        //    else if (health <= 20 && health > 10)
+        //        spriteBatch.Draw(heart20, hearts, Color.White);
+        //    else if (health <= 10 && health > 0)
+        //        spriteBatch.Draw(heart10, hearts, Color.White);
+        //    else if (health <= 0)
+        //       spriteBatch.Draw(heart0, hearts, Color.White);
 
-        }
+        //}
     }
 }

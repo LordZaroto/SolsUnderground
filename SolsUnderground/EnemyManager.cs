@@ -109,7 +109,7 @@ namespace SolsUnderground
                             openTiles[spawnPoint].Y,
                             enemyTextures[enemyChoice][2].Width,
                             enemyTextures[enemyChoice][2].Height),
-                            12, 8));
+                            25, 3));
                         break;
                 }
             }
