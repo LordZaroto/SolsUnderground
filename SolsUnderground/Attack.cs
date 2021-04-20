@@ -12,9 +12,9 @@ namespace SolsUnderground
     /// </summary>
     class Attack
     {
-        private Rectangle hitbox;
-        private int knockback;
-        private int damage;
+        protected Rectangle hitbox;
+        protected int knockback;
+        protected int damage;
 
         public Rectangle Hitbox
         {
