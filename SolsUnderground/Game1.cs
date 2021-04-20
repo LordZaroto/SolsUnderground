@@ -941,9 +941,12 @@ namespace SolsUnderground
                         Color.White);
                     _spriteBatch.DrawString(
                         text,
-                        "defeat all enemies to go on to the next room, go till you face the boss\n" +
-                        "there are 7 floors and you must beat the boss of the floor to go to the next\n"+
-                        "in the ",
+                        "defeat all enemies to go on to the next room,\n" +
+                        "               go till you face the boss.\n" +
+                        "there are 7 floors and you must beat the boss \n" +
+                        "               to go to the next floor.\n"+
+                        "Defeat all 7 of the total boss of each floor\n" +
+                        "                       and you win",
                         new Vector2(150, 250),
                         Color.White);
                     if (MouseOver(button5, mouse) == true)
