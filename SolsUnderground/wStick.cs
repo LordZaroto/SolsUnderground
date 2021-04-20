@@ -17,6 +17,7 @@ namespace SolsUnderground
         private int knockback;
         private Vector2 hitboxScale;
         private string name;
+        private double timer;
         private Rectangle hitboxF;
         private Rectangle hitboxL;
         private Rectangle hitboxB;
@@ -97,6 +98,11 @@ namespace SolsUnderground
         {
             get { return name; }
         }
+        public double Timer
+        {
+            get { return timer; }
+            set { timer = value; }
+        }
         //------------------------------
 
         //----------------------------------------
@@ -116,6 +122,7 @@ namespace SolsUnderground
             attack = 3;
             knockback = (int)(1 * 32);
             hitboxScale = new Vector2(2, 1.5f);
+            timer = 0.1;
         }
 
         public override void Draw(SpriteBatch sb)

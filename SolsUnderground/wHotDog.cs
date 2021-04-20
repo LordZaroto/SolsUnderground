@@ -21,6 +21,7 @@ namespace SolsUnderground
         private Rectangle hitboxB;
         private Rectangle hitboxR;
         private string name;
+        private double timer;
         //-----------------------------
 
         //---------------------------------------------------------------------
@@ -101,6 +102,12 @@ namespace SolsUnderground
         {
             get { return name; }
         }
+
+        public double Timer
+        {
+            get { return timer; }
+            set { timer = value; }
+        }
         //---------------
         //------------------------------
 
@@ -119,6 +126,7 @@ namespace SolsUnderground
             attack = 5;
             knockback = (int)(1 * 32);
             hitboxScale = new Vector2(2, 1.5f);
+            timer = 0.1;
         }
 
         /// <summary>
@@ -154,10 +162,7 @@ namespace SolsUnderground
             if (player.Hp > player.MaxHp)
                 player.Hp = player.MaxHp;
 
-            // No attack
-            positionRect = new Rectangle(0, 0, 0, 0);
-
-            return new Attack(positionRect, 0, 0);
+            return null;
         }
 
         public override void Draw(SpriteBatch sb)

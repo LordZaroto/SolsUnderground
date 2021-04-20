@@ -25,12 +25,16 @@ namespace SolsUnderground
         private double sp1CD;
         private double sp2Counter;
         private double sp2CD;
+        private double sp1HitTimer;
+        private double sp2HitTimer;
         Texture2D[] textures;
+        Texture2D atkTexture;
         //consructor: initializes the fields
-        public Weeb(Texture2D[] textures, Rectangle positionRect, int health, int attack)
+        public Weeb(Texture2D[] textures, Rectangle positionRect, int health, int attack, Texture2D atkTexture)
         {
             this.textures = textures;
             this.texture = textures[0];
+            this.atkTexture = atkTexture;
             this.positionRect = positionRect;
             this.maxHP = health;
             this.currentHP = health;
@@ -44,6 +48,8 @@ namespace SolsUnderground
             sp1Counter = 6;
             sp2CD = 3.5;
             sp2Counter = 2;
+            sp1HitTimer = 0.1;
+            sp2HitTimer = 0.1;
         }
 
         //properties
@@ -237,7 +243,10 @@ namespace SolsUnderground
                             Width + (Width * 2 * (3 / 4)),
                             Height * 2 + (Height / 2)),
                         attack * 3,
-                        knockback * 3);
+                        knockback * 3,
+                        atkTexture,
+                        AttackDirection.up,
+                        sp1HitTimer);
 
                     Y -= Height;
                     return special;
@@ -253,7 +262,10 @@ namespace SolsUnderground
                             Width * 2 + (Width / 2),
                             Height + (Height * 2 * (3 / 4))),
                         attack * 3,
-                        knockback * 3);
+                        knockback * 3,
+                        atkTexture,
+                        AttackDirection.left,
+                        sp1HitTimer);
 
                     X -= Width;
 
@@ -270,7 +282,10 @@ namespace SolsUnderground
                             Width + (Width * 2 * (3 / 4)),
                             Height * 2 + (Height / 2)),
                         attack * 3,
-                        knockback * 3);
+                        knockback * 3,
+                        atkTexture,
+                        AttackDirection.down,
+                        sp1HitTimer);
 
                     Y += Height;
 
@@ -287,7 +302,10 @@ namespace SolsUnderground
                             Width * 2 + (Width / 2),
                             Height + (Height * 2 * (3 / 4))),
                         attack * 3,
-                        knockback * 3);
+                        knockback * 3,
+                        atkTexture,
+                        AttackDirection.right,
+                        sp1HitTimer);
 
                     X += Width;
 
@@ -323,7 +341,10 @@ namespace SolsUnderground
                             Width + (Width * 2 * (3 / 4)),
                             Height * 4 + (Height / 2)),
                         attack / 2,
-                        knockback / 2);
+                        knockback / 2,
+                        atkTexture,
+                        AttackDirection.up,
+                        sp1HitTimer);
 
                     Y -= Height * 3;
                     return special;
@@ -339,7 +360,10 @@ namespace SolsUnderground
                             Width * 4 + (Width / 2),
                             Height + (Height * 2 * (3 / 4))),
                         attack / 2,
-                        knockback / 2);
+                        knockback / 2,
+                        atkTexture,
+                        AttackDirection.left,
+                        sp1HitTimer);
 
                     X -= Width * 3;
 
@@ -356,7 +380,10 @@ namespace SolsUnderground
                             Width + (Width * 2 * (3 / 4)),
                             Height * 4 + (Height / 2)),
                         attack / 2,
-                        knockback / 2);
+                        knockback / 2,
+                        atkTexture,
+                        AttackDirection.down,
+                        sp1HitTimer);
 
                     Y += Height * 3;
 
@@ -373,7 +400,10 @@ namespace SolsUnderground
                             Width * 4 + (Width / 2),
                             Height + (Height * 2 * (3 / 4))),
                         attack / 2,
-                        knockback / 2);
+                        knockback / 2,
+                        atkTexture,
+                        AttackDirection.right,
+                        sp1HitTimer);
 
                     X += Width * 3;
 

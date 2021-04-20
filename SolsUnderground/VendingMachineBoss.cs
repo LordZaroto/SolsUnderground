@@ -16,6 +16,7 @@ namespace SolsUnderground
         private double kbCounter;
         private double kbCD;
         Texture2D[] textures;
+        Texture2D atkTexture;
         GameTime gameTime;
         float _timer = 0f;
         float aoeTimer;
@@ -23,11 +24,16 @@ namespace SolsUnderground
 
         private double sp1Counter;
         private double sp1CD;
+        private double sp2Counter;
+        private double sp2CD;
+        private double sp1HitTimer;
+        private double sp2HitTimer;
 
-        public VendingMachineBoss(Texture2D[] textures, Rectangle positionRect, int health, int attack)
+        public VendingMachineBoss(Texture2D[] textures, Rectangle positionRect, int health, int attack, Texture2D atkTexture)
         {
             this.textures = textures;
             this.texture = textures[0];
+            this.atkTexture = atkTexture;
             this.positionRect = positionRect;
             this.maxHP = health;
             this.currentHP = maxHP;
@@ -43,6 +49,9 @@ namespace SolsUnderground
 
             sp1CD = 8;
             sp1Counter = 6;
+            //sp2Counter stuff
+            sp1HitTimer = 0.1;
+            sp2HitTimer = 0.1;
         }
 
 
@@ -295,7 +304,10 @@ namespace SolsUnderground
                             Width + 100,
                             Height + 100),
                         attack * 3,
-                        knockback * 3);
+                        knockback * 3,
+                        atkTexture,
+                        AttackDirection.up, //This is temporary - Should probably change based off player position
+                        sp1HitTimer);
 
                 return special;
             }
@@ -312,7 +324,7 @@ namespace SolsUnderground
                     
                     if (_timer > 1)
                     {
-                        _timer = 0;
+                        _timer = 0; 
                         return AOE();
                     }
                 }
