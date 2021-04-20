@@ -9,47 +9,30 @@ namespace SolsUnderground
 {
     class Projectiles: Attack
     {
-        EnemyState enemy;
-        PlayerState player;
+        Rectangle hitbox;
+        int damage;
+        int knockback;
+        AttackDirection attack;
 
-        public Projectiles(Rectangle hitbox, int damage, int knockback, EnemyState enemy, PlayerState player)
-            :base(hitbox, damage, knockback)
+        public Projectiles(Rectangle hitbox, int damage, int knockback, Texture2D texture, AttackDirection attack, double timer)
+            :base(hitbox, damage, knockback, texture, attack, timer)
         {
-            this.enemy = enemy;
-            this.player = player;
             this.hitbox = hitbox;
-            this.damage = damage;
-            this.knockback = knockback;
+            this.attack = attack;
 
         }
+
         public void MovingHitbox()
         {
-            if(enemy != null)
-            {
-                if (enemy == EnemyState.attackForward)
-                    hitbox.X += 1;
-                if (enemy == EnemyState.attackBack)
+                if (attack == AttackDirection.down)
+                    hitbox.Y += 1;
+                if (attack == AttackDirection.up)
+                    hitbox.Y -= 1;
+                if (attack == AttackDirection.left)
                     hitbox.X -= 1;
-                if (enemy == EnemyState.attackLeft)
-                    hitbox.X -= 1;
-                if (enemy == EnemyState.attackRight)
+                if (attack == AttackDirection.right)
                     hitbox.X += 1;
-            }
-            if(player != null)
-            {
-                if (player == PlayerState.attackForward)
-                    hitbox.X += 1;
-                if (player == PlayerState.attackBack)
-                    hitbox.X -= 1;
-                if (player == PlayerState.attackLeft)
-                    hitbox.X -= 1;
-                if (player == PlayerState.attackRight)
-                    hitbox.X += 1;
-            }
 
         }
-
-
-
     }
 }
