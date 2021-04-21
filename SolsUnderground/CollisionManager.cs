@@ -193,5 +193,14 @@ namespace SolsUnderground
                 gameObject.Y = temp.Y;
             }
         }
+
+
+        //public Attack AttackWallCollision(Attack a)
+        //{
+        //    for(int i = 0; i < barriers.Count; i++)
+        //    {
+
+        //    }
+        //}
     }
 }
