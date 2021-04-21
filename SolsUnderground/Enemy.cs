@@ -72,5 +72,6 @@ namespace SolsUnderground
         public abstract void TakeDamage(int damage, int knockback);
 
         public abstract void EnemyMove(Player player, GameTime gameTime);
+
     }
 }
