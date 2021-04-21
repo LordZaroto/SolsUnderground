@@ -29,6 +29,7 @@ namespace SolsUnderground
         private double sp1HitTimer;
         private double sp2HitTimer;
 
+        //constructor
         public VendingMachineBoss(Texture2D[] textures, Rectangle positionRect, int health, int attack, Texture2D atkTexture)
         {
             this.textures = textures;
@@ -126,6 +127,11 @@ namespace SolsUnderground
             set;
         }
 
+        /// <summary>
+        /// overriden take damage method - no knockback
+        /// </summary>
+        /// <param name="damage"></param>
+        /// <param name="knockback"></param>
         public override void TakeDamage(int damage, int knockback)
         {
             if (!(enemyState == EnemyState.dead))
@@ -158,6 +164,14 @@ namespace SolsUnderground
             }
         }
 
+        /// <summary>
+        /// moves in 3 stages
+        /// 1 - up and down slowly
+        /// 2 - up and down faster
+        /// 3 - chases player
+        /// </summary>
+        /// <param name="player"></param>
+        /// <param name="gameTime"></param>
         public override void EnemyMove(Player player, GameTime gameTime)
         {
             //Update the cooldowns
@@ -256,6 +270,7 @@ namespace SolsUnderground
             }
         }
 
+        //draws a different color when charging for AOE
         public override void Draw(SpriteBatch sb)
         {
             if (sp1Counter > sp1CD - 1)
@@ -282,6 +297,10 @@ namespace SolsUnderground
             
         }
 
+        /// <summary>
+        /// not implemented yet
+        /// </summary>
+        /// <returns></returns>
         public Attack Shoot()
         {
             moveCounter = 0;
@@ -289,6 +308,10 @@ namespace SolsUnderground
             return null;
         }
 
+        /// <summary>
+        /// deals damage all around
+        /// </summary>
+        /// <returns></returns>
         public Attack AOE()
         {
             if (sp1Counter >= sp1CD)
@@ -314,6 +337,11 @@ namespace SolsUnderground
             return null;
         }
 
+        /// <summary>
+        /// uses AOE when player is close, shoots faster when there is less health
+        /// </summary>
+        /// <param name="player"></param>
+        /// <returns></returns>
         public override Attack BossAttack(Player player)
         {
             if (moveCounter >= moveCD)

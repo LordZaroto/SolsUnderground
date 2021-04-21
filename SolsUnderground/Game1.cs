@@ -118,11 +118,11 @@ namespace SolsUnderground
         private Texture2D returnToMenu;
         private Texture2D returnToMenuClicked;
         private Rectangle button5;
-        private char forward = 'w';
-        private char backward = 's';
-        private char left = 'a';
-        private char right = 'd';
-        private char equip = 'e';
+        private Keys forward = Keys.W;
+        private Keys backward = Keys.S;
+        private Keys left = Keys.A;
+        private Keys right = Keys.D;
+        private Keys equip = Keys.E;
 
         //HUD items
         private SpriteFont uiText;
@@ -482,7 +482,7 @@ namespace SolsUnderground
                     combatManager.CleanUp(itemManager);
 
                     //Collisions
-                    itemManager.ActivateItems(SingleKeyPress(Keys.E, kb, prevKB));
+                    itemManager.ActivateItems(SingleKeyPress(equip, kb, prevKB));
                     collisionManager.CheckCollisions();
 
                     // Check if room is cleared
@@ -706,6 +706,10 @@ namespace SolsUnderground
             GraphicsDevice.Clear(Color.Black);
             MouseState mouse = Mouse.GetState();
             KeyboardState keyboard = Keyboard.GetState();
+            player.Forward = forward;
+            player.Backward = backward;
+            player.Left = left;
+            player.Right = right;
             _spriteBatch.Begin();
             switch (currentState)
             {
@@ -746,38 +750,145 @@ namespace SolsUnderground
 
                 // Controls Screen
                 case GameState.Controls:
+                    Keys newkey = Keys.None;
+                    Color squareColorF = Color.Gray;
+                    Color squareColorB = Color.Gray;
+                    Color squareColorL = Color.Gray;
+                    Color squareColorR = Color.Gray;
+                    Color squareColorE = Color.Gray;
 
-                     _spriteBatch.DrawString(
+
+                    _spriteBatch.DrawString(
                         heading,
                         "Controls",
                         new Vector2(390, 0),
                         Color.White);
 
-                    Rectangle forwardRect = new Rectangle(500, 250, 300, 40);
+                    Rectangle forwardRect = new Rectangle(740, 255, 150, 50);
+                    _spriteBatch.Draw(Program.drawSquare, forwardRect, squareColorF);
+                    if (MouseOver(forwardRect, mouse) == true)
+                    {
+                        squareColorF = Color.LightBlue;
+                        _spriteBatch.Draw(Program.drawSquare, forwardRect, Color.LightBlue);
+                        if (squareColorF == Color.LightBlue && keyboard.GetPressedKeyCount() > 0)
+                        {
+                            newkey = keyboard.GetPressedKeys()[0];
+                            if (newkey != equip && newkey != backward && newkey != left && newkey != right)
+                            {
+                                forward = newkey;
+                                squareColorF = Color.Gray;
+                                
+                            }
+
+                            else
+                            {
+                                squareColorF = Color.Gray;
+                                
+                            }
+                            player.Forward = forward;
+                        }
+
+                        
+                    }
                     _spriteBatch.DrawString(
                       text,
-                      "Forward - " + char.ToUpper(forward),
+                      "Forward - " + forward.ToString(),
                       new Vector2(500, 250),
                       Color.White); ;
 
-                    Rectangle backwardRect = new Rectangle(500, 350, 300, 40);
+                    Rectangle backwardRect = new Rectangle(800, 355, 150, 50);
+                    _spriteBatch.Draw(Program.drawSquare, backwardRect, squareColorB);
+                    if (MouseOver(backwardRect, mouse) == true)
+                    {
+                        squareColorB = Color.LightBlue;
+                        _spriteBatch.Draw(Program.drawSquare, backwardRect, Color.LightBlue);
+                        if (squareColorB == Color.LightBlue && keyboard.GetPressedKeyCount() > 0)
+                        {
+                            newkey = keyboard.GetPressedKeys()[0];
+                            if (newkey != forward && newkey != equip && newkey != left && newkey != right)
+                            {
+                                backward = newkey;
+                                squareColorB = Color.Gray;
+                                
+                            }
+
+                            else
+                            {
+                                squareColorB = Color.Gray;
+                                
+                            }
+                            player.Backward = backward;
+                        }
+                        
+
+                    }
                     _spriteBatch.DrawString(
                         text,
-                        "Backwards - " + char.ToUpper(backward),
+                        "Backwards - " + backward.ToString(),
                         new Vector2(500, 350),
                         Color.White);
 
-                    Rectangle leftRect = new Rectangle(500, 450, 300, 40);
+                    Rectangle leftRect = new Rectangle(644, 455, 150, 50);
+                    _spriteBatch.Draw(Program.drawSquare, leftRect, squareColorL);
+                    if (MouseOver(leftRect, mouse) == true)
+                    {
+                        squareColorL = Color.LightBlue;
+                        _spriteBatch.Draw(Program.drawSquare, leftRect, Color.LightBlue);
+                        if (squareColorL == Color.LightBlue && keyboard.GetPressedKeyCount() > 0)
+                        {
+                            newkey = keyboard.GetPressedKeys()[0];
+                            if (newkey != forward && newkey != backward && newkey != equip && newkey != right)
+                            {
+                                left = newkey;
+                                squareColorL = Color.Gray;
+                                
+                            }
+
+                            else
+                            {
+                                squareColorL = Color.Gray;
+                                
+                            }
+                            
+                        }
+
+                     
+                    }
                     _spriteBatch.DrawString(
                         text,
-                        " Left - " + char.ToUpper(left),
+                        " Left - " + left.ToString(),
                         new Vector2(500, 450),
                         Color.White);
 
-                    Rectangle rightRect = new Rectangle(500, 550, 300, 40);
+                    Rectangle rightRect = new Rectangle(662, 555, 150, 50);
+                    _spriteBatch.Draw(Program.drawSquare, rightRect, squareColorR);
+                    if (MouseOver(rightRect, mouse) == true)
+                    {
+                        squareColorR = Color.LightBlue;
+                        _spriteBatch.Draw(Program.drawSquare, rightRect, Color.LightBlue);
+                        if (squareColorR == Color.LightBlue && keyboard.GetPressedKeyCount() > 0)
+                        {
+                            newkey = keyboard.GetPressedKeys()[0];
+                            if (newkey != forward && newkey != backward && newkey != left && newkey != equip)
+                            {
+                                right = newkey;
+                                squareColorR = Color.Gray;
+                                
+                            }
+
+                            else
+                            {
+                                squareColorR = Color.Gray;
+                                
+                            }
+                            
+                        }
+
+                        player.Right = right;
+                    }
                     _spriteBatch.DrawString(
                         text,
-                        "Right - " + char.ToUpper(right),
+                        "Right - " + right.ToString(),
                         new Vector2(500, 550),
                         Color.White);
 
@@ -787,18 +898,41 @@ namespace SolsUnderground
                         new Vector2(500, 650),
                         Color.White);
 
-                    Rectangle equipRect = new Rectangle(500, 650, 300, 40);
-                    if (MouseClick(equipRect, mouse, prevM) == true) ;
+                    Rectangle equipRect = new Rectangle(675, 755, 150, 50);
+                    _spriteBatch.Draw(Program.drawSquare, equipRect, squareColorE);
+                    if (MouseOver(equipRect, mouse) == true)
+                    {
+                        squareColorE = Color.LightBlue;
+                        _spriteBatch.Draw(Program.drawSquare, equipRect, Color.LightBlue);
+                        if (squareColorE == Color.LightBlue && keyboard.GetPressedKeyCount() >0 )
+                        {
+                            newkey = keyboard.GetPressedKeys()[0];
+                            if (newkey != forward && newkey != backward && newkey != left && newkey != right)
+                            {
+                                equip = newkey;
+                                squareColorE = Color.Gray;
+                            }
 
+                            else
+                                squareColorE = Color.Gray;
+                        }
+                        
+
+                    }
                     _spriteBatch.DrawString(
                         text,
-                        "Equip - " + char.ToUpper(equip),
+                        "Equip - " + equip.ToString(),
                         new Vector2(500, 750),
                         Color.White);
                     if (MouseOver(button5, mouse) == true)
                         _spriteBatch.Draw(returnToMenuClicked, button5, Color.White);
                     else
                         _spriteBatch.Draw(returnToMenu, button5, Color.White);
+
+                    player.Forward = forward;
+                    player.Backward = backward;
+                    player.Left = left;
+                    player.Right = right;
                     break;
 
 
@@ -811,9 +945,12 @@ namespace SolsUnderground
                         Color.White);
                     _spriteBatch.DrawString(
                         text,
-                        "defeat all enemies to go on to the next room, go till you face the boss\n" +
-                        "there are 7 floors and you must beat the boss of the floor to go to the next\n"+
-                        "in the ",
+                        "defeat all enemies to go on to the next room,\n" +
+                        "               go till you face the boss.\n" +
+                        "there are 7 floors and you must beat the boss \n" +
+                        "               to go to the next floor.\n"+
+                        "Defeat all 7 of the total boss of each floor\n" +
+                        "                       and you win",
                         new Vector2(150, 250),
                         Color.White);
                     if (MouseOver(button5, mouse) == true)
