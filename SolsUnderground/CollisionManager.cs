@@ -204,58 +204,13 @@ namespace SolsUnderground
         /// <returns></returns>
         public Attack AttackWallCollision(Attack a)
         {
-            Rectangle noKnockArea = new Rectangle(a.Hitbox.X + 25, a.Hitbox.Y + 25,
-                    50 + a.Hitbox.Width, 50 + a.Hitbox.Height);
+            Rectangle noKnockArea = new Rectangle(a.Hitbox.X + a.Knockback, a.Hitbox.Y + a.Knockback,
+                    (2*a.Knockback) + a.Hitbox.Width, (2*a.Knockback) + a.Hitbox.Height);
             for (int i = 0; i < barriers.Count; i++)
             {
-                //First version attempted to decrease the knockback 
-                //based on the direction of the attack and the distance 
-                //between the hitbox and the barrier
-                //
-                //
-                //    if (a.AttackDirection == AttackDirection.right)
-                //    {
-                //        if (a.Hitbox.X <= barriers[i].X + barriers[i].Width &&
-                //            a.Hitbox.X + a.Knockback >= barriers[i].X)
-                //        {
-                //            int knockback = 0;//a.Hitbox.X + a.Knockback + a.Hitbox.Width;
-                //            return new Attack(a.Hitbox, a.Damage, knockback, a.Texture, a.AttackDirection, a.Timer);
-                //        }
-                //    }
-                //    else if (a.AttackDirection == AttackDirection.left)
-                //    {
-                //        if (a.Hitbox.X >= barriers[i].X &&
-                //            a.Hitbox.X - a.Knockback <= barriers[i].X)
-                //        {
-                //            int knockback = 0;// a.Hitbox.X - (barriers[i].X + barriers[i].Width);
-                //            return new Attack(a.Hitbox, a.Damage, knockback, a.Texture, a.AttackDirection, a.Timer);
-                //        }
-                //    }
-                //    else if (a.AttackDirection == AttackDirection.down)
-                //    {
-                //        if (a.Hitbox.Y + a.Hitbox.Height <= barriers[i].Y + barriers[i].Height &&
-                //            a.Hitbox.Y + a.Hitbox.Height + a.Knockback >= barriers[i].Y + barriers[i].Height)
-                //        {
-                //            int knockback = 0;// barriers[i].Y - (a.Hitbox.Y + a.Hitbox.Height);
-                //            return new Attack(a.Hitbox, a.Damage, knockback, a.Texture, a.AttackDirection, a.Timer);
-                //        }
-                //    }
-                //    else
-                //    {
-                //        if (a.Hitbox.Y + a.Knockback <= barriers[i].Y &&
-                //            a.Hitbox.Y >= barriers[i].Y)
-                //        {
-                //            int knockback = 0;// (barriers[i].Y + barriers[i].Height) - a.Hitbox.Y;
-                //            return new Attack(a.Hitbox, a.Damage, knockback, a.Texture, a.AttackDirection, a.Timer);
-                //        }
-                //    }
-                //}
-                //return a;
-
+                //When the player is within knockback range of a barrier
                 if (noKnockArea.Intersects(barriers[i]) || noKnockArea.Contains(barriers[i]))
                 {
-                    //Attempted to decrease the knockback to make the player only get
-                    //knocked to the wall
                     int knockback;
                     if (a.AttackDirection == AttackDirection.left && barriers[i].X < player.X)
                     {
@@ -275,12 +230,8 @@ namespace SolsUnderground
                     }
                     else
                     {
-                        knockback = 0;
+                        knockback = a.Knockback;
                     }
-                    //decimal kb = (decimal)knockback;
-                    //kb = Math.Abs(kb);
-
-                    //knockback = (int)kb;
                     return new Attack(a.Hitbox, a.Damage, knockback, a.AttackDirection);
                 }
         }

@@ -103,7 +103,8 @@ namespace SolsUnderground
                     }
                 }
                 
-                if (e.PositionRect.Intersects(player.PositionRect) && !(e.State == EnemyState.dead))
+                if ((e.PositionRect.Intersects(player.PositionRect) || player.PositionRect.Contains(e.PositionRect)
+                    || e.PositionRect.Contains(player.PositionRect)) && !(e.State == EnemyState.dead))
                 {
                     Rectangle temp = player.PositionRect;
                     //A new attack is created when the player intersects with an enemy
