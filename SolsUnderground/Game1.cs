@@ -706,6 +706,10 @@ namespace SolsUnderground
             GraphicsDevice.Clear(Color.Black);
             MouseState mouse = Mouse.GetState();
             KeyboardState keyboard = Keyboard.GetState();
+            player.Forward = forward;
+            player.Backward = backward;
+            player.Left = left;
+            player.Right = right;
             _spriteBatch.Begin();
             switch (currentState)
             {
