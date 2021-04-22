@@ -118,11 +118,11 @@ namespace SolsUnderground
         private Texture2D returnToMenu;
         private Texture2D returnToMenuClicked;
         private Rectangle button5;
-        private Keys forward = Keys.W;
-        private Keys backward = Keys.S;
-        private Keys left = Keys.A;
-        private Keys right = Keys.D;
-        private Keys equip = Keys.E;
+        private Keys forward;
+        private Keys backward;
+        private Keys left;
+        private Keys right;
+        private Keys equip;
 
         //HUD items
         private SpriteFont uiText;
@@ -157,7 +157,6 @@ namespace SolsUnderground
         private Rectangle weaponIcon;
         private Rectangle armorIcon;
         private Rectangle infoRect;
-        private Rectangle currentWeapon;
 
         //save/load items
         private Texture2D file1;
@@ -706,10 +705,6 @@ namespace SolsUnderground
             GraphicsDevice.Clear(Color.Black);
             MouseState mouse = Mouse.GetState();
             KeyboardState keyboard = Keyboard.GetState();
-            player.Forward = forward;
-            player.Backward = backward;
-            player.Left = left;
-            player.Right = right;
             _spriteBatch.Begin();
             switch (currentState)
             {
@@ -982,8 +977,8 @@ namespace SolsUnderground
                     _spriteBatch.Draw(Program.drawSquare, new Rectangle(5, 5, player.Hp * 3, 30), Color.DarkRed);
                     _spriteBatch.DrawString(
                         uiText,
-                        "" + player.Hp,
-                        new Vector2(((player.MaxHp * 3 )/2) -10, 5),
+                        player.Hp + "/" + player.MaxHp,
+                        new Vector2(10, 5),
                         Color.White);
                     
 

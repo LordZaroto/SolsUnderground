@@ -238,6 +238,11 @@ namespace SolsUnderground
             _animations = animations;
             _animationManager = new AnimationManager(_animations.First().Value, this);
             _timer = 0f;
+            forward = Keys.W;
+            left = Keys.A;
+            backward = Keys.S;
+            right = Keys.D;
+            equip = Keys.E;
         }
         //----------------------------------------------------------
 
