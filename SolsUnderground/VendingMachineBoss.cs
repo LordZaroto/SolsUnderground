@@ -317,7 +317,10 @@ namespace SolsUnderground
             {
                 sp2Counter = 0;
                 moveCounter = 0;
-                Projectiles can = new Projectiles(new Rectangle(X + Width / 2, Y + Height / 2, textures[4].Width, textures[4].Height), 3, 32, textures[4], AttackDirection.left, sp2HitTimer);
+                Projectile can = new Projectile(
+                    new Rectangle(X + Width / 2, Y + Height / 2, 
+                    textures[4].Width, textures[4].Height), 
+                    3, 5, 32, textures[4], AttackDirection.left, false);
                 return can;
             }
             return null;
@@ -345,7 +348,8 @@ namespace SolsUnderground
                         knockback * 3,
                         atkTexture,
                         AttackDirection.up, //This is temporary - Should probably change based off player position
-                        sp1HitTimer);
+                        sp1HitTimer,
+                        false);
 
                 return special;
             }
@@ -357,8 +361,11 @@ namespace SolsUnderground
         /// </summary>
         /// <param name="player"></param>
         /// <returns></returns>
-        public override Attack BossAttack(Player player)
+        public override List<Attack> EnemyAttack(Player player)
         {
+            List<Attack> attacks = new List<Attack>();
+            AttackDirection direction = AttackDirection.left;
+
             if (moveCounter >= moveCD)
             {
                 //If close to player
@@ -367,7 +374,7 @@ namespace SolsUnderground
                  if (_AOETimer > 1)
                  {
                      //_timer = 0; 
-                     return AOE();
+                     attacks.Add(AOE());
                  }
              
              
@@ -376,21 +383,47 @@ namespace SolsUnderground
                  {
                      if (_attackTimer > 2)
                      {
-                         return Shoot();
+                         attacks.Add(Shoot());
                      }
                  }
                  else
                  {
                      if (_attackTimer > 1)
                      {
-                         return Shoot();
+                         attacks.Add(Shoot());
                      }
                  }
                  
              
             }
 
-            return null;
+            // Check direction for collision hitbox
+            switch (enemyState)
+            {
+                case EnemyState.faceForward:
+                case EnemyState.moveForward:
+                    direction = AttackDirection.up;
+                    break;
+
+                case EnemyState.faceLeft:
+                case EnemyState.moveLeft:
+                    direction = AttackDirection.left;
+                    break;
+
+                case EnemyState.faceBack:
+                case EnemyState.moveBack:
+                    direction = AttackDirection.down;
+                    break;
+
+                case EnemyState.faceRight:
+                case EnemyState.moveRight:
+                    direction = AttackDirection.right;
+                    break;
+            }
+
+            attacks.Add(new Attack(PositionRect, attack, knockback, null, direction, 0.001, false));
+
+            return attacks;
         }
     }
 }

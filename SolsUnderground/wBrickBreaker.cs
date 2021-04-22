@@ -169,7 +169,7 @@ namespace SolsUnderground
                 player.Width * 5,
                 player.Height * 5);
 
-            return new Attack(positionRect, (int)(attack * 1.2), (int)(knockback * 1.5), texture, atkdir, timer);
+            return new Attack(positionRect, (int)(attack * 1.2), (int)(knockback * 1.5), texture, atkdir, timer, true);
         }
 
         public override void Draw(SpriteBatch sb)

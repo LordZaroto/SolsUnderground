@@ -195,6 +195,51 @@ namespace SolsUnderground
         }
 
         /// <summary>
+        /// Corrects attack hitboxes as they collide with walls and deletes colliding projectiles.
+        /// </summary>
+        /// <param name="attack">Attack to correct hitbox of</param>
+        /// <returns>Bool indicating whether attack exists after collision</returns>
+        public bool AttackWallCollisions(Attack attack)
+        {
+            foreach (Rectangle b in barriers)
+            {
+                if (b.Intersects(attack.Hitbox))
+                {
+                    if (attack is Projectile)
+                    {
+                        return false;
+                    }
+
+                    //// Non-projectiles have hitbox cut based on collision and direction
+                    //switch (attack.AttackDirection)
+                    //{
+                    //    case AttackDirection.up:
+                    //        if (b.Y < attack.Y)
+                    //        {
+                    //            attack.Height -= b.Y - attack.Y;
+                    //            attack.Y = b.Y;
+                    //        }
+                    //        else
+                    //        {
+                    //            if (b.X > attack.X)
+                    //            {
+                    //                attack.Width -= b.X - attack.Width;
+                    //            }
+                    //            else // b.X <= attack.X
+                    //            {
+                    //                attack.Width -= b.X - attack.X;
+                    //                attack.X = b.X;
+                    //            }
+                    //        }
+                    //        break;
+                    //}
+                }
+            }
+
+            return true;
+        }
+
+        /// <summary>
         /// Noah Flanders
         /// 
         /// The knockback of an incoming attack is adjusted if there are walls
@@ -202,7 +247,7 @@ namespace SolsUnderground
         /// </summary>
         /// <param name="a"></param>
         /// <returns></returns>
-        public Attack AttackWallCollision(Attack a)
+        public Attack AdjustAttackKnockback(Attack a)
         {
             Rectangle noKnockArea = new Rectangle(a.Hitbox.X + a.Knockback, a.Hitbox.Y + a.Knockback,
                     (2*a.Knockback) + a.Hitbox.Width, (2*a.Knockback) + a.Hitbox.Height);

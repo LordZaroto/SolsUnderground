@@ -22,7 +22,7 @@ namespace SolsUnderground
         /// </summary>
         /// <param name="player"></param>
         /// <returns></returns>
-        public abstract Attack BossAttack(Player player);
+        //public abstract List<Attack> EnemyAttack(Player player);
         //Use helper methods for each attack that the boss
         //can perform for cleaner code. Make those helper methods
         //return an Attack object and return the appropriate 

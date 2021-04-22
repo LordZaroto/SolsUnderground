@@ -154,7 +154,8 @@ namespace SolsUnderground
                     knockback * 2,
                     texture,
                     AttackDirection.up,
-                    timer);
+                    timer,
+                    true);
 
                 return special;
             }
@@ -176,7 +177,8 @@ namespace SolsUnderground
                     knockback * 2,
                     texture,
                     AttackDirection.left,
-                    timer);
+                    timer,
+                    true);
 
                 return special;
             }
@@ -198,7 +200,8 @@ namespace SolsUnderground
                     knockback * 2,
                     texture,
                     AttackDirection.down,
-                    timer);
+                    timer,
+                    true);
 
                 return special;
             }
@@ -220,7 +223,8 @@ namespace SolsUnderground
                     knockback * 2,
                     texture,
                     AttackDirection.right,
-                    timer);
+                    timer,
+                    true);
 
                 return special;
             }

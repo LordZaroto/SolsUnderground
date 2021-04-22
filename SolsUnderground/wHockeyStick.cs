@@ -163,14 +163,11 @@ namespace SolsUnderground
                     break;
             }
 
-            // w.X = p.X + (p.W - w.W) / 2
-            positionRect = new Rectangle(
-                player.X - player.Width,
-                player.Y - player.Height,
-                player.Width * 3,
-                player.Height * 3);
+            Rectangle shotHitbox = new Rectangle(player.X, 
+                (int)(player.Y + ((double)player.Height * 3 / 8)), 
+                player.Width, player.Height / 4);
 
-            return new Attack(positionRect, (int)(attack * 0.5), (int)(knockback * 3), texture, atkdir, timer);
+            return new Projectile(shotHitbox, (int)(attack * 0.5), 6, (int)(knockback * 3), texture, atkdir, true);
         }
 
         public override void Draw(SpriteBatch sb)

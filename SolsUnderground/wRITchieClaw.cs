@@ -149,7 +149,8 @@ namespace SolsUnderground
                     knockback / 2,
                     texture,
                     AttackDirection.up,
-                    timer);
+                    timer,
+                    true);
 
                 player.Y -= player.Height * 5;
                 return special;
@@ -170,7 +171,8 @@ namespace SolsUnderground
                     knockback / 2,
                     texture,
                     AttackDirection.left,
-                    timer);
+                    timer,
+                    true);
 
 
                 player.X -= player.Width * 5;
@@ -193,7 +195,8 @@ namespace SolsUnderground
                     knockback / 2,
                     texture,
                     AttackDirection.down,
-                    timer);
+                    timer,
+                    true);
 
                 player.Y += player.Height * 5;
 
@@ -215,7 +218,8 @@ namespace SolsUnderground
                     knockback / 2,
                     texture,
                     AttackDirection.right,
-                    timer);
+                    timer,
+                    true);
 
                 player.X += player.Width * 5;
 

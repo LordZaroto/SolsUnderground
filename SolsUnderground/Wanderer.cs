@@ -202,6 +202,42 @@ namespace SolsUnderground
             }
         }
 
+        /// <summary>
+        /// Provides an attack hitbox equal to the wanderer's hitbox.
+        /// </summary>
+        public override List<Attack> EnemyAttack(Player player)
+        {
+            List<Attack> attacks = new List<Attack>();
+            AttackDirection direction = AttackDirection.left;
+
+            switch (enemyState)
+            {
+                case EnemyState.faceForward:
+                case EnemyState.moveForward:
+                    direction = AttackDirection.up;
+                    break;
+
+                case EnemyState.faceLeft:
+                case EnemyState.moveLeft:
+                    direction = AttackDirection.left;
+                    break;
+
+                case EnemyState.faceBack:
+                case EnemyState.moveBack:
+                    direction = AttackDirection.down;
+                    break;
+
+                case EnemyState.faceRight:
+                case EnemyState.moveRight:
+                    direction = AttackDirection.right;
+                    break;
+            }
+
+            attacks.Add(new Attack(PositionRect, attack, knockback, null, direction, 0.001, false));
+
+            return attacks;
+        }
+
         public override void Draw(SpriteBatch sb)
         {
             sb.Draw(texture, positionRect, Color.White);

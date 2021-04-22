@@ -20,10 +20,11 @@ namespace SolsUnderground
     /// </summary>
     class Attack : GameObject
     {
-        private int knockback;
-        private int damage;
-        private AttackDirection attackDirection;
-        private double timer;
+        protected int knockback;
+        protected int damage;
+        protected AttackDirection attackDirection;
+        protected double timer;
+        protected bool isPlayerAttack;
 
         public Rectangle Hitbox
         {
@@ -81,18 +82,24 @@ namespace SolsUnderground
             set { timer = value; }
         }
 
+        public bool IsPlayerAttack
+        {
+            get { return isPlayerAttack; }
+        }
+
         public Texture2D Texture
         {
             get { return texture; }
         }
 
-        public Attack(Rectangle hitbox, int damage, int knockback, Texture2D texture, AttackDirection atkDir, double timer)
+        public Attack(Rectangle hitbox, int damage, int knockback, Texture2D texture, AttackDirection atkDir, double timer, bool isPlayerAttack)
         {
             this.positionRect = hitbox;
             this.damage = damage;
             this.knockback = knockback;
             this.texture = texture;
             this.timer = timer;
+            this.isPlayerAttack = isPlayerAttack;
             attackDirection = atkDir;
         }
 

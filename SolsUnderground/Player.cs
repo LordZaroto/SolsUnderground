@@ -108,27 +108,27 @@ namespace SolsUnderground
             set { playerState = value; }
         }
 
-        public Keys Forward
+        public Keys ForwardKey
         {
             get { return forward; }
             set { forward = (Keys)value; }
         }
-        public Keys Backward
+        public Keys BackwardKey
         {
             get { return backward; }
             set { backward = (Keys)value; }
         }
-        public Keys Left
+        public Keys LeftKey
         {
             get { return left; }
             set { left = (Keys)value; }
         }
-        public Keys Right
+        public Keys RightKey
         {
             get { return right; }
             set { right = (Keys)value; }
         }
-        public Keys Equips
+        public Keys EquipKey
         {
             get { return equip; }
             set { equip = (Keys)value; }
@@ -480,7 +480,8 @@ namespace SolsUnderground
                             Knockback,
                             CurrentWeapon.Sprite,
                             AttackDirection.up,
-                            CurrentWeapon.Timer);
+                            CurrentWeapon.Timer,
+                            true);
 
                         return currentAttack;
                     }
@@ -494,7 +495,8 @@ namespace SolsUnderground
                             Knockback,
                             CurrentWeapon.Sprite,
                             AttackDirection.left,
-                            CurrentWeapon.Timer);
+                            CurrentWeapon.Timer,
+                            true);
 
                         return currentAttack;
                     }
@@ -508,7 +510,8 @@ namespace SolsUnderground
                             Knockback,
                             CurrentWeapon.Sprite,
                             AttackDirection.down,
-                            CurrentWeapon.Timer);
+                            CurrentWeapon.Timer,
+                            true);
 
                         return currentAttack;
                     }
@@ -522,7 +525,8 @@ namespace SolsUnderground
                             Knockback,
                             CurrentWeapon.Sprite,
                             AttackDirection.right,
-                            CurrentWeapon.Timer);
+                            CurrentWeapon.Timer,
+                            true);
 
                         return currentAttack;
                     }
@@ -700,20 +704,7 @@ namespace SolsUnderground
             else if (_animationManager != null) // Player is moving/attacking
             {
                 _animationManager.Draw(sb);
-
-                // Draw weapon when attacking
-                switch (playerState)
-                {
-                    case PlayerState.attackForward:
-                    case PlayerState.attackLeft:
-                    case PlayerState.attackBack:
-                    case PlayerState.attackRight:
-                        CurrentWeapon.Draw(sb);
-                        break;
-                }
             }
-
-
         }
     }
 }

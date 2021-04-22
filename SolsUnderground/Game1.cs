@@ -469,19 +469,17 @@ namespace SolsUnderground
                 // Main Game Loop
                 case GameState.Game:
 
-                    //Player
+                    // Movement
                     player.Input(kb, gameTime);
-                    combatManager.PlayerAttack(player.BasicAttack(leftBState, previousLeftBState));
-                    combatManager.PlayerAttack(player.Special(rightBState, previousRightBState));
-
-                    // Enemies
-
                     enemyManager.MoveEnemies(gameTime);
-                    combatManager.EnemyAttacks(player);
+
+                    // Attacks
+                    combatManager.LoadAttacks(mouse, prevM);
+                    combatManager.ActivateAttacks(gameTime);
                     combatManager.CleanUp(itemManager);
 
                     //Collisions
-                    itemManager.ActivateItems(SingleKeyPress(equip, kb, prevKB));
+                    itemManager.ActivateItems(SingleKeyPress(player.EquipKey, kb, prevKB));
                     collisionManager.CheckCollisions();
 
                     // Check if room is cleared
@@ -507,6 +505,7 @@ namespace SolsUnderground
                         isRoomCleared = false;
 
                         enemyManager.ClearEnemies();
+                        combatManager.ClearAttacks();
 
                         // Check if boss room
                         if (mapManager.IsBossRoom)
@@ -780,7 +779,7 @@ namespace SolsUnderground
                                 squareColorF = Color.Gray;
                                 
                             }
-                            player.Forward = forward;
+                            player.ForwardKey = forward;
                         }
 
                         
@@ -812,7 +811,7 @@ namespace SolsUnderground
                                 squareColorB = Color.Gray;
                                 
                             }
-                            player.Backward = backward;
+                            player.BackwardKey = backward;
                         }
                         
 
@@ -879,7 +878,7 @@ namespace SolsUnderground
                             
                         }
 
-                        player.Right = right;
+                        player.RightKey = right;
                     }
                     _spriteBatch.DrawString(
                         text,
@@ -924,10 +923,10 @@ namespace SolsUnderground
                     else
                         _spriteBatch.Draw(returnToMenu, button5, Color.White);
 
-                    player.Forward = forward;
-                    player.Backward = backward;
-                    player.Left = left;
-                    player.Right = right;
+                    player.ForwardKey = forward;
+                    player.BackwardKey = backward;
+                    player.LeftKey = left;
+                    player.RightKey = right;
                     break;
 
 
@@ -961,6 +960,7 @@ namespace SolsUnderground
                     itemManager.Draw(_spriteBatch);
                     player.Draw(_spriteBatch);
                     enemyManager.Draw(_spriteBatch);
+                    combatManager.DrawAttacks(_spriteBatch);
 
                     //Health(_spriteBatch, player.Hp);
                     _spriteBatch.Draw(tigerBucks, money, Color.White);
@@ -1242,6 +1242,7 @@ namespace SolsUnderground
             mapManager.Reset();
 
             enemyManager.ClearEnemies();
+            combatManager.ClearAttacks();
             itemManager.NextRoom(mapManager.CurrentRoom.ChestSpawns);
             isRoomCleared = false;
             enemyManager.SpawnEnemies(

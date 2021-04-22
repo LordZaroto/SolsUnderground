@@ -199,23 +199,51 @@ namespace SolsUnderground
         /// </summary>
         /// <param name="player"></param>
         /// <returns></returns>
-        public override Attack BossAttack(Player player)
+        public override List<Attack> EnemyAttack(Player player)
         {
-            if(moveCounter >= moveCD)
+            List<Attack> attacks = new List<Attack>();
+            AttackDirection direction = AttackDirection.left;
+
+            if (moveCounter >= moveCD)
             {
                 //If close to player
                 if ((Math.Abs(X - player.X) < 50 && (State == EnemyState.moveRight || State == EnemyState.moveLeft))
                     || (Math.Abs(Y - player.Y) < 50 && (State == EnemyState.moveForward || State == EnemyState.moveBack)))
                 {
-                    return DragonWrath();
+                    attacks.Add(DragonWrath());
                 }
                 else
                 {
-                    return DragonDash();
+                    attacks.Add(DragonDash());
                 }
             }
 
-            return null;
+            // Determine direction for collision attack
+            switch (enemyState)
+            {
+                case EnemyState.faceForward:
+                case EnemyState.moveForward:
+                    direction = AttackDirection.up;
+                    break;
+
+                case EnemyState.faceLeft:
+                case EnemyState.moveLeft:
+                    direction = AttackDirection.left;
+                    break;
+
+                case EnemyState.faceBack:
+                case EnemyState.moveBack:
+                    direction = AttackDirection.down;
+                    break;
+
+                case EnemyState.faceRight:
+                case EnemyState.moveRight:
+                    direction = AttackDirection.right;
+                    break;
+            }
+            attacks.Add(new Attack(PositionRect, attack, knockback, null, direction, 0.001, false));
+
+            return attacks;
         }
 
         /// <summary>
@@ -246,7 +274,8 @@ namespace SolsUnderground
                         knockback * 3,
                         atkTexture,
                         AttackDirection.up,
-                        sp1HitTimer);
+                        sp1HitTimer,
+                        false);
 
                     Y -= Height;
                     return special;
@@ -265,7 +294,8 @@ namespace SolsUnderground
                         knockback * 3,
                         atkTexture,
                         AttackDirection.left,
-                        sp1HitTimer);
+                        sp1HitTimer,
+                        false);
 
                     X -= Width;
 
@@ -285,7 +315,8 @@ namespace SolsUnderground
                         knockback * 3,
                         atkTexture,
                         AttackDirection.down,
-                        sp1HitTimer);
+                        sp1HitTimer,
+                        false);
 
                     Y += Height;
 
@@ -305,7 +336,8 @@ namespace SolsUnderground
                         knockback * 3,
                         atkTexture,
                         AttackDirection.right,
-                        sp1HitTimer);
+                        sp1HitTimer,
+                        false);
 
                     X += Width;
 
@@ -344,7 +376,8 @@ namespace SolsUnderground
                         knockback / 2,
                         atkTexture,
                         AttackDirection.up,
-                        sp1HitTimer);
+                        sp1HitTimer,
+                        false);
 
                     Y -= Height * 3;
                     return special;
@@ -363,7 +396,8 @@ namespace SolsUnderground
                         knockback / 2,
                         atkTexture,
                         AttackDirection.left,
-                        sp1HitTimer);
+                        sp1HitTimer,
+                        false);
 
                     X -= Width * 3;
 
@@ -383,7 +417,8 @@ namespace SolsUnderground
                         knockback / 2,
                         atkTexture,
                         AttackDirection.down,
-                        sp1HitTimer);
+                        sp1HitTimer,
+                        false);
 
                     Y += Height * 3;
 
@@ -403,7 +438,8 @@ namespace SolsUnderground
                         knockback / 2,
                         atkTexture,
                         AttackDirection.right,
-                        sp1HitTimer);
+                        sp1HitTimer,
+                        false);
 
                     X += Width * 3;
 

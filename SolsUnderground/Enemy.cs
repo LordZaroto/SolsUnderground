@@ -73,5 +73,6 @@ namespace SolsUnderground
 
         public abstract void EnemyMove(Player player, GameTime gameTime);
 
+        public abstract List<Attack> EnemyAttack(Player player);
     }
 }

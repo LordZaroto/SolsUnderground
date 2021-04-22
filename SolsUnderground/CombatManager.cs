@@ -19,6 +19,7 @@ namespace SolsUnderground
         //Fields
         //-----------------------------
         public List<Enemy> enemies;
+        private List<Attack> activeAttacks;
         private Player player;
         private CollisionManager collisionManager;
         //-----------------------------
@@ -48,6 +49,7 @@ namespace SolsUnderground
         {
             this.player = player;
             this.collisionManager = collisionManager;
+            activeAttacks = new List<Attack>();
         }
         //----------------------------------------------------------
 
@@ -71,7 +73,7 @@ namespace SolsUnderground
             {
                 if (attack.Hitbox.Intersects(enemies[i].PositionRect))
                 {
-                    attack = collisionManager.AttackWallCollision(attack);
+                    attack = collisionManager.AdjustAttackKnockback(attack);
                     enemies[i].TakeDamage(attack.Damage, attack.Knockback);
                 }
             }
@@ -80,63 +82,63 @@ namespace SolsUnderground
         /// <summary>
         /// If an enemy attack connects with the player, execute the resultant consequences.
         /// </summary>
-        public void EnemyAttacks(Player player)
-        {
-            foreach (Enemy e in enemies)
-            {
-                if(e is Boss)
-                {
-                    //Cast the enemy as a boss to use specials
-                    Boss boss = (Boss)e;
-                    Attack special = boss.BossAttack(player);
-                    if (special != null)
-                    {
-                        special = collisionManager.AttackWallCollision(special);//Adjusts knockback for walls
-                    }
-
-                    if(!(special == null))
-                    {
-                        if (special.Hitbox.Intersects(player.PositionRect) && !(boss.State == EnemyState.dead))
-                        {
-                            player.TakeDamage(special.Damage, special.AttackDirection, special.Knockback);
-                        }
-                    }
-                }
-                
-                if ((e.PositionRect.Intersects(player.PositionRect) || player.PositionRect.Contains(e.PositionRect)
-                    || e.PositionRect.Contains(player.PositionRect)) && !(e.State == EnemyState.dead))
-                {
-                    Rectangle temp = player.PositionRect;
-                    //A new attack is created when the player intersects with an enemy
-                    Attack basic;
-                    if(Rectangle.Intersect(temp, e.PositionRect).Width <= Rectangle.Intersect(temp, e.PositionRect).Height)
-                    {
-                        if(e.PositionRect.X > temp.X)
-                        {
-                            basic = new Attack(e.PositionRect, e.Attack, e.Knockback, AttackDirection.left);
-                        }
-                        else
-                        {
-                            basic = new Attack(e.PositionRect, e.Attack, e.Knockback, AttackDirection.right);
-                        }
-                    }
-                    else
-                    {
-                        if(e.PositionRect.Y > temp.Y)
-                        {
-                            basic = new Attack(e.PositionRect, e.Attack, e.Knockback, AttackDirection.up);
-                        }
-                        else
-                        {
-                            basic = new Attack(e.PositionRect, e.Attack, e.Knockback, AttackDirection.down);
-                        }
-                    }
-                    basic = collisionManager.AttackWallCollision(basic);//The knockback of the attack is adjusted for walls
-                    player.TakeDamage(e.Attack, basic.AttackDirection, basic.Knockback);
-                }
-                
-            }
-        }
+        //public void EnemyAttacks(Player player)
+        //{
+        //    foreach (Enemy e in enemies)
+        //    {
+        //        if(e is Boss)
+        //        {
+        //            //Cast the enemy as a boss to use specials
+        //            Boss boss = (Boss)e;
+        //            Attack special = boss.EnemyAttack(player);
+        //            if (special != null)
+        //            {
+        //                special = collisionManager.AttackWallCollision(special);//Adjusts knockback for walls
+        //            }
+        //
+        //            if(!(special == null))
+        //            {
+        //                if (special.Hitbox.Intersects(player.PositionRect) && !(boss.State == EnemyState.dead))
+        //                {
+        //                    player.TakeDamage(special.Damage, special.AttackDirection, special.Knockback);
+        //                }
+        //            }
+        //        }
+        //        
+        //        if ((e.PositionRect.Intersects(player.PositionRect) || player.PositionRect.Contains(e.PositionRect)
+        //            || e.PositionRect.Contains(player.PositionRect)) && !(e.State == EnemyState.dead))
+        //        {
+        //            Rectangle temp = player.PositionRect;
+        //            //A new attack is created when the player intersects with an enemy
+        //            Attack basic;
+        //            if(Rectangle.Intersect(temp, e.PositionRect).Width <= Rectangle.Intersect(temp, e.PositionRect).Height)
+        //            {
+        //                if(e.PositionRect.X > temp.X)
+        //                {
+        //                    basic = new Attack(e.PositionRect, e.Attack, e.Knockback, AttackDirection.left);
+        //                }
+        //                else
+        //                {
+        //                    basic = new Attack(e.PositionRect, e.Attack, e.Knockback, AttackDirection.right);
+        //                }
+        //            }
+        //            else
+        //            {
+        //                if(e.PositionRect.Y > temp.Y)
+        //                {
+        //                    basic = new Attack(e.PositionRect, e.Attack, e.Knockback, AttackDirection.up);
+        //                }
+        //                else
+        //                {
+        //                    basic = new Attack(e.PositionRect, e.Attack, e.Knockback, AttackDirection.down);
+        //                }
+        //            }
+        //            basic = collisionManager.AttackWallCollision(basic);//The knockback of the attack is adjusted for walls
+        //            player.TakeDamage(e.Attack, basic.AttackDirection, basic.Knockback);
+        //        }
+        //        
+        //    }
+        //}
 
         /// <summary>
         /// Loads enemy list into combat manager.
@@ -145,6 +147,122 @@ namespace SolsUnderground
         public void GetEnemies(List<Enemy> enemies)
         {
             this.enemies = enemies;
+        }
+
+        /// <summary>
+        /// Loads all player and enemy attacks into active attack list.
+        /// </summary>
+        /// <param name="mouse">Current mouse state</param>
+        /// <param name="prevMouse">Previous mouse state</param>
+        public void LoadAttacks(MouseState mouse, MouseState prevMouse)
+        {
+            // Load player attacks
+            Attack pBasic = player.BasicAttack(mouse.LeftButton, prevMouse.LeftButton);
+            Attack pSpecial = player.Special(mouse.RightButton, prevMouse.RightButton);
+
+            if (pBasic != null)
+            {
+                activeAttacks.Add(pBasic);
+            }
+            if (pSpecial != null)
+            {
+                activeAttacks.Add(pSpecial);
+            }
+
+            // Load enemy attacks
+            List<Attack> eAttacks;
+            foreach (Enemy e in enemies)
+            {
+                eAttacks = e.EnemyAttack(player);
+
+                for (int i = 0; i < eAttacks.Count; i++)
+                {
+                    if (eAttacks[i] != null)
+                    {
+                        activeAttacks.Add(eAttacks[i]);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Checks attack collisions with entities, deals damage/knockback as appropriate,
+        /// and clears any attacks that have reached the end of their duration.
+        /// </summary>
+        /// <param name="gameTime"></param>
+        public void ActivateAttacks(GameTime gameTime)
+        {
+            for (int i = 0; i < activeAttacks.Count;)
+            {
+                // Filter hitboxes of attacks
+                // Remove projectiles colliding with walls
+                if (!collisionManager.AttackWallCollisions(activeAttacks[i]))
+                {
+                    activeAttacks.RemoveAt(i);
+                    continue;
+                }
+
+                // If enemy attack, check against player
+                if (!activeAttacks[i].IsPlayerAttack)
+                {
+                    if (activeAttacks[i].Hitbox.Intersects(player.PositionRect))
+                    {
+                        player.TakeDamage(activeAttacks[i].Damage,
+                            activeAttacks[i].AttackDirection, activeAttacks[i].Knockback);
+
+                        if (activeAttacks[i] is Projectile)
+                        {
+                            activeAttacks.RemoveAt(i);
+                            continue;
+                        }
+                    }
+                }
+                else // If player attack, check against all enemies
+                {
+                    foreach (Enemy e in enemies)
+                    {
+                        if (activeAttacks[i].Hitbox.Intersects(e.PositionRect))
+                        {
+                            e.TakeDamage(activeAttacks[i].Damage, activeAttacks[i].Knockback);
+                        }
+                    }
+                }
+
+                // If timer runs out, remove attack
+                if ((activeAttacks[i].Timer -= gameTime.ElapsedGameTime.TotalSeconds) <= 0)
+                {
+                    activeAttacks.RemoveAt(i);
+                    continue;
+                }
+
+                // Move any active projectiles
+                if (activeAttacks[i] is Projectile)
+                {
+                    ((Projectile)activeAttacks[i]).Move();
+                }
+
+                i++;
+            }
+        }
+
+        /// <summary>
+        /// Draws all active attacks on screen.
+        /// </summary>
+        /// <param name="sb">Spritebatch</param>
+        public void DrawAttacks(SpriteBatch sb)
+        {
+            foreach (Attack a in activeAttacks)
+            {
+                sb.Draw(a.Texture, a.Hitbox, Color.White);
+            }
+        }
+
+        /// <summary>
+        /// Removes all active attacks.
+        /// </summary>
+        public void ClearAttacks()
+        {
+            activeAttacks.Clear();
         }
 
         /// <summary>
