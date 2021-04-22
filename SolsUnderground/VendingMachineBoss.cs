@@ -24,6 +24,8 @@ namespace SolsUnderground
 
         bool movingUp;
 
+        AttackDirection attackDirection;
+
         private double sp1Counter;
         private double sp1CD;
         private double sp2Counter;
@@ -51,6 +53,7 @@ namespace SolsUnderground
             _attackTimer = 0f;
             float _AOETimer = 0f;
 
+            attackDirection = AttackDirection.left;
 
             sp1CD = 5;
             sp1Counter = 3;
@@ -276,6 +279,22 @@ namespace SolsUnderground
                     
                 }
             }
+            if(player.X < X && Math.Abs((player.X + player.Width/2) - (X + Width/2)) > Math.Abs((player.Y + player.Height / 2) - (Y + Height / 2)))
+            {
+                attackDirection = AttackDirection.left;
+            }
+            else if(player.X >= X && Math.Abs((player.X + player.Width / 2) - (X + Width / 2)) >= Math.Abs((player.Y + player.Height / 2) - (Y + Height / 2)))
+            {
+                attackDirection = AttackDirection.right;
+            }
+            else if (player.Y >= Y && Math.Abs((player.X + player.Width / 2) - (X + Width / 2)) <= Math.Abs((player.Y + player.Height / 2) - (Y + Height / 2)))
+            {
+                attackDirection = AttackDirection.down;
+            }
+            else
+            {
+                attackDirection = AttackDirection.up;
+            }
         }
 
         //draws a different color when charging for AOE
@@ -316,11 +335,14 @@ namespace SolsUnderground
             if(sp2Counter >= sp2CD)
             {
                 sp2Counter = 0;
-                moveCounter = 0;
+                //moveCounter = 0;
+
+
+
                 Projectile can = new Projectile(
                     new Rectangle(X + Width / 2, Y + Height / 2, 
                     textures[4].Width, textures[4].Height), 
-                    3, 5, 32, textures[4], AttackDirection.left, false);
+                    3, 5, 32, textures[4], attackDirection, false);
                 return can;
             }
             return null;
@@ -383,6 +405,7 @@ namespace SolsUnderground
                  {
                      if (_attackTimer > 2)
                      {
+                        _attackTimer = 0;
                          attacks.Add(Shoot());
                      }
                  }
@@ -390,7 +413,8 @@ namespace SolsUnderground
                  {
                      if (_attackTimer > 1)
                      {
-                         attacks.Add(Shoot());
+                        _attackTimer = 0;
+                        attacks.Add(Shoot());
                      }
                  }
                  
