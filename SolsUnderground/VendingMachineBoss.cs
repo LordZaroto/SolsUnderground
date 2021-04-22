@@ -52,8 +52,8 @@ namespace SolsUnderground
             float _AOETimer = 0f;
 
 
-            sp1CD = 8;
-            sp1Counter = 6;
+            sp1CD = 5;
+            sp1Counter = 3;
             //sp2Counter stuff
             sp1HitTimer = 0.1;
             sp2HitTimer = 0.1;
@@ -181,6 +181,7 @@ namespace SolsUnderground
             //Update the cooldowns
             moveCounter += gameTime.ElapsedGameTime.TotalSeconds;
             sp1Counter += gameTime.ElapsedGameTime.TotalSeconds;
+            sp2Counter += gameTime.ElapsedGameTime.TotalSeconds;
 
             if (moveCounter >= moveCD)
             {
@@ -244,12 +245,14 @@ namespace SolsUnderground
                             {
                                 if (positionRect.X >= player.X)
                                 {
+                                texture = textures[2];
                                     positionRect.X -= 3;
                                     enemyState = EnemyState.moveLeft;
                                 }
                                 else
                                 {
-                                    positionRect.X += 3;
+                                texture = textures[3];
+                                positionRect.X += 3;
                                     enemyState = EnemyState.moveRight;
                                 }
                             }
@@ -257,11 +260,13 @@ namespace SolsUnderground
                             {
                                 if (positionRect.Y >= player.Y)
                                 {
+                                    texture = textures[1];
                                     positionRect.Y -= 3;
                                     enemyState = EnemyState.moveBack;
                                 }
                                 else
                                 {
+                                    texture = textures[0];
                                     positionRect.Y += 3;
                                     enemyState = EnemyState.moveForward;
                                 }
@@ -308,8 +313,13 @@ namespace SolsUnderground
         /// <returns></returns>
         public Attack Shoot()
         {
-            //moveCounter = 0;
-            
+            if(sp2Counter >= sp2CD)
+            {
+                sp2Counter = 0;
+                moveCounter = 0;
+                Projectiles can = new Projectiles(new Rectangle(X + Width / 2, Y + Height / 2, textures[4].Width, textures[4].Height), 3, 32, textures[4], AttackDirection.left, sp2HitTimer);
+                return can;
+            }
             return null;
         }
 

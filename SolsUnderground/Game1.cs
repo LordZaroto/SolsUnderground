@@ -321,7 +321,7 @@ namespace SolsUnderground
                 Content.Load<Texture2D>("vmBossBack"),
                 Content.Load<Texture2D>("vmBossLeft"),
                 Content.Load<Texture2D>("vmBossRight"),
-                Content.Load<Texture2D>("HotDog")}; // Boss Attack Texture
+                Content.Load<Texture2D>("Cola")}; // Boss Attack Texture
             enemyManager.AddBossData(vmBossTextures);
 
             // Tiles
