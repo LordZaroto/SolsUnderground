@@ -250,7 +250,7 @@ namespace SolsUnderground
             collisionManager = new CollisionManager(player,
                 _graphics.PreferredBackBufferWidth,
                 _graphics.PreferredBackBufferHeight);
-            combatManager = new CombatManager(player);
+            combatManager = new CombatManager(player, collisionManager);
             enemyManager = new EnemyManager(player, collisionManager, combatManager);
 
             // Items
@@ -320,7 +320,7 @@ namespace SolsUnderground
                 Content.Load<Texture2D>("vmBossBack"),
                 Content.Load<Texture2D>("vmBossLeft"),
                 Content.Load<Texture2D>("vmBossRight"),
-                Content.Load<Texture2D>("HotDog")}; // Boss Attack Texture
+                Content.Load<Texture2D>("Cola")}; // Boss Attack Texture
             enemyManager.AddBossData(vmBossTextures);
 
             // Tiles
