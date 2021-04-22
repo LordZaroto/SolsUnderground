@@ -194,13 +194,48 @@ namespace SolsUnderground
             }
         }
 
-
-        //public Attack AttackWallCollision(Attack a)
-        //{
-        //    for(int i = 0; i < barriers.Count; i++)
-        //    {
-
-        //    }
-        //}
+        /// <summary>
+        /// Noah Flanders
+        /// 
+        /// The knockback of an incoming attack is adjusted if there are walls
+        /// in between the target's current position and the knocked back position
+        /// </summary>
+        /// <param name="a"></param>
+        /// <returns></returns>
+        public Attack AttackWallCollision(Attack a)
+        {
+            Rectangle noKnockArea = new Rectangle(a.Hitbox.X + a.Knockback, a.Hitbox.Y + a.Knockback,
+                    (2*a.Knockback) + a.Hitbox.Width, (2*a.Knockback) + a.Hitbox.Height);
+            for (int i = 0; i < barriers.Count; i++)
+            {
+                //When the player is within knockback range of a barrier
+                if (noKnockArea.Intersects(barriers[i]) || noKnockArea.Contains(barriers[i]))
+                {
+                    int knockback;
+                    if (a.AttackDirection == AttackDirection.left && barriers[i].X < player.X)
+                    {
+                        knockback = player.PositionRect.X - (barriers[i].X + barriers[i].Width);
+                    }
+                    else if (a.AttackDirection == AttackDirection.up && barriers[i].Y < player.Y)
+                    {
+                        knockback = player.PositionRect.Y - (barriers[i].Y + barriers[i].Height);
+                    }
+                    else if (a.AttackDirection == AttackDirection.right && barriers[i].X > player.X)
+                    {
+                        knockback = barriers[i].X - (player.PositionRect.X + player.PositionRect.Width);
+                    }
+                    else if (a.AttackDirection == AttackDirection.down && barriers[i].Y > player.Y)
+                    {
+                        knockback = barriers[i].Y - (player.PositionRect.Y + player.PositionRect.Height);
+                    }
+                    else
+                    {
+                        knockback = a.Knockback;
+                    }
+                    return new Attack(a.Hitbox, a.Damage, knockback, a.AttackDirection);
+                }
+        }
+            return a;
+        }
     }
 }

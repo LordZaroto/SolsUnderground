@@ -20,6 +20,7 @@ namespace SolsUnderground
         //-----------------------------
         public List<Enemy> enemies;
         private Player player;
+        private CollisionManager collisionManager;
         //-----------------------------
 
         //---------------------------------------------------------------------
@@ -43,9 +44,10 @@ namespace SolsUnderground
 
         //Constructor
         //----------------------------------------------------------
-        public CombatManager(Player player)
+        public CombatManager(Player player, CollisionManager collisionManager)
         {
             this.player = player;
+            this.collisionManager = collisionManager;
         }
         //----------------------------------------------------------
 
@@ -69,6 +71,7 @@ namespace SolsUnderground
             {
                 if (attack.Hitbox.Intersects(enemies[i].PositionRect))
                 {
+                    attack = collisionManager.AttackWallCollision(attack);
                     enemies[i].TakeDamage(attack.Damage, attack.Knockback);
                 }
             }
@@ -86,19 +89,50 @@ namespace SolsUnderground
                     //Cast the enemy as a boss to use specials
                     Boss boss = (Boss)e;
                     Attack special = boss.BossAttack(player);
+                    if (special != null)
+                    {
+                        special = collisionManager.AttackWallCollision(special);//Adjusts knockback for walls
+                    }
 
                     if(!(special == null))
                     {
                         if (special.Hitbox.Intersects(player.PositionRect) && !(boss.State == EnemyState.dead))
                         {
-                            player.TakeDamage(special.Damage, boss.State, special.Knockback);
+                            player.TakeDamage(special.Damage, special.AttackDirection, special.Knockback);
                         }
                     }
                 }
                 
-                if (e.PositionRect.Intersects(player.PositionRect) && !(e.State == EnemyState.dead))
+                if ((e.PositionRect.Intersects(player.PositionRect) || player.PositionRect.Contains(e.PositionRect)
+                    || e.PositionRect.Contains(player.PositionRect)) && !(e.State == EnemyState.dead))
                 {
-                    player.TakeDamage(e.Attack, e.State, e.Knockback);
+                    Rectangle temp = player.PositionRect;
+                    //A new attack is created when the player intersects with an enemy
+                    Attack basic;
+                    if(Rectangle.Intersect(temp, e.PositionRect).Width <= Rectangle.Intersect(temp, e.PositionRect).Height)
+                    {
+                        if(e.PositionRect.X > temp.X)
+                        {
+                            basic = new Attack(e.PositionRect, e.Attack, e.Knockback, AttackDirection.left);
+                        }
+                        else
+                        {
+                            basic = new Attack(e.PositionRect, e.Attack, e.Knockback, AttackDirection.right);
+                        }
+                    }
+                    else
+                    {
+                        if(e.PositionRect.Y > temp.Y)
+                        {
+                            basic = new Attack(e.PositionRect, e.Attack, e.Knockback, AttackDirection.up);
+                        }
+                        else
+                        {
+                            basic = new Attack(e.PositionRect, e.Attack, e.Knockback, AttackDirection.down);
+                        }
+                    }
+                    basic = collisionManager.AttackWallCollision(basic);//The knockback of the attack is adjusted for walls
+                    player.TakeDamage(e.Attack, basic.AttackDirection, basic.Knockback);
                 }
                 
             }

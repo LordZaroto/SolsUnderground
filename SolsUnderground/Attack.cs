@@ -81,6 +81,11 @@ namespace SolsUnderground
             set { timer = value; }
         }
 
+        public Texture2D Texture
+        {
+            get { return texture; }
+        }
+
         public Attack(Rectangle hitbox, int damage, int knockback, Texture2D texture, AttackDirection atkDir, double timer)
         {
             this.positionRect = hitbox;
@@ -88,6 +93,14 @@ namespace SolsUnderground
             this.knockback = knockback;
             this.texture = texture;
             this.timer = timer;
+            attackDirection = atkDir;
+        }
+
+        public Attack(Rectangle hitbox, int damage, int knockback, AttackDirection atkDir)
+        {
+            this.positionRect = hitbox;
+            this.damage = damage;
+            this.knockback = knockback;
             attackDirection = atkDir;
         }
     }

@@ -251,7 +251,7 @@ namespace SolsUnderground
             collisionManager = new CollisionManager(player,
                 _graphics.PreferredBackBufferWidth,
                 _graphics.PreferredBackBufferHeight);
-            combatManager = new CombatManager(player);
+            combatManager = new CombatManager(player, collisionManager);
             enemyManager = new EnemyManager(player, collisionManager, combatManager);
 
             // Items
