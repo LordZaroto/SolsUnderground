@@ -143,7 +143,7 @@ namespace SolsUnderground
                         spawnPoint.Y + (40 - bossTextures[bossChoice][2].Height) / 2,
                         bossTextures[bossChoice][2].Width,
                         bossTextures[bossChoice][2].Height),
-                        75, 8,
+                        150, 8,
                         bossTextures[bossChoice][4]));
                     break;
             }

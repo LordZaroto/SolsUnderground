@@ -18,8 +18,10 @@ namespace SolsUnderground
         Texture2D[] textures;
         Texture2D atkTexture;
         GameTime gameTime;
-        float _timer = 0f;
-        float aoeTimer;
+        float _timer;
+        float _AOETimer;
+        float _attackTimer;
+
         bool movingUp;
 
         private double sp1Counter;
@@ -46,7 +48,9 @@ namespace SolsUnderground
             kbCounter = kbCD;
             movingUp = true;
             _timer = 0f;
-            aoeTimer = 0f;
+            _attackTimer = 0f;
+            float _AOETimer = 0f;
+
 
             sp1CD = 8;
             sp1Counter = 6;
@@ -184,56 +188,54 @@ namespace SolsUnderground
                 {
                     if (currentHP > maxHP / 3 * 2)
                     {
-                        if (!(Math.Abs((positionRect.X +(positionRect.Width/2)) - (player.X + player.Width/2)) < 150 && Math.Abs((positionRect.Y + (positionRect.Height / 2)) - (player.Y + player.Height / 2)) < 150))
-                        {
 
+                        if (_timer > 2)
+                        {
+                            _timer = 0;
                             if (movingUp)
                             {
-                                positionRect.Y += 1;
+                                movingUp = false;
                             }
                             else
                             {
-                                positionRect.Y -= 1;
-                            }
-                            if (_timer > 3)
-                            {
-                                _timer = 0;
-                                if (movingUp)
-                                {
-                                    movingUp = false;
-                                }
-                                else
-                                {
-                                    movingUp = true;
-                                }
+                                movingUp = true;
                             }
                         }
+                        if (movingUp)
+                        {
+                            positionRect.Y -= 1;
+                        }
+                        else
+                        {
+                            positionRect.Y += 1;
+                        }
+                        
+                     
                     }
                     else if (currentHP <= maxHP / 3 * 2 && currentHP > maxHP / 3)
                     {
-                        if (!(Math.Abs((positionRect.X + (positionRect.Width / 2)) - (player.X + player.Width / 2)) < 150 && Math.Abs((positionRect.Y + (positionRect.Height / 2)) - (player.Y + player.Height / 2)) < 150))
+                     
+                        if (movingUp)
                         {
+                            positionRect.Y -= 2;
+                        }
+                        else
+                        {
+                            positionRect.Y += 2;
+                        }
+                        if (_timer > 2)
+                        {
+                            _timer = 0;
                             if (movingUp)
                             {
-                                positionRect.Y += 2;
+                                movingUp = false;
                             }
                             else
                             {
-                                positionRect.Y -= 2;
-                            }
-                            if (_timer > 2.5)
-                            {
-                                _timer = 0;
-                                if (movingUp)
-                                {
-                                    movingUp = false;
-                                }
-                                else
-                                {
-                                    movingUp = true;
-                                }
+                                movingUp = true;
                             }
                         }
+                     
                     }
                     else
                     {
@@ -266,6 +268,7 @@ namespace SolsUnderground
                             }
                         
                     }
+                    
                 }
             }
         }
@@ -293,8 +296,10 @@ namespace SolsUnderground
 
         public void UpdateTimer(GameTime gameTime)
         {
-                _timer += (float)gameTime.ElapsedGameTime.TotalSeconds;
-            
+            _timer += (float)gameTime.ElapsedGameTime.TotalSeconds;
+            _attackTimer += (float)gameTime.ElapsedGameTime.TotalSeconds;
+            _AOETimer += (float)gameTime.ElapsedGameTime.TotalSeconds;
+
         }
 
         /// <summary>
@@ -303,7 +308,7 @@ namespace SolsUnderground
         /// <returns></returns>
         public Attack Shoot()
         {
-            moveCounter = 0;
+            //moveCounter = 0;
             
             return null;
         }
@@ -318,14 +323,14 @@ namespace SolsUnderground
             {
                 //Reset the cooldown
                 sp1Counter = 0;
-                moveCounter = 0;
+                //moveCounter = 0;
 
                 Attack special = new Attack(
                         new Rectangle(
-                            X - 50,
-                            Y - 50,
-                            Width + 100,
-                            Height + 100),
+                            X - 80,
+                            Y - 80,
+                            Width + 160,
+                            Height + 160),
                         attack * 3,
                         knockback * 3,
                         atkTexture,
@@ -347,33 +352,32 @@ namespace SolsUnderground
             if (moveCounter >= moveCD)
             {
                 //If close to player
-                if ((Math.Abs(X - player.X) < 120 && (Math.Abs(Y - player.Y) < 120)))
-                {
-                    
-                    if (_timer > 1)
-                    {
-                        _timer = 0; 
-                        return AOE();
-                    }
-                }
-                else
-                {
-                    if(currentHP > maxHP / 3 * 2)
-                    {
-                        if (_timer % 2 == 0)
-                        {
-                            return Shoot();
-                        }
-                    }
-                    else
-                    {
-                        if (_timer % 1 == 0)
-                        {
-                            return Shoot();
-                        }
-                    }
-                    
-                }
+
+                 
+                 if (_AOETimer > 1)
+                 {
+                     //_timer = 0; 
+                     return AOE();
+                 }
+             
+             
+             
+                 if(currentHP > maxHP / 3 * 2)
+                 {
+                     if (_attackTimer > 2)
+                     {
+                         return Shoot();
+                     }
+                 }
+                 else
+                 {
+                     if (_attackTimer > 1)
+                     {
+                         return Shoot();
+                     }
+                 }
+                 
+             
             }
 
             return null;
