@@ -20,6 +20,7 @@ namespace SolsUnderground
         //-----------------------------
         public List<Enemy> enemies;
         private List<Attack> activeAttacks;
+        private List<double> attackIntervals;
         private Player player;
         private CollisionManager collisionManager;
         //-----------------------------
@@ -50,6 +51,7 @@ namespace SolsUnderground
             this.player = player;
             this.collisionManager = collisionManager;
             activeAttacks = new List<Attack>();
+            attackIntervals = new List<double>();
         }
         //----------------------------------------------------------
 
@@ -163,10 +165,12 @@ namespace SolsUnderground
             if (pBasic != null)
             {
                 activeAttacks.Add(pBasic);
+                attackIntervals.Add(0.1);
             }
             if (pSpecial != null)
             {
                 activeAttacks.Add(pSpecial);
+                attackIntervals.Add(0.1);
             }
 
             // Load enemy attacks
@@ -180,6 +184,7 @@ namespace SolsUnderground
                     if (eAttacks[i] != null)
                     {
                         activeAttacks.Add(eAttacks[i]);
+                        attackIntervals.Add(0.15);
                     }
                 }
             }
@@ -199,31 +204,65 @@ namespace SolsUnderground
                 if (!collisionManager.AttackWallCollisions(activeAttacks[i]))
                 {
                     activeAttacks.RemoveAt(i);
+                    attackIntervals.RemoveAt(i);
                     continue;
                 }
 
                 // If enemy attack, check against player
                 if (!activeAttacks[i].IsPlayerAttack)
                 {
-                    if (activeAttacks[i].Hitbox.Intersects(player.PositionRect))
+                    if (activeAttacks[i].Hitbox.Intersects(player.PositionRect) && attackIntervals[i] > 0.15)
                     {
+                        attackIntervals[i] -= 0.15;
+
                         player.TakeDamage(activeAttacks[i].Damage,
                             activeAttacks[i].AttackDirection, activeAttacks[i].Knockback);
 
                         if (activeAttacks[i] is Projectile)
                         {
                             activeAttacks.RemoveAt(i);
+                            attackIntervals.RemoveAt(i);
                             continue;
                         }
                     }
                 }
                 else // If player attack, check against all enemies
                 {
-                    foreach (Enemy e in enemies)
+                    if (activeAttacks[i] is Projectile)
                     {
-                        if (activeAttacks[i].Hitbox.Intersects(e.PositionRect))
+                        bool hit = false;
+
+                        foreach (Enemy e in enemies)
                         {
-                            e.TakeDamage(activeAttacks[i].Damage, activeAttacks[i].Knockback);
+                            if (activeAttacks[i].Hitbox.Intersects(e.PositionRect) && attackIntervals[i] > 0.15)
+                            {
+                                attackIntervals[i] -= 0.15;
+
+                                e.TakeDamage(activeAttacks[i].Damage, activeAttacks[i].Knockback);
+                                hit = true;
+                            }
+
+                            if (hit)
+                                break;
+                        }
+
+                        if (hit)
+                        {
+                            activeAttacks.RemoveAt(i);
+                            attackIntervals.RemoveAt(i);
+                            continue;
+                        }
+                    }
+                    else // Non-projectile attacks
+                    {
+                        foreach (Enemy e in enemies)
+                        {
+                            if (activeAttacks[i].Hitbox.Intersects(e.PositionRect) && attackIntervals[i] > 0.15)
+                            {
+                                attackIntervals[i] -= 0.15;
+
+                                e.TakeDamage(activeAttacks[i].Damage, activeAttacks[i].Knockback);
+                            }
                         }
                     }
                 }
@@ -232,8 +271,12 @@ namespace SolsUnderground
                 if ((activeAttacks[i].Timer -= gameTime.ElapsedGameTime.TotalSeconds) <= 0)
                 {
                     activeAttacks.RemoveAt(i);
+                    attackIntervals.RemoveAt(i);
                     continue;
                 }
+
+                // Increment attack intervals
+                attackIntervals[i] += gameTime.ElapsedGameTime.TotalSeconds;
 
                 // Move any active projectiles
                 if (activeAttacks[i] is Projectile)
