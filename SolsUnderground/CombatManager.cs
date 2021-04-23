@@ -296,7 +296,8 @@ namespace SolsUnderground
         {
             foreach (Attack a in activeAttacks)
             {
-                sb.Draw(a.Texture, a.Hitbox, Color.White);
+                if (a.Texture != null)
+                    sb.Draw(a.Texture, a.Hitbox, Color.White);
             }
         }
 

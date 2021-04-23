@@ -210,29 +210,46 @@ namespace SolsUnderground
                         return false;
                     }
 
-                    //// Non-projectiles have hitbox cut based on collision and direction
-                    //switch (attack.AttackDirection)
-                    //{
-                    //    case AttackDirection.up:
-                    //        if (b.Y < attack.Y)
-                    //        {
-                    //            attack.Height -= b.Y - attack.Y;
-                    //            attack.Y = b.Y;
-                    //        }
-                    //        else
-                    //        {
-                    //            if (b.X > attack.X)
-                    //            {
-                    //                attack.Width -= b.X - attack.Width;
-                    //            }
-                    //            else // b.X <= attack.X
-                    //            {
-                    //                attack.Width -= b.X - attack.X;
-                    //                attack.X = b.X;
-                    //            }
-                    //        }
-                    //        break;
-                    //}
+                    // Non-projectiles have hitbox cut based on collision and direction
+                    switch (attack.AttackDirection)
+                    {
+                        case AttackDirection.up:
+
+                            // Check horizontals
+                            if (b.X > attack.X)
+                            {
+                                attack.Width = b.X - attack.X;
+                            }
+                            else // b.X <= attack.X
+                            {
+                                attack.Width = (attack.X + attack.Width) - (b.X + b.Width);
+                                attack.X = b.X + b.Width;
+                            }
+
+                            if (b.Intersects(attack.Hitbox))
+                            {
+                                // Check verticals
+                                if (b.Y < attack.Y)
+                                {
+                                    attack.Height = attack.Y + attack.Height - (b.Y + b.Height);
+                                    attack.Y = b.Y + b.Height;
+                                }
+                                else // b.Y <= attack.Y
+                                {
+
+                                }
+                            }
+                            break;
+
+                        case AttackDirection.left:
+                            break;
+
+                        case AttackDirection.down:
+                            break;
+
+                        case AttackDirection.right:
+                            break;
+                    }
                 }
             }
 

@@ -241,7 +241,7 @@ namespace SolsUnderground
                     direction = AttackDirection.right;
                     break;
             }
-            attacks.Add(new Attack(PositionRect, attack, knockback, null, direction, 0.001, false));
+            attacks.Add(new Attack(PositionRect, attack, knockback, null, direction, 0.15, false));
 
             return attacks;
         }

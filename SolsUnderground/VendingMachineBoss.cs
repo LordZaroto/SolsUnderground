@@ -243,37 +243,36 @@ namespace SolsUnderground
                     }
                     else
                     {
-                        
-                            if (Math.Abs(positionRect.X - player.X) >= Math.Abs(positionRect.Y - player.Y))
+                        if (Math.Abs(positionRect.X - player.X) >= Math.Abs(positionRect.Y - player.Y))
+                        {
+                            if (positionRect.X >= player.X)
                             {
-                                if (positionRect.X >= player.X)
-                                {
                                 texture = textures[2];
-                                    positionRect.X -= 3;
-                                    enemyState = EnemyState.moveLeft;
-                                }
-                                else
-                                {
+                                positionRect.X -= 3;
+                                enemyState = EnemyState.moveLeft;
+                            }
+                            else
+                            {
                                 texture = textures[3];
                                 positionRect.X += 3;
-                                    enemyState = EnemyState.moveRight;
-                                }
+                                enemyState = EnemyState.moveRight;
                             }
-                            else if (Math.Abs(positionRect.X - player.X) < Math.Abs(positionRect.Y - player.Y))
+                        }
+                        else if (Math.Abs(positionRect.X - player.X) < Math.Abs(positionRect.Y - player.Y))
+                        {
+                            if (positionRect.Y >= player.Y)
                             {
-                                if (positionRect.Y >= player.Y)
-                                {
-                                    texture = textures[1];
-                                    positionRect.Y -= 3;
-                                    enemyState = EnemyState.moveBack;
-                                }
-                                else
-                                {
-                                    texture = textures[0];
-                                    positionRect.Y += 3;
-                                    enemyState = EnemyState.moveForward;
-                                }
+                                texture = textures[1];
+                                positionRect.Y -= 3;
+                                enemyState = EnemyState.moveBack;
                             }
+                            else
+                            {
+                                texture = textures[0];
+                                positionRect.Y += 3;
+                                enemyState = EnemyState.moveForward;
+                            }
+                        }
                         
                     }
                     
@@ -369,7 +368,7 @@ namespace SolsUnderground
                         attack * 3,
                         knockback * 3,
                         atkTexture,
-                        AttackDirection.up, //This is temporary - Should probably change based off player position
+                        attackDirection, //This is temporary - Should probably change based off player position
                         sp1HitTimer,
                         false);
 
@@ -386,7 +385,6 @@ namespace SolsUnderground
         public override List<Attack> EnemyAttack(Player player)
         {
             List<Attack> attacks = new List<Attack>();
-            AttackDirection direction = AttackDirection.left;
 
             if (moveCounter >= moveCD)
             {
@@ -421,31 +419,7 @@ namespace SolsUnderground
              
             }
 
-            // Check direction for collision hitbox
-            switch (enemyState)
-            {
-                case EnemyState.faceForward:
-                case EnemyState.moveForward:
-                    direction = AttackDirection.up;
-                    break;
-
-                case EnemyState.faceLeft:
-                case EnemyState.moveLeft:
-                    direction = AttackDirection.left;
-                    break;
-
-                case EnemyState.faceBack:
-                case EnemyState.moveBack:
-                    direction = AttackDirection.down;
-                    break;
-
-                case EnemyState.faceRight:
-                case EnemyState.moveRight:
-                    direction = AttackDirection.right;
-                    break;
-            }
-
-            attacks.Add(new Attack(PositionRect, attack, knockback, null, direction, 0.001, false));
+            attacks.Add(new Attack(PositionRect, attack, knockback, null, attackDirection, 0.15, false));
 
             return attacks;
         }
