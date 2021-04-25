@@ -802,6 +802,14 @@ namespace SolsUnderground
                 effectCounter -= 0.5;
             }
         }
+
+        /// <summary>
+        /// Removes all status effects.
+        /// </summary>
+        public void ClearEffects()
+        {
+            activeEffects.Clear();
+        }
         
         public void Die()
         {

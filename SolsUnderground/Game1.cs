@@ -1268,6 +1268,7 @@ namespace SolsUnderground
             collisionManager.SetBarrierList(mapManager.CurrentRoom.GetBarriers());
 
             // Reset player stats
+            player.ClearEffects();
             player.Equip(stick);
             player.Equip(hoodie);
             player.MaxHp = 100;
