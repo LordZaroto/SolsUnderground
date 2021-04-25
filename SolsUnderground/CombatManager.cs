@@ -165,12 +165,12 @@ namespace SolsUnderground
             if (pBasic != null)
             {
                 activeAttacks.Add(pBasic);
-                attackIntervals.Add(0.1);
+                attackIntervals.Add(0.15);
             }
             if (pSpecial != null)
             {
                 activeAttacks.Add(pSpecial);
-                attackIntervals.Add(0.1);
+                attackIntervals.Add(0.15);
             }
 
             // Load enemy attacks
@@ -218,6 +218,10 @@ namespace SolsUnderground
                         player.TakeDamage(activeAttacks[i].Damage,
                             activeAttacks[i].AttackDirection, activeAttacks[i].Knockback);
 
+                        // Apply effects
+                        if (activeAttacks[i].Effect != null)
+                            player.AddEffect(activeAttacks[i].Effect);
+
                         if (activeAttacks[i] is Projectile)
                         {
                             activeAttacks.RemoveAt(i);
@@ -239,6 +243,11 @@ namespace SolsUnderground
                                 attackIntervals[i] -= 0.15;
 
                                 e.TakeDamage(activeAttacks[i].Damage, activeAttacks[i].Knockback);
+
+                                // Apply effects
+                                if (activeAttacks[i].Effect != null)
+                                    e.AddEffect(activeAttacks[i].Effect);
+
                                 hit = true;
                             }
 
@@ -262,6 +271,10 @@ namespace SolsUnderground
                                 attackIntervals[i] -= 0.15;
 
                                 e.TakeDamage(activeAttacks[i].Damage, activeAttacks[i].Knockback);
+
+                                // Apply effects
+                                if (activeAttacks[i].Effect != null)
+                                    e.AddEffect(activeAttacks[i].Effect);
                             }
                         }
                     }
@@ -294,10 +307,33 @@ namespace SolsUnderground
         /// <param name="sb">Spritebatch</param>
         public void DrawAttacks(SpriteBatch sb)
         {
+            float rotation = 0f;
+
             foreach (Attack a in activeAttacks)
             {
                 if (a.Texture != null)
+                {
+                    switch (a.AttackDirection)
+                    {
+                        case AttackDirection.up:
+                            rotation = MathHelper.Pi + MathHelper.PiOver2;
+                            break;
+                        case AttackDirection.left:
+                            rotation = MathHelper.Pi;
+                            break;
+                        case AttackDirection.down:
+                            rotation = MathHelper.PiOver2;
+                            break;
+                        case AttackDirection.right:
+                            rotation = MathHelper.TwoPi;
+                            break;
+                    }
+                    
+                    // Figure out how to rotate sprites for attack animations
+                    //sb.Draw(a.Texture, a.Hitbox, null, Color.White, rotation, Vector2.Zero, SpriteEffects.None, 1f);
+                    
                     sb.Draw(a.Texture, a.Hitbox, Color.White);
+                }
             }
         }
 

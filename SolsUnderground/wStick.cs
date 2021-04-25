@@ -132,6 +132,8 @@ namespace SolsUnderground
 
         public Attack Special(Player player)
         {
+            player.AddEffect(new StatusEffect(StatusType.AtkUp, 3, 1));
+
             return null;
         }
 

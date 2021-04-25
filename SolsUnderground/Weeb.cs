@@ -40,6 +40,8 @@ namespace SolsUnderground
             this.currentHP = health;
             this.attack = attack;
             this.knockback = 32;
+            activeEffects = new List<StatusEffect>();
+            effectCounter = 0;
             moveCD = 0.2;
             moveCounter = moveCD;
             kbCD = 0.1;
@@ -73,7 +75,7 @@ namespace SolsUnderground
 
         public override int Attack
         {
-            get { return attack; }
+            get { return Math.Max(attack + AttackMod, 0); }
             set { attack = value; }
         }
 
@@ -107,6 +109,74 @@ namespace SolsUnderground
             set { enemyState = value; }
         }
 
+        protected override int AttackMod
+        {
+            get
+            {
+                int attackMod = 0;
+
+                foreach (StatusEffect fx in activeEffects)
+                {
+                    if (fx.Effect == StatusType.AtkUp)
+                        attackMod += fx.Power;
+
+                    if (fx.Effect == StatusType.AtkDown)
+                        attackMod -= fx.Power;
+                }
+
+                return attackMod;
+            }
+        }
+        protected override int DefenseMod
+        {
+            get
+            {
+                int defenseMod = 0;
+
+                foreach (StatusEffect fx in activeEffects)
+                {
+                    if (fx.Effect == StatusType.DefUp)
+                        defenseMod += fx.Power;
+
+                    if (fx.Effect == StatusType.DefDown)
+                        defenseMod -= fx.Power;
+                }
+
+                return defenseMod;
+            }
+        }
+        protected override int SpeedMod
+        {
+            get
+            {
+                int speedMod = 0;
+
+                foreach (StatusEffect fx in activeEffects)
+                {
+                    if (fx.Effect == StatusType.SpdUp)
+                        speedMod += fx.Power;
+
+                    if (fx.Effect == StatusType.SpdDown)
+                        speedMod -= fx.Power;
+                }
+
+                return speedMod;
+            }
+        }
+        protected override bool IsStunned
+        {
+            get
+            {
+                foreach (StatusEffect fx in activeEffects)
+                {
+                    if (fx.Effect == StatusType.Stun)
+                        return true;
+                }
+
+                return false;
+            }
+        }
+
         /// <summary>
         /// overridden method
         /// changes health when hit by the player
@@ -118,7 +188,7 @@ namespace SolsUnderground
             {
                 //moveCounter = 0; Testing no knockback on bosses
 
-                currentHP -= damage;
+                currentHP -= Math.Max(damage - DefenseMod, 0);
 
                 //Reduces knockback recieved by 50%
                 if (enemyState == EnemyState.faceForward || enemyState == EnemyState.moveForward)
@@ -150,43 +220,46 @@ namespace SolsUnderground
         /// </summary>
         public override void EnemyMove(Player player, GameTime gameTime)
         {
-            //Update the cooldowns
-            sp1Counter += gameTime.ElapsedGameTime.TotalSeconds;
-            sp2Counter += gameTime.ElapsedGameTime.TotalSeconds;
-            moveCounter += gameTime.ElapsedGameTime.TotalSeconds;
-
-            if (moveCounter >= moveCD)
+            if (!IsStunned)
             {
-                if (!(enemyState == EnemyState.dead))
+                //Update the cooldowns
+                sp1Counter += gameTime.ElapsedGameTime.TotalSeconds;
+                sp2Counter += gameTime.ElapsedGameTime.TotalSeconds;
+                moveCounter += gameTime.ElapsedGameTime.TotalSeconds;
+
+                if (moveCounter >= moveCD)
                 {
-                    if (Math.Abs(positionRect.X - player.X) >= Math.Abs(positionRect.Y - player.Y))
+                    if (!(enemyState == EnemyState.dead))
                     {
-                        if (positionRect.X >= player.X)
+                        if (Math.Abs(positionRect.X - player.X) >= Math.Abs(positionRect.Y - player.Y))
                         {
-                            texture = textures[2];
-                            positionRect.X -= 2;
-                            enemyState = EnemyState.moveLeft;
+                            if (positionRect.X >= player.X)
+                            {
+                                texture = textures[2];
+                                positionRect.X -= Math.Max(2 + SpeedMod, 0);
+                                enemyState = EnemyState.moveLeft;
+                            }
+                            else
+                            {
+                                texture = textures[3];
+                                positionRect.X += Math.Max(2 + SpeedMod, 0);
+                                enemyState = EnemyState.moveRight;
+                            }
                         }
-                        else
+                        else if (Math.Abs(positionRect.X - player.X) < Math.Abs(positionRect.Y - player.Y))
                         {
-                            texture = textures[3];
-                            positionRect.X += 2;
-                            enemyState = EnemyState.moveRight;
-                        }
-                    }
-                    else if (Math.Abs(positionRect.X - player.X) < Math.Abs(positionRect.Y - player.Y))
-                    {
-                        if (positionRect.Y >= player.Y)
-                        {
-                            texture = textures[1];
-                            positionRect.Y -= 2;
-                            enemyState = EnemyState.moveForward;
-                        }
-                        else
-                        {
-                            texture = textures[0];
-                            positionRect.Y += 2;
-                            enemyState = EnemyState.moveBack;
+                            if (positionRect.Y >= player.Y)
+                            {
+                                texture = textures[1];
+                                positionRect.Y -= Math.Max(2 + SpeedMod, 0);
+                                enemyState = EnemyState.moveForward;
+                            }
+                            else
+                            {
+                                texture = textures[0];
+                                positionRect.Y += Math.Max(2 + SpeedMod, 0);
+                                enemyState = EnemyState.moveBack;
+                            }
                         }
                     }
                 }
@@ -204,46 +277,108 @@ namespace SolsUnderground
             List<Attack> attacks = new List<Attack>();
             AttackDirection direction = AttackDirection.left;
 
-            if (moveCounter >= moveCD)
+            if (!IsStunned)
             {
-                //If close to player
-                if ((Math.Abs(X - player.X) < 50 && (State == EnemyState.moveRight || State == EnemyState.moveLeft))
-                    || (Math.Abs(Y - player.Y) < 50 && (State == EnemyState.moveForward || State == EnemyState.moveBack)))
+                if (moveCounter >= moveCD)
                 {
-                    attacks.Add(DragonWrath());
+                    //If close to player
+                    if ((Math.Abs(X - player.X) < 50 && (State == EnemyState.moveRight || State == EnemyState.moveLeft))
+                        || (Math.Abs(Y - player.Y) < 50 && (State == EnemyState.moveForward || State == EnemyState.moveBack)))
+                    {
+                        attacks.Add(DragonWrath());
+                    }
+                    else
+                    {
+                        attacks.Add(DragonDash());
+                    }
                 }
-                else
+
+                // Determine direction for collision attack
+                switch (enemyState)
                 {
-                    attacks.Add(DragonDash());
+                    case EnemyState.faceForward:
+                    case EnemyState.moveForward:
+                        direction = AttackDirection.up;
+                        break;
+
+                    case EnemyState.faceLeft:
+                    case EnemyState.moveLeft:
+                        direction = AttackDirection.left;
+                        break;
+
+                    case EnemyState.faceBack:
+                    case EnemyState.moveBack:
+                        direction = AttackDirection.down;
+                        break;
+
+                    case EnemyState.faceRight:
+                    case EnemyState.moveRight:
+                        direction = AttackDirection.right;
+                        break;
                 }
+                attacks.Add(new Attack(PositionRect, Attack, knockback, null, direction, 0.15, false, null));
             }
-
-            // Determine direction for collision attack
-            switch (enemyState)
-            {
-                case EnemyState.faceForward:
-                case EnemyState.moveForward:
-                    direction = AttackDirection.up;
-                    break;
-
-                case EnemyState.faceLeft:
-                case EnemyState.moveLeft:
-                    direction = AttackDirection.left;
-                    break;
-
-                case EnemyState.faceBack:
-                case EnemyState.moveBack:
-                    direction = AttackDirection.down;
-                    break;
-
-                case EnemyState.faceRight:
-                case EnemyState.moveRight:
-                    direction = AttackDirection.right;
-                    break;
-            }
-            attacks.Add(new Attack(PositionRect, attack, knockback, null, direction, 0.15, false));
 
             return attacks;
+        }
+
+        /// <summary>
+        /// Adds a status effect to the enemy.
+        /// </summary>
+        /// <param name="effect"></param>
+        public override void AddEffect(StatusEffect effect)
+        {
+            activeEffects.Add(effect);
+        }
+
+        /// <summary>
+        /// Updates the timer for each effect and activates the
+        /// non stat-modifying effects, and removes any finished effects
+        /// </summary>
+        /// <param name="gameTime"></param>
+        public override void UpdateEffects(GameTime gameTime)
+        {
+            effectCounter += gameTime.ElapsedGameTime.TotalSeconds;
+
+            // Update effects every half-second
+            if (effectCounter > 0.5)
+            {
+                for (int i = 0; i < activeEffects.Count;)
+                {
+                    activeEffects[i].Duration -= effectCounter;
+
+                    // Apply any active effects
+                    switch (activeEffects[i].Effect)
+                    {
+                        case StatusType.Regen:
+                            Health += activeEffects[i].Power;
+
+                            if (Health > maxHP)
+                                Health = maxHP;
+                            break;
+
+                        case StatusType.Sick:
+                            Health -= activeEffects[i].Power;
+                            break;
+
+                        case StatusType.Stun:
+                            // Prevent movement? or attacks as well?
+                            // Should stun be written here or in other methods?
+                            break;
+                    }
+
+                    // Remove if effect reaches end of duration
+                    if (activeEffects[i].Duration < 0)
+                    {
+                        activeEffects.RemoveAt(i);
+                        continue;
+                    }
+
+                    i++;
+                }
+
+                effectCounter -= 0.5;
+            }
         }
 
         /// <summary>
@@ -270,12 +405,13 @@ namespace SolsUnderground
                             Y - (Height + (Height / 2)),
                             Width + (Width * 2 * (3 / 4)),
                             Height * 2 + (Height / 2)),
-                        attack * 3,
+                        Attack * 3,
                         knockback * 3,
                         atkTexture,
                         AttackDirection.up,
                         sp1HitTimer,
-                        false);
+                        false,
+                        null);
 
                     Y -= Height;
                     return special;
@@ -290,12 +426,13 @@ namespace SolsUnderground
                             Y - (Height * (3 / 4)),
                             Width * 2 + (Width / 2),
                             Height + (Height * 2 * (3 / 4))),
-                        attack * 3,
+                        Attack * 3,
                         knockback * 3,
                         atkTexture,
                         AttackDirection.left,
                         sp1HitTimer,
-                        false);
+                        false,
+                        null);
 
                     X -= Width;
 
@@ -311,12 +448,13 @@ namespace SolsUnderground
                             Y - (Height / 2),
                             Width + (Width * 2 * (3 / 4)),
                             Height * 2 + (Height / 2)),
-                        attack * 3,
+                        Attack * 3,
                         knockback * 3,
                         atkTexture,
                         AttackDirection.down,
                         sp1HitTimer,
-                        false);
+                        false,
+                        null);
 
                     Y += Height;
 
@@ -332,12 +470,13 @@ namespace SolsUnderground
                             Y - (Height * (3 / 4)),
                             Width * 2 + (Width / 2),
                             Height + (Height * 2 * (3 / 4))),
-                        attack * 3,
+                        Attack * 3,
                         knockback * 3,
                         atkTexture,
                         AttackDirection.right,
                         sp1HitTimer,
-                        false);
+                        false,
+                        null);
 
                     X += Width;
 
@@ -372,12 +511,13 @@ namespace SolsUnderground
                             Y - (Height * 3 + (Height / 2)),
                             Width + (Width * 2 * (3 / 4)),
                             Height * 4 + (Height / 2)),
-                        attack / 2,
+                        Attack / 2,
                         knockback / 2,
                         atkTexture,
                         AttackDirection.up,
                         sp1HitTimer,
-                        false);
+                        false,
+                        null);
 
                     Y -= Height * 3;
                     return special;
@@ -392,12 +532,13 @@ namespace SolsUnderground
                             Y - (Height * (3 / 4)),
                             Width * 4 + (Width / 2),
                             Height + (Height * 2 * (3 / 4))),
-                        attack / 2,
+                        Attack / 2,
                         knockback / 2,
                         atkTexture,
                         AttackDirection.left,
                         sp1HitTimer,
-                        false);
+                        false,
+                        null);
 
                     X -= Width * 3;
 
@@ -413,12 +554,13 @@ namespace SolsUnderground
                             Y - (Height / 2),
                             Width + (Width * 2 * (3 / 4)),
                             Height * 4 + (Height / 2)),
-                        attack / 2,
+                        Attack / 2,
                         knockback / 2,
                         atkTexture,
                         AttackDirection.down,
                         sp1HitTimer,
-                        false);
+                        false,
+                        null);
 
                     Y += Height * 3;
 
@@ -434,12 +576,13 @@ namespace SolsUnderground
                             Y - (Height * (3 / 4)),
                             Width * 4 + (Width / 2),
                             Height + (Height * 2 * (3 / 4))),
-                        attack / 2,
+                        Attack / 2,
                         knockback / 2,
                         atkTexture,
                         AttackDirection.right,
                         sp1HitTimer,
-                        false);
+                        false,
+                        null);
 
                     X += Width * 3;
 
@@ -473,6 +616,13 @@ namespace SolsUnderground
             sb.Draw(Program.drawSquare,
                 new Rectangle(X, Y - 10, (int)(Width * ((double)currentHP / (double)maxHP)), 3),
                 Color.Red);
+
+            // Draw status effects
+            for (int i = 0; i < activeEffects.Count; i++)
+            {
+                activeEffects[i].PositionRect = new Rectangle(X + 6 * i, Y - 17, 5, 6);
+                activeEffects[i].Draw(sb);
+            }
         }
     }
 }

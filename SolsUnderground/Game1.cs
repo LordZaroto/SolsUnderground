@@ -141,7 +141,7 @@ namespace SolsUnderground
         private Texture2D heart100;
         private Rectangle hearts;
         private Texture2D tigerBucks;
-        private Rectangle money;
+        private Rectangle moneyIconRect;
 
 
         //pause items
@@ -305,6 +305,7 @@ namespace SolsUnderground
                 Content.Load<Texture2D>("ShooterLeft"),
                 Content.Load<Texture2D>("ShooterRight") };
             enemyManager.AddEnemyData(shooterTextures);
+
             // Boss Textures
             weebTextures = new Texture2D[] {
                 Content.Load<Texture2D>("weeb_Forward"),
@@ -322,6 +323,12 @@ namespace SolsUnderground
                 Content.Load<Texture2D>("vmBossRight"),
                 Content.Load<Texture2D>("Cola")}; // Boss Attack Texture
             enemyManager.AddBossData(vmBossTextures);
+
+            // Status Textures
+            StatusEffect.LoadEffectSprite(Content.Load<Texture2D>("fxModifier"));
+            StatusEffect.LoadEffectSprite(Content.Load<Texture2D>("fxRegen"));
+            StatusEffect.LoadEffectSprite(Content.Load<Texture2D>("fxSick"));
+            StatusEffect.LoadEffectSprite(Content.Load<Texture2D>("fxStun"));
 
             // Tiles
             List<Texture2D> tileTextures = new List<Texture2D>();
@@ -368,7 +375,7 @@ namespace SolsUnderground
             heart100 = Content.Load<Texture2D>("heart100");*/
             hearts = new Rectangle(0, 0, 400, 40);
             tigerBucks = Content.Load<Texture2D>("TigerBuck");
-            money = new Rectangle(550, -15, 40, 50);
+            moneyIconRect = new Rectangle(5, 940, 40, 50);
 
             //paused buttons
             returnToGame = Content.Load<Texture2D>("ReturnToGame");
@@ -477,6 +484,10 @@ namespace SolsUnderground
                     combatManager.LoadAttacks(mouse, prevM);
                     combatManager.ActivateAttacks(gameTime);
                     combatManager.CleanUp(itemManager);
+
+                    // Effects
+                    player.UpdateEffects(gameTime);
+                    enemyManager.UpdateEnemyEffects(gameTime);
 
                     //Collisions
                     itemManager.ActivateItems(SingleKeyPress(player.EquipKey, kb, prevKB));
@@ -962,45 +973,50 @@ namespace SolsUnderground
                     enemyManager.Draw(_spriteBatch);
                     combatManager.DrawAttacks(_spriteBatch);
 
-                    //Health(_spriteBatch, player.Hp);
-                    _spriteBatch.Draw(tigerBucks, money, Color.White);
+                    // Draw currency
+                    _spriteBatch.Draw(tigerBucks, moneyIconRect, Color.White);
                     _spriteBatch.DrawString(
-                        text,
-                        "-" + player.TigerBucks,
-                        new Vector2(590, -10),
-                        Color.White);
+                        uiText,
+                        player.TigerBucks.ToString(),
+                        new Vector2(55, 965),
+                        Color.Orange);
 
                     // Draw HP bar
                     if (player.Hp < 0)
                         player.Hp = 0;
-                    _spriteBatch.Draw(Program.drawSquare, new Rectangle(0, 0, player.MaxHp * 3 + 10, 40), Color.Black);
-                    _spriteBatch.Draw(Program.drawSquare, new Rectangle(5, 5, player.Hp * 3, 30), Color.DarkRed);
+                    _spriteBatch.Draw(Program.drawSquare, new Rectangle(0, 0, 300, 40), Color.Black);
+                    _spriteBatch.Draw(Program.drawSquare, new Rectangle(5, 5, (int)((double)player.Hp * 290 / player.MaxHp), 30), Color.DarkRed);
                     _spriteBatch.DrawString(
                         uiText,
                         player.Hp + "/" + player.MaxHp,
                         new Vector2(10, 5),
                         Color.White);
-                    
 
-                    // Draw cooldown bars
+
+                    // Draw basic cooldown bar
+                    _spriteBatch.Draw(Program.drawSquare, new Rectangle(300, 0, 60, 10), Color.DarkGreen);
                     if (player.BasicCounter < player.CurrentWeapon.BasicCooldown)
                     {
                         _spriteBatch.Draw(Program.drawSquare, 
-                            new Rectangle(player.MaxHp * 3 + 10, 0, 
-                            (int)(player.CurrentWeapon.BasicCooldown * 50 - player.BasicCounter * 50), 20), 
+                            new Rectangle(300, 0, 
+                            (int)(((double)player.CurrentWeapon.BasicCooldown - player.BasicCounter) * 60 / player.CurrentWeapon.BasicCooldown), 10), 
                             Color.Green);
                     }
+
+                    // Draw special cooldown bar
+                    _spriteBatch.Draw(Program.drawSquare, new Rectangle(300, 10, 60, 10), Color.DarkBlue);
                     if (player.SpecialCounter < player.CurrentWeapon.SpecialCooldown)
                     {
                         _spriteBatch.Draw(Program.drawSquare,
-                            new Rectangle(player.MaxHp * 3 + 10, 20,
-                            (int)(player.CurrentWeapon.SpecialCooldown * 20 - player.SpecialCounter * 20), 20),
+                            new Rectangle(300, 10,
+                            (int)(((double)player.CurrentWeapon.SpecialCooldown - player.SpecialCounter) * 60 / player.CurrentWeapon.SpecialCooldown), 10),
                             Color.Blue);
                     }
 
+                    // Draw floor and room number
                     _spriteBatch.DrawString(
                         uiText,
-                        mapManager.CurrentFloor + "-" + mapManager.CurrentRoomNum,
+                        mapManager.CurrentFloor + 1 + "-" + mapManager.CurrentRoomNum,
                         new Vector2(1275, 5),
                         Color.White);
                     break;

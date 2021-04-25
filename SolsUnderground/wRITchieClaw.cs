@@ -150,7 +150,8 @@ namespace SolsUnderground
                     texture,
                     AttackDirection.up,
                     timer,
-                    true);
+                    true,
+                    new StatusEffect(StatusType.Sick, 1, 3));
 
                 player.Y -= player.Height * 5;
                 return special;
@@ -172,7 +173,8 @@ namespace SolsUnderground
                     texture,
                     AttackDirection.left,
                     timer,
-                    true);
+                    true,
+                    new StatusEffect(StatusType.Sick, 1, 3));
 
 
                 player.X -= player.Width * 5;
@@ -196,7 +198,8 @@ namespace SolsUnderground
                     texture,
                     AttackDirection.down,
                     timer,
-                    true);
+                    true,
+                    new StatusEffect(StatusType.Sick, 1, 3));
 
                 player.Y += player.Height * 5;
 
@@ -219,7 +222,8 @@ namespace SolsUnderground
                     texture,
                     AttackDirection.right,
                     timer,
-                    true);
+                    true,
+                    new StatusEffect(StatusType.Sick, 1, 3));
 
                 player.X += player.Width * 5;
 

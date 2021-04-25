@@ -44,6 +44,8 @@ namespace SolsUnderground
             this.currentHP = maxHP;
             this.attack = attack;
             this.knockback = 64;
+            activeEffects = new List<StatusEffect>();
+            effectCounter = 0;
             moveCD = 2;
             moveCounter = moveCD;
             kbCD = 2;
@@ -77,8 +79,8 @@ namespace SolsUnderground
 
         public override int Attack
         {
-            get;
-            set;
+            get { return Math.Max(attack + AttackMod, 0); }
+            set { attack = value; }
         }
 
         public override int Knockback
@@ -134,6 +136,74 @@ namespace SolsUnderground
             set;
         }
 
+        protected override int AttackMod
+        {
+            get
+            {
+                int attackMod = 0;
+
+                foreach (StatusEffect fx in activeEffects)
+                {
+                    if (fx.Effect == StatusType.AtkUp)
+                        attackMod += fx.Power;
+
+                    if (fx.Effect == StatusType.AtkDown)
+                        attackMod -= fx.Power;
+                }
+
+                return attackMod;
+            }
+        }
+        protected override int DefenseMod
+        {
+            get
+            {
+                int defenseMod = 0;
+
+                foreach (StatusEffect fx in activeEffects)
+                {
+                    if (fx.Effect == StatusType.DefUp)
+                        defenseMod += fx.Power;
+
+                    if (fx.Effect == StatusType.DefDown)
+                        defenseMod -= fx.Power;
+                }
+
+                return defenseMod;
+            }
+        }
+        protected override int SpeedMod
+        {
+            get
+            {
+                int speedMod = 0;
+
+                foreach (StatusEffect fx in activeEffects)
+                {
+                    if (fx.Effect == StatusType.SpdUp)
+                        speedMod += fx.Power;
+
+                    if (fx.Effect == StatusType.SpdDown)
+                        speedMod -= fx.Power;
+                }
+
+                return speedMod;
+            }
+        }
+        protected override bool IsStunned
+        {
+            get
+            {
+                foreach (StatusEffect fx in activeEffects)
+                {
+                    if (fx.Effect == StatusType.Stun)
+                        return true;
+                }
+
+                return false;
+            }
+        }
+
         /// <summary>
         /// overriden take damage method - no knockback
         /// </summary>
@@ -145,7 +215,7 @@ namespace SolsUnderground
             {
                 //moveCounter = 0;
 
-                currentHP -= damage;
+                currentHP -= Math.Max(damage - DefenseMod, 0);
 
                 /*if (enemyState == EnemyState.faceForward || enemyState == EnemyState.moveForward)
                 {
@@ -188,7 +258,7 @@ namespace SolsUnderground
 
             if (moveCounter >= moveCD)
             {
-                if (!(enemyState == EnemyState.dead))
+                if (!(enemyState == EnemyState.dead) && !IsStunned)
                 {
                     if (currentHP > maxHP / 3 * 2)
                     {
@@ -207,11 +277,11 @@ namespace SolsUnderground
                         }
                         if (movingUp)
                         {
-                            positionRect.Y -= 1;
+                            positionRect.Y -= Math.Max(1 + SpeedMod, 0);
                         }
                         else
                         {
-                            positionRect.Y += 1;
+                            positionRect.Y += Math.Max(1 + SpeedMod, 0);
                         }
                         
                      
@@ -221,11 +291,11 @@ namespace SolsUnderground
                      
                         if (movingUp)
                         {
-                            positionRect.Y -= 2;
+                            positionRect.Y -= Math.Max(2 + SpeedMod, 0);
                         }
                         else
                         {
-                            positionRect.Y += 2;
+                            positionRect.Y += Math.Max(2 + SpeedMod, 0);
                         }
                         if (_timer > 2)
                         {
@@ -248,13 +318,13 @@ namespace SolsUnderground
                             if (positionRect.X >= player.X)
                             {
                                 texture = textures[2];
-                                positionRect.X -= 3;
+                                positionRect.X -= Math.Max(3 + SpeedMod, 0);
                                 enemyState = EnemyState.moveLeft;
                             }
                             else
                             {
                                 texture = textures[3];
-                                positionRect.X += 3;
+                                positionRect.X += Math.Max(3 + SpeedMod, 0);
                                 enemyState = EnemyState.moveRight;
                             }
                         }
@@ -263,37 +333,38 @@ namespace SolsUnderground
                             if (positionRect.Y >= player.Y)
                             {
                                 texture = textures[1];
-                                positionRect.Y -= 3;
+                                positionRect.Y -= Math.Max(3 + SpeedMod, 0);
                                 enemyState = EnemyState.moveBack;
                             }
                             else
                             {
                                 texture = textures[0];
-                                positionRect.Y += 3;
+                                positionRect.Y += Math.Max(3 + SpeedMod, 0);
                                 enemyState = EnemyState.moveForward;
                             }
                         }
                         
                     }
                     
+                    if(player.X < X && Math.Abs((player.X + player.Width/2) - (X + Width/2)) > Math.Abs((player.Y + player.Height / 2) - (Y + Height / 2)))
+                    {
+                        attackDirection = AttackDirection.left;
+                    }
+                    else if(player.X >= X && Math.Abs((player.X + player.Width / 2) - (X + Width / 2)) >= Math.Abs((player.Y + player.Height / 2) - (Y + Height / 2)))
+                    {
+                        attackDirection = AttackDirection.right;
+                    }
+                    else if (player.Y >= Y && Math.Abs((player.X + player.Width / 2) - (X + Width / 2)) <= Math.Abs((player.Y + player.Height / 2) - (Y + Height / 2)))
+                    {
+                        attackDirection = AttackDirection.down;
+                    }
+                    else
+                    {
+                        attackDirection = AttackDirection.up;
+                    }
                 }
             }
-            if(player.X < X && Math.Abs((player.X + player.Width/2) - (X + Width/2)) > Math.Abs((player.Y + player.Height / 2) - (Y + Height / 2)))
-            {
-                attackDirection = AttackDirection.left;
-            }
-            else if(player.X >= X && Math.Abs((player.X + player.Width / 2) - (X + Width / 2)) >= Math.Abs((player.Y + player.Height / 2) - (Y + Height / 2)))
-            {
-                attackDirection = AttackDirection.right;
-            }
-            else if (player.Y >= Y && Math.Abs((player.X + player.Width / 2) - (X + Width / 2)) <= Math.Abs((player.Y + player.Height / 2) - (Y + Height / 2)))
-            {
-                attackDirection = AttackDirection.down;
-            }
-            else
-            {
-                attackDirection = AttackDirection.up;
-            }
+            
         }
 
         //draws a different color when charging for AOE
@@ -315,14 +386,23 @@ namespace SolsUnderground
             sb.Draw(Program.drawSquare,
                 new Rectangle(X, Y - 10, (int)(Width * ((double)currentHP / (double)maxHP)), 3),
                 Color.Red);
+
+            // Draw status effects
+            for (int i = 0; i < activeEffects.Count; i++)
+            {
+                activeEffects[i].PositionRect = new Rectangle(X + 6 * i, Y - 17, 5, 6);
+                activeEffects[i].Draw(sb);
+            }
         }
 
         public void UpdateTimer(GameTime gameTime)
         {
-            _timer += (float)gameTime.ElapsedGameTime.TotalSeconds;
-            _attackTimer += (float)gameTime.ElapsedGameTime.TotalSeconds;
-            _AOETimer += (float)gameTime.ElapsedGameTime.TotalSeconds;
-
+            if (!IsStunned)
+            {
+                _timer += (float)gameTime.ElapsedGameTime.TotalSeconds;
+                _attackTimer += (float)gameTime.ElapsedGameTime.TotalSeconds;
+                _AOETimer += (float)gameTime.ElapsedGameTime.TotalSeconds;
+            }
         }
 
         /// <summary>
@@ -340,8 +420,8 @@ namespace SolsUnderground
 
                 Projectile can = new Projectile(
                     new Rectangle(X + Width / 2, Y + Height / 2, 
-                    textures[4].Width, textures[4].Height), 
-                    3, 5, 32, textures[4], attackDirection, false);
+                    textures[4].Width, textures[4].Height),
+                    Math.Max(3 + AttackMod, 0), 5, 32, textures[4], attackDirection, false, null);
                 return can;
             }
             return null;
@@ -365,12 +445,13 @@ namespace SolsUnderground
                             Y - 80,
                             Width + 160,
                             Height + 160),
-                        attack * 3,
+                        Attack * 3,
                         knockback * 3,
                         atkTexture,
                         attackDirection, //This is temporary - Should probably change based off player position
                         sp1HitTimer,
-                        false);
+                        false,
+                        null);
 
                 return special;
             }
@@ -386,42 +467,103 @@ namespace SolsUnderground
         {
             List<Attack> attacks = new List<Attack>();
 
-            if (moveCounter >= moveCD)
+            if (!IsStunned)
             {
-                //If close to player
+                if (moveCounter >= moveCD)
+                {
+                    //If close to player
 
-                 
-                 if (_AOETimer > 1)
-                 {
-                     //_timer = 0; 
-                     attacks.Add(AOE());
-                 }
-             
-             
-             
-                 if(currentHP > maxHP / 3 * 2)
-                 {
-                     if (_attackTimer > 2)
-                     {
-                        _attackTimer = 0;
-                         attacks.Add(Shoot());
-                     }
-                 }
-                 else
-                 {
-                     if (_attackTimer > 1)
-                     {
-                        _attackTimer = 0;
-                        attacks.Add(Shoot());
-                     }
-                 }
-                 
-             
+
+                    if (_AOETimer > 1)
+                    {
+                        //_timer = 0; 
+                        attacks.Add(AOE());
+                    }
+
+
+
+                    if (currentHP > maxHP / 3 * 2)
+                    {
+                        if (_attackTimer > 2)
+                        {
+                            _attackTimer = 0;
+                            attacks.Add(Shoot());
+                        }
+                    }
+                    else
+                    {
+                        if (_attackTimer > 1)
+                        {
+                            _attackTimer = 0;
+                            attacks.Add(Shoot());
+                        }
+                    }
+                }
+
+                attacks.Add(new Attack(PositionRect, Attack, knockback, null, attackDirection, 0.15, false, null));
             }
-
-            attacks.Add(new Attack(PositionRect, attack, knockback, null, attackDirection, 0.15, false));
+            
 
             return attacks;
+        }
+
+        /// <summary>
+        /// Adds a status effect to the enemy.
+        /// </summary>
+        /// <param name="effect"></param>
+        public override void AddEffect(StatusEffect effect)
+        {
+            activeEffects.Add(effect);
+        }
+
+        /// <summary>
+        /// Updates the timer for each effect and activates the
+        /// non stat-modifying effects, and removes any finished effects
+        /// </summary>
+        /// <param name="gameTime"></param>
+        public override void UpdateEffects(GameTime gameTime)
+        {
+            effectCounter += gameTime.ElapsedGameTime.TotalSeconds;
+
+            // Update effects every half-second
+            if (effectCounter > 0.5)
+            {
+                for (int i = 0; i < activeEffects.Count;)
+                {
+                    activeEffects[i].Duration -= effectCounter;
+
+                    // Apply any active effects
+                    switch (activeEffects[i].Effect)
+                    {
+                        case StatusType.Regen:
+                            Health += activeEffects[i].Power;
+
+                            if (Health > maxHP)
+                                Health = maxHP;
+                            break;
+
+                        case StatusType.Sick:
+                            Health -= activeEffects[i].Power;
+                            break;
+
+                        case StatusType.Stun:
+                            // Prevent movement? or attacks as well?
+                            // Should stun be written here or in other methods?
+                            break;
+                    }
+
+                    // Remove if effect reaches end of duration
+                    if (activeEffects[i].Duration < 0)
+                    {
+                        activeEffects.RemoveAt(i);
+                        continue;
+                    }
+
+                    i++;
+                }
+
+                effectCounter -= 0.5;
+            }
         }
     }
 }

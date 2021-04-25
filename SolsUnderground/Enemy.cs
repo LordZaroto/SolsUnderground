@@ -40,6 +40,8 @@ namespace SolsUnderground
         protected int currentHP;
         protected int attack;
         protected int knockback;
+        protected List<StatusEffect> activeEffects;
+        protected double effectCounter;
 
         //properties
         public abstract int Health
@@ -66,6 +68,26 @@ namespace SolsUnderground
             set;
         }
 
+        protected abstract int AttackMod
+        {
+            get;
+        }
+
+        protected abstract int DefenseMod
+        {
+            get;
+        }
+
+        protected abstract int SpeedMod
+        {
+            get;
+        }
+
+        protected abstract bool IsStunned
+        {
+            get;
+        }
+
 
         //method to be overridden
         //changes health when hit by the player
@@ -74,5 +96,9 @@ namespace SolsUnderground
         public abstract void EnemyMove(Player player, GameTime gameTime);
 
         public abstract List<Attack> EnemyAttack(Player player);
+
+        public abstract void AddEffect(StatusEffect effect);
+
+        public abstract void UpdateEffects(GameTime gameTime);
     }
 }

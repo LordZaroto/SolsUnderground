@@ -11,8 +11,9 @@ namespace SolsUnderground
     {
         private int speed;
 
-        public Projectile(Rectangle hitbox, int damage, int speed, int knockback, Texture2D texture, AttackDirection attack, bool isPlayerAttack)
-            :base(hitbox, damage, knockback, texture, attack, float.MaxValue, isPlayerAttack)
+        public Projectile(Rectangle hitbox, int damage, int speed, int knockback, 
+            Texture2D texture, AttackDirection attack, bool isPlayerAttack, StatusEffect effect)
+            :base(hitbox, damage, knockback, texture, attack, float.MaxValue, isPlayerAttack, effect)
         {
             this.speed = speed;
         }

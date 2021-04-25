@@ -157,10 +157,13 @@ namespace SolsUnderground
                     break;
             }
 
-            // Heal player for 50 HP
-            player.Hp += 50;
+            // Heal player for 20 HP
+            player.Hp += 20;
             if (player.Hp > player.MaxHp)
                 player.Hp = player.MaxHp;
+
+            // Grant regen effect
+            player.AddEffect(new StatusEffect(StatusType.Regen, 3, 5));
 
             return null;
         }

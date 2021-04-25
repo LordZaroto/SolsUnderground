@@ -25,16 +25,16 @@ namespace SolsUnderground
         protected AttackDirection attackDirection;
         protected double timer;
         protected bool isPlayerAttack;
+        protected StatusEffect effect;
 
         public Rectangle Hitbox
         {
             get { return positionRect; }
         }
 
-        public override int X
+        public StatusEffect Effect
         {
-            get { return positionRect.X; }
-            set { positionRect.X = value; }
+            get { return effect; }
         }
 
         public override int Y
@@ -75,7 +75,6 @@ namespace SolsUnderground
             get { return attackDirection; }
             set { attackDirection = value; }
         }
-
         public double Timer
         {
             get { return timer; }
@@ -87,12 +86,19 @@ namespace SolsUnderground
             get { return isPlayerAttack; }
         }
 
+        public override int X
+        {
+            get { return positionRect.X; }
+            set { positionRect.X = value; }
+        }
+
         public Texture2D Texture
         {
             get { return texture; }
         }
 
-        public Attack(Rectangle hitbox, int damage, int knockback, Texture2D texture, AttackDirection atkDir, double timer, bool isPlayerAttack)
+        public Attack(Rectangle hitbox, int damage, int knockback, Texture2D texture, 
+            AttackDirection atkDir, double timer, bool isPlayerAttack, StatusEffect effect)
         {
             this.positionRect = hitbox;
             this.damage = damage;
@@ -100,6 +106,7 @@ namespace SolsUnderground
             this.texture = texture;
             this.timer = timer;
             this.isPlayerAttack = isPlayerAttack;
+            this.effect = effect;
             attackDirection = atkDir;
         }
 

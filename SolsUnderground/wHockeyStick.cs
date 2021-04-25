@@ -122,7 +122,7 @@ namespace SolsUnderground
         {
             name = "Hockey Stick";
             basicCooldown = 0.4;
-            specialCooldown = 5;
+            specialCooldown = 1;
             attack = 5;
             knockback = (int)(1 * 32);
             hitboxScale = new Vector2(0.5f, 4);
@@ -130,7 +130,7 @@ namespace SolsUnderground
         }
 
         /// <summary>
-        /// The player spins and knocks enemies away.
+        /// The player shoots a hockey puck.
         /// </summary>
         public Attack Special(Player player)
         {
@@ -167,7 +167,7 @@ namespace SolsUnderground
                 (int)(player.Y + ((double)player.Height * 3 / 8)), 
                 player.Width, player.Height / 4);
 
-            return new Projectile(shotHitbox, (int)(attack * 0.5), 6, (int)(knockback * 3), texture, atkdir, true);
+            return new Projectile(shotHitbox, (int)(attack * 0.5), 6, (int)(knockback * 3), texture, atkdir, true, null);
         }
 
         public override void Draw(SpriteBatch sb)

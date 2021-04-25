@@ -155,7 +155,8 @@ namespace SolsUnderground
                     texture,
                     AttackDirection.up,
                     timer,
-                    true);
+                    true,
+                    null);
 
                 return special;
             }
@@ -178,7 +179,8 @@ namespace SolsUnderground
                     texture,
                     AttackDirection.left,
                     timer,
-                    true);
+                    true,
+                    null);
 
                 return special;
             }
@@ -201,7 +203,8 @@ namespace SolsUnderground
                     texture,
                     AttackDirection.down,
                     timer,
-                    true);
+                    true,
+                    null);
 
                 return special;
             }
@@ -224,7 +227,8 @@ namespace SolsUnderground
                     texture,
                     AttackDirection.right,
                     timer,
-                    true);
+                    true,
+                    null);
 
                 return special;
             }

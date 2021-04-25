@@ -170,6 +170,16 @@ namespace SolsUnderground
         }
 
         /// <summary>
+        /// Updates enemy status effects.
+        /// </summary>
+        /// <param name="gameTime"></param>
+        public void UpdateEnemyEffects(GameTime gameTime)
+        {
+            foreach (Enemy e in enemies)
+                e.UpdateEffects(gameTime);
+        }
+
+        /// <summary>
         /// Removes all active enemies.
         /// </summary>
         public void ClearEnemies()

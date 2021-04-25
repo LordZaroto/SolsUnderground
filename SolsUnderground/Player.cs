@@ -53,6 +53,8 @@ namespace SolsUnderground
         private double moveCounter;
         private double moveCD;
         private PlayerState playerState;
+        private List<StatusEffect> activeEffects;
+        private double effectCounter;
         private Texture2D[] textures;
         private int tigerBucks;
         private Keys forward;
@@ -143,7 +145,14 @@ namespace SolsUnderground
         /// </summary>
         public int Defense
         {
-            get { return CurrentArmor.Defense; }
+            get { return Math.Max(CurrentArmor.Defense + DefenseMod, 0); }
+        }
+        /// <summary>
+        /// Defines the player's movement speed
+        /// </summary>
+        public int Speed
+        {
+            get { return Math.Max(4 + CurrentArmor.Speed + SpeedMod, 0); }
         }
         /// <summary>
         /// Current hit points
@@ -166,7 +175,8 @@ namespace SolsUnderground
         /// </summary>
         public int Damage
         {
-            get { return CurrentWeapon.Attack; }
+            get 
+            { return Math.Max(CurrentWeapon.Attack + AttackMod, 0); }
         }
         /// <summary>
         /// Counter for basic attack cooldown.
@@ -207,6 +217,74 @@ namespace SolsUnderground
         {
             get { return (Armor)armor; }
         }
+
+        private int AttackMod
+        {
+            get
+            {
+                int attackMod = 0;
+
+                foreach (StatusEffect fx in activeEffects)
+                {
+                    if (fx.Effect == StatusType.AtkUp)
+                        attackMod += fx.Power;
+
+                    if (fx.Effect == StatusType.AtkDown)
+                        attackMod -= fx.Power;
+                }
+
+                return attackMod;
+            }
+        }
+        private int DefenseMod
+        {
+            get
+            {
+                int defenseMod = 0;
+
+                foreach (StatusEffect fx in activeEffects)
+                {
+                    if (fx.Effect == StatusType.DefUp)
+                        defenseMod += fx.Power;
+
+                    if (fx.Effect == StatusType.DefDown)
+                        defenseMod -= fx.Power;
+                }
+
+                return defenseMod;
+            }
+        }
+        private int SpeedMod
+        {
+            get
+            {
+                int speedMod = 0;
+
+                foreach (StatusEffect fx in activeEffects)
+                {
+                    if (fx.Effect == StatusType.SpdUp)
+                        speedMod += fx.Power;
+
+                    if (fx.Effect == StatusType.SpdDown)
+                        speedMod -= fx.Power;
+                }
+
+                return speedMod;
+            }
+        }
+        private bool IsStunned
+        {
+            get
+            {
+                foreach (StatusEffect fx in activeEffects)
+                {
+                    if (fx.Effect == StatusType.Stun)
+                        return true;
+                }
+
+                return false;
+            }
+        }
         //------------------------------
 
         //----------------------------------------
@@ -235,6 +313,8 @@ namespace SolsUnderground
             moveCD = 0.1;
             moveCounter = moveCD;
             playerState = PlayerState.faceBack;
+            activeEffects = new List<StatusEffect>();
+            effectCounter = 0;
             _animations = animations;
             _animationManager = new AnimationManager(_animations.First().Value, this);
             _timer = 0f;
@@ -259,7 +339,7 @@ namespace SolsUnderground
         {
             if (hp > 0)
             {
-                if (moveCounter >= moveCD)
+                if (moveCounter >= moveCD && !IsStunned)
                 {
                     bool test = false;
 
@@ -305,7 +385,7 @@ namespace SolsUnderground
                         //to accomadate for adjustments to both axis.
                         if (kbState.IsKeyDown(right))
                         {
-                            X += (3 + CurrentArmor.Speed);
+                            X += Math.Max(Speed - 1, 0);
 
                             //Two trues will make a false!
                             if (test == true)
@@ -319,7 +399,7 @@ namespace SolsUnderground
                         }
                         if (kbState.IsKeyDown(right))
                         {
-                            X -= (3 + CurrentArmor.Speed);
+                            X -= Math.Max(Speed - 1, 0);
 
                             if (test == true)
                             {
@@ -354,14 +434,14 @@ namespace SolsUnderground
                             else if (kbState.IsKeyDown(forward))
                             {
                                 _animationManager.Play(_animations["playerMoveForward"]);
-                                Y -= (3 + CurrentArmor.Speed);
+                                Y -= Math.Max(Speed - 1, 0);
                                 playerState = PlayerState.moveForward;
 
                             }
                             else if (kbState.IsKeyDown(backward))
                             {
                                 _animationManager.Play(_animations["playerMoveBack"]);
-                                Y += (3 + CurrentArmor.Speed);
+                                Y += Math.Max(Speed - 1, 0);
                                 playerState = PlayerState.moveBack;
 
                             }
@@ -389,14 +469,14 @@ namespace SolsUnderground
                             else if (kbState.IsKeyDown(forward))
                             {
                                 _animationManager.Play(_animations["playerMoveForward"]);
-                                Y -= (4 + CurrentArmor.Speed);
+                                Y -= Speed;
                                 playerState = PlayerState.moveForward;
 
                             }
                             else if (kbState.IsKeyDown(backward))
                             {
                                 _animationManager.Play(_animations["playerMoveBack"]);
-                                Y += (4 + CurrentArmor.Speed);
+                                Y += Speed;
                                 playerState = PlayerState.moveBack;
 
                             }
@@ -405,14 +485,14 @@ namespace SolsUnderground
                     if (kbState.IsKeyDown(left) && test == false)
                     {
                         _animationManager.Play(_animations["playerMoveLeft"]);
-                        X -= (4 + CurrentArmor.Speed);
+                        X -= Speed;
                         playerState = PlayerState.moveLeft;
 
                     }
                     if (kbState.IsKeyDown(right) && test == false)
                     {
                         _animationManager.Play(_animations["playerMoveRight"]);
-                        X += (4 + CurrentArmor.Speed);
+                        X += Speed;
                         playerState = PlayerState.moveRight;
 
                     }
@@ -426,24 +506,12 @@ namespace SolsUnderground
         {
             if (SingleRButtonPress(rButton, previousRightBState))
             {
-                if (specialCounter >= CurrentWeapon.SpecialCooldown)
+                if (specialCounter >= CurrentWeapon.SpecialCooldown && !IsStunned)
                 {
                     //Reset the cooldown
                     specialCounter = 0;
 
                     currentAttack = CurrentWeapon.Special(this);
-
-                    ////Check which weapon is equipped
-                    //if (weapon is wStick)
-                    //{
-                    //    wStick stick = new wStick();
-                    //    special = stick.Special(this);
-                    //}
-                    //else if(weapon is wRITchieClaw)
-                    //{
-                    //    wRITchieClaw claw = new wRITchieClaw();
-                    //    special = claw.Special(this);
-                    //}
                     
                     //Return the special attack of the appropriate weapon
                     return currentAttack;
@@ -464,7 +532,7 @@ namespace SolsUnderground
         {
             if(SingleLButtonPress(lButton, previousLeftBState))
             {
-                if (basicCounter >= CurrentWeapon.BasicCooldown)
+                if (basicCounter >= CurrentWeapon.BasicCooldown && !IsStunned)
                 {
                     //Reset the cooldown
                     basicCounter = 0;
@@ -481,7 +549,8 @@ namespace SolsUnderground
                             CurrentWeapon.Sprite,
                             AttackDirection.up,
                             CurrentWeapon.Timer,
-                            true);
+                            true,
+                            null);
 
                         return currentAttack;
                     }
@@ -496,7 +565,8 @@ namespace SolsUnderground
                             CurrentWeapon.Sprite,
                             AttackDirection.left,
                             CurrentWeapon.Timer,
-                            true);
+                            true,
+                            null);
 
                         return currentAttack;
                     }
@@ -511,7 +581,8 @@ namespace SolsUnderground
                             CurrentWeapon.Sprite,
                             AttackDirection.down,
                             CurrentWeapon.Timer,
-                            true);
+                            true,
+                            null);
 
                         return currentAttack;
                     }
@@ -526,7 +597,8 @@ namespace SolsUnderground
                             CurrentWeapon.Sprite,
                             AttackDirection.right,
                             CurrentWeapon.Timer,
-                            true);
+                            true,
+                            null);
 
                         return currentAttack;
                     }
@@ -547,8 +619,7 @@ namespace SolsUnderground
                 damageCounter = 0;
 
                 // Prevent player from "healing" from negative damage
-                if (damage - Defense > 0)
-                    hp -= (damage - Defense);
+                hp -= Math.Max(damage - Defense, 0);
 
 
                 //Player knockback - Commented out till reworked
@@ -677,12 +748,64 @@ namespace SolsUnderground
             drop.PositionRect = new Rectangle(X, Y, 40, 40);
             return drop;
         }
+
+        /// <summary>
+        /// Adds a status effect to the player.
+        /// </summary>
+        /// <param name="effect"></param>
+        public void AddEffect(StatusEffect effect)
+        {
+            activeEffects.Add(effect);
+        }
+
+        /// <summary>
+        /// Updates the timer for each effect and activates the
+        /// non stat-modifying effects, and removes any finished effects
+        /// </summary>
+        /// <param name="gameTime"></param>
+        public void UpdateEffects(GameTime gameTime)
+        {
+            effectCounter += gameTime.ElapsedGameTime.TotalSeconds;
+
+            // Update effects every half-second
+            if (effectCounter > 0.5)
+            {
+                for (int i = 0; i < activeEffects.Count;)
+                {
+                    activeEffects[i].Duration -= effectCounter;
+
+                    // Apply any active effects
+                    switch (activeEffects[i].Effect)
+                    {
+                        case StatusType.Regen:
+                            Hp += activeEffects[i].Power;
+
+                            if (Hp > MaxHp)
+                                Hp = MaxHp;
+                            break;
+
+                        case StatusType.Sick:
+                            Hp -= activeEffects[i].Power;
+                            break;
+                    }
+
+                    // Remove if effect reaches end of duration
+                    if (activeEffects[i].Duration < 0)
+                    {
+                        activeEffects.RemoveAt(i);
+                        continue;
+                    }
+
+                    i++;
+                }
+
+                effectCounter -= 0.5;
+            }
+        }
         
         public void Die()
         {
-            
             _animationManager.Play(_animations["heroDeath"]);
-            
         }
 
         public void UpdateTimer(GameTime gameTime)
@@ -704,6 +827,13 @@ namespace SolsUnderground
             else if (_animationManager != null) // Player is moving/attacking
             {
                 _animationManager.Draw(sb);
+            }
+
+            // Draw any effects
+            for (int i = 0; i < activeEffects.Count; i++)
+            {
+                activeEffects[i].PositionRect = new Rectangle(362 + 12 * i, 4, 10, 12);
+                activeEffects[i].Draw(sb);
             }
         }
     }
