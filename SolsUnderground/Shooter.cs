@@ -261,7 +261,7 @@ namespace SolsUnderground
                 {
                     attackCounter -= attackCD;
                 
-                    attacks.Add(new Projectile(positionRect, Attack, 3, knockback, texture, direction, false, new StatusEffect(StatusType.Sick, 2, 5)));
+                    attacks.Add(new Projectile(positionRect, Attack, 3, knockback, texture, direction, false, new StatusEffect(StatusType.Sick, 1, 3)));
                 }
                 
                 attacks.Add(new Attack(PositionRect, attack, knockback, null, 
@@ -309,11 +309,9 @@ namespace SolsUnderground
 
                         case StatusType.Sick:
                             Health -= activeEffects[i].Power;
-                            break;
 
-                        case StatusType.Stun:
-                            // Prevent movement? or attacks as well?
-                            // Should stun be written here or in other methods?
+                            if (currentHP <= 0)
+                                enemyState = EnemyState.dead;
                             break;
                     }
 

@@ -349,6 +349,9 @@ namespace SolsUnderground
 
                         case StatusType.Sick:
                             Health -= activeEffects[i].Power;
+
+                            if (currentHP <= 0)
+                                enemyState = EnemyState.dead;
                             break;
                     }
 

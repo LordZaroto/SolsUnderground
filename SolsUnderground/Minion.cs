@@ -312,7 +312,7 @@ namespace SolsUnderground
                     switch (activeEffects[i].Effect)
                     {
                         case StatusType.Regen:
-                            Health += activeEffects[i].Power;
+                            Health += activeEffects[i].Power;  
 
                             if (Health > maxHP)
                                 Health = maxHP;
@@ -320,6 +320,9 @@ namespace SolsUnderground
 
                         case StatusType.Sick:
                             Health -= activeEffects[i].Power;
+
+                            if (currentHP <= 0)
+                                enemyState = EnemyState.dead;
                             break;
 
                         case StatusType.Stun:

@@ -544,11 +544,9 @@ namespace SolsUnderground
 
                         case StatusType.Sick:
                             Health -= activeEffects[i].Power;
-                            break;
 
-                        case StatusType.Stun:
-                            // Prevent movement? or attacks as well?
-                            // Should stun be written here or in other methods?
+                            if (currentHP <= 0)
+                                enemyState = EnemyState.dead;
                             break;
                     }
 
