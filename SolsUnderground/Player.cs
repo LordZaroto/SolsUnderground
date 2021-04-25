@@ -765,16 +765,15 @@ namespace SolsUnderground
         /// <param name="gameTime"></param>
         public void UpdateEffects(GameTime gameTime)
         {
-            effectCounter += gameTime.ElapsedGameTime.TotalSeconds;
-
-            // Update effects every half-second
-            if (effectCounter > 0.5)
+            for (int i = 0; i < activeEffects.Count;)
             {
-                for (int i = 0; i < activeEffects.Count;)
-                {
-                    activeEffects[i].Duration -= effectCounter;
+                activeEffects[i].Counter += gameTime.ElapsedGameTime.TotalSeconds;
+                activeEffects[i].EffectInterval += gameTime.ElapsedGameTime.TotalSeconds;
 
-                    // Apply any active effects
+                if (activeEffects[i].EffectInterval > 0.5)
+                {
+                    activeEffects[i].EffectInterval -= 0.5;
+
                     switch (activeEffects[i].Effect)
                     {
                         case StatusType.Regen:
@@ -788,18 +787,16 @@ namespace SolsUnderground
                             Hp -= activeEffects[i].Power;
                             break;
                     }
-
-                    // Remove if effect reaches end of duration
-                    if (activeEffects[i].Duration < 0)
-                    {
-                        activeEffects.RemoveAt(i);
-                        continue;
-                    }
-
-                    i++;
                 }
 
-                effectCounter -= 0.5;
+                // Remove if effect reaches end of duration
+                if (activeEffects[i].Counter > activeEffects[i].Duration)
+                {
+                    activeEffects.RemoveAt(i);
+                    continue;
+                }
+
+                i++;
             }
         }
 
@@ -840,7 +837,7 @@ namespace SolsUnderground
             // Draw any effects
             for (int i = 0; i < activeEffects.Count; i++)
             {
-                activeEffects[i].PositionRect = new Rectangle(362 + 12 * i, 4, 10, 12);
+                activeEffects[i].PositionRect = new Rectangle(362 + 22 * i, 4, 20, 24);
                 activeEffects[i].Draw(sb);
             }
         }

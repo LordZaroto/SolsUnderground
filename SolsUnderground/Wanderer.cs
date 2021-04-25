@@ -306,7 +306,7 @@ namespace SolsUnderground
             if (!IsStunned)
             {
                 attacks.Add(new Attack(PositionRect, Attack, knockback, null, 
-                    direction, 0.15, false, new StatusEffect(StatusType.Stun, 0, 0.5)));
+                    direction, 0.15, false, new StatusEffect(StatusType.Stun, 0, 1)));
             }
 
             return attacks;
@@ -328,16 +328,16 @@ namespace SolsUnderground
         /// <param name="gameTime"></param>
         public override void UpdateEffects(GameTime gameTime)
         {
-            effectCounter += gameTime.ElapsedGameTime.TotalSeconds;
-
-            // Update effects every half-second
-            if (effectCounter > 0.5)
+            for (int i = 0; i < activeEffects.Count;)
             {
-                for (int i = 0; i < activeEffects.Count;)
-                {
-                    activeEffects[i].Duration -= effectCounter;
+                activeEffects[i].Counter += gameTime.ElapsedGameTime.TotalSeconds;
+                activeEffects[i].EffectInterval += gameTime.ElapsedGameTime.TotalSeconds;
 
-                    // Apply any active effects
+                // Check interval for regen/sickness
+                if (activeEffects[i].EffectInterval > 0.5)
+                {
+                    activeEffects[i].EffectInterval -= 0.5;
+
                     switch (activeEffects[i].Effect)
                     {
                         case StatusType.Regen:
@@ -354,18 +354,16 @@ namespace SolsUnderground
                                 enemyState = EnemyState.dead;
                             break;
                     }
-
-                    // Remove if effect reaches end of duration
-                    if (activeEffects[i].Duration < 0)
-                    {
-                        activeEffects.RemoveAt(i);
-                        continue;
-                    }
-
-                    i++;
                 }
 
-                effectCounter -= 0.5;
+                // Remove if effect reaches end of duration
+                if (activeEffects[i].Counter > activeEffects[i].Duration)
+                {
+                    activeEffects.RemoveAt(i);
+                    continue;
+                }
+
+                i++;
             }
         }
 

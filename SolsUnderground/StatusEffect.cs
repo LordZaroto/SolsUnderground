@@ -36,6 +36,8 @@ namespace SolsUnderground
         private Color color;
         private int power;
         private double duration;
+        private double counter;
+        private double effectInterval;
 
         // Properties
 
@@ -52,7 +54,18 @@ namespace SolsUnderground
         public double Duration
         {
             get { return duration; }
-            set { duration = value; }
+        }
+
+        public double Counter
+        {
+            get { return counter; }
+            set { counter = value; }
+        }
+
+        public double EffectInterval
+        {
+            get { return effectInterval; }
+            set { effectInterval = value; }
         }
 
         public override int X
@@ -91,6 +104,8 @@ namespace SolsUnderground
             this.effect = effect;
             this.power = power;
             this.duration = duration;
+            counter = 0;
+            effectInterval = 0;
 
             switch (effect)
             {
