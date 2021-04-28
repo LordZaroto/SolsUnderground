@@ -968,7 +968,7 @@ namespace SolsUnderground
                 // Main Game Screen
                 case GameState.Game:
                     mapManager.Draw(_spriteBatch);
-                    itemManager.Draw(_spriteBatch);
+                    itemManager.Draw(_spriteBatch, mouse, uiText);
                     player.Draw(_spriteBatch);
                     enemyManager.Draw(_spriteBatch);
                     combatManager.DrawAttacks(_spriteBatch);
@@ -1047,35 +1047,37 @@ namespace SolsUnderground
                     _spriteBatch.Draw(player.CurrentArmor.Sprite, armorIcon, Color.White);
 
                     // Draw weapon info if mouse hovers over weapon icon
-                    if (prevM.X > weaponIcon.X && prevM.X < weaponIcon.X + weaponIcon.Width
-                        && prevM.Y > weaponIcon.Y && prevM.Y < weaponIcon.Y + weaponIcon.Height)
+                    if (MouseOver(weaponIcon, mouse))
                     {
-                        infoRect = new Rectangle(prevM.X, prevM.Y, 270, 120);
+                        infoRect = new Rectangle(mouse.X, mouse.Y, 280, 140);
 
                         _spriteBatch.Draw(Program.drawSquare, infoRect, Color.DarkGray);
+                        _spriteBatch.DrawString(uiText, player.CurrentWeapon.Name,
+                            new Vector2(infoRect.X + 10, infoRect.Y + 5), Color.LightBlue);
                         _spriteBatch.DrawString(uiText, "Damage: " + player.CurrentWeapon.Attack,
-                            new Vector2(infoRect.X + 10, infoRect.Y + 3), Color.White);
-                        _spriteBatch.DrawString(uiText, "Knockback: " + player.CurrentWeapon.Knockback,
                             new Vector2(infoRect.X + 10, infoRect.Y + 30), Color.White);
-                        _spriteBatch.DrawString(uiText, "Basic Cooldown: " + player.CurrentWeapon.BasicCooldown,
+                        _spriteBatch.DrawString(uiText, "Knockback: " + player.CurrentWeapon.Knockback,
                             new Vector2(infoRect.X + 10, infoRect.Y + 55), Color.White);
-                        _spriteBatch.DrawString(uiText, "Special Cooldown: " + player.CurrentWeapon.SpecialCooldown,
+                        _spriteBatch.DrawString(uiText, "Basic Cooldown: " + player.CurrentWeapon.BasicCooldown,
                             new Vector2(infoRect.X + 10, infoRect.Y + 80), Color.White);
+                        _spriteBatch.DrawString(uiText, "Special Cooldown: " + player.CurrentWeapon.SpecialCooldown,
+                            new Vector2(infoRect.X + 10, infoRect.Y + 105), Color.White);
                     }
 
                     // Draw armor info if mouse hovers over armor icon
-                    if (prevM.X > armorIcon.X && prevM.X < armorIcon.X + armorIcon.Width
-                        && prevM.Y > armorIcon.Y && prevM.Y < armorIcon.Y + armorIcon.Height)
+                    if (MouseOver(armorIcon, mouse))
                     {
-                        infoRect = new Rectangle(prevM.X, prevM.Y, 150, 90);
+                        infoRect = new Rectangle(mouse.X, mouse.Y, 150, 115);
 
                         _spriteBatch.Draw(Program.drawSquare, infoRect, Color.DarkGray);
+                        _spriteBatch.DrawString(uiText, player.CurrentArmor.Name,
+                            new Vector2(infoRect.X + 10, infoRect.Y + 3), Color.LightBlue);
                         _spriteBatch.DrawString(uiText, "Defense: " + player.CurrentArmor.Defense,
-                            new Vector2(infoRect.X + 10, infoRect.Y + 3), Color.White);
-                        _spriteBatch.DrawString(uiText, "Speed: " + player.CurrentArmor.Speed,
                             new Vector2(infoRect.X + 10, infoRect.Y + 30), Color.White);
-                        _spriteBatch.DrawString(uiText, "HP: " + player.CurrentArmor.HP,
+                        _spriteBatch.DrawString(uiText, "Speed: " + player.CurrentArmor.Speed,
                             new Vector2(infoRect.X + 10, infoRect.Y + 55), Color.White);
+                        _spriteBatch.DrawString(uiText, "HP: " + player.CurrentArmor.HP,
+                            new Vector2(infoRect.X + 10, infoRect.Y + 80), Color.White);
                     }
 
 
@@ -1212,7 +1214,6 @@ namespace SolsUnderground
         //allows the mouse clicks
         protected bool MouseClick(Rectangle button, MouseState currentMouse, MouseState previousMouse)
         {
-            MouseState mouse = Mouse.GetState();
             if ((currentMouse.X >= button.Left && currentMouse.X <= button.Right) && (currentMouse.Y >= button.Top && currentMouse.Y <= button.Bottom) && currentMouse.LeftButton == ButtonState.Released && previousMouse.LeftButton == ButtonState.Pressed)
             {
                 return true;
@@ -1221,9 +1222,8 @@ namespace SolsUnderground
                 return false;
         }
 
-        protected bool MouseOver(Rectangle button, MouseState currentMouse)
+        public static bool MouseOver(Rectangle button, MouseState currentMouse)
         {
-            MouseState mouse = Mouse.GetState();
             if ((currentMouse.X >= button.Left && currentMouse.X <= button.Right) && (currentMouse.Y >= button.Top && currentMouse.Y <= button.Bottom))
             {
                 return true;

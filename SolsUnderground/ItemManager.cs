@@ -307,18 +307,73 @@ namespace SolsUnderground
 
         /// <summary>
         /// Draws all chests and items in the current room.
+        /// Also draws information boxes for moused-over items.
         /// </summary>
         /// <param name="sb">Spritebatch to draw with</param>
-        public void Draw(SpriteBatch sb)
+        public void Draw(SpriteBatch sb, MouseState mouse, SpriteFont uiText)
         {
             foreach (Chest c in chests)
             {
                 c.Draw(sb);
             }
 
+            // Draw items over chests
             foreach (Item i in items)
             {
                 i.Draw(sb);
+            }
+
+            // Draw info boxes over items
+            foreach (Item i in items)
+            {
+                // Draw info for any items mouse hovers over
+                if (Game1.MouseOver(i.PositionRect, mouse))
+                {
+                    Rectangle infoRect;
+
+                    switch (i.Type)
+                    {
+                        case ItemType.Weapon:
+                            infoRect = new Rectangle(mouse.X, mouse.Y, 280, 140);
+
+                            sb.Draw(Program.drawSquare, infoRect, Color.DarkGray);
+
+                            sb.DrawString(uiText, ((Weapon)i).Name,
+                                new Vector2(infoRect.X + 10, infoRect.Y + 5), Color.LightBlue);
+
+                            sb.DrawString(uiText, "Damage: " + ((Weapon)i).Attack,
+                                new Vector2(infoRect.X + 10, infoRect.Y + 30), Color.White);
+
+                            sb.DrawString(uiText, "Knockback: " + ((Weapon)i).Knockback,
+                                new Vector2(infoRect.X + 10, infoRect.Y + 55), Color.White);
+
+                            sb.DrawString(uiText, "Basic Cooldown: " + ((Weapon)i).BasicCooldown,
+                                new Vector2(infoRect.X + 10, infoRect.Y + 80), Color.White);
+
+                            sb.DrawString(uiText, "Special Cooldown: " + ((Weapon)i).SpecialCooldown,
+                                new Vector2(infoRect.X + 10, infoRect.Y + 105), Color.White);
+                            break;
+
+
+                        case ItemType.Armor:
+                            infoRect = new Rectangle(mouse.X, mouse.Y, 150, 115);
+
+                            sb.Draw(Program.drawSquare, infoRect, Color.DarkGray);
+
+                            sb.DrawString(uiText, ((Armor)i).Name,
+                                new Vector2(infoRect.X + 10, infoRect.Y + 3), Color.LightBlue);
+
+                            sb.DrawString(uiText, "Defense: " + ((Armor)i).Defense,
+                                new Vector2(infoRect.X + 10, infoRect.Y + 30), Color.White);
+
+                            sb.DrawString(uiText, "Speed: " + ((Armor)i).Speed,
+                                new Vector2(infoRect.X + 10, infoRect.Y + 55), Color.White);
+
+                            sb.DrawString(uiText, "HP: " + ((Armor)i).HP,
+                                new Vector2(infoRect.X + 10, infoRect.Y + 80), Color.White);
+                            break;
+                    }
+                }
             }
         }
     }
