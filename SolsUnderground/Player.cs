@@ -314,7 +314,6 @@ namespace SolsUnderground
             moveCounter = moveCD;
             playerState = PlayerState.faceBack;
             activeEffects = new List<StatusEffect>();
-            effectCounter = 0;
             _animations = animations;
             _animationManager = new AnimationManager(_animations.First().Value, this);
             _timer = 0f;
@@ -609,7 +608,7 @@ namespace SolsUnderground
         }
 
         /// <summary>
-        /// The player will take damage an be knocked back.
+        /// The player will take damage and be knocked back.
         /// </summary>
         public void TakeDamage(int damage, AttackDirection attackDirection, int knockback)
         {

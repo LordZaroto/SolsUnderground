@@ -65,7 +65,7 @@ namespace SolsUnderground
             this.barriers = barriers;
 
             // Add barrier to right-hand side of screen - to be removed after enemies are cleared
-            barriers.Add(new Rectangle(windowWidth, 0, 50, windowHeight));
+            barriers.Add(new Rectangle(windowWidth, 0, 250, windowHeight));
         }
 
         /// <summary>

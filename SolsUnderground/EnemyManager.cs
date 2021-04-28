@@ -163,6 +163,15 @@ namespace SolsUnderground
                         150, 8,
                         bossTextures[bossChoice][4]));
                     break;
+
+                case 2:
+                    enemies.Add(new BalloonRitchieBoss(bossTextures[bossChoice],
+                        new Rectangle(spawnPoint.X + (40 - bossTextures[bossChoice][2].Width) / 2,
+                        spawnPoint.Y + (40 - bossTextures[bossChoice][2].Height) / 2,
+                        bossTextures[bossChoice][2].Width,
+                        bossTextures[bossChoice][2].Height),
+                        40, 6));
+                    break;
             }
         }
 

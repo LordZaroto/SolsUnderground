@@ -60,10 +60,11 @@ namespace SolsUnderground
         private Texture2D[] minionTextures;
         private Texture2D[] wandererTextures;
         private Texture2D[] shooterTextures;
-        private Texture2D[] vmBossTextures;
 
         //Bosses
         private Texture2D[] weebTextures;
+        private Texture2D[] vmBossTextures;
+        private Texture2D[] brBossTextures;
 
         // Items
         private List<Texture2D> chestTextures;
@@ -203,8 +204,10 @@ namespace SolsUnderground
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // Text
+            Program.drawSquare = Content.Load<Texture2D>("BlankRect");
             heading = Content.Load<SpriteFont>("Roboto175");
             text = Content.Load<SpriteFont>("Roboto40");
+            uiText = Content.Load<SpriteFont>("Roberto20a");
 
             // Player Animations
             Dictionary<string, Animation> animations = new Dictionary<string, Animation>()
@@ -322,6 +325,15 @@ namespace SolsUnderground
                 Content.Load<Texture2D>("Cola")}; // Boss Attack Texture
             enemyManager.AddBossData(vmBossTextures);
 
+            brBossTextures = new Texture2D[]
+            {
+                Program.drawSquare,
+                Program.drawSquare,
+                Program.drawSquare,
+                Program.drawSquare,
+                Program.drawSquare };
+            enemyManager.AddBossData(brBossTextures);
+
             // Status Textures
             StatusEffect.LoadEffectSprite(Content.Load<Texture2D>("fxModifier"));
             StatusEffect.LoadEffectSprite(Content.Load<Texture2D>("fxRegen"));
@@ -353,8 +365,6 @@ namespace SolsUnderground
             tigerBucks = Content.Load<Texture2D>("TigerBuck");
 
             //options/controls buttons
-            uiText = Content.Load<SpriteFont>("Roberto20a");
-            Program.drawSquare = Content.Load<Texture2D>("BlankRect");
             returnToMenu = Content.Load<Texture2D>("ReturnToMenu");
             returnToMenuClicked = Content.Load<Texture2D>("ReturnToMenuClicked");
             button5 = new Rectangle(305, 827, 709, 153);
