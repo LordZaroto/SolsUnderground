@@ -10,6 +10,18 @@
     <ApplicationIcon>Icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Content\Bandana2.png" />
+    <None Remove="Content\BlankRect2.png" />
+    <None Remove="Content\BrickBreaker2.png" />
+    <None Remove="Content\fxModifier.png" />
+    <None Remove="Content\fxRegen.png" />
+    <None Remove="Content\fxSick.png" />
+    <None Remove="Content\fxStun.png" />
+    <None Remove="Content\heroBack2.png" />
+    <None Remove="Content\heroForward2.png" />
+    <None Remove="Content\playerMovingDown2.png" />
+    <None Remove="Content\playerMovingUp2.png" />
+    <None Remove="Content\WinterCoat2.png" />
     <None Remove="Icon.ico" />
     <None Remove="Icon.bmp" />
   </ItemGroup>

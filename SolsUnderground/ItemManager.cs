@@ -310,7 +310,7 @@ namespace SolsUnderground
         /// Also draws information boxes for moused-over items.
         /// </summary>
         /// <param name="sb">Spritebatch to draw with</param>
-        public void Draw(SpriteBatch sb, MouseState mouse, SpriteFont uiText)
+        public void Draw(SpriteBatch sb)
         {
             foreach (Chest c in chests)
             {
@@ -322,8 +322,16 @@ namespace SolsUnderground
             {
                 i.Draw(sb);
             }
+        }
 
-            // Draw info boxes over items
+        /// <summary>
+        /// Draws info boxes for any equipment item that the mouse hovers over.
+        /// </summary>
+        /// <param name="sb">SpriteBatch</param>
+        /// <param name="mouse">Current mouse state</param>
+        /// <param name="uiText">Info text spritefont</param>
+        public void DrawInfoBoxes(SpriteBatch sb, MouseState mouse, SpriteFont uiText)
+        {
             foreach (Item i in items)
             {
                 // Draw info for any items mouse hovers over
@@ -336,10 +344,10 @@ namespace SolsUnderground
                         case ItemType.Weapon:
                             infoRect = new Rectangle(mouse.X, mouse.Y, 280, 140);
 
-                            sb.Draw(Program.drawSquare, infoRect, Color.DarkGray);
+                            sb.Draw(Program.drawSquare, infoRect, Color.DarkRed);
 
                             sb.DrawString(uiText, ((Weapon)i).Name,
-                                new Vector2(infoRect.X + 10, infoRect.Y + 5), Color.LightBlue);
+                                new Vector2(infoRect.X + 10, infoRect.Y + 5), Color.LightSalmon);
 
                             sb.DrawString(uiText, "Damage: " + ((Weapon)i).Attack,
                                 new Vector2(infoRect.X + 10, infoRect.Y + 30), Color.White);
@@ -356,9 +364,9 @@ namespace SolsUnderground
 
 
                         case ItemType.Armor:
-                            infoRect = new Rectangle(mouse.X, mouse.Y, 150, 115);
+                            infoRect = new Rectangle(mouse.X, mouse.Y, 160, 115);
 
-                            sb.Draw(Program.drawSquare, infoRect, Color.DarkGray);
+                            sb.Draw(Program.drawSquare, infoRect, Color.DarkSlateGray);
 
                             sb.DrawString(uiText, ((Armor)i).Name,
                                 new Vector2(infoRect.X + 10, infoRect.Y + 3), Color.LightBlue);

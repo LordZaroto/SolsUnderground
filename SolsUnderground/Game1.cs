@@ -968,10 +968,11 @@ namespace SolsUnderground
                 // Main Game Screen
                 case GameState.Game:
                     mapManager.Draw(_spriteBatch);
-                    itemManager.Draw(_spriteBatch, mouse, uiText);
+                    itemManager.Draw(_spriteBatch);
                     player.Draw(_spriteBatch);
                     enemyManager.Draw(_spriteBatch);
                     combatManager.DrawAttacks(_spriteBatch);
+                    itemManager.DrawInfoBoxes(_spriteBatch, mouse, uiText);
 
                     // Draw currency
                     _spriteBatch.Draw(tigerBucks, moneyIconRect, Color.White);
