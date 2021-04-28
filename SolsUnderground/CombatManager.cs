@@ -268,8 +268,6 @@ namespace SolsUnderground
                         {
                             if (activeAttacks[i].Hitbox.Intersects(e.PositionRect) && attackIntervals[i] > 0.15)
                             {
-                                attackIntervals[i] -= 0.15;
-
                                 e.TakeDamage(activeAttacks[i].Damage, activeAttacks[i].Knockback);
 
                                 // Apply effects
@@ -277,6 +275,9 @@ namespace SolsUnderground
                                     e.AddEffect(activeAttacks[i].Effect);
                             }
                         }
+
+                        if (attackIntervals[i] > 0.15)
+                            attackIntervals[i] -= 0.15;
                     }
                 }
 
