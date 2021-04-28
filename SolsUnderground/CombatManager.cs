@@ -146,7 +146,7 @@ namespace SolsUnderground
         /// Loads enemy list into combat manager.
         /// </summary>
         /// <param name="enemies">Reference to working enemy list</param>
-        public void GetEnemies(List<Enemy> enemies)
+        public void SetEnemyList(List<Enemy> enemies)
         {
             this.enemies = enemies;
         }

@@ -25,18 +25,6 @@
 /processorParam:TextureFormat=Color
 /build:Bandana.png
 
-#begin Bandana2.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:Bandana2.png
-
 #begin BarrierSprite.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -61,18 +49,6 @@
 /processorParam:TextureFormat=Color
 /build:BlankRect.png
 
-#begin BlankRect2.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:BlankRect2.png
-
 #begin BrickBreaker.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -84,18 +60,6 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:BrickBreaker.png
-
-#begin BrickBreaker2.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:BrickBreaker2.png
 
 #begin BrickSprite.png
 /importer:TextureImporter
@@ -529,7 +493,7 @@
 /processorParam:TextureFormat=Color
 /build:hearts0d.png
 
-#begin heroBack2.png
+#begin heroBack.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -539,7 +503,7 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:heroBack2.png
+/build:heroBack.png
 
 #begin heroDeath.png
 /importer:TextureImporter
@@ -553,7 +517,7 @@
 /processorParam:TextureFormat=Color
 /build:heroDeath.png
 
-#begin heroForward2.png
+#begin heroForward.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -563,7 +527,7 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:heroForward2.png
+/build:heroForward.png
 
 #begin heroLeft.png
 /importer:TextureImporter
@@ -757,7 +721,7 @@
 /processorParam:TextureFormat=Color
 /build:NewGameCLicked.png
 
-#begin playerMovingDown2.png
+#begin playerMovingDown.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -767,7 +731,7 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:playerMovingDown2.png
+/build:playerMovingDown.png
 
 #begin playerMovingLeft.png
 /importer:TextureImporter
@@ -793,7 +757,7 @@
 /processorParam:TextureFormat=Color
 /build:playerMovingRight.png
 
-#begin playerMovingUp2.png
+#begin playerMovingUp.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -803,7 +767,7 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:playerMovingUp2.png
+/build:playerMovingUp.png
 
 #begin RedBrickSprite.png
 /importer:TextureImporter
@@ -1290,16 +1254,4 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:WinterCoat.png
-
-#begin WinterCoat2.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:WinterCoat2.png
 

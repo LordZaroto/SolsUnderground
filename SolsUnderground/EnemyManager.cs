@@ -44,7 +44,7 @@ namespace SolsUnderground
 
             // Hand a reference of enemy list to collision and combat managers
             collisionManager.SetEnemyList(enemies);
-            combatManager.GetEnemies(enemies);
+            combatManager.SetEnemyList(enemies);
         }
 
         // Methods
@@ -56,6 +56,14 @@ namespace SolsUnderground
         public void AddEnemyData(Texture2D[] enemySprites)
         {
             enemyTextures.Add(enemySprites);
+        }
+
+        /// <summary>
+        /// Removes all sprites for all regular enemies from manager.
+        /// </summary>
+        public void ClearEnemyData()
+        {
+            enemyTextures.Clear();
         }
 
         /// <summary>
@@ -72,7 +80,9 @@ namespace SolsUnderground
         /// Currently only spawns default SkaterBro enemy.
         /// </summary>
         /// <param name="enemyCount">Number of enemies to add</param>
-        public void SpawnEnemies(int enemyCount, List<Rectangle> openTiles)
+        /// <param name="openTiles">List of tile positions that enemies can spawn on</param>
+        /// <param name="floorFactor">Difficulty multiplier</param>
+        public void SpawnEnemies(int enemyCount, List<Rectangle> openTiles, float floorFactor)
         {
             // Use to store random index of openTile list
             int spawnPoint;
@@ -81,36 +91,40 @@ namespace SolsUnderground
             for (int i = 0; i < enemyCount; i++)
             {
                 spawnPoint = Program.rng.Next(openTiles.Count);
+
                 enemyChoice = Program.rng.Next(enemyTextures.Count);
+                Rectangle spawnRect = new Rectangle(openTiles[spawnPoint].X,
+                            openTiles[spawnPoint].Y,
+                            enemyTextures[enemyChoice][2].Width,
+                            enemyTextures[enemyChoice][2].Height);
 
                 // Need to expand and implement spawning multiple enemy types
                 //The type of enemy spawned should be random
                 switch (enemyChoice)
                 {
+                    // Tier 0 - Starting enemies
                     case 0:
-                        enemies.Add(new Minion(enemyTextures[enemyChoice],
-                            new Rectangle(openTiles[spawnPoint].X, 
-                            openTiles[spawnPoint].Y, 
-                            enemyTextures[enemyChoice][2].Width, 
-                            enemyTextures[enemyChoice][2].Height), 
-                            6, 4));
+                        enemies.Add(new Minion(enemyTextures[enemyChoice], spawnRect, 
+                            (int)(6 * floorFactor), (int)(4 * floorFactor)));
                         break;
                     case 1:
-                        enemies.Add(new Wanderer(enemyTextures[enemyChoice],
-                            new Rectangle(openTiles[spawnPoint].X,
-                            openTiles[spawnPoint].Y,
-                            enemyTextures[enemyChoice][2].Width,
-                            enemyTextures[enemyChoice][2].Height), 
-                            12, 8));
+                        enemies.Add(new Wanderer(enemyTextures[enemyChoice], spawnRect, 
+                            (int)(12 * floorFactor), (int)(8 * floorFactor)));
                         break;
+
+                    // Tier 1 - After 2nd floor
                     case 2:
-                        enemies.Add(new Shooter(enemyTextures[enemyChoice],
-                            new Rectangle(openTiles[spawnPoint].X,
-                            openTiles[spawnPoint].Y,
-                            enemyTextures[enemyChoice][2].Width,
-                            enemyTextures[enemyChoice][2].Height),
-                            25, 3));
+                        enemies.Add(new Shooter(enemyTextures[enemyChoice], spawnRect,
+                            (int)(25 * floorFactor), (int)(3 * floorFactor)));
                         break;
+
+                    // Tier 2 - After 4th floor
+                    case 3:
+                        enemies.Add(new Weeb(enemyTextures[enemyChoice], spawnRect,
+                            20, 7, enemyTextures[enemyChoice][4]));
+                        break;
+
+                    // Tier 3 - After 6th floor
                 }
             }
         }
@@ -120,6 +134,9 @@ namespace SolsUnderground
         /// </summary>
         public void SpawnBoss()
         {
+            // Currently spawns all bosses in center of room
+            // When all bosses are added, maybe add specific spawn points for each boss?
+
             Point spawnPoint = new Point(640, 480);
             int bossChoice = Program.rng.Next(bossTextures.Count);
 

@@ -37,7 +37,8 @@ namespace SolsUnderground
 
         //games state
         private GameState currentState;
-        bool isRoomCleared;
+        private bool isRoomCleared;
+        private int difficultyTier;
 
         //text
         private SpriteFont heading;
@@ -177,10 +178,6 @@ namespace SolsUnderground
         private Texture2D grave;
         private Rectangle tombstone;
 
-
-        //game time
-        private GameTime gameTime;
-
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -193,6 +190,7 @@ namespace SolsUnderground
             //sets game state to menu, and sets window size
             currentState = GameState.Menu;
             isRoomCleared = false;
+            difficultyTier = 0;
             _graphics.PreferredBackBufferWidth = 1320;
             _graphics.PreferredBackBufferHeight = 1000;
             _graphics.ApplyChanges();
@@ -211,8 +209,8 @@ namespace SolsUnderground
             // Player Animations
             Dictionary<string, Animation> animations = new Dictionary<string, Animation>()
             {
-                {"playerMoveForward", new Animation(Content.Load<Texture2D>("playerMovingUp2"), 4) },
-                {"playerMoveBack", new Animation(Content.Load<Texture2D>("playerMovingDown2"), 4) },
+                {"playerMoveForward", new Animation(Content.Load<Texture2D>("playerMovingUp"), 4) },
+                {"playerMoveBack", new Animation(Content.Load<Texture2D>("playerMovingDown"), 4) },
                 {"playerMoveLeft", new Animation(Content.Load<Texture2D>("playerMovingLeft"), 4) },
                 {"playerMoveRight", new Animation(Content.Load<Texture2D>("playerMovingRight"), 4) },
                 {"heroDeath", new Animation(Content.Load<Texture2D>("heroDeath"), 4) }
@@ -220,8 +218,8 @@ namespace SolsUnderground
 
             // Player Textures
             playerTextures = new Texture2D[] {
-                Content.Load<Texture2D>("heroForward2"),
-                Content.Load<Texture2D>("heroBack2"),
+                Content.Load<Texture2D>("heroForward"),
+                Content.Load<Texture2D>("heroBack"),
                 Content.Load<Texture2D>("heroLeft"),
                 Content.Load<Texture2D>("heroRight") };
 
@@ -231,7 +229,7 @@ namespace SolsUnderground
             // Starting weapon
             stickTexture = Content.Load<Texture2D>("stick");
             ritchieClawTexture = Content.Load<Texture2D>("ritchieClaw");
-            brickBreakerTexture = Content.Load<Texture2D>("BrickBreaker2");
+            brickBreakerTexture = Content.Load<Texture2D>("BrickBreaker");
             
             stick = new wStick(stickTexture, new Rectangle(0, 0, 0, 0));
 
@@ -273,8 +271,8 @@ namespace SolsUnderground
             itemManager.AddWeaponSprite(thePrecipiceTexture);
 
             // Armor
-            winterCoatTexture = Content.Load<Texture2D>("WinterCoat2");
-            bandanaTexture = Content.Load<Texture2D>("Bandana2");
+            winterCoatTexture = Content.Load<Texture2D>("WinterCoat");
+            bandanaTexture = Content.Load<Texture2D>("Bandana");
             skatesTexture = Content.Load<Texture2D>("Skates");
             maskTexture = Content.Load<Texture2D>("Mask");
             itemManager.AddArmorSprite(hoodieTexture);
@@ -284,19 +282,19 @@ namespace SolsUnderground
             itemManager.AddArmorSprite(maskTexture);
 
             // Enemy Textures
+            // Enemies get added in StartGame() 
+            // or in Update()'s main game loop at difficulty tier
             minionTextures = new Texture2D[] {
                 Content.Load<Texture2D>("minionForward"),
                 Content.Load<Texture2D>("minionBack"),
                 Content.Load<Texture2D>("minionLeft"),
                 Content.Load<Texture2D>("minionRight") };
-            enemyManager.AddEnemyData(minionTextures);
 
             wandererTextures = new Texture2D[] {
                 Content.Load<Texture2D>("wandererForward"),
                 Content.Load<Texture2D>("wandererBack"),
                 Content.Load<Texture2D>("wandererLeft"),
                 Content.Load<Texture2D>("wandererRight") };
-            enemyManager.AddEnemyData(wandererTextures);
 
             shooterTextures = new Texture2D[]
             {
@@ -304,9 +302,9 @@ namespace SolsUnderground
                 Content.Load<Texture2D>("ShooterBack"),
                 Content.Load<Texture2D>("ShooterLeft"),
                 Content.Load<Texture2D>("ShooterRight") };
-            enemyManager.AddEnemyData(shooterTextures);
 
             // Boss Textures
+            // Boss data added here, stay constant
             weebTextures = new Texture2D[] {
                 Content.Load<Texture2D>("weeb_Forward"),
                 Content.Load<Texture2D>("weeb_Back"),
@@ -356,7 +354,7 @@ namespace SolsUnderground
 
             //options/controls buttons
             uiText = Content.Load<SpriteFont>("Roberto20a");
-            Program.drawSquare = Content.Load<Texture2D>("BlankRect2");
+            Program.drawSquare = Content.Load<Texture2D>("BlankRect");
             returnToMenu = Content.Load<Texture2D>("ReturnToMenu");
             returnToMenuClicked = Content.Load<Texture2D>("ReturnToMenuClicked");
             button5 = new Rectangle(305, 827, 709, 153);
@@ -506,7 +504,29 @@ namespace SolsUnderground
                         || (SingleKeyPress(Keys.N, kb, prevKB) && Program.godMode))
                     {
                         player.X = 0;
-                        mapManager.NextRoom();
+                        
+                        // Increases room and floor as appropriate
+                        // Also check if new items/enemies are added to game pool
+                        if (mapManager.NextRoom())
+                        {
+                            switch (difficultyTier)
+                            {
+                                case 0:
+                                    enemyManager.AddEnemyData(shooterTextures);
+                                    break;
+
+                                case 1:
+                                    enemyManager.AddEnemyData(weebTextures);
+                                    break;
+
+                                case 2:
+                                    break;
+                            }
+
+                            difficultyTier++;
+                        }
+
+                        // Check if player has reached end of game
                         if(mapManager.CurrentFloor > 6)
                         {
                             currentState = GameState.Win;
@@ -527,7 +547,8 @@ namespace SolsUnderground
                         {
                             enemyManager.SpawnEnemies(
                                 mapManager.CurrentRoom.EnemyCount,
-                                mapManager.CurrentRoom.GetOpenTiles());
+                                mapManager.CurrentRoom.GetOpenTiles(),
+                                mapManager.FloorFactor);
                         }
 
                         collisionManager.SetBarrierList(mapManager.CurrentRoom.GetBarriers());
@@ -1257,14 +1278,21 @@ namespace SolsUnderground
         {
             // Reset managers
             mapManager.Reset();
+            enemyManager.ClearEnemyData();
 
+            // Add starting enemies
+            enemyManager.AddEnemyData(minionTextures);
+            enemyManager.AddEnemyData(wandererTextures);
+
+            // Initiate new room
             enemyManager.ClearEnemies();
             combatManager.ClearAttacks();
             itemManager.NextRoom(mapManager.CurrentRoom.ChestSpawns);
             isRoomCleared = false;
             enemyManager.SpawnEnemies(
                 mapManager.CurrentRoom.EnemyCount,
-                mapManager.CurrentRoom.GetOpenTiles());
+                mapManager.CurrentRoom.GetOpenTiles(),
+                mapManager.FloorFactor);
 
             collisionManager.SetBarrierList(mapManager.CurrentRoom.GetBarriers());
 
@@ -1335,7 +1363,8 @@ namespace SolsUnderground
                 {
                     enemyManager.SpawnEnemies(
                         mapManager.CurrentRoom.EnemyCount,
-                        mapManager.CurrentRoom.GetOpenTiles());
+                        mapManager.CurrentRoom.GetOpenTiles(),
+                        mapManager.FloorFactor);
                 }
 
                 collisionManager.SetBarrierList(mapManager.CurrentRoom.GetBarriers());
