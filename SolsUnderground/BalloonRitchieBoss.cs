@@ -24,6 +24,8 @@ namespace SolsUnderground
         private Color[] hpBarColors;
         private Texture2D[] textures;
 
+        private Point shotSize;
+        private int shotSpeed;
         private double elapsedGameTime;
         private double attackCounter;
         private double attackInterval;
@@ -32,7 +34,12 @@ namespace SolsUnderground
         private double barrageCounter;
         private double barrageDuration;
         private double barrageInterval;
-        private Point barrageShotSize;
+
+        private double waveCD;
+        private double waveCounter;
+        private double waveDuration;
+        private double waveInterval;
+
         /// Inherits:
         /// Texture2D texture
         /// Rectangle positionRect
@@ -176,12 +183,20 @@ namespace SolsUnderground
 
             phase = 0;
             hpBarColors = new Color[]{ Color.Blue, Color.Yellow, Color.Red, Color.Black};
+            shotSize = new Point(20, 15);
+            shotSpeed = 4;
+            attackCounter = 0;
+            attackInterval = 0;
 
-            barrageCD = 12;
-            barrageCounter = 6;
+            barrageCD = 9;
+            barrageCounter = 0;
             barrageDuration = 3;
             barrageInterval = 0.3;
-            barrageShotSize = new Point(20, 15);
+
+            waveCD = 5;
+            waveCounter = 0;
+            waveDuration = 3;
+            waveInterval = 1;
         }
 
         // Methods
@@ -196,7 +211,7 @@ namespace SolsUnderground
             currentHP -= Math.Max(damage - DefenseMod, 0);
 
             // Knockback
-
+            // No knockback
 
             // Check health for phase change/death
             if (currentHP <= 0)
@@ -207,12 +222,21 @@ namespace SolsUnderground
                 switch (phase)
                 {
                     case 1:
-                        activeEffects.Add(new StatusEffect(StatusType.SpdUp, 1, double.MaxValue));
+                        // After first phase, speed up and attack intervals are halved
+                        activeEffects.Add(new StatusEffect(StatusType.SpdUp, 2, double.MaxValue));
+                        barrageInterval /= 2f;
+                        waveInterval /= 2f;
                         break;
 
                     case 2:
+                        // After second phase, attack up, shot speed doubled, barrage cooldown shortened, and barrage interval halved again
                         activeEffects.Add(new StatusEffect(StatusType.AtkUp, 2, double.MaxValue));
-                        barrageInterval = 0.15;
+                        barrageCD /= 3f;
+                        barrageInterval /= 2f;
+                        shotSpeed *= 2;
+
+                        // Make sure barrage doesnt happen immediately due to shortening
+                        barrageCD = 4;
                         break;
 
                     case 3:
@@ -275,7 +299,7 @@ namespace SolsUnderground
                     if (player.PositionRect.Center.X < positionRect.Center.X)
                     {
                         enemyState = EnemyState.faceLeft;
-                        texture = textures[1];
+                        texture = textures[2];
                     }
                     if (player.PositionRect.Center.X > positionRect.Center.X)
                     {
@@ -293,14 +317,14 @@ namespace SolsUnderground
                     if (player.PositionRect.Center.Y > positionRect.Center.Y)
                     {
                         enemyState = EnemyState.faceBack;
-                        texture = textures[2];
+                        texture = textures[1];
                     }
                 }
             }
         }
 
         /// <summary>
-        /// 
+        /// Attacks the player using barrages and waves of balloons.
         /// </summary>
         /// <param name="player"></param>
         /// <returns></returns>
@@ -308,35 +332,35 @@ namespace SolsUnderground
         {
             List<Attack> attacks = new List<Attack>();
 
+            // Determine direction for attacks
+            AttackDirection direction = AttackDirection.left;
+            switch (enemyState)
+            {
+                case EnemyState.faceForward:
+                case EnemyState.moveForward:
+                    direction = AttackDirection.up;
+                    break;
+
+                case EnemyState.faceLeft:
+                case EnemyState.moveLeft:
+                    direction = AttackDirection.left;
+                    break;
+
+                case EnemyState.faceBack:
+                case EnemyState.moveBack:
+                    direction = AttackDirection.down;
+                    break;
+
+                case EnemyState.faceRight:
+                case EnemyState.moveRight:
+                    direction = AttackDirection.right;
+                    break;
+            }
+
             if (enemyState != EnemyState.dead)
             {
                 if (!IsStunned)
                 {
-                    // Determine direction for attacks
-                    AttackDirection direction = AttackDirection.left;
-                    switch (enemyState)
-                    {
-                        case EnemyState.faceForward:
-                        case EnemyState.moveForward:
-                            direction = AttackDirection.up;
-                            break;
-
-                        case EnemyState.faceLeft:
-                        case EnemyState.moveLeft:
-                            direction = AttackDirection.left;
-                            break;
-
-                        case EnemyState.faceBack:
-                        case EnemyState.moveBack:
-                            direction = AttackDirection.down;
-                            break;
-
-                        case EnemyState.faceRight:
-                        case EnemyState.moveRight:
-                            direction = AttackDirection.right;
-                            break;
-                    }
-
                     // Check for ongoing attacks
                     switch (attackState)
                     {
@@ -345,10 +369,13 @@ namespace SolsUnderground
                             break;
 
                         case AttackState.Wave:
+                            attacks.AddRange(Wave(direction));
                             break;
 
                         case AttackState.None:
+                            // Increment timers when not attacking
                             barrageCounter += elapsedGameTime;
+                            waveCounter += elapsedGameTime;
 
                             if (barrageCounter > barrageCD)
                             {
@@ -357,15 +384,18 @@ namespace SolsUnderground
                                 attackInterval = 0;
                                 attackState = AttackState.Barrage;
                             }
+                            else if (waveCounter > waveCD)
+                            {
+                                waveCounter -= waveCD;
+                                attackCounter = 0;
+                                attackInterval = 0;
+                                attackState = AttackState.Wave;
+                            }
                             break;
                     }
 
                     attacks.Add(new Attack(PositionRect, Attack, knockback, null, direction, 0.15, false, null));
                 }
-            }
-            else
-            {
-                // Pop on death
             }
 
             return attacks;
@@ -387,35 +417,191 @@ namespace SolsUnderground
                 if (attackInterval <= 0)
                 {
                     attackInterval += barrageInterval;
-                    Rectangle shotRect;
+                    Rectangle shotRect = new Rectangle();
 
-                    if (direction == AttackDirection.up || direction == AttackDirection.down)
+                    switch (direction)
                     {
-                        shotRect = new Rectangle(
-                            X + Program.rng.Next(Width - barrageShotSize.Y),
-                            positionRect.Center.Y,
-                            barrageShotSize.Y,
-                            barrageShotSize.X);
-                    }
-                    else
-                    {
-                        shotRect = new Rectangle(
-                            positionRect.Center.X,
-                            Y + Program.rng.Next(Height - barrageShotSize.Y),
-                            barrageShotSize.X,
-                            barrageShotSize.Y);
+                        case AttackDirection.up:
+                            shotRect = new Rectangle(
+                                X + Program.rng.Next(Width - (int)(shotSize.Y * 1.5)),
+                                Y,
+                                (int)(shotSize.Y * 1.5),
+                                (int)(shotSize.X * 1.5));
+                            break;
+
+                        case AttackDirection.left:
+                            shotRect = new Rectangle(
+                            X,
+                            Y + Program.rng.Next(Height - (int)(shotSize.Y * 1.5)),
+                            (int)(shotSize.X * 1.5),
+                            (int)(shotSize.Y * 1.5));
+                            break;
+
+                        case AttackDirection.down:
+                            shotRect = new Rectangle(
+                                X + Program.rng.Next(Width - (int)(shotSize.Y * 1.5)),
+                                positionRect.Bottom - (int)(shotSize.X * 1.5),
+                                (int)(shotSize.Y * 1.5),
+                                (int)(shotSize.X * 1.5));
+                            break;
+
+                        case AttackDirection.right:
+                            shotRect = new Rectangle(
+                            positionRect.Right - (int)(shotSize.X * 1.5),
+                            Y + Program.rng.Next(Height - (int)(shotSize.Y * 1.5)),
+                            (int)(shotSize.X * 1.5),
+                            (int)(shotSize.Y * 1.5));
+                            break;
                     }
 
-                    return new Projectile(shotRect, Attack / 2, 4, Knockback / 4,
-                        Program.drawSquare, direction, false, null);
+                    return new Projectile(shotRect, Attack, (int)(shotSpeed * 1.5), Knockback / 4,
+                        textures[4], direction, false, null);
                 }
             }
             else
             {
+                // Ensure break between attacks
                 attackState = AttackState.None;
+                waveCounter -= 0.5;
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// Shoots walls of balloons towards the player at set intervals.
+        /// </summary>
+        /// <param name="direction"></param>
+        /// <returns>List of Projectiles once a second, empty List all other frames</returns>
+        private List<Projectile> Wave(AttackDirection direction)
+        {
+            List<Projectile> shots = new List<Projectile>();
+
+            if (attackCounter < waveDuration)
+            {
+                // Update timers
+                attackCounter += elapsedGameTime;
+                attackInterval -= elapsedGameTime;
+
+                // Launch a wall of projectiles every second, faster in later phases
+                if (attackInterval <= 0)
+                {
+                    attackInterval += waveInterval;
+                    Rectangle shotRect;
+
+                    switch (direction)
+                    {
+                        case AttackDirection.up:
+                            shotRect = new Rectangle(
+                                positionRect.Center.X,
+                                Y,
+                                shotSize.Y,
+                                shotSize.X);
+
+                            // Add center shot
+                            shots.Add(new Projectile(shotRect, Attack, shotSpeed, Knockback, 
+                                textures[4], direction, false, null));
+
+                            // Add shots extending to the size of BalloonRitchie
+                            for (int i = shotSize.Y; i < Width / 2; i += shotSize.Y)
+                            {
+                                shots.Add(new Projectile(
+                                    new Rectangle(shotRect.X + i, shotRect.Y, shotRect.Width, shotRect.Height), 
+                                    Attack, shotSpeed, Knockback,
+                                    textures[4], direction, false, null));
+                                shots.Add(new Projectile(
+                                    new Rectangle(shotRect.X - i, shotRect.Y, shotRect.Width, shotRect.Height),
+                                    Attack, shotSpeed, Knockback,
+                                    textures[4], direction, false, null));
+                            }
+                            break;
+
+                        case AttackDirection.left:
+                            shotRect = new Rectangle(
+                                X,
+                                positionRect.Center.Y,
+                                shotSize.X,
+                                shotSize.Y);
+
+                            // Add center shot
+                            shots.Add(new Projectile(shotRect, Attack, shotSpeed, Knockback,
+                                textures[4], direction, false, null));
+
+                            // Add shots extending to the size of BalloonRitchie
+                            for (int i = shotSize.Y; i < Height / 2; i += shotSize.Y)
+                            {
+                                shots.Add(new Projectile(
+                                    new Rectangle(shotRect.X, shotRect.Y + i, shotRect.Width, shotRect.Height),
+                                    Attack, shotSpeed, Knockback,
+                                    textures[4], direction, false, null));
+                                shots.Add(new Projectile(
+                                    new Rectangle(shotRect.X, shotRect.Y - i, shotRect.Width, shotRect.Height),
+                                    Attack, shotSpeed, Knockback,
+                                    textures[4], direction, false, null));
+                            }
+                            break;
+
+                        case AttackDirection.down:
+                            shotRect = new Rectangle(
+                                positionRect.Center.X,
+                                positionRect.Bottom - shotSize.X,
+                                shotSize.Y,
+                                shotSize.X);
+
+                            // Add center shot
+                            shots.Add(new Projectile(shotRect, Attack, shotSpeed, Knockback,
+                                textures[4], direction, false, null));
+
+                            // Add shots extending to the size of BalloonRitchie
+                            for (int i = shotSize.Y; i < Width / 2; i += shotSize.Y)
+                            {
+                                shots.Add(new Projectile(
+                                    new Rectangle(shotRect.X + i, shotRect.Y, shotRect.Width, shotRect.Height),
+                                    Attack, shotSpeed, Knockback,
+                                    textures[4], direction, false, null));
+                                shots.Add(new Projectile(
+                                    new Rectangle(shotRect.X - i, shotRect.Y, shotRect.Width, shotRect.Height),
+                                    Attack, shotSpeed, Knockback,
+                                    textures[4], direction, false, null));
+                            }
+                            break;
+
+                        case AttackDirection.right:
+                            shotRect = new Rectangle(
+                                positionRect.Right - shotSize.X,
+                                positionRect.Center.Y,
+                                shotSize.X,
+                                shotSize.Y);
+
+                            // Add center shot
+                            shots.Add(new Projectile(shotRect, Attack, shotSpeed, Knockback,
+                                textures[4], direction, false, null));
+
+                            // Add shots extending to the size of BalloonRitchie
+                            for (int i = shotSize.Y; i < Height / 2; i += shotSize.Y)
+                            {
+                                shots.Add(new Projectile(
+                                    new Rectangle(shotRect.X, shotRect.Y + i, shotRect.Width, shotRect.Height),
+                                    Attack, shotSpeed, Knockback,
+                                    textures[4], direction, false, null));
+                                shots.Add(new Projectile(
+                                    new Rectangle(shotRect.X, shotRect.Y - i, shotRect.Width, shotRect.Height),
+                                    Attack, shotSpeed, Knockback,
+                                    textures[4], direction, false, null));
+                            }
+                            break;
+
+                    }
+                }
+            }
+            else
+            {
+                // Ensure break between attacks
+                attackState = AttackState.None;
+                barrageCounter -= 0.5;
+            }
+
+            return shots;
         }
 
         /// <summary>
@@ -480,8 +666,10 @@ namespace SolsUnderground
         public override void Draw(SpriteBatch sb)
         {
             // Draw indicators for attacks
-            if (barrageCounter > barrageCD - 1)
+            if (barrageCounter > barrageCD - 1 && attackState == AttackState.None)
                 sb.Draw(texture, positionRect, Color.Green);
+            else if (waveCounter > waveCD - 1 && attackState == AttackState.None)
+                sb.Draw(texture, positionRect, Color.Blue);
             else
                 sb.Draw(texture, positionRect, Color.White);
 

@@ -327,11 +327,11 @@ namespace SolsUnderground
 
             brBossTextures = new Texture2D[]
             {
-                Program.drawSquare,
-                Program.drawSquare,
-                Program.drawSquare,
-                Program.drawSquare,
-                Program.drawSquare };
+                Content.Load<Texture2D>("brBossFront"),
+                Content.Load<Texture2D>("brBossBack"),
+                Content.Load<Texture2D>("brBossLeft"),
+                Content.Load<Texture2D>("brBossRight"),
+                Content.Load<Texture2D>("brShot") }; // Boss Attack Texture
             enemyManager.AddBossData(brBossTextures);
 
             // Status Textures
@@ -488,6 +488,10 @@ namespace SolsUnderground
                     player.Input(kb, gameTime);
                     enemyManager.MoveEnemies(gameTime);
 
+                    //Collisions
+                    itemManager.ActivateItems(SingleKeyPress(player.EquipKey, kb, prevKB));
+                    collisionManager.CheckCollisions();
+
                     // Attacks
                     combatManager.LoadAttacks(mouse, prevM);
                     combatManager.ActivateAttacks(gameTime);
@@ -496,10 +500,6 @@ namespace SolsUnderground
                     // Effects
                     player.UpdateEffects(gameTime);
                     enemyManager.UpdateEnemyEffects(gameTime);
-
-                    //Collisions
-                    itemManager.ActivateItems(SingleKeyPress(player.EquipKey, kb, prevKB));
-                    collisionManager.CheckCollisions();
 
                     // Check if room is cleared
                     if (combatManager.EnemyCount == 0 && !isRoomCleared)

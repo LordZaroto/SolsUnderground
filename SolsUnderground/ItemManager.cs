@@ -106,13 +106,17 @@ namespace SolsUnderground
                         // Drop ThePrecipice
                         items.Add(new wThePrecipice(itemTextures[moneySpriteCount + healthSpriteCount + 5],
                         new Rectangle(
-                            enemy.X + (Program.rng.Next(5) - 2),
-                            enemy.Y + (Program.rng.Next(5) - 2),
+                            enemy.PositionRect.Center.X - 20 + (Program.rng.Next(5) - 2),
+                            enemy.PositionRect.Center.Y - 20 + (Program.rng.Next(5) - 2),
                             40, 40)));
                     }
                     if (enemy is VendingMachineBoss)
                     {
                         // Vending Machine drops here
+                    }
+                    if (enemy is BalloonRitchieBoss)
+                    {
+                        // Balloon Ritchie drops here
                     }
                 }
                 else
@@ -120,8 +124,8 @@ namespace SolsUnderground
                     // Spawn increased money item in small randomized area
                     items.Add(new Item(ItemType.Money, moneyValue * 5, itemTextures[0],
                         new Rectangle(
-                            enemy.X + (Program.rng.Next(5) - 2),
-                            enemy.Y + (Program.rng.Next(5) - 2),
+                            enemy.PositionRect.Center.X - itemTextures[0].Width / 2 + (Program.rng.Next(5) - 2),
+                            enemy.PositionRect.Center.Y - itemTextures[0].Height / 2 + (Program.rng.Next(5) - 2),
                             itemTextures[0].Width,
                             itemTextures[0].Height)));
                 }
@@ -131,8 +135,8 @@ namespace SolsUnderground
                 // Spawn money item in small randomized area
                 items.Add(new Item(ItemType.Money, moneyValue, itemTextures[0],
                     new Rectangle(
-                        enemy.X + (Program.rng.Next(5) - 2),
-                        enemy.Y + (Program.rng.Next(5) - 2),
+                        enemy.PositionRect.Center.X - itemTextures[0].Width / 2 + (Program.rng.Next(5) - 2),
+                        enemy.PositionRect.Center.Y - itemTextures[0].Height / 2 + (Program.rng.Next(5) - 2),
                         itemTextures[0].Width,
                         itemTextures[0].Height)));
 
@@ -141,8 +145,8 @@ namespace SolsUnderground
                 {
                     items.Add(new Item(ItemType.HealthPickup, 20, itemTextures[1],
                          new Rectangle(
-                             enemy.X + (Program.rng.Next(5) - 2),
-                             enemy.Y + (Program.rng.Next(5) - 2),
+                             enemy.PositionRect.Center.X - itemTextures[moneySpriteCount].Width / 2 + (Program.rng.Next(5) - 2),
+                             enemy.PositionRect.Center.Y - itemTextures[moneySpriteCount].Height / 2 + (Program.rng.Next(5) - 2),
                              itemTextures[moneySpriteCount].Width,
                              itemTextures[moneySpriteCount].Height)));
                 }
