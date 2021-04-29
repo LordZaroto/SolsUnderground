@@ -122,7 +122,11 @@ namespace SolsUnderground
                             break;
 
                         case 5:
-                            // ThePrecipice is a boss drop, not found in chests
+                            // ThePrecipice is a boss drop from Weeb
+                            break;
+
+                        case 6:
+                            drop = new wCactus(itemTextures[textureID], positionRect);
                             break;
                     }
                     break;
@@ -152,6 +156,10 @@ namespace SolsUnderground
 
                             case 4:
                                 drop = new aMask(itemTextures[textureID], positionRect);
+                                break;
+
+                            case 5:
+                                // TigerMask is a boss drop from BalloonRitchie
                                 break;
                         }
                         break;

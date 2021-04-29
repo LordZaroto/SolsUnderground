@@ -112,7 +112,7 @@ namespace SolsUnderground
                 case StatusType.AtkUp:
                 case StatusType.AtkDown:
                     texture = effectSprites[0];
-                    color = Color.Red;
+                    color = Color.Orange;
                     break;
 
                 case StatusType.DefUp:

@@ -272,6 +272,7 @@ namespace SolsUnderground
             itemManager.AddWeaponSprite(hockeyStickTexture);
             itemManager.AddWeaponSprite(hotDogTexture);
             itemManager.AddWeaponSprite(thePrecipiceTexture);
+            itemManager.AddWeaponSprite(Content.Load<Texture2D>("Cactus"));
 
             // Armor
             winterCoatTexture = Content.Load<Texture2D>("WinterCoat");
@@ -283,6 +284,7 @@ namespace SolsUnderground
             itemManager.AddArmorSprite(bandanaTexture);
             itemManager.AddArmorSprite(skatesTexture);
             itemManager.AddArmorSprite(maskTexture);
+            itemManager.AddArmorSprite(Content.Load<Texture2D>("TigerMask"));
 
             // Enemy Textures
             // Enemies get added in StartGame() 

@@ -133,6 +133,18 @@
 /processorParam:TextureFormat=Color
 /build:brShot.png
 
+#begin Cactus.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Cactus.png
+
 #begin ChestClosed.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -925,8 +937,17 @@
 #begin Rooms/BlueMaze.level
 /copy:Rooms/BlueMaze.level
 
+#begin Rooms/BossRooms/arenaBossRoom.level
+/copy:Rooms/BossRooms/arenaBossRoom.level
+
 #begin Rooms/BossRooms/basicBossRoom.level
 /copy:Rooms/BossRooms/basicBossRoom.level
+
+#begin Rooms/BossRooms/laneBossRoom.level
+/copy:Rooms/BossRooms/laneBossRoom.level
+
+#begin Rooms/BossRooms/shootoutBossRoom.level
+/copy:Rooms/BossRooms/shootoutBossRoom.level
 
 #begin Rooms/BrokenPillars.level
 /copy:Rooms/BrokenPillars.level
@@ -943,17 +964,29 @@
 #begin Rooms/EyeRoom.level
 /copy:Rooms/EyeRoom.level
 
+#begin Rooms/RaceTrackRoom.level
+/copy:Rooms/RaceTrackRoom.level
+
 #begin Rooms/SimpleRoom.level
 /copy:Rooms/SimpleRoom.level
 
 #begin Rooms/SkullRoom.level
 /copy:Rooms/SkullRoom.level
 
+#begin Rooms/SplitRoom.level
+/copy:Rooms/SplitRoom.level
+
 #begin Rooms/StartRooms/basicStartRoom.level
 /copy:Rooms/StartRooms/basicStartRoom.level
 
+#begin Rooms/SubBoxRoom.level
+/copy:Rooms/SubBoxRoom.level
+
 #begin Rooms/TunnelRoom.level
 /copy:Rooms/TunnelRoom.level
+
+#begin Rooms/ZigZagRoom.level
+/copy:Rooms/ZigZagRoom.level
 
 #begin Save.png
 /importer:TextureImporter
@@ -1110,6 +1143,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:TigerBuck.png
+
+#begin TigerMask.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:TigerMask.png
 
 #begin vmBossBack.png
 /importer:TextureImporter

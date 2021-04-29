@@ -92,6 +92,15 @@ namespace SolsUnderground
             {
                 spawnPoint = Program.rng.Next(openTiles.Count);
 
+                // Prevent enemies from spawning too close to player
+                Rectangle noSpawnZone = new Rectangle(
+                    0, 360, 160, 280);
+
+                while (noSpawnZone.Contains(openTiles[spawnPoint].Center))
+                {
+                    spawnPoint = Program.rng.Next(openTiles.Count);
+                }
+
                 enemyChoice = Program.rng.Next(enemyTextures.Count);
                 Rectangle spawnRect = new Rectangle(openTiles[spawnPoint].X,
                             openTiles[spawnPoint].Y,

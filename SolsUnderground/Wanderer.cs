@@ -175,7 +175,7 @@ namespace SolsUnderground
 
                 if (enemyState == EnemyState.faceForward || enemyState == EnemyState.moveForward)
                 {
-                    Y -= (int)(knockback);
+                    Y += (int)(knockback);
                 }
                 if (enemyState == EnemyState.faceLeft || enemyState == EnemyState.moveLeft)
                 {
@@ -183,7 +183,7 @@ namespace SolsUnderground
                 }
                 if (enemyState == EnemyState.faceBack || enemyState == EnemyState.moveBack)
                 {
-                    Y += (int)(knockback);
+                    Y -= (int)(knockback);
                 }
                 if (enemyState == EnemyState.faceRight || enemyState == EnemyState.moveRight)
                 {
@@ -306,7 +306,7 @@ namespace SolsUnderground
             if (!IsStunned)
             {
                 attacks.Add(new Attack(PositionRect, Attack, knockback, null, 
-                    direction, 0.15, false, new StatusEffect(StatusType.Stun, 0, 1)));
+                    direction, 0.15, false, new StatusEffect(StatusType.Stun, 0, 0.5)));
             }
 
             return attacks;

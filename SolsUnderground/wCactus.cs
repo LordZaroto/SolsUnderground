@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace SolsUnderground
 {
-    class wBrickBreaker : Item, Weapon
+    class wCactus : Item, Weapon
     {
         //Fields
         //-----------------------------
@@ -16,12 +16,12 @@ namespace SolsUnderground
         private double specialCooldown;
         private int knockback;
         private Vector2 hitboxScale;
+        private string name;
+        private double timer;
         private Rectangle hitboxF;
         private Rectangle hitboxL;
         private Rectangle hitboxB;
         private Rectangle hitboxR;
-        private string name;
-        private double timer;
         //-----------------------------
 
         //---------------------------------------------------------------------
@@ -68,11 +68,6 @@ namespace SolsUnderground
             get { return hitboxR; }
             set { hitboxR = value; }
         }
-
-        public Texture2D Texture
-        {
-            get { return texture; }
-        }
         //------------------------------
 
         //Weapon Stats
@@ -98,11 +93,11 @@ namespace SolsUnderground
         {
             get { return knockback; }
         }
+
         public string Name
         {
             get { return name; }
         }
-
         public double Timer
         {
             get { return timer; }
@@ -116,37 +111,40 @@ namespace SolsUnderground
         //||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
         //---------------------------------------------------------------------
 
-        public wBrickBreaker(Texture2D texture, Rectangle positionRect)
-            : base(ItemType.Weapon, 8, texture, positionRect)
+        public wCactus(Texture2D texture, Rectangle positionRect)
+            : base(ItemType.Weapon, 7, texture, positionRect)
         {
-            name = "Brick Breaker";
-            basicCooldown = 0.7;
-            specialCooldown = 5;
-            attack = 8;
-            knockback = (int)(1.2 * 32);
-            hitboxScale = new Vector2(2, 2);
+            name = "Cactus";
+            this.texture = texture;
+            this.positionRect = positionRect;
+            basicCooldown = 0.6;
+            specialCooldown = 8;
+            attack = 7;
+            knockback = (int)(0.5 * 32);
+            hitboxScale = new Vector2(2, 3);
             timer = 0.1;
-        }
-
-        /// <summary>
-        /// The player slams the ground and creates a shockwave.
-        /// </summary>
-        public Attack Special(Player player)
-        {
-            // w.X = p.X + (p.W - w.W) / 2
-            positionRect = new Rectangle(
-                player.X - player.Width * 2,
-                player.Y - player.Height * 2,
-                player.Width * 5,
-                player.Height * 5);
-
-            return new Attack(positionRect, (int)(attack * 1.2), (int)(knockback * 1.5), texture, 
-                AttackDirection.allAround, timer, true, new StatusEffect(StatusType.Stun, 0, 1));
         }
 
         public override void Draw(SpriteBatch sb)
         {
             sb.Draw(texture, positionRect, Color.White);
+        }
+
+        /// <summary>
+        /// Plants a cactus that sits and damages enemies for several seconds.
+        /// </summary>
+        /// <param name="player"></param>
+        /// <returns></returns>
+        public Attack Special(Player player)
+        {
+            // w.X = p.X + (p.W - w.W) / 2
+            positionRect = new Rectangle(
+                player.X + (player.Width - (int)(player.Width * hitboxScale.X) / 2),
+                player.Y + (player.Height - (int)(player.Height * hitboxScale.Y) / 2),
+                (int)(player.Width * hitboxScale.X),
+                (int)(player.Height * hitboxScale.Y));
+
+            return new Attack(positionRect, 1, knockback * 3, texture, AttackDirection.allAround, 5, true, null);
         }
 
         public Rectangle GetHitbox(int x, int y, int width, int height, PlayerState state)
