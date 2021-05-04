@@ -877,6 +877,18 @@
 /processorParam:TextureFormat=Color
 /build:NewGameCLicked.png
 
+#begin pannini.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:pannini.png
+
 #begin playerMovingDown.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -1039,8 +1051,14 @@
 #begin Rooms/BossRooms/basicBossRoom.level
 /copy:Rooms/BossRooms/basicBossRoom.level
 
+#begin Rooms/BossRooms/bloodyBossRoom.level
+/copy:Rooms/BossRooms/bloodyBossRoom.level
+
 #begin Rooms/BossRooms/laneBossRoom.level
 /copy:Rooms/BossRooms/laneBossRoom.level
+
+#begin Rooms/BossRooms/openBossRoom.level
+/copy:Rooms/BossRooms/openBossRoom.level
 
 #begin Rooms/BossRooms/shootoutBossRoom.level
 /copy:Rooms/BossRooms/shootoutBossRoom.level
@@ -1170,6 +1188,54 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Skates.png
+
+#begin solBack.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:solBack.png
+
+#begin solFront.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:solFront.png
+
+#begin solLeft.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:solLeft.png
+
+#begin solRight.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:solRight.png
 
 #begin StartGame1.png
 /importer:TextureImporter

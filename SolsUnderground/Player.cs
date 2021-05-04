@@ -832,6 +832,25 @@ namespace SolsUnderground
                 activeEffects[i].Counter += gameTime.ElapsedGameTime.TotalSeconds;
                 activeEffects[i].EffectInterval += gameTime.ElapsedGameTime.TotalSeconds;
 
+                switch (activeEffects[i].Effect)
+                {
+                    case StatusType.DriftUp:
+                        Y -= activeEffects[i].Power;
+                        break;
+
+                    case StatusType.DriftLeft:
+                        X -= activeEffects[i].Power;
+                        break;
+
+                    case StatusType.DriftDown:
+                        Y += activeEffects[i].Power;
+                        break;
+
+                    case StatusType.DriftRight:
+                        X += activeEffects[i].Power;
+                        break;
+                }
+
                 if (activeEffects[i].EffectInterval > 0.5)
                 {
                     activeEffects[i].EffectInterval -= 0.5;
@@ -848,6 +867,23 @@ namespace SolsUnderground
                         case StatusType.Sick:
                             Hp -= activeEffects[i].Power;
                             break;
+
+                        case StatusType.DriftUp:
+                            Y -= activeEffects[i].Power;
+                            break;
+
+                        case StatusType.DriftLeft:
+                            X -= activeEffects[i].Power;
+                            break;
+
+                        case StatusType.DriftDown:
+                            Y += activeEffects[i].Power;
+                            break;
+
+                        case StatusType.DriftRight:
+                            X += activeEffects[i].Power;
+                            break;
+
                     }
                 }
 
