@@ -25,8 +25,12 @@ namespace SolsUnderground
         private int prevY;
         private int xVelocity;
         private int yVelocity;
+        private bool reverseX;
+        private bool reverseY;
         Texture2D[] textures;
         Texture2D atkTexture;
+        float puddleTimer;
+
         //consructor: initializes the fields
         public JanitorBoss(Texture2D[] textures, Rectangle positionRect, int health, int attack, Texture2D atkTexture)
         {
@@ -46,14 +50,17 @@ namespace SolsUnderground
             kbCounter = kbCD;
             sp1CD = 7;
             sp1Counter = 6;
-            sp2CD = 1;
-            sp2Counter = 0;
+            //sp2CD = 1;
+            //sp2Counter = 0;
             sp1HitTimer = 0.1;
             sp2HitTimer = 0.1;
             prevX = 0;
             prevY = 0;
             xVelocity = 0;
             yVelocity = 0;
+            reverseX = false;
+            reverseY = false;
+            puddleTimer = 0f;
         }
 
         //properties
@@ -109,6 +116,18 @@ namespace SolsUnderground
         {
             get { return enemyState; }
             set { enemyState = value; }
+        }
+
+        public bool ReverseX
+        {
+            get { return reverseX; }
+            set { reverseX = value; }
+        }
+
+        public bool ReverseY
+        {
+            get { return reverseY; }
+            set { reverseY = value; }
         }
 
         protected override int AttackMod
@@ -229,44 +248,95 @@ namespace SolsUnderground
                 sp2Counter += gameTime.ElapsedGameTime.TotalSeconds;
                 moveCounter += gameTime.ElapsedGameTime.TotalSeconds;
 
-                if (moveCounter >= moveCD)
-                {
+                //if (moveCounter >= moveCD)
+                //{
                     if (!(enemyState == EnemyState.dead))
                     {
-                        if(currentHP > maxHP / 3 * 2)
+                        if (reverseX && reverseY)
                         {
-                            xVelocity = 2;
-                            yVelocity = 1;
-                        }else if(currentHP > maxHP / 3 && currentHP <= maxHP / 3 * 2)
+                        texture = textures[0];
+                            if (currentHP > maxHP / 3 * 2)
+                            {
+                                xVelocity = -2;
+                                yVelocity = -1;
+                            }
+                            else if (currentHP > maxHP / 3 && currentHP <= maxHP / 3 * 2)
+                            {
+                                xVelocity = -3;
+                                yVelocity = -2;
+                            }
+                            else
+                            {
+                                xVelocity = -4;
+                                yVelocity = -3;
+                            }
+                        }
+                        else if (reverseX)
                         {
-                            xVelocity = 3;
-                            yVelocity = 2;
+                        texture = textures[0];
+                        if (currentHP > maxHP / 3 * 2)
+                            {
+                                xVelocity = -2;
+                                yVelocity = 1;
+                            }
+                            else if (currentHP > maxHP / 3 && currentHP <= maxHP / 3 * 2)
+                            {
+                                xVelocity = -3;
+                                yVelocity = 2;
+                            }
+                            else
+                            {
+                                xVelocity = -4;
+                                yVelocity = 3;
+                            }
+                        }
+                        else  if (reverseY)
+                        {
+                        texture = textures[1];
+                        if (currentHP > maxHP / 3 * 2)
+                            {
+                                xVelocity = 2;
+                                yVelocity = -1;
+                            }
+                            else if (currentHP > maxHP / 3 && currentHP <= maxHP / 3 * 2)
+                            {
+                                xVelocity = 3;
+                                yVelocity = -2;
+                            }
+                            else
+                            {
+                                xVelocity = 4;
+                                yVelocity = -3;
+                            }
                         }
                         else
                         {
-                            xVelocity = 4;
-                            yVelocity = 3;
-                        }
-                        if (prevX == positionRect.X)
-                        {
-                            xVelocity *= -1;
-                        }
-                        if (prevY == positionRect.Y)
-                        {
-                            yVelocity *= -1;
+                        texture = textures[1];
+                        if (currentHP > maxHP / 3 * 2)
+                            {
+                                xVelocity = 2;
+                                yVelocity = 1;
+                            }
+                            else if (currentHP > maxHP / 3 && currentHP <= maxHP / 3 * 2)
+                            {
+                                xVelocity = 3;
+                                yVelocity = 2;
+                            }
+                            else
+                            {
+                                xVelocity = 4;
+                                yVelocity = 3;
+                            }
                         }
                         positionRect.X += xVelocity;
                         positionRect.Y += yVelocity;
-                        prevX = positionRect.X;
-                        prevY = positionRect.Y;
                     }
-                }
+                //}
             }
         }
 
         /// <summary>
-        /// The Weeb will unleash different special moves according
-        /// to his position in relation to the player.
+        /// 
         /// </summary>
         /// <param name="player"></param>
         /// <returns></returns>
@@ -286,10 +356,7 @@ namespace SolsUnderground
                         {
                             attacks.Add(MopSwing());
                         }
-                        else
-                        {
-                            attacks.Add(PuddleDrop());
-                        }
+                        
                     }
                     else if (enemyState == EnemyState.faceRight || enemyState == EnemyState.moveRight)
                     {
@@ -297,15 +364,15 @@ namespace SolsUnderground
                         {
                             attacks.Add(MopSwing());
                         }
-                        else
-                        {
-                            attacks.Add(PuddleDrop());
-                        }
+                        
                     }
-                    else
+
+                    if(puddleTimer > 1)
                     {
+                        puddleTimer = 0;
                         attacks.Add(PuddleDrop());
                     }
+                    
                 }
 
                 // Determine direction for collision attack
@@ -350,10 +417,10 @@ namespace SolsUnderground
                 {
                     if(enemyState == EnemyState.faceLeft || enemyState == EnemyState.moveLeft)
                     {
-                        special = new Attack(PositionRect, 1, 0, atkTexture, AttackDirection.left, 5, false, new StatusEffect(StatusType.Sick, 1, 3));
+                        special = new Attack(PositionRect, 1, 0, textures[2], AttackDirection.left, 5, false, new StatusEffect(StatusType.Sick, 1, 3));
                     }else if(enemyState == EnemyState.faceRight || enemyState == EnemyState.moveRight)
                     {
-                        special = new Attack(PositionRect, 1, 0, atkTexture, AttackDirection.right, 5, false, new StatusEffect(StatusType.Sick, 1, 3));
+                        special = new Attack(PositionRect, 1, 0, textures[2], AttackDirection.right, 5, false, new StatusEffect(StatusType.Sick, 1, 3));
                     }
                     
                 }
@@ -361,22 +428,22 @@ namespace SolsUnderground
                 {
                     if (enemyState == EnemyState.faceLeft || enemyState == EnemyState.moveLeft)
                     {
-                        special = new Attack(PositionRect, 1, 0, atkTexture, AttackDirection.left, 5, false, new StatusEffect(StatusType.Sick, 1, 3));
+                        special = new Attack(PositionRect, 1, 0, textures[2], AttackDirection.left, 5, false, new StatusEffect(StatusType.Sick, 1, 3));
                     }
                     else if (enemyState == EnemyState.faceRight || enemyState == EnemyState.moveRight)
                     {
-                        special = new Attack(PositionRect, 1, 0, atkTexture, AttackDirection.right, 5, false, new StatusEffect(StatusType.Sick, 1, 3));
+                        special = new Attack(PositionRect, 1, 0, textures[2], AttackDirection.right, 5, false, new StatusEffect(StatusType.Sick, 1, 3));
                     }
                 }
                 else
                 {
                     if (enemyState == EnemyState.faceLeft || enemyState == EnemyState.moveLeft)
                     {
-                        special = new Attack(PositionRect, 1, 0, atkTexture, AttackDirection.left, 5, false, new StatusEffect(StatusType.Sick, 1, 3));
+                        special = new Attack(PositionRect, 1, 0, textures[2], AttackDirection.left, 5, false, new StatusEffect(StatusType.Sick, 1, 3));
                     }
                     else if (enemyState == EnemyState.faceRight || enemyState == EnemyState.moveRight)
                     {
-                        special = new Attack(PositionRect, 1, 0, atkTexture, AttackDirection.right, 5, false, new StatusEffect(StatusType.Sick, 1, 3));
+                        special = new Attack(PositionRect, 1, 0, textures[2], AttackDirection.right, 5, false, new StatusEffect(StatusType.Sick, 1, 3));
                     }
                 }
 
@@ -390,11 +457,11 @@ namespace SolsUnderground
             Attack special = null;
             if (enemyState == EnemyState.faceLeft || enemyState == EnemyState.moveLeft)
             {
-                special = new Attack(new Rectangle(positionRect.X-50, positionRect.Y-25, 50, 100), 10, 32, atkTexture, AttackDirection.left, 5, false, null);
+                special = new Attack(new Rectangle(positionRect.X-50, positionRect.Y-25, 50, 100), 10, 32, textures[2], AttackDirection.left, 5, false, null);
             }
             else if (enemyState == EnemyState.faceRight || enemyState == EnemyState.moveRight)
             {
-                special = new Attack(new Rectangle(positionRect.X + texture.Width, positionRect.Y - 25, 50, 100), 10, 32, atkTexture, AttackDirection.right, 5, false, null);
+                special = new Attack(new Rectangle(positionRect.X + texture.Width, positionRect.Y - 25, 50, 100), 10, 32, textures[2], AttackDirection.right, 5, false, null);
             }
             return special;
         }
@@ -453,10 +520,16 @@ namespace SolsUnderground
                 i++;
             }
         }
+
+        public void UpdateTimer(GameTime gameTime)
+        {
+            puddleTimer += (float)gameTime.ElapsedGameTime.TotalSeconds;
+        }
+
         public override void Draw(SpriteBatch sb)
         {
             // Use draw colors to give player attack tells
-            if (sp2Counter > sp2CD - 1)
+            /*if (sp2Counter > sp2CD - 1)
             {
                 sb.Draw(texture, positionRect, Color.Purple);
             }
@@ -465,9 +538,9 @@ namespace SolsUnderground
                 sb.Draw(texture, positionRect, Color.Green);
             }
             else
-            {
+            {*/
                 sb.Draw(texture, positionRect, Color.White);
-            }
+            //}
 
             // Draw HP bar
             sb.Draw(Program.drawSquare,
