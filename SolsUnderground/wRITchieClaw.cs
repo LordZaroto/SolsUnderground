@@ -153,7 +153,10 @@ namespace SolsUnderground
                     true,
                     new StatusEffect(StatusType.Sick, 1, 3));
 
-                player.Y -= player.Height * 5;
+                // Treat dash as knockback to activate i-frames
+                player.TakeDamage(0, AttackDirection.up, 0);
+                player.AddEffect(new StatusEffect(StatusType.DriftUp, 13, 0.2));
+
                 return special;
             }
             else if (player.State == PlayerState.faceLeft || player.State == PlayerState.moveLeft)
@@ -177,7 +180,9 @@ namespace SolsUnderground
                     new StatusEffect(StatusType.Sick, 1, 3));
 
 
-                player.X -= player.Width * 5;
+                // Treat dash as knockback to activate i-frames
+                player.TakeDamage(0, AttackDirection.left, 0);
+                player.AddEffect(new StatusEffect(StatusType.DriftLeft, 13, 0.2));
 
                 return special;
             }
@@ -201,7 +206,9 @@ namespace SolsUnderground
                     true,
                     new StatusEffect(StatusType.Sick, 1, 3));
 
-                player.Y += player.Height * 5;
+                // Treat dash as knockback to activate i-frames
+                player.TakeDamage(0, AttackDirection.down, 0);
+                player.AddEffect(new StatusEffect(StatusType.DriftDown, 13, 0.2));
 
                 return special;
             }
@@ -225,7 +232,9 @@ namespace SolsUnderground
                     true,
                     new StatusEffect(StatusType.Sick, 1, 3));
 
-                player.X += player.Width * 5;
+                // Treat dash as knockback to activate i-frames
+                player.TakeDamage(0, AttackDirection.right, 0);
+                player.AddEffect(new StatusEffect(StatusType.DriftRight, 13, 0.2));
 
                 return special;
             }

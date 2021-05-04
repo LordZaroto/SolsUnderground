@@ -1003,8 +1003,14 @@
 #begin Rooms/BossRooms/basicBossRoom.level
 /copy:Rooms/BossRooms/basicBossRoom.level
 
+#begin Rooms/BossRooms/bloodyBossRoom.level
+/copy:Rooms/BossRooms/bloodyBossRoom.level
+
 #begin Rooms/BossRooms/laneBossRoom.level
 /copy:Rooms/BossRooms/laneBossRoom.level
+
+#begin Rooms/BossRooms/openBossRoom.level
+/copy:Rooms/BossRooms/openBossRoom.level
 
 #begin Rooms/BossRooms/shootoutBossRoom.level
 /copy:Rooms/BossRooms/shootoutBossRoom.level
