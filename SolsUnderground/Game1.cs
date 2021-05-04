@@ -60,6 +60,7 @@ namespace SolsUnderground
         private Texture2D[] minionTextures;
         private Texture2D[] wandererTextures;
         private Texture2D[] shooterTextures;
+        private Texture2D[] solsWorkerTextures;
 
         //Bosses
         private Texture2D[] weebTextures;
@@ -308,6 +309,14 @@ namespace SolsUnderground
                 Content.Load<Texture2D>("ShooterLeft"),
                 Content.Load<Texture2D>("ShooterRight") };
 
+            solsWorkerTextures = new Texture2D[]
+{
+                Content.Load<Texture2D>("solFront"),
+                Content.Load<Texture2D>("solBack"),
+                Content.Load<Texture2D>("solLeft"),
+                Content.Load<Texture2D>("solRight"),
+                Content.Load<Texture2D>("pannini")};
+
             // Boss Textures
             // Boss data added here, stay constant
             weebTextures = new Texture2D[] {
@@ -529,6 +538,7 @@ namespace SolsUnderground
 
                                 case 1:
                                     enemyManager.AddEnemyData(weebTextures);
+                                    enemyManager.AddEnemyData(solsWorkerTextures);
                                     break;
 
                                 case 2:

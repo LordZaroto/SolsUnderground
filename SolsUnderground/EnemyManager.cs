@@ -134,6 +134,10 @@ namespace SolsUnderground
                         break;
 
                     // Tier 3 - After 6th floor
+                    case 4:
+                        enemies.Add(new SolsWorker(enemyTextures[enemyChoice], spawnRect,
+                            (int)(20 * floorFactor), (int)(4 * floorFactor)));
+                        break;
                 }
             }
         }
