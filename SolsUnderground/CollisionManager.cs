@@ -123,10 +123,20 @@ namespace SolsUnderground
                         if (barriers[i].X > temp.X)
                         {
                             temp.X -= Rectangle.Intersect(temp, barriers[i]).Width;
+                            if(gameObject is JanitorBoss)
+                            {
+                                JanitorBoss j = (JanitorBoss)gameObject;
+                                j.ReverseX = true;
+                            }
                         }
                         else
                         {
                             temp.X += Rectangle.Intersect(temp, barriers[i]).Width;
+                            if (gameObject is JanitorBoss)
+                            {
+                                JanitorBoss j = (JanitorBoss)gameObject;
+                                j.ReverseX = false;
+                            }
                         }
                     }
                     else
@@ -134,10 +144,20 @@ namespace SolsUnderground
                         if (barriers[i].Y > temp.Y)
                         {
                             temp.Y -= Rectangle.Intersect(temp, barriers[i]).Height;
+                            if (gameObject is JanitorBoss)
+                            {
+                                JanitorBoss j = (JanitorBoss)gameObject;
+                                j.ReverseY = true;
+                            }
                         }
                         else
                         {
                             temp.Y += Rectangle.Intersect(temp, barriers[i]).Height;
+                            if (gameObject is JanitorBoss)
+                            {
+                                JanitorBoss j = (JanitorBoss)gameObject;
+                                j.ReverseY = false;
+                            }
                         }
                     }
                 }
