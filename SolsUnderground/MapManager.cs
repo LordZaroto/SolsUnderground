@@ -127,7 +127,7 @@ namespace SolsUnderground
         /// <summary>
         /// Randomly draws rooms from the room pool to build a floor of five rooms.
         /// </summary>
-        public void NewFloor()
+        private void NewFloor()
         {
             // Current floor composition:
             // Start Room -> 4 random rooms -> Boss Room
