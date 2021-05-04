@@ -351,7 +351,9 @@ namespace SolsUnderground
             {
                 Content.Load<Texture2D>("janitorBossLeft"),
                 Content.Load<Texture2D>("janitorBossRight"),
-                Content.Load<Texture2D>("puddle") // boss attack texture
+                Content.Load<Texture2D>("puddle"), // boss attack texture
+                Content.Load<Texture2D>("mop1"),
+                Content.Load<Texture2D>("mop2")
             };
             enemyManager.AddBossData(jbTextures);
 

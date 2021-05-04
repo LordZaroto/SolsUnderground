@@ -208,6 +208,10 @@ namespace SolsUnderground
                 {
                     VendingMachineBoss vm = (VendingMachineBoss)enemies[i];
                     vm.UpdateTimer(gameTime);
+                }else if(enemies[i] is JanitorBoss)
+                {
+                    JanitorBoss j = (JanitorBoss)enemies[i];
+                    j.UpdateTimer(gameTime);
                 }
                 enemies[i].EnemyMove(player, gameTime);
             }
