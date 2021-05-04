@@ -118,7 +118,7 @@ namespace SolsUnderground
         //---------------------------------------------------------------------
 
         public wHockeyStick(Texture2D texture, Rectangle positionRect)
-            : base(ItemType.Weapon, 5, texture, positionRect)
+            : base(ItemType.Weapon, 10, texture, positionRect)
         {
             name = "Hockey Stick";
             basicCooldown = 0.4;
@@ -167,7 +167,7 @@ namespace SolsUnderground
                 (int)(player.Y + ((double)player.Height * 3 / 8)), 
                 player.Width, player.Height / 4);
 
-            return new Projectile(shotHitbox, (int)(attack * 0.5), 6, (int)(knockback * 3), texture, atkdir, true, null);
+            return new Projectile(shotHitbox, (int)(attack * 0.5), 6, 0, texture, atkdir, true, null);
         }
 
         public override void Draw(SpriteBatch sb)

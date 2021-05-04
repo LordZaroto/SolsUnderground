@@ -112,7 +112,7 @@ namespace SolsUnderground
         //---------------------------------------------------------------------
 
         public wCactus(Texture2D texture, Rectangle positionRect)
-            : base(ItemType.Weapon, 7, texture, positionRect)
+            : base(ItemType.Weapon, 20, texture, positionRect)
         {
             name = "Cactus";
             this.texture = texture;

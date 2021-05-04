@@ -65,6 +65,7 @@ namespace SolsUnderground
         private Texture2D[] weebTextures;
         private Texture2D[] vmBossTextures;
         private Texture2D[] brBossTextures;
+        private Texture2D[] busBossTextures;
 
         // Items
         private List<Texture2D> chestTextures;
@@ -340,6 +341,15 @@ namespace SolsUnderground
                 Content.Load<Texture2D>("brBossRight"),
                 Content.Load<Texture2D>("brShot") }; // Boss Attack Texture
             enemyManager.AddBossData(brBossTextures);
+
+            busBossTextures = new Texture2D[]
+            {
+                Content.Load<Texture2D>("BusDown"),
+                Content.Load<Texture2D>("BusUp"),
+                Content.Load<Texture2D>("BusLeft"),
+                Content.Load<Texture2D>("BusRight")
+            };
+            enemyManager.AddBossData(busBossTextures);
 
             // Status Textures
             StatusEffect.LoadEffectSprite(Content.Load<Texture2D>("fxModifier"));

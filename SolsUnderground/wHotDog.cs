@@ -118,7 +118,7 @@ namespace SolsUnderground
         //---------------------------------------------------------------------
 
         public wHotDog(Texture2D texture, Rectangle positionRect)
-            : base(ItemType.Weapon, 5, texture, positionRect)
+            : base(ItemType.Weapon, 30, texture, positionRect)
         {
             name = "Hot Dog";
             basicCooldown = 0.4;

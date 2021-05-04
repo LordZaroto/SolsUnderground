@@ -122,11 +122,24 @@ namespace SolsUnderground
                         //adjusts the position
                         if (barriers[i].X > temp.X)
                         {
+                            //The Bus continues to move and bounce off of walls changing direction
                             temp.X -= Rectangle.Intersect(temp, barriers[i]).Width;
+                            if(gameObject is BusBoss)
+                            {
+                                BusBoss b = (BusBoss)gameObject;
+                                b.ReverseX = true;
+                                b.State = EnemyState.moveLeft;
+                            }
                         }
                         else
                         {
                             temp.X += Rectangle.Intersect(temp, barriers[i]).Width;
+                            if (gameObject is BusBoss)
+                            {
+                                BusBoss b = (BusBoss)gameObject;
+                                b.ReverseX = false;
+                                b.State = EnemyState.moveRight;
+                            }
                         }
                     }
                     else
@@ -134,10 +147,22 @@ namespace SolsUnderground
                         if (barriers[i].Y > temp.Y)
                         {
                             temp.Y -= Rectangle.Intersect(temp, barriers[i]).Height;
+                            if (gameObject is BusBoss)
+                            {
+                                BusBoss b = (BusBoss)gameObject;
+                                b.ReverseY = true;
+                                b.State = EnemyState.moveBack;
+                            }
                         }
                         else
                         {
                             temp.Y += Rectangle.Intersect(temp, barriers[i]).Height;
+                            if (gameObject is BusBoss)
+                            {
+                                BusBoss b = (BusBoss)gameObject;
+                                b.ReverseY = false;
+                                b.State = EnemyState.moveForward;
+                            }
                         }
                     }
                 }

@@ -48,7 +48,7 @@ namespace SolsUnderground
 
         // Constructor
         public aMask(Texture2D texture, Rectangle positionRect)
-            : base(ItemType.Armor, 0, texture, positionRect)
+            : base(ItemType.Armor, 10, texture, positionRect)
         {
             name = "Mask";
             defense = 0;
