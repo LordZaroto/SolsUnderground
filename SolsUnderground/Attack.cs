@@ -12,7 +12,8 @@ namespace SolsUnderground
         up,
         down,
         right,
-        left
+        left,
+        allAround
     }
     
     /// <summary>

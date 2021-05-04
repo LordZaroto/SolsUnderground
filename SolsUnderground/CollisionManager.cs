@@ -65,7 +65,7 @@ namespace SolsUnderground
             this.barriers = barriers;
 
             // Add barrier to right-hand side of screen - to be removed after enemies are cleared
-            barriers.Add(new Rectangle(windowWidth, 0, 50, windowHeight));
+            barriers.Add(new Rectangle(windowWidth, 0, 250, windowHeight));
         }
 
         /// <summary>
@@ -280,6 +280,38 @@ namespace SolsUnderground
                             else
                             {  // Barrier is more centered; adjust hitbox horizontally
                                 attack.Width = b.X - attack.X;
+                            }
+                            break;
+
+                        case AttackDirection.allAround:
+
+                            // Compare and see whether the closest horizonal edge is closer to the attack's center
+                            // than the closest vertical edge
+                            if (Math.Min(Math.Abs(attack.Hitbox.Center.X - b.Left), Math.Abs(attack.Hitbox.Center.X - b.Right)) 
+                                > Math.Min(Math.Abs(attack.Hitbox.Center.Y - b.Top), Math.Abs(attack.Hitbox.Center.Y - b.Bottom)))
+                            {
+                                // Adjust horizontally
+                                if (b.Left > attack.Hitbox.Center.X)
+                                { // If barrier is to the right, adjust right side of hitbox
+                                    attack.Width = b.X - attack.X;
+                                }
+                                else
+                                { // If barrier is to the left, adjust left side of hitbox
+                                    attack.Width = (attack.X + attack.Width) - (b.X + b.Width);
+                                    attack.X = b.X + b.Width;
+                                }
+                            }
+                            else // Adjust vertically
+                            {
+                                if (b.Bottom < attack.Hitbox.Center.Y)
+                                { // If barrier is to the top, adjust top side of hitbox
+                                    attack.Height = (attack.Y + attack.Height) - (b.Y + b.Height);
+                                    attack.Y = b.Y + b.Height;
+                                }
+                                else
+                                {  // If barrier is to the bottom, adjust bottom side of hitbox
+                                    attack.Height = b.Y - attack.Y;
+                                }
                             }
                             break;
                     }

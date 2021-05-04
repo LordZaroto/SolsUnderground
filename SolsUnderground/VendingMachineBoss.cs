@@ -448,7 +448,7 @@ namespace SolsUnderground
                         Attack * 3,
                         knockback * 3,
                         atkTexture,
-                        attackDirection, //This is temporary - Should probably change based off player position
+                        AttackDirection.allAround, //This is temporary - Should probably change based off player position
                         sp1HitTimer,
                         false,
                         null);

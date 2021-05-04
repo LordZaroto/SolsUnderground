@@ -146,7 +146,7 @@ namespace SolsUnderground
         /// Loads enemy list into combat manager.
         /// </summary>
         /// <param name="enemies">Reference to working enemy list</param>
-        public void GetEnemies(List<Enemy> enemies)
+        public void SetEnemyList(List<Enemy> enemies)
         {
             this.enemies = enemies;
         }
@@ -272,8 +272,6 @@ namespace SolsUnderground
                         {
                             if (activeAttacks[i].Hitbox.Intersects(e.PositionRect) && attackIntervals[i] > 0.15)
                             {
-                                attackIntervals[i] -= 0.15;
-
                                 e.TakeDamage(activeAttacks[i].Damage, activeAttacks[i].Knockback);
 
                                 // Apply effects
@@ -281,6 +279,9 @@ namespace SolsUnderground
                                     e.AddEffect(activeAttacks[i].Effect);
                             }
                         }
+
+                        if (attackIntervals[i] > 0.15)
+                            attackIntervals[i] -= 0.15;
                     }
                 }
 

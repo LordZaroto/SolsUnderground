@@ -37,7 +37,8 @@ namespace SolsUnderground
 
         //games state
         private GameState currentState;
-        bool isRoomCleared;
+        private bool isRoomCleared;
+        private int difficultyTier;
 
         //text
         private SpriteFont heading;
@@ -59,10 +60,11 @@ namespace SolsUnderground
         private Texture2D[] minionTextures;
         private Texture2D[] wandererTextures;
         private Texture2D[] shooterTextures;
-        private Texture2D[] vmBossTextures;
 
         //Bosses
         private Texture2D[] weebTextures;
+        private Texture2D[] vmBossTextures;
+        private Texture2D[] brBossTextures;
 
         // Items
         private List<Texture2D> chestTextures;
@@ -80,6 +82,8 @@ namespace SolsUnderground
         private Texture2D hotDogTexture;
         //private wThePrecipice thePrecipice;
         private Texture2D thePrecipiceTexture;
+        private Texture2D nerfBlasterTexture;
+        private Texture2D nerfBulletTexture;
 
         // Armor
         private aHoodie hoodie;
@@ -177,10 +181,6 @@ namespace SolsUnderground
         private Texture2D grave;
         private Rectangle tombstone;
 
-
-        //game time
-        private GameTime gameTime;
-
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -193,6 +193,7 @@ namespace SolsUnderground
             //sets game state to menu, and sets window size
             currentState = GameState.Menu;
             isRoomCleared = false;
+            difficultyTier = 0;
             _graphics.PreferredBackBufferWidth = 1320;
             _graphics.PreferredBackBufferHeight = 1000;
             _graphics.ApplyChanges();
@@ -205,14 +206,16 @@ namespace SolsUnderground
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // Text
+            Program.drawSquare = Content.Load<Texture2D>("BlankRect");
             heading = Content.Load<SpriteFont>("Roboto175");
             text = Content.Load<SpriteFont>("Roboto40");
+            uiText = Content.Load<SpriteFont>("Roberto20a");
 
             // Player Animations
             Dictionary<string, Animation> animations = new Dictionary<string, Animation>()
             {
-                {"playerMoveForward", new Animation(Content.Load<Texture2D>("playerMovingUp2"), 4) },
-                {"playerMoveBack", new Animation(Content.Load<Texture2D>("playerMovingDown2"), 4) },
+                {"playerMoveForward", new Animation(Content.Load<Texture2D>("playerMovingUp"), 4) },
+                {"playerMoveBack", new Animation(Content.Load<Texture2D>("playerMovingDown"), 4) },
                 {"playerMoveLeft", new Animation(Content.Load<Texture2D>("playerMovingLeft"), 4) },
                 {"playerMoveRight", new Animation(Content.Load<Texture2D>("playerMovingRight"), 4) },
                 {"heroDeath", new Animation(Content.Load<Texture2D>("heroDeath"), 4) }
@@ -220,8 +223,8 @@ namespace SolsUnderground
 
             // Player Textures
             playerTextures = new Texture2D[] {
-                Content.Load<Texture2D>("heroForward2"),
-                Content.Load<Texture2D>("heroBack2"),
+                Content.Load<Texture2D>("heroForward"),
+                Content.Load<Texture2D>("heroBack"),
                 Content.Load<Texture2D>("heroLeft"),
                 Content.Load<Texture2D>("heroRight") };
 
@@ -231,7 +234,7 @@ namespace SolsUnderground
             // Starting weapon
             stickTexture = Content.Load<Texture2D>("stick");
             ritchieClawTexture = Content.Load<Texture2D>("ritchieClaw");
-            brickBreakerTexture = Content.Load<Texture2D>("BrickBreaker2");
+            brickBreakerTexture = Content.Load<Texture2D>("BrickBreaker");
             
             stick = new wStick(stickTexture, new Rectangle(0, 0, 0, 0));
 
@@ -267,14 +270,18 @@ namespace SolsUnderground
             hockeyStickTexture = Content.Load<Texture2D>("HockeyStick");
             hotDogTexture = Content.Load<Texture2D>("HotDog");
             thePrecipiceTexture = Content.Load<Texture2D>("thePrecipice");
+            nerfBlasterTexture = Content.Load<Texture2D>("nerfBlaster");
+            nerfBulletTexture = Content.Load<Texture2D>("nerfBullet");
             itemManager.AddWeaponSprite(brickBreakerTexture);
             itemManager.AddWeaponSprite(hockeyStickTexture);
             itemManager.AddWeaponSprite(hotDogTexture);
             itemManager.AddWeaponSprite(thePrecipiceTexture);
+            itemManager.AddWeaponSprite(Content.Load<Texture2D>("Cactus"));
+            itemManager.AddWeaponSprite(nerfBlasterTexture);
 
             // Armor
-            winterCoatTexture = Content.Load<Texture2D>("WinterCoat2");
-            bandanaTexture = Content.Load<Texture2D>("Bandana2");
+            winterCoatTexture = Content.Load<Texture2D>("WinterCoat");
+            bandanaTexture = Content.Load<Texture2D>("Bandana");
             skatesTexture = Content.Load<Texture2D>("Skates");
             maskTexture = Content.Load<Texture2D>("Mask");
             itemManager.AddArmorSprite(hoodieTexture);
@@ -282,21 +289,22 @@ namespace SolsUnderground
             itemManager.AddArmorSprite(bandanaTexture);
             itemManager.AddArmorSprite(skatesTexture);
             itemManager.AddArmorSprite(maskTexture);
+            itemManager.AddArmorSprite(Content.Load<Texture2D>("TigerMask"));
 
             // Enemy Textures
+            // Enemies get added in StartGame() 
+            // or in Update()'s main game loop at difficulty tier
             minionTextures = new Texture2D[] {
                 Content.Load<Texture2D>("minionForward"),
                 Content.Load<Texture2D>("minionBack"),
                 Content.Load<Texture2D>("minionLeft"),
                 Content.Load<Texture2D>("minionRight") };
-            enemyManager.AddEnemyData(minionTextures);
 
             wandererTextures = new Texture2D[] {
                 Content.Load<Texture2D>("wandererForward"),
                 Content.Load<Texture2D>("wandererBack"),
                 Content.Load<Texture2D>("wandererLeft"),
                 Content.Load<Texture2D>("wandererRight") };
-            enemyManager.AddEnemyData(wandererTextures);
 
             shooterTextures = new Texture2D[]
             {
@@ -304,9 +312,9 @@ namespace SolsUnderground
                 Content.Load<Texture2D>("ShooterBack"),
                 Content.Load<Texture2D>("ShooterLeft"),
                 Content.Load<Texture2D>("ShooterRight") };
-            enemyManager.AddEnemyData(shooterTextures);
 
             // Boss Textures
+            // Boss data added here, stay constant
             weebTextures = new Texture2D[] {
                 Content.Load<Texture2D>("weeb_Forward"),
                 Content.Load<Texture2D>("weeb_Back"),
@@ -323,6 +331,15 @@ namespace SolsUnderground
                 Content.Load<Texture2D>("vmBossRight"),
                 Content.Load<Texture2D>("Cola")}; // Boss Attack Texture
             enemyManager.AddBossData(vmBossTextures);
+
+            brBossTextures = new Texture2D[]
+            {
+                Content.Load<Texture2D>("brBossFront"),
+                Content.Load<Texture2D>("brBossBack"),
+                Content.Load<Texture2D>("brBossLeft"),
+                Content.Load<Texture2D>("brBossRight"),
+                Content.Load<Texture2D>("brShot") }; // Boss Attack Texture
+            enemyManager.AddBossData(brBossTextures);
 
             // Status Textures
             StatusEffect.LoadEffectSprite(Content.Load<Texture2D>("fxModifier"));
@@ -355,8 +372,6 @@ namespace SolsUnderground
             tigerBucks = Content.Load<Texture2D>("TigerBuck");
 
             //options/controls buttons
-            uiText = Content.Load<SpriteFont>("Roberto20a");
-            Program.drawSquare = Content.Load<Texture2D>("BlankRect2");
             returnToMenu = Content.Load<Texture2D>("ReturnToMenu");
             returnToMenuClicked = Content.Load<Texture2D>("ReturnToMenuClicked");
             button5 = new Rectangle(305, 827, 709, 153);
@@ -480,6 +495,10 @@ namespace SolsUnderground
                     player.Input(kb, gameTime);
                     enemyManager.MoveEnemies(gameTime);
 
+                    //Collisions
+                    itemManager.ActivateItems(SingleKeyPress(player.EquipKey, kb, prevKB));
+                    collisionManager.CheckCollisions();
+
                     // Attacks
                     combatManager.LoadAttacks(mouse, prevM);
                     combatManager.ActivateAttacks(gameTime);
@@ -488,10 +507,6 @@ namespace SolsUnderground
                     // Effects
                     player.UpdateEffects(gameTime);
                     enemyManager.UpdateEnemyEffects(gameTime);
-
-                    //Collisions
-                    itemManager.ActivateItems(SingleKeyPress(player.EquipKey, kb, prevKB));
-                    collisionManager.CheckCollisions();
 
                     // Check if room is cleared
                     if (combatManager.EnemyCount == 0 && !isRoomCleared)
@@ -506,7 +521,29 @@ namespace SolsUnderground
                         || (SingleKeyPress(Keys.N, kb, prevKB) && Program.godMode))
                     {
                         player.X = 0;
-                        mapManager.NextRoom();
+                        
+                        // Increases room and floor as appropriate
+                        // Also check if new items/enemies are added to game pool
+                        if (mapManager.NextRoom())
+                        {
+                            switch (difficultyTier)
+                            {
+                                case 0:
+                                    enemyManager.AddEnemyData(shooterTextures);
+                                    break;
+
+                                case 1:
+                                    enemyManager.AddEnemyData(weebTextures);
+                                    break;
+
+                                case 2:
+                                    break;
+                            }
+
+                            difficultyTier++;
+                        }
+
+                        // Check if player has reached end of game
                         if(mapManager.CurrentFloor > 6)
                         {
                             currentState = GameState.Win;
@@ -527,7 +564,8 @@ namespace SolsUnderground
                         {
                             enemyManager.SpawnEnemies(
                                 mapManager.CurrentRoom.EnemyCount,
-                                mapManager.CurrentRoom.GetOpenTiles());
+                                mapManager.CurrentRoom.GetOpenTiles(),
+                                mapManager.FloorFactor);
                         }
 
                         collisionManager.SetBarrierList(mapManager.CurrentRoom.GetBarriers());
@@ -972,6 +1010,7 @@ namespace SolsUnderground
                     player.Draw(_spriteBatch);
                     enemyManager.Draw(_spriteBatch);
                     combatManager.DrawAttacks(_spriteBatch);
+                    itemManager.DrawInfoBoxes(_spriteBatch, mouse, uiText);
 
                     // Draw currency
                     _spriteBatch.Draw(tigerBucks, moneyIconRect, Color.White);
@@ -1047,35 +1086,37 @@ namespace SolsUnderground
                     _spriteBatch.Draw(player.CurrentArmor.Sprite, armorIcon, Color.White);
 
                     // Draw weapon info if mouse hovers over weapon icon
-                    if (prevM.X > weaponIcon.X && prevM.X < weaponIcon.X + weaponIcon.Width
-                        && prevM.Y > weaponIcon.Y && prevM.Y < weaponIcon.Y + weaponIcon.Height)
+                    if (MouseOver(weaponIcon, mouse))
                     {
-                        infoRect = new Rectangle(prevM.X, prevM.Y, 270, 120);
+                        infoRect = new Rectangle(mouse.X, mouse.Y, 280, 140);
 
                         _spriteBatch.Draw(Program.drawSquare, infoRect, Color.DarkGray);
+                        _spriteBatch.DrawString(uiText, player.CurrentWeapon.Name,
+                            new Vector2(infoRect.X + 10, infoRect.Y + 5), Color.LightBlue);
                         _spriteBatch.DrawString(uiText, "Damage: " + player.CurrentWeapon.Attack,
-                            new Vector2(infoRect.X + 10, infoRect.Y + 3), Color.White);
-                        _spriteBatch.DrawString(uiText, "Knockback: " + player.CurrentWeapon.Knockback,
                             new Vector2(infoRect.X + 10, infoRect.Y + 30), Color.White);
-                        _spriteBatch.DrawString(uiText, "Basic Cooldown: " + player.CurrentWeapon.BasicCooldown,
+                        _spriteBatch.DrawString(uiText, "Knockback: " + player.CurrentWeapon.Knockback,
                             new Vector2(infoRect.X + 10, infoRect.Y + 55), Color.White);
-                        _spriteBatch.DrawString(uiText, "Special Cooldown: " + player.CurrentWeapon.SpecialCooldown,
+                        _spriteBatch.DrawString(uiText, "Basic Cooldown: " + player.CurrentWeapon.BasicCooldown,
                             new Vector2(infoRect.X + 10, infoRect.Y + 80), Color.White);
+                        _spriteBatch.DrawString(uiText, "Special Cooldown: " + player.CurrentWeapon.SpecialCooldown,
+                            new Vector2(infoRect.X + 10, infoRect.Y + 105), Color.White);
                     }
 
                     // Draw armor info if mouse hovers over armor icon
-                    if (prevM.X > armorIcon.X && prevM.X < armorIcon.X + armorIcon.Width
-                        && prevM.Y > armorIcon.Y && prevM.Y < armorIcon.Y + armorIcon.Height)
+                    if (MouseOver(armorIcon, mouse))
                     {
-                        infoRect = new Rectangle(prevM.X, prevM.Y, 150, 90);
+                        infoRect = new Rectangle(mouse.X, mouse.Y, 150, 115);
 
                         _spriteBatch.Draw(Program.drawSquare, infoRect, Color.DarkGray);
+                        _spriteBatch.DrawString(uiText, player.CurrentArmor.Name,
+                            new Vector2(infoRect.X + 10, infoRect.Y + 3), Color.LightBlue);
                         _spriteBatch.DrawString(uiText, "Defense: " + player.CurrentArmor.Defense,
-                            new Vector2(infoRect.X + 10, infoRect.Y + 3), Color.White);
-                        _spriteBatch.DrawString(uiText, "Speed: " + player.CurrentArmor.Speed,
                             new Vector2(infoRect.X + 10, infoRect.Y + 30), Color.White);
-                        _spriteBatch.DrawString(uiText, "HP: " + player.CurrentArmor.HP,
+                        _spriteBatch.DrawString(uiText, "Speed: " + player.CurrentArmor.Speed,
                             new Vector2(infoRect.X + 10, infoRect.Y + 55), Color.White);
+                        _spriteBatch.DrawString(uiText, "HP: " + player.CurrentArmor.HP,
+                            new Vector2(infoRect.X + 10, infoRect.Y + 80), Color.White);
                     }
 
 
@@ -1212,7 +1253,6 @@ namespace SolsUnderground
         //allows the mouse clicks
         protected bool MouseClick(Rectangle button, MouseState currentMouse, MouseState previousMouse)
         {
-            MouseState mouse = Mouse.GetState();
             if ((currentMouse.X >= button.Left && currentMouse.X <= button.Right) && (currentMouse.Y >= button.Top && currentMouse.Y <= button.Bottom) && currentMouse.LeftButton == ButtonState.Released && previousMouse.LeftButton == ButtonState.Pressed)
             {
                 return true;
@@ -1221,9 +1261,8 @@ namespace SolsUnderground
                 return false;
         }
 
-        protected bool MouseOver(Rectangle button, MouseState currentMouse)
+        public static bool MouseOver(Rectangle button, MouseState currentMouse)
         {
-            MouseState mouse = Mouse.GetState();
             if ((currentMouse.X >= button.Left && currentMouse.X <= button.Right) && (currentMouse.Y >= button.Top && currentMouse.Y <= button.Bottom))
             {
                 return true;
@@ -1256,14 +1295,21 @@ namespace SolsUnderground
         {
             // Reset managers
             mapManager.Reset();
+            enemyManager.ClearEnemyData();
 
+            // Add starting enemies
+            enemyManager.AddEnemyData(minionTextures);
+            enemyManager.AddEnemyData(wandererTextures);
+
+            // Initiate new room
             enemyManager.ClearEnemies();
             combatManager.ClearAttacks();
             itemManager.NextRoom(mapManager.CurrentRoom.ChestSpawns);
             isRoomCleared = false;
             enemyManager.SpawnEnemies(
                 mapManager.CurrentRoom.EnemyCount,
-                mapManager.CurrentRoom.GetOpenTiles());
+                mapManager.CurrentRoom.GetOpenTiles(),
+                mapManager.FloorFactor);
 
             collisionManager.SetBarrierList(mapManager.CurrentRoom.GetBarriers());
 
@@ -1334,7 +1380,8 @@ namespace SolsUnderground
                 {
                     enemyManager.SpawnEnemies(
                         mapManager.CurrentRoom.EnemyCount,
-                        mapManager.CurrentRoom.GetOpenTiles());
+                        mapManager.CurrentRoom.GetOpenTiles(),
+                        mapManager.FloorFactor);
                 }
 
                 collisionManager.SetBarrierList(mapManager.CurrentRoom.GetBarriers());

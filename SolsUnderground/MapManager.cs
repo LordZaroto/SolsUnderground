@@ -54,6 +54,10 @@ namespace SolsUnderground
         {
             get { return (CurrentRoomNum == floor.Count - 1); }
         }
+        public float FloorFactor
+        {
+            get { return 1 + 0.2f * (currentFloor / 2); }
+        }
 
         // Constructor
         public MapManager(List<Texture2D> tileTextures, int windowWidth, int windowHeight)
@@ -158,6 +162,11 @@ namespace SolsUnderground
             }
 
             // Add a boss room/boss stuff here
+            switch (currentFloor)
+            {
+
+            }
+
             floor.Add(bossRooms[Program.rng.Next(bossRooms.Count)]);
         }
 
@@ -166,17 +175,26 @@ namespace SolsUnderground
         /// while the last room is active, creates a new floor and sets
         /// the first room active.
         /// </summary>
-        public void NextRoom()
+        /// <returns>Bool indicating if the floor factor has increased, false otherwise</returns>
+        public bool NextRoom()
         {
             currentRoom++;
 
             // If moving beyond last room, adjust to new floor
-            if (currentRoom == floor.Count)
+            if (currentRoom >= floor.Count)
             {
                 currentRoom = 0;
                 currentFloor++;
                 NewFloor();
+
+                // Returns true once after every two new floors
+                if (currentFloor % 2 == 0)
+                {
+                    return true;
+                }
             }
+
+            return false;
         }
 
         /// <summary>

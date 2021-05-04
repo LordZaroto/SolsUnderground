@@ -106,13 +106,27 @@ namespace SolsUnderground
                         // Drop ThePrecipice
                         items.Add(new wThePrecipice(itemTextures[moneySpriteCount + healthSpriteCount + 5],
                         new Rectangle(
-                            enemy.X + (Program.rng.Next(5) - 2),
-                            enemy.Y + (Program.rng.Next(5) - 2),
+                            enemy.PositionRect.Center.X - 20 + (Program.rng.Next(5) - 2),
+                            enemy.PositionRect.Center.Y - 20 + (Program.rng.Next(5) - 2),
                             40, 40)));
                     }
                     if (enemy is VendingMachineBoss)
                     {
                         // Vending Machine drops here
+                        items.Add(new wNerfBlaster(itemTextures[moneySpriteCount + healthSpriteCount + 7],
+                        new Rectangle(
+                            enemy.PositionRect.Center.X - 20 + (Program.rng.Next(5) - 2),
+                            enemy.PositionRect.Center.Y - 20 + (Program.rng.Next(5) - 2),
+                            40, 40)));
+                    }
+                    if (enemy is BalloonRitchieBoss)
+                    {
+                        // Drop TigerMask
+                        items.Add(new aTigerMask(itemTextures[moneySpriteCount + healthSpriteCount + weaponSpriteCount + 5],
+                        new Rectangle(
+                            enemy.PositionRect.Center.X - 20 + (Program.rng.Next(5) - 2),
+                            enemy.PositionRect.Center.Y - 20 + (Program.rng.Next(5) - 2),
+                            40, 40)));
                     }
                 }
                 else
@@ -120,8 +134,8 @@ namespace SolsUnderground
                     // Spawn increased money item in small randomized area
                     items.Add(new Item(ItemType.Money, moneyValue * 5, itemTextures[0],
                         new Rectangle(
-                            enemy.X + (Program.rng.Next(5) - 2),
-                            enemy.Y + (Program.rng.Next(5) - 2),
+                            enemy.PositionRect.Center.X - itemTextures[0].Width / 2 + (Program.rng.Next(5) - 2),
+                            enemy.PositionRect.Center.Y - itemTextures[0].Height / 2 + (Program.rng.Next(5) - 2),
                             itemTextures[0].Width,
                             itemTextures[0].Height)));
                 }
@@ -131,8 +145,8 @@ namespace SolsUnderground
                 // Spawn money item in small randomized area
                 items.Add(new Item(ItemType.Money, moneyValue, itemTextures[0],
                     new Rectangle(
-                        enemy.X + (Program.rng.Next(5) - 2),
-                        enemy.Y + (Program.rng.Next(5) - 2),
+                        enemy.PositionRect.Center.X - itemTextures[0].Width / 2 + (Program.rng.Next(5) - 2),
+                        enemy.PositionRect.Center.Y - itemTextures[0].Height / 2 + (Program.rng.Next(5) - 2),
                         itemTextures[0].Width,
                         itemTextures[0].Height)));
 
@@ -141,8 +155,8 @@ namespace SolsUnderground
                 {
                     items.Add(new Item(ItemType.HealthPickup, 20, itemTextures[1],
                          new Rectangle(
-                             enemy.X + (Program.rng.Next(5) - 2),
-                             enemy.Y + (Program.rng.Next(5) - 2),
+                             enemy.PositionRect.Center.X - itemTextures[moneySpriteCount].Width / 2 + (Program.rng.Next(5) - 2),
+                             enemy.PositionRect.Center.Y - itemTextures[moneySpriteCount].Height / 2 + (Program.rng.Next(5) - 2),
                              itemTextures[moneySpriteCount].Width,
                              itemTextures[moneySpriteCount].Height)));
                 }
@@ -277,26 +291,37 @@ namespace SolsUnderground
                             items.Add(new wThePrecipice(itemTextures[i + equipmentStart],
                                 new Rectangle(new Point(50 + 50 * i, 100), size)));
                             break;
-
-                        // Armor
                         case 6:
+                            items.Add(new wCactus(itemTextures[i + equipmentStart],
+                                new Rectangle(new Point(50 + 50 * i, 100), size)));
+                            break;
+                        case 7:
+                            items.Add(new wNerfBlaster(itemTextures[i + equipmentStart],
+                                new Rectangle(new Point(50 + 50 * i, 100), size)));
+                            break;
+                        // Armor
+                        case 8:
                             items.Add(new aHoodie(itemTextures[i + equipmentStart],
                                 new Rectangle(new Point(50 + 50 * (i - weaponSpriteCount), 800), size)));
                             break;
-                        case 7:
+                        case 9:
                             items.Add(new aWinterCoat(itemTextures[i + equipmentStart],
                                 new Rectangle(new Point(50 + 50 * (i - weaponSpriteCount), 800), size)));
                             break;
-                        case 8:
+                        case 10:
                             items.Add(new aBandana(itemTextures[i + equipmentStart],
                                 new Rectangle(new Point(50 + 50 * (i - weaponSpriteCount), 800), size)));
                             break;
-                        case 9:
+                        case 11:
                             items.Add(new aSkates(itemTextures[i + equipmentStart],
                                 new Rectangle(new Point(50 + 50 * (i - weaponSpriteCount), 800), size)));
                             break;
-                        case 10:
+                        case 12:
                             items.Add(new aMask(itemTextures[i + equipmentStart],
+                                new Rectangle(new Point(50 + 50 * (i - weaponSpriteCount), 800), size)));
+                            break;
+                        case 13:
+                            items.Add(new aTigerMask(itemTextures[i + equipmentStart],
                                 new Rectangle(new Point(50 + 50 * (i - weaponSpriteCount), 800), size)));
                             break;
 
@@ -307,6 +332,7 @@ namespace SolsUnderground
 
         /// <summary>
         /// Draws all chests and items in the current room.
+        /// Also draws information boxes for moused-over items.
         /// </summary>
         /// <param name="sb">Spritebatch to draw with</param>
         public void Draw(SpriteBatch sb)
@@ -316,9 +342,71 @@ namespace SolsUnderground
                 c.Draw(sb);
             }
 
+            // Draw items over chests
             foreach (Item i in items)
             {
                 i.Draw(sb);
+            }
+        }
+
+        /// <summary>
+        /// Draws info boxes for any equipment item that the mouse hovers over.
+        /// </summary>
+        /// <param name="sb">SpriteBatch</param>
+        /// <param name="mouse">Current mouse state</param>
+        /// <param name="uiText">Info text spritefont</param>
+        public void DrawInfoBoxes(SpriteBatch sb, MouseState mouse, SpriteFont uiText)
+        {
+            foreach (Item i in items)
+            {
+                // Draw info for any items mouse hovers over
+                if (Game1.MouseOver(i.PositionRect, mouse))
+                {
+                    Rectangle infoRect;
+
+                    switch (i.Type)
+                    {
+                        case ItemType.Weapon:
+                            infoRect = new Rectangle(mouse.X, mouse.Y, 280, 140);
+
+                            sb.Draw(Program.drawSquare, infoRect, Color.DarkRed);
+
+                            sb.DrawString(uiText, ((Weapon)i).Name,
+                                new Vector2(infoRect.X + 10, infoRect.Y + 5), Color.LightSalmon);
+
+                            sb.DrawString(uiText, "Damage: " + ((Weapon)i).Attack,
+                                new Vector2(infoRect.X + 10, infoRect.Y + 30), Color.White);
+
+                            sb.DrawString(uiText, "Knockback: " + ((Weapon)i).Knockback,
+                                new Vector2(infoRect.X + 10, infoRect.Y + 55), Color.White);
+
+                            sb.DrawString(uiText, "Basic Cooldown: " + ((Weapon)i).BasicCooldown,
+                                new Vector2(infoRect.X + 10, infoRect.Y + 80), Color.White);
+
+                            sb.DrawString(uiText, "Special Cooldown: " + ((Weapon)i).SpecialCooldown,
+                                new Vector2(infoRect.X + 10, infoRect.Y + 105), Color.White);
+                            break;
+
+
+                        case ItemType.Armor:
+                            infoRect = new Rectangle(mouse.X, mouse.Y, 160, 115);
+
+                            sb.Draw(Program.drawSquare, infoRect, Color.DarkSlateGray);
+
+                            sb.DrawString(uiText, ((Armor)i).Name,
+                                new Vector2(infoRect.X + 10, infoRect.Y + 3), Color.LightBlue);
+
+                            sb.DrawString(uiText, "Defense: " + ((Armor)i).Defense,
+                                new Vector2(infoRect.X + 10, infoRect.Y + 30), Color.White);
+
+                            sb.DrawString(uiText, "Speed: " + ((Armor)i).Speed,
+                                new Vector2(infoRect.X + 10, infoRect.Y + 55), Color.White);
+
+                            sb.DrawString(uiText, "HP: " + ((Armor)i).HP,
+                                new Vector2(infoRect.X + 10, infoRect.Y + 80), Color.White);
+                            break;
+                    }
+                }
             }
         }
     }

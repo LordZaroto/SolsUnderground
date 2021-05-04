@@ -7,7 +7,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace SolsUnderground
 {
-    class wBrickBreaker : Item, Weapon
+    class wNerfBlaster : Item, Weapon
     {
         //Fields
         //-----------------------------
@@ -22,6 +22,7 @@ namespace SolsUnderground
         private Rectangle hitboxR;
         private string name;
         private double timer;
+        private int ammo;
         //-----------------------------
 
         //---------------------------------------------------------------------
@@ -73,6 +74,12 @@ namespace SolsUnderground
         {
             get { return texture; }
         }
+
+        public int Ammo
+        {
+            get { return ammo; }
+            set { ammo = value; }
+        }
         //------------------------------
 
         //Weapon Stats
@@ -108,6 +115,7 @@ namespace SolsUnderground
             get { return timer; }
             set { timer = value; }
         }
+        //---------------
         //------------------------------
 
         //----------------------------------------
@@ -116,32 +124,68 @@ namespace SolsUnderground
         //||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
         //---------------------------------------------------------------------
 
-        public wBrickBreaker(Texture2D texture, Rectangle positionRect)
-            : base(ItemType.Weapon, 8, texture, positionRect)
+        public wNerfBlaster(Texture2D texture, Rectangle positionRect)
+            : base(ItemType.Weapon, 5, texture, positionRect)
         {
-            name = "Brick Breaker";
-            basicCooldown = 0.7;
+            name = "Nerf Blaster";
+            basicCooldown = 0.1;
             specialCooldown = 5;
-            attack = 8;
-            knockback = (int)(1.2 * 32);
-            hitboxScale = new Vector2(2, 2);
+            attack = 1;
+            knockback = (int)(1 * 32);
+            hitboxScale = new Vector2(1, 1);
             timer = 0.1;
+            ammo = 5;
         }
 
         /// <summary>
-        /// The player slams the ground and creates a shockwave.
+        /// The player spins and knocks enemies away.
         /// </summary>
         public Attack Special(Player player)
         {
-            // w.X = p.X + (p.W - w.W) / 2
-            positionRect = new Rectangle(
-                player.X - player.Width * 2,
-                player.Y - player.Height * 2,
-                player.Width * 5,
-                player.Height * 5);
+            if(ammo > 0)
+            {
+                ammo--;
 
-            return new Attack(positionRect, (int)(attack * 1.2), (int)(knockback * 1.5), texture, 
-                AttackDirection.allAround, timer, true, new StatusEffect(StatusType.Stun, 0, 1));
+                AttackDirection atkdir = AttackDirection.up;
+
+                switch (player.State)
+                {
+                    case PlayerState.faceForward:
+                    case PlayerState.moveForward:
+                        player.State = PlayerState.attackForward;
+                        atkdir = AttackDirection.up;
+                        break;
+
+                    case PlayerState.faceLeft:
+                    case PlayerState.moveLeft:
+                        player.State = PlayerState.attackLeft;
+                        atkdir = AttackDirection.left;
+                        break;
+
+                    case PlayerState.faceBack:
+                    case PlayerState.moveBack:
+                        player.State = PlayerState.attackBack;
+                        atkdir = AttackDirection.down;
+                        break;
+
+                    case PlayerState.faceRight:
+                    case PlayerState.moveRight:
+                        player.State = PlayerState.attackRight;
+                        atkdir = AttackDirection.right;
+                        break;
+                }
+
+                Rectangle shotHitbox = new Rectangle(player.X,
+                    (int)(player.Y + ((double)player.Height * 3 / 8)),
+                    player.Width, player.Height / 4);
+
+                return new Projectile(shotHitbox, (int)(attack * 20), 15, (int)(knockback * 3), texture, atkdir, true, null);
+            }
+            else
+            {
+                return null;
+            }
+            
         }
 
         public override void Draw(SpriteBatch sb)
