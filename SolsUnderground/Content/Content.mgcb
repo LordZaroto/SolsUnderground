@@ -685,6 +685,30 @@
 /processorParam:TextureFormat=Color
 /build:InstructionsClicked.png
 
+#begin janitorBossLeft.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:janitorBossLeft.png
+
+#begin janitorBossRight.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:janitorBossRight.png
+
 #begin Load1.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -864,6 +888,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:playerMovingUp.png
+
+#begin puddle.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:puddle.png
 
 #begin RedBrickSprite.png
 /importer:TextureImporter
