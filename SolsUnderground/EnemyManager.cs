@@ -145,44 +145,59 @@ namespace SolsUnderground
         /// <summary>
         /// Spawns a single boss in the center of the current room.
         /// </summary>
-        public void SpawnBoss()
+        public void SpawnBoss(int floor)
         {
             // Currently spawns all bosses in center of room
             // When all bosses are added, maybe add specific spawn points for each boss?
 
             Point spawnPoint = new Point(640, 480);
-            int bossChoice = Program.rng.Next(bossTextures.Count);
 
             // Need to expand and implement spawning multiple enemy types
             //The type of enemy spawned should be random
-            switch (bossChoice)
+            switch (floor)
             {
-                case 0:
-                    enemies.Add(new Weeb(bossTextures[bossChoice],
-                        new Rectangle(spawnPoint.X + (40 - bossTextures[bossChoice][2].Width) / 2,
-                        spawnPoint.Y + (40 - bossTextures[bossChoice][2].Height) / 2,
-                        bossTextures[bossChoice][2].Width,
-                        bossTextures[bossChoice][2].Height),
+                case 0: // Bus
+                    break;
+
+                case 1: // Weeb
+                    enemies.Add(new Weeb(bossTextures[floor],
+                        new Rectangle(spawnPoint.X + (40 - bossTextures[floor][2].Width) / 2,
+                        spawnPoint.Y + (40 - bossTextures[floor][2].Height) / 2,
+                        bossTextures[floor][2].Width,
+                        bossTextures[floor][2].Height),
                         75, 8,
-                        bossTextures[bossChoice][4]));
+                        bossTextures[floor][4]));
                     break;
 
-                case 1:
-                    enemies.Add(new VendingMachineBoss(bossTextures[bossChoice],
-                        new Rectangle(spawnPoint.X + (40 - bossTextures[bossChoice][2].Width) / 2,
-                        spawnPoint.Y + (40 - bossTextures[bossChoice][2].Height) / 2,
-                        bossTextures[bossChoice][2].Width,
-                        bossTextures[bossChoice][2].Height),
+                case 2: // Janitor
+                    enemies.Add(new JanitorBoss(bossTextures[floor],
+                        new Rectangle(spawnPoint.X + (40 - bossTextures[floor][0].Width) / 2,
+                        spawnPoint.Y + (40 - bossTextures[floor][0].Height) / 2,
+                        bossTextures[floor][0].Width,
+                        bossTextures[floor][0].Height),
                         150, 8,
-                        bossTextures[bossChoice][4]));
+                        bossTextures[floor][2]));
                     break;
 
-                case 2:
-                    enemies.Add(new BalloonRitchieBoss(bossTextures[bossChoice],
-                        new Rectangle(spawnPoint.X + (40 - bossTextures[bossChoice][2].Width) / 2,
-                        spawnPoint.Y + (40 - bossTextures[bossChoice][2].Height) / 2,
-                        bossTextures[bossChoice][2].Width,
-                        bossTextures[bossChoice][2].Height),
+                case 3: // VM
+                    enemies.Add(new VendingMachineBoss(bossTextures[floor],
+                        new Rectangle(spawnPoint.X + (40 - bossTextures[floor][2].Width) / 2,
+                        spawnPoint.Y + (40 - bossTextures[floor][2].Height) / 2,
+                        bossTextures[floor][2].Width,
+                        bossTextures[floor][2].Height),
+                        150, 8,
+                        bossTextures[floor][4]));
+                    break;
+
+                case 4: // Stalker
+                    break;
+
+                case 5: // BR
+                    enemies.Add(new BalloonRitchieBoss(bossTextures[floor],
+                        new Rectangle(spawnPoint.X + (40 - bossTextures[floor][2].Width) / 2,
+                        spawnPoint.Y + (40 - bossTextures[floor][2].Height) / 2,
+                        bossTextures[floor][2].Width,
+                        bossTextures[floor][2].Height),
                         40, 4));
                     break;
             }

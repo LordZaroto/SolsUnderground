@@ -723,6 +723,67 @@ namespace SolsUnderground
         }
 
         /// <summary>
+        /// The player equips the given weapon or armor piece and checks if
+        /// the current room is the shop
+        /// </summary>
+        public Item Equip(Item equipment, int roomNum, int currentFloor)
+        {
+            Item drop = null;
+
+            if (roomNum == 0 && currentFloor > 0)//If in the shop
+            {
+                if (tigerBucks >= equipment.Value)//If you have enough money
+                {
+                    if (equipment.Type == ItemType.Weapon)
+                    {
+                        drop = weapon;
+                        drop.Value = 0;
+                        weapon = equipment;
+                    }
+                    else if (equipment.Type == ItemType.Armor)
+                    {
+                        drop = armor;
+                        drop.Value = 0;
+                        armor = equipment;
+
+                        // Clamp health if armor lowers maxHP
+                        if (hp > MaxHp)
+                            hp = MaxHp;
+                    }
+                    tigerBucks -= equipment.Value;//Adjusts money value
+                }
+                else
+                {
+                    drop = equipment;
+                }
+            }
+            else
+            {
+                if (equipment.Type == ItemType.Weapon)
+                {
+                    drop = weapon;
+                    weapon = equipment;
+                }
+                else if (equipment.Type == ItemType.Armor)
+                {
+                    drop = armor;
+                    armor = equipment;
+
+                    // Clamp health if armor lowers maxHP
+                    if (hp > MaxHp)
+                        hp = MaxHp;
+                }
+            }
+
+            if(drop != equipment)
+            {
+                drop.PositionRect = new Rectangle(X, Y, 40, 40);
+            }
+            
+            return drop;
+        }
+
+        /// <summary>
         /// The player equips the given weapon or armor piece.
         /// </summary>
         public Item Equip(Item equipment)
@@ -732,11 +793,13 @@ namespace SolsUnderground
             if (equipment.Type == ItemType.Weapon)
             {
                 drop = weapon;
+                drop.Value = 0;
                 weapon = equipment;
             }
             else if (equipment.Type == ItemType.Armor)
             {
                 drop = armor;
+                drop.Value = 0;
                 armor = equipment;
 
                 // Clamp health if armor lowers maxHP
@@ -769,6 +832,25 @@ namespace SolsUnderground
                 activeEffects[i].Counter += gameTime.ElapsedGameTime.TotalSeconds;
                 activeEffects[i].EffectInterval += gameTime.ElapsedGameTime.TotalSeconds;
 
+                switch (activeEffects[i].Effect)
+                {
+                    case StatusType.DriftUp:
+                        Y -= activeEffects[i].Power;
+                        break;
+
+                    case StatusType.DriftLeft:
+                        X -= activeEffects[i].Power;
+                        break;
+
+                    case StatusType.DriftDown:
+                        Y += activeEffects[i].Power;
+                        break;
+
+                    case StatusType.DriftRight:
+                        X += activeEffects[i].Power;
+                        break;
+                }
+
                 if (activeEffects[i].EffectInterval > 0.5)
                 {
                     activeEffects[i].EffectInterval -= 0.5;
@@ -785,6 +867,23 @@ namespace SolsUnderground
                         case StatusType.Sick:
                             Hp -= activeEffects[i].Power;
                             break;
+
+                        case StatusType.DriftUp:
+                            Y -= activeEffects[i].Power;
+                            break;
+
+                        case StatusType.DriftLeft:
+                            X -= activeEffects[i].Power;
+                            break;
+
+                        case StatusType.DriftDown:
+                            Y += activeEffects[i].Power;
+                            break;
+
+                        case StatusType.DriftRight:
+                            X += activeEffects[i].Power;
+                            break;
+
                     }
                 }
 

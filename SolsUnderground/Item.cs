@@ -37,6 +37,7 @@ namespace SolsUnderground
         public int Value
         {
             get { return itemValue; }
+            set { itemValue = value; }
         }
         public override int X
         {

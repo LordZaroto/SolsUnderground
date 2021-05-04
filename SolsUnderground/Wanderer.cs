@@ -306,7 +306,7 @@ namespace SolsUnderground
             if (!IsStunned)
             {
                 attacks.Add(new Attack(PositionRect, Attack, knockback, null, 
-                    direction, 0.15, false, new StatusEffect(StatusType.Stun, 0, 0.5)));
+                    direction, 0.15, false, null));
             }
 
             return attacks;

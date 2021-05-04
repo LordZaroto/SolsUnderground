@@ -5,11 +5,9 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-//Preston Gilmore
-
 namespace SolsUnderground
 {
-    class wRITchieClaw : Item, Weapon
+    class wNerfBlaster : Item, Weapon
     {
         //Fields
         //-----------------------------
@@ -17,13 +15,14 @@ namespace SolsUnderground
         private double basicCooldown;
         private double specialCooldown;
         private int knockback;
-        private string name;
-        private double timer;
         private Vector2 hitboxScale;
         private Rectangle hitboxF;
         private Rectangle hitboxL;
         private Rectangle hitboxB;
         private Rectangle hitboxR;
+        private string name;
+        private double timer;
+        private int ammo;
         //-----------------------------
 
         //---------------------------------------------------------------------
@@ -70,6 +69,17 @@ namespace SolsUnderground
             get { return hitboxR; }
             set { hitboxR = value; }
         }
+
+        public Texture2D Texture
+        {
+            get { return texture; }
+        }
+
+        public int Ammo
+        {
+            get { return ammo; }
+            set { ammo = value; }
+        }
         //------------------------------
 
         //Weapon Stats
@@ -95,7 +105,6 @@ namespace SolsUnderground
         {
             get { return knockback; }
         }
-
         public string Name
         {
             get { return name; }
@@ -106,6 +115,7 @@ namespace SolsUnderground
             get { return timer; }
             set { timer = value; }
         }
+        //---------------
         //------------------------------
 
         //----------------------------------------
@@ -114,132 +124,68 @@ namespace SolsUnderground
         //||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
         //---------------------------------------------------------------------
 
-        //public RITchieClaw(Texture2D texture, Rectangle positionRect)
-        public wRITchieClaw(Texture2D texture, Rectangle positionRect)
-            : base(ItemType.Weapon, 7, texture, positionRect)
+        public wNerfBlaster(Texture2D texture, Rectangle positionRect)
+            : base(ItemType.Weapon, 5, texture, positionRect)
         {
-            name = "Ritchie Claw";
+            name = "Nerf Blaster";
             basicCooldown = 0.1;
-            specialCooldown = 3;
-            attack = 5;
-            knockback = (int)(0.8 * 32);
-            hitboxScale = new Vector2(2, 1);
+            specialCooldown = 5;
+            attack = 1;
+            knockback = (int)(1 * 32);
+            hitboxScale = new Vector2(1, 1);
             timer = 0.1;
+            ammo = 5;
         }
 
         /// <summary>
-        /// The player will dash a long distance, striking enemies along the way.
+        /// The player spins and knocks enemies away.
         /// </summary>
         public Attack Special(Player player)
         {
-            //Create the attack hitbox in the direction the player is facing
-            if (player.State == PlayerState.faceForward || player.State == PlayerState.moveForward)
+            if(ammo > 0)
             {
-                player.State = PlayerState.attackForward;
+                ammo--;
 
-                positionRect = new Rectangle(
-                        player.X - (player.Width * (3 / 4)),
-                        player.Y - (player.Height * 5 + (player.Height / 2)),
-                        player.Width + (player.Width * 2 * (3 / 4)),
-                        player.Height * 6 + (player.Height / 2));
+                AttackDirection atkdir = AttackDirection.up;
 
-                Attack special = new Attack(
-                    positionRect,
-                    attack / 2 + 1,
-                    knockback / 2,
-                    texture,
-                    AttackDirection.up,
-                    timer,
-                    true,
-                    new StatusEffect(StatusType.Sick, 1, 3));
+                switch (player.State)
+                {
+                    case PlayerState.faceForward:
+                    case PlayerState.moveForward:
+                        player.State = PlayerState.attackForward;
+                        atkdir = AttackDirection.up;
+                        break;
 
-                // Treat dash as knockback to activate i-frames
-                player.TakeDamage(0, AttackDirection.up, 0);
-                player.AddEffect(new StatusEffect(StatusType.DriftUp, 13, 0.2));
+                    case PlayerState.faceLeft:
+                    case PlayerState.moveLeft:
+                        player.State = PlayerState.attackLeft;
+                        atkdir = AttackDirection.left;
+                        break;
 
-                return special;
+                    case PlayerState.faceBack:
+                    case PlayerState.moveBack:
+                        player.State = PlayerState.attackBack;
+                        atkdir = AttackDirection.down;
+                        break;
+
+                    case PlayerState.faceRight:
+                    case PlayerState.moveRight:
+                        player.State = PlayerState.attackRight;
+                        atkdir = AttackDirection.right;
+                        break;
+                }
+
+                Rectangle shotHitbox = new Rectangle(player.X,
+                    (int)(player.Y + ((double)player.Height * 3 / 8)),
+                    player.Width, player.Height / 4);
+
+                return new Projectile(shotHitbox, (int)(attack * 20), 15, (int)(knockback * 3), texture, atkdir, true, null);
             }
-            else if (player.State == PlayerState.faceLeft || player.State == PlayerState.moveLeft)
+            else
             {
-                player.State = PlayerState.attackLeft;
-
-                positionRect = new Rectangle(
-                        player.X - (player.Width * 5 + (player.Width / 2)),
-                        player.Y - (player.Height * (3 / 4)),
-                        player.Width * 6 + (player.Width / 2),
-                        player.Height + (player.Height * 2 * (3 / 4)));
-
-                Attack special = new Attack(
-                    positionRect,
-                    attack / 2 + 1,
-                    knockback / 2,
-                    texture,
-                    AttackDirection.left,
-                    timer,
-                    true,
-                    new StatusEffect(StatusType.Sick, 1, 3));
-
-
-                // Treat dash as knockback to activate i-frames
-                player.TakeDamage(0, AttackDirection.left, 0);
-                player.AddEffect(new StatusEffect(StatusType.DriftLeft, 13, 0.2));
-
-                return special;
+                return null;
             }
-            else if (player.State == PlayerState.faceBack || player.State == PlayerState.moveBack)
-            {
-                player.State = PlayerState.attackBack;
-
-                positionRect = new Rectangle(
-                        player.X - (player.Width * (3 / 4)),
-                        player.Y - (player.Height / 2),
-                        player.Width + (player.Width * 2 * (3 / 4)),
-                        player.Height * 6 + (player.Height / 2));
-
-                Attack special = new Attack(
-                    positionRect,
-                    attack / 2 + 1,
-                    knockback / 2,
-                    texture,
-                    AttackDirection.down,
-                    timer,
-                    true,
-                    new StatusEffect(StatusType.Sick, 1, 3));
-
-                // Treat dash as knockback to activate i-frames
-                player.TakeDamage(0, AttackDirection.down, 0);
-                player.AddEffect(new StatusEffect(StatusType.DriftDown, 13, 0.2));
-
-                return special;
-            }
-            else if (player.State == PlayerState.faceRight || player.State == PlayerState.moveRight)
-            {
-                player.State = PlayerState.attackRight;
-
-                positionRect = new Rectangle(
-                        player.X - (player.Width / 2),
-                        player.Y - (player.Height * (3 / 4)),
-                        player.Width * 6 + (player.Width / 2),
-                        player.Height + (player.Height * 2 * (3 / 4)));
-
-                Attack special = new Attack(
-                    positionRect,
-                    attack / 2 + 1,
-                    knockback / 2,
-                    texture,
-                    AttackDirection.right,
-                    timer,
-                    true,
-                    new StatusEffect(StatusType.Sick, 1, 3));
-
-                // Treat dash as knockback to activate i-frames
-                player.TakeDamage(0, AttackDirection.right, 0);
-                player.AddEffect(new StatusEffect(StatusType.DriftRight, 13, 0.2));
-
-                return special;
-            }
-
-            return null;
+            
         }
 
         public override void Draw(SpriteBatch sb)

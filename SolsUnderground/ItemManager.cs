@@ -113,6 +113,11 @@ namespace SolsUnderground
                     if (enemy is VendingMachineBoss)
                     {
                         // Vending Machine drops here
+                        items.Add(new wNerfBlaster(itemTextures[moneySpriteCount + healthSpriteCount + 7],
+                        new Rectangle(
+                            enemy.PositionRect.Center.X - 20 + (Program.rng.Next(5) - 2),
+                            enemy.PositionRect.Center.Y - 20 + (Program.rng.Next(5) - 2),
+                            40, 40)));
                     }
                     if (enemy is BalloonRitchieBoss)
                     {
@@ -161,7 +166,7 @@ namespace SolsUnderground
         /// <summary>
         /// Activates the effects of picking up an item if its colliding with the player.
         /// </summary>
-        public void ActivateItems(bool isEKeyPressed)
+        public void ActivateItems(bool isEKeyPressed, int roomNum, int currentFloor)
         {
             List<Item> unequipped = new List<Item>();
 
@@ -186,21 +191,21 @@ namespace SolsUnderground
                             continue;
 
                         case ItemType.Weapon:
-                            if (isEKeyPressed)
-                            {
-                                unequipped.Add(player.Equip(items[i]));
-                                items.RemoveAt(i);
-                                continue;
-                            }
+                                if (isEKeyPressed)
+                                {
+                                    unequipped.Add(player.Equip(items[i], roomNum, currentFloor));
+                                    items.RemoveAt(i);
+                                    continue;
+                                }
                             break;
 
                         case ItemType.Armor:
-                            if (isEKeyPressed)
-                            {
-                                unequipped.Add(player.Equip(items[i]));
-                                items.RemoveAt(i);
-                                continue;
-                            }
+                                if (isEKeyPressed)
+                                {
+                                    unequipped.Add(player.Equip(items[i], roomNum, currentFloor));
+                                    items.RemoveAt(i);
+                                    continue;
+                                }
                             break;
                     }
                 }
@@ -290,29 +295,32 @@ namespace SolsUnderground
                             items.Add(new wCactus(itemTextures[i + equipmentStart],
                                 new Rectangle(new Point(50 + 50 * i, 100), size)));
                             break;
-
-                        // Armor
                         case 7:
+                            items.Add(new wNerfBlaster(itemTextures[i + equipmentStart],
+                                new Rectangle(new Point(50 + 50 * i, 100), size)));
+                            break;
+                        // Armor
+                        case 8:
                             items.Add(new aHoodie(itemTextures[i + equipmentStart],
                                 new Rectangle(new Point(50 + 50 * (i - weaponSpriteCount), 800), size)));
                             break;
-                        case 8:
+                        case 9:
                             items.Add(new aWinterCoat(itemTextures[i + equipmentStart],
                                 new Rectangle(new Point(50 + 50 * (i - weaponSpriteCount), 800), size)));
                             break;
-                        case 9:
+                        case 10:
                             items.Add(new aBandana(itemTextures[i + equipmentStart],
                                 new Rectangle(new Point(50 + 50 * (i - weaponSpriteCount), 800), size)));
                             break;
-                        case 10:
+                        case 11:
                             items.Add(new aSkates(itemTextures[i + equipmentStart],
                                 new Rectangle(new Point(50 + 50 * (i - weaponSpriteCount), 800), size)));
                             break;
-                        case 11:
+                        case 12:
                             items.Add(new aMask(itemTextures[i + equipmentStart],
                                 new Rectangle(new Point(50 + 50 * (i - weaponSpriteCount), 800), size)));
                             break;
-                        case 12:
+                        case 13:
                             items.Add(new aTigerMask(itemTextures[i + equipmentStart],
                                 new Rectangle(new Point(50 + 50 * (i - weaponSpriteCount), 800), size)));
                             break;
@@ -359,7 +367,7 @@ namespace SolsUnderground
                     switch (i.Type)
                     {
                         case ItemType.Weapon:
-                            infoRect = new Rectangle(mouse.X, mouse.Y, 280, 140);
+                            infoRect = new Rectangle(mouse.X, mouse.Y, 280, 165);
 
                             sb.Draw(Program.drawSquare, infoRect, Color.DarkRed);
 
@@ -377,11 +385,14 @@ namespace SolsUnderground
 
                             sb.DrawString(uiText, "Special Cooldown: " + ((Weapon)i).SpecialCooldown,
                                 new Vector2(infoRect.X + 10, infoRect.Y + 105), Color.White);
+
+                            sb.DrawString(uiText, "Value: $" + i.Value,
+                                new Vector2(infoRect.X + 10, infoRect.Y + 130), Color.White);
                             break;
 
 
                         case ItemType.Armor:
-                            infoRect = new Rectangle(mouse.X, mouse.Y, 160, 115);
+                            infoRect = new Rectangle(mouse.X, mouse.Y, 160, 140);
 
                             sb.Draw(Program.drawSquare, infoRect, Color.DarkSlateGray);
 
@@ -396,6 +407,9 @@ namespace SolsUnderground
 
                             sb.DrawString(uiText, "HP: " + ((Armor)i).HP,
                                 new Vector2(infoRect.X + 10, infoRect.Y + 80), Color.White);
+
+                            sb.DrawString(uiText, "Value: $" + i.Value,
+                                new Vector2(infoRect.X + 10, infoRect.Y + 105), Color.White);
                             break;
                     }
                 }
