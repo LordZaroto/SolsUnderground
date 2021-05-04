@@ -7,19 +7,19 @@ using Microsoft.Xna.Framework.Input;
 
 namespace SolsUnderground
 {
-    class Wanderer : Enemy
+    class SolsWorker : Enemy
     {
         private EnemyState enemyState;
         private double moveCounter;
         private double moveCD;
+        private double attackCounter;
+        private double attackCD;
         private double kbCounter;
         private double kbCD;
         Texture2D[] textures;
-        GameTime gameTime;
-        float _timer = 0f;
-        int moveDirection;
+
         //consructor: initializes the fields
-        public Wanderer(Texture2D[] textures, Rectangle positionRect, int health, int attack)
+        public SolsWorker(Texture2D[] textures, Rectangle positionRect, int health, int attack)
         {
             this.textures = textures;
             this.texture = textures[0];
@@ -27,14 +27,15 @@ namespace SolsUnderground
             this.maxHP = health;
             this.currentHP = health;
             this.attack = attack;
-            this.knockback = 64;
+            this.knockback = 32;
             activeEffects = new List<StatusEffect>();
             effectCounter = 0;
-            moveCD = 0.1;
+            moveCD = 0.3;
             moveCounter = moveCD;
-            kbCD = 2;
+            kbCD = 0.1;
             kbCounter = kbCD;
-            moveDirection = Program.rng.Next(0, 4);
+            attackCD = 2;
+            attackCounter = attackCD;
         }
 
         //properties
@@ -62,6 +63,12 @@ namespace SolsUnderground
             set { attack = value; }
         }
 
+        public override int Knockback
+        {
+            get { return knockback; }
+            set { knockback = value; }
+        }
+
         public override int Width
         {
             get { return positionRect.Width; }
@@ -84,12 +91,6 @@ namespace SolsUnderground
         {
             get { return enemyState; }
             set { enemyState = value; }
-        }
-
-        public override int Knockback
-        {
-            get { return knockback; }
-            set { knockback = value; }
         }
 
         protected override int AttackMod
@@ -173,22 +174,7 @@ namespace SolsUnderground
 
                 currentHP -= Math.Max(damage - DefenseMod, 0);
 
-                if (enemyState == EnemyState.faceForward || enemyState == EnemyState.moveForward)
-                {
-                    Y += (int)(knockback);
-                }
-                if (enemyState == EnemyState.faceLeft || enemyState == EnemyState.moveLeft)
-                {
-                    X += (int)(knockback);
-                }
-                if (enemyState == EnemyState.faceBack || enemyState == EnemyState.moveBack)
-                {
-                    Y -= (int)(knockback);
-                }
-                if (enemyState == EnemyState.faceRight || enemyState == EnemyState.moveRight)
-                {
-                    X -= (int)(knockback);
-                }
+                //Shooters should be stationary and do not get knocked back
 
                 if (currentHP <= 0)
                 {
@@ -209,77 +195,46 @@ namespace SolsUnderground
             {
                 if (!(enemyState == EnemyState.dead) && !IsStunned)
                 {
-                    if (Math.Abs(positionRect.X - player.X) <= 80 && Math.Abs(positionRect.Y - player.Y) <= 80)
+                    if (Math.Abs(positionRect.X - player.X) >= Math.Abs(positionRect.Y - player.Y))
                     {
-                        if (positionRect.X > player.X)
+                        if (positionRect.X >= player.X)
                         {
                             texture = textures[2];
-                            positionRect.X -= Math.Max(1 + SpeedMod, 0);
+                            positionRect.X -= Math.Max(2 + SpeedMod, 0);
                             enemyState = EnemyState.moveLeft;
                         }
-                        if (positionRect.X < player.X)
+                        else
                         {
                             texture = textures[3];
-                            positionRect.X += Math.Max(1 + SpeedMod, 0);
+                            positionRect.X += Math.Max(2 + SpeedMod, 0);
                             enemyState = EnemyState.moveRight;
                         }
-                        if (positionRect.Y > player.Y)
+                    }
+                    else if (Math.Abs(positionRect.X - player.X) < Math.Abs(positionRect.Y - player.Y))
+                    {
+                        if (positionRect.Y >= player.Y)
                         {
                             texture = textures[1];
-                            positionRect.Y -= Math.Max(1 + SpeedMod, 0);
-                            enemyState = EnemyState.moveForward;
-                        }
-                        if (positionRect.Y < player.Y)
-                        {
-                            texture = textures[0];
-                            positionRect.Y += Math.Max(1 + SpeedMod, 0);
+                            positionRect.Y -= Math.Max(2 + SpeedMod, 0);
                             enemyState = EnemyState.moveBack;
                         }
-                    }
-                    else
-                    {
-
-                        if (_timer >= 3 && _timer < 4)
+                        else
                         {
-
-                            switch (moveDirection)
-                            {
-                                case 0:
-                                    texture = textures[3];
-                                    positionRect.X += Math.Max(1 + SpeedMod, 0);
-                                    break;
-                                case 1:
-                                    texture = textures[2];
-                                    positionRect.X -= Math.Max(1 + SpeedMod, 0);
-                                    break;
-                                case 2:
-                                    texture = textures[0];
-                                    positionRect.Y += Math.Max(1 + SpeedMod, 0);
-                                    break;
-                                case 3:
-                                    texture = textures[1];
-                                    positionRect.Y -= Math.Max(1 + SpeedMod, 0);
-                                    break;
-                            }
-                        }
-                        else if (_timer >= 5)
-                        {
-                            _timer = 0f;
-                            moveDirection = Program.rng.Next(0, 4);
+                            texture = textures[0];
+                            positionRect.Y += Math.Max(2 + SpeedMod, 0);
+                            enemyState = EnemyState.moveForward;
                         }
                     }
                 }
             }
         }
 
-        /// <summary>
-        /// Provides an attack hitbox equal to the wanderer's hitbox.
-        /// </summary>
         public override List<Attack> EnemyAttack(Player player)
         {
             List<Attack> attacks = new List<Attack>();
             AttackDirection direction = AttackDirection.left;
 
+            // Check direction for collision hitbox
             switch (enemyState)
             {
                 case EnemyState.faceForward:
@@ -305,9 +260,18 @@ namespace SolsUnderground
 
             if (!IsStunned)
             {
-                attacks.Add(new Attack(PositionRect, Attack, knockback, null, 
+                // Shoot projectile when not on cooldown
+                if (attackCounter >= attackCD)
+                {
+                    attackCounter -= attackCD;
+
+                    attacks.Add(new Projectile(positionRect, Attack, 5, knockback, textures[4], direction, false, new StatusEffect(StatusType.DefDown, 2, 4)));
+                }
+
+                attacks.Add(new Attack(PositionRect, attack, knockback, null,
                     direction, 0.15, false, null));
             }
+
 
             return attacks;
         }
@@ -386,10 +350,6 @@ namespace SolsUnderground
                 activeEffects[i].Draw(sb);
             }
         }
-
-        public void UpdateTimer(GameTime gameTime)
-        {
-            _timer += (float)gameTime.ElapsedGameTime.TotalSeconds;
-        }
     }
 }
+

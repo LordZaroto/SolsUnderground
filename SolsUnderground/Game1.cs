@@ -60,12 +60,14 @@ namespace SolsUnderground
         private Texture2D[] minionTextures;
         private Texture2D[] wandererTextures;
         private Texture2D[] shooterTextures;
+        private Texture2D[] solsWorkerTextures;
 
         //Bosses
         private Texture2D[] weebTextures;
         private Texture2D[] vmBossTextures;
         private Texture2D[] brBossTextures;
         private Texture2D[] busBossTextures;
+        private Texture2D[] jbTextures;
 
         // Items
         private List<Texture2D> chestTextures;
@@ -195,6 +197,11 @@ namespace SolsUnderground
             currentState = GameState.Menu;
             isRoomCleared = false;
             difficultyTier = 0;
+            forward = Keys.W;
+            backward = Keys.S;
+            left = Keys.A;
+            right = Keys.D;
+            equip = Keys.E;
             _graphics.PreferredBackBufferWidth = 1320;
             _graphics.PreferredBackBufferHeight = 1000;
             _graphics.ApplyChanges();
@@ -314,8 +321,26 @@ namespace SolsUnderground
                 Content.Load<Texture2D>("ShooterLeft"),
                 Content.Load<Texture2D>("ShooterRight") };
 
+            solsWorkerTextures = new Texture2D[]
+{
+                Content.Load<Texture2D>("solFront"),
+                Content.Load<Texture2D>("solBack"),
+                Content.Load<Texture2D>("solLeft"),
+                Content.Load<Texture2D>("solRight"),
+                Content.Load<Texture2D>("pannini")};
+
             // Boss Textures
-            // Boss data added here, stay constant
+            // ADD IN ORDER: Bus, Weeb, Jan, VM, Stalk, BR, Munson
+
+            busBossTextures = new Texture2D[]
+            {
+                Content.Load<Texture2D>("BusDown"),
+                Content.Load<Texture2D>("BusUp"),
+                Content.Load<Texture2D>("BusLeft"),
+                Content.Load<Texture2D>("BusRight")
+            };
+            enemyManager.AddBossData(busBossTextures);
+
             weebTextures = new Texture2D[] {
                 Content.Load<Texture2D>("weeb_Forward"),
                 Content.Load<Texture2D>("weeb_Back"),
@@ -323,6 +348,14 @@ namespace SolsUnderground
                 Content.Load<Texture2D>("weeb_Right"),
                 Content.Load<Texture2D>("thePrecipice")}; // Boss Attack Texture
             enemyManager.AddBossData(weebTextures);
+
+            jbTextures = new Texture2D[]
+            {
+                Content.Load<Texture2D>("janitorBossLeft"),
+                Content.Load<Texture2D>("janitorBossRight"),
+                Content.Load<Texture2D>("puddle") // boss attack texture
+            };
+            enemyManager.AddBossData(jbTextures);
 
             vmBossTextures = new Texture2D[]
             {
@@ -333,6 +366,9 @@ namespace SolsUnderground
                 Content.Load<Texture2D>("Cola")}; // Boss Attack Texture
             enemyManager.AddBossData(vmBossTextures);
 
+            // ADD STALKER HERE
+            enemyManager.AddBossData(weebTextures);
+
             brBossTextures = new Texture2D[]
             {
                 Content.Load<Texture2D>("brBossFront"),
@@ -342,14 +378,11 @@ namespace SolsUnderground
                 Content.Load<Texture2D>("brShot") }; // Boss Attack Texture
             enemyManager.AddBossData(brBossTextures);
 
-            busBossTextures = new Texture2D[]
-            {
-                Content.Load<Texture2D>("BusDown"),
-                Content.Load<Texture2D>("BusUp"),
-                Content.Load<Texture2D>("BusLeft"),
-                Content.Load<Texture2D>("BusRight")
-            };
-            enemyManager.AddBossData(busBossTextures);
+            // ADD MUNSON HERE
+            enemyManager.AddBossData(weebTextures);
+
+
+            
 
             // Status Textures
             StatusEffect.LoadEffectSprite(Content.Load<Texture2D>("fxModifier"));
@@ -424,7 +457,7 @@ namespace SolsUnderground
             file2Clicked = Content.Load<Texture2D>("file2Clicked");
             file2Rect = new Rectangle(515, 500, 290, 300);
             file3 = Content.Load<Texture2D>("file3");
-            file3Clicked = Content.Load<Texture2D>("file1Clicked");
+            file3Clicked = Content.Load<Texture2D>("file3Clicked");
             file3Rect = new Rectangle(918, 500, 290, 300);
 
 
@@ -545,6 +578,7 @@ namespace SolsUnderground
 
                                 case 1:
                                     enemyManager.AddEnemyData(weebTextures);
+                                    enemyManager.AddEnemyData(solsWorkerTextures);
                                     break;
 
                                 case 2:
@@ -569,7 +603,7 @@ namespace SolsUnderground
                         // Check if boss room
                         if (mapManager.IsBossRoom)
                         {
-                            enemyManager.SpawnBoss();
+                            enemyManager.SpawnBoss(mapManager.CurrentFloor);
                         }
                         else
                         {
@@ -949,7 +983,13 @@ namespace SolsUnderground
                     _spriteBatch.DrawString(
                         text,
                         "Attack - Left Click",
-                        new Vector2(500, 650),
+                        new Vector2(200, 650),
+                        Color.White);
+
+                    _spriteBatch.DrawString(
+                        text,
+                        "Special - Right Click",
+                        new Vector2(700, 650),
                         Color.White);
 
                     Rectangle equipRect = new Rectangle(675, 755, 150, 50);
@@ -999,12 +1039,12 @@ namespace SolsUnderground
                         Color.White);
                     _spriteBatch.DrawString(
                         text,
-                        "defeat all enemies to go on to the next room,\n" +
-                        "               go till you face the boss.\n" +
-                        "there are 7 floors and you must beat the boss \n" +
+                        "Defeat all the enemies in each room to\n" +
+                        "        advance to the next room.\n" +
+                        "Defeat the boss in the last room on each floor\n" +
                         "               to go to the next floor.\n"+
-                        "Defeat all 7 of the total boss of each floor\n" +
-                        "                       and you win",
+                        "Reach Sols and secure your panini by \n" +
+                        "            completing all 7 floors.",
                         new Vector2(150, 250),
                         Color.White);
                     if (MouseOver(button5, mouse) == true)
@@ -1361,42 +1401,40 @@ namespace SolsUnderground
             player.Hp = int.Parse(fileData[0]);
             player.TigerBucks = int.Parse(fileData[1]);
 
+            // Move player to saved room and floor
             int numFloors = int.Parse(fileData[2]);
-            for(int i = 0; i < numFloors; i++)
-            {
-                mapManager.NewFloor();
-            }
-
             int roomNum = int.Parse(fileData[3]);
-            for(int j = 0; j < roomNum; j++)
+            for(int j = 0; j < roomNum + numFloors * 6; j++)
             {
-                player.X = 0;
                 mapManager.NextRoom();
-                if (mapManager.CurrentFloor > 6)
-                {
-                    currentState = GameState.Win;
-                }
-
-                itemManager.NextRoom(mapManager.CurrentRoom.ChestSpawns);
-                isRoomCleared = false;
-
-                enemyManager.ClearEnemies();
-
-                // Check if boss room
-                if (mapManager.IsBossRoom)
-                {
-                    enemyManager.SpawnBoss();
-                }
-                else
-                {
-                    enemyManager.SpawnEnemies(
-                        mapManager.CurrentRoom.EnemyCount,
-                        mapManager.CurrentRoom.GetOpenTiles(),
-                        mapManager.FloorFactor);
-                }
-
-                collisionManager.SetBarrierList(mapManager.CurrentRoom.GetBarriers());
             }
+
+            // Initialize room
+            player.X = 0;
+            if (mapManager.CurrentFloor > 6)
+            {
+                currentState = GameState.Win;
+            }
+
+            itemManager.NextRoom(mapManager.CurrentRoom.ChestSpawns);
+            isRoomCleared = false;
+
+            enemyManager.ClearEnemies();
+
+            // Check if boss room
+            if (mapManager.IsBossRoom)
+            {
+                enemyManager.SpawnBoss(mapManager.CurrentFloor);
+            }
+            else
+            {
+                enemyManager.SpawnEnemies(
+                    mapManager.CurrentRoom.EnemyCount,
+                    mapManager.CurrentRoom.GetOpenTiles(),
+                    mapManager.FloorFactor);
+            }
+
+            collisionManager.SetBarrierList(mapManager.CurrentRoom.GetBarriers());
 
             string currentWeaponName = fileData[4];
             switch (currentWeaponName)

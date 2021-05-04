@@ -127,7 +127,7 @@ namespace SolsUnderground
         /// <summary>
         /// Randomly draws rooms from the room pool to build a floor of five rooms.
         /// </summary>
-        public void NewFloor()
+        private void NewFloor()
         {
             // Current floor composition:
             // Start Room -> 4 random rooms -> Boss Room
@@ -161,13 +161,37 @@ namespace SolsUnderground
                 floor.Add(nextRoom);
             }
 
-            // Add a boss room/boss stuff here
+            // Add boss-specific rooms
             switch (currentFloor)
             {
+                case 0: // Bus
+                    floor.Add(bossRooms[4]);
+                    break;
 
+                case 1: // Weeb
+                    floor.Add(bossRooms[0]);
+                    break;
+
+                case 2: // Janitor
+                    floor.Add(bossRooms[4]);
+                    break;
+
+                case 3: // VM
+                    floor.Add(bossRooms[5]);
+                    break;
+
+                case 4: // Stalker
+                    floor.Add(bossRooms[2]);
+                    break;
+
+                case 5: // BR
+                    floor.Add(bossRooms[3]);
+                    break;
+
+                case 6: // Munson
+                    floor.Add(bossRooms[1]);
+                    break;
             }
-
-            floor.Add(bossRooms[Program.rng.Next(bossRooms.Count)]);
         }
 
         /// <summary>

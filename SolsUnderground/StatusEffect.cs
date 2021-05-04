@@ -24,7 +24,11 @@ namespace SolsUnderground
         SpdDown,
         Regen,
         Sick,
-        Stun
+        Stun,
+        DriftUp,
+        DriftLeft,
+        DriftDown,
+        DriftRight
     }
 
     class StatusEffect : StaticObject
@@ -140,6 +144,14 @@ namespace SolsUnderground
                 case StatusType.Stun:
                     texture = effectSprites[3];
                     color = Color.White;
+                    break;
+
+                case StatusType.DriftUp:
+                case StatusType.DriftLeft:
+                case StatusType.DriftDown:
+                case StatusType.DriftRight:
+                    texture = effectSprites[0];
+                    color = Color.Transparent;
                     break;
             }
         }

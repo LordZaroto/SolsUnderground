@@ -130,6 +130,12 @@ namespace SolsUnderground
                                 b.ReverseX = true;
                                 b.State = EnemyState.moveLeft;
                             }
+                        
+                            if(gameObject is JanitorBoss)
+                            {
+                                JanitorBoss j = (JanitorBoss)gameObject;
+                                j.ReverseX = true;
+                            }
                         }
                         else
                         {
@@ -142,11 +148,24 @@ namespace SolsUnderground
                             }
                         }
                     }
+                            if (gameObject is JanitorBoss)
+                            {
+                                JanitorBoss j = (JanitorBoss)gameObject;
+                                j.ReverseX = false;
+                            }
+                        }
+                    }
                     else
                     {
                         if (barriers[i].Y > temp.Y)
                         {
                             temp.Y -= Rectangle.Intersect(temp, barriers[i]).Height;
+                            if (gameObject is JanitorBoss)
+                            {
+                                JanitorBoss j = (JanitorBoss)gameObject;
+                                j.ReverseY = true;
+                            }
+                        
                             if (gameObject is BusBoss)
                             {
                                 BusBoss b = (BusBoss)gameObject;
@@ -157,6 +176,11 @@ namespace SolsUnderground
                         else
                         {
                             temp.Y += Rectangle.Intersect(temp, barriers[i]).Height;
+                            if (gameObject is JanitorBoss)
+                            {
+                                JanitorBoss j = (JanitorBoss)gameObject;
+                                j.ReverseY = false;
+                            }
                             if (gameObject is BusBoss)
                             {
                                 BusBoss b = (BusBoss)gameObject;
