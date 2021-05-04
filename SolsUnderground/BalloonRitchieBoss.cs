@@ -14,7 +14,8 @@ namespace SolsUnderground
         {
             None,
             Barrage,
-            Wave
+            Wave,
+            Beam
         }
 
         // Fields
@@ -39,6 +40,10 @@ namespace SolsUnderground
         private double waveCounter;
         private double waveDuration;
         private double waveInterval;
+
+        private double beamCD;
+        private double beamCounter;
+        private double beamDuration;
 
         /// Inherits:
         /// Texture2D texture
@@ -193,10 +198,14 @@ namespace SolsUnderground
             barrageDuration = 3;
             barrageInterval = 0.3;
 
-            waveCD = 5;
+            waveCD = 6;
             waveCounter = 0;
             waveDuration = 3;
             waveInterval = 1;
+
+            beamCD = 7;
+            beamCounter = 0;
+            beamDuration = 2.5;
         }
 
         // Methods
@@ -236,7 +245,7 @@ namespace SolsUnderground
                         shotSpeed *= 2;
 
                         // Make sure barrage doesnt happen immediately due to shortening
-                        barrageCD = 4;
+                        barrageCounter = 4;
                         break;
 
                     case 3:
@@ -372,10 +381,15 @@ namespace SolsUnderground
                             attacks.AddRange(Wave(direction));
                             break;
 
+                        case AttackState.Beam:
+                            attacks.Add(Beam(direction));
+                            break;
+
                         case AttackState.None:
                             // Increment timers when not attacking
                             barrageCounter += elapsedGameTime;
                             waveCounter += elapsedGameTime;
+                            beamCounter += elapsedGameTime;
 
                             if (barrageCounter > barrageCD)
                             {
@@ -383,6 +397,13 @@ namespace SolsUnderground
                                 attackCounter = 0;
                                 attackInterval = 0;
                                 attackState = AttackState.Barrage;
+                            }
+                            else if (beamCounter > beamCD)
+                            {
+                                beamCounter -= beamCD;
+                                attackCounter = 0;
+                                attackInterval = 0;
+                                attackState = AttackState.Beam;
                             }
                             else if (waveCounter > waveCD)
                             {
@@ -604,6 +625,60 @@ namespace SolsUnderground
             return shots;
         }
 
+
+        private Projectile Beam(AttackDirection direction)
+        {
+            if (attackCounter < beamDuration)
+            {
+                attackCounter += elapsedGameTime;
+                Rectangle shotRect = new Rectangle();
+
+                switch (direction)
+                {
+                    case AttackDirection.up:
+                        shotRect = new Rectangle(
+                                positionRect.Center.X,
+                                Y,
+                                shotSize.Y,
+                                shotSize.X);
+                        break;
+
+                    case AttackDirection.left:
+                        shotRect = new Rectangle(
+                                X,
+                                positionRect.Center.Y,
+                                shotSize.X,
+                                shotSize.Y);
+                        break;
+
+                    case AttackDirection.down:
+                        shotRect = new Rectangle(
+                                positionRect.Center.X,
+                                positionRect.Bottom - shotSize.X,
+                                shotSize.Y,
+                                shotSize.X);
+                        break;
+
+                    case AttackDirection.right:
+                        shotRect = new Rectangle(
+                                positionRect.Right - shotSize.X,
+                                positionRect.Center.Y,
+                                shotSize.X,
+                                shotSize.Y);
+                        break;
+                }
+
+                return new Projectile(shotRect, Attack * 2, shotSpeed * 2, Knockback,
+                    textures[4], direction, false, null);
+            }
+            else
+            {
+                attackState = AttackState.None;
+            }
+
+            return null;
+        }
+
         /// <summary>
         /// Adds a status effect to the enemy.
         /// </summary>
@@ -670,6 +745,8 @@ namespace SolsUnderground
                 sb.Draw(texture, positionRect, Color.Green);
             else if (waveCounter > waveCD - 1 && attackState == AttackState.None)
                 sb.Draw(texture, positionRect, Color.Blue);
+            else if (beamCounter > beamCD - 1 && attackState == AttackState.None)
+                sb.Draw(texture, positionRect, Color.Red);
             else
                 sb.Draw(texture, positionRect, Color.White);
 
