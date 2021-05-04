@@ -685,6 +685,30 @@
 /processorParam:TextureFormat=Color
 /build:InstructionsClicked.png
 
+#begin janitorBossLeft.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:janitorBossLeft.png
+
+#begin janitorBossRight.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:janitorBossRight.png
+
 #begin Load1.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -769,6 +793,30 @@
 /processorParam:TextureFormat=Color
 /build:minionRight.png
 
+#begin nerfBlaster.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:nerfBlaster.png
+
+#begin nerfBullet.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:nerfBullet.png
+
 #begin NewGame.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -840,6 +888,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:playerMovingUp.png
+
+#begin puddle.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:puddle.png
 
 #begin RedBrickSprite.png
 /importer:TextureImporter
@@ -978,6 +1038,9 @@
 
 #begin Rooms/StartRooms/basicStartRoom.level
 /copy:Rooms/StartRooms/basicStartRoom.level
+
+#begin Rooms/StartRooms/shopRoom.level
+/copy:Rooms/StartRooms/shopRoom.level
 
 #begin Rooms/SubBoxRoom.level
 /copy:Rooms/SubBoxRoom.level

@@ -65,6 +65,7 @@ namespace SolsUnderground
         private Texture2D[] weebTextures;
         private Texture2D[] vmBossTextures;
         private Texture2D[] brBossTextures;
+        private Texture2D[] jbTextures;
 
         // Items
         private List<Texture2D> chestTextures;
@@ -82,6 +83,8 @@ namespace SolsUnderground
         private Texture2D hotDogTexture;
         //private wThePrecipice thePrecipice;
         private Texture2D thePrecipiceTexture;
+        private Texture2D nerfBlasterTexture;
+        private Texture2D nerfBulletTexture;
 
         // Armor
         private aHoodie hoodie;
@@ -273,11 +276,14 @@ namespace SolsUnderground
             hockeyStickTexture = Content.Load<Texture2D>("HockeyStick");
             hotDogTexture = Content.Load<Texture2D>("HotDog");
             thePrecipiceTexture = Content.Load<Texture2D>("thePrecipice");
+            nerfBlasterTexture = Content.Load<Texture2D>("nerfBlaster");
+            nerfBulletTexture = Content.Load<Texture2D>("nerfBullet");
             itemManager.AddWeaponSprite(brickBreakerTexture);
             itemManager.AddWeaponSprite(hockeyStickTexture);
             itemManager.AddWeaponSprite(hotDogTexture);
             itemManager.AddWeaponSprite(thePrecipiceTexture);
             itemManager.AddWeaponSprite(Content.Load<Texture2D>("Cactus"));
+            itemManager.AddWeaponSprite(nerfBlasterTexture);
 
             // Armor
             winterCoatTexture = Content.Load<Texture2D>("WinterCoat");
@@ -340,6 +346,14 @@ namespace SolsUnderground
                 Content.Load<Texture2D>("brBossRight"),
                 Content.Load<Texture2D>("brShot") }; // Boss Attack Texture
             enemyManager.AddBossData(brBossTextures);
+
+            jbTextures = new Texture2D[]
+            {
+                Content.Load<Texture2D>("janitorBossLeft"),
+                Content.Load<Texture2D>("janitorBossRight"),
+                Content.Load<Texture2D>("puddle") // boss attack texture
+            };
+            enemyManager.AddBossData(jbTextures);
 
             // Status Textures
             StatusEffect.LoadEffectSprite(Content.Load<Texture2D>("fxModifier"));
@@ -496,7 +510,8 @@ namespace SolsUnderground
                     enemyManager.MoveEnemies(gameTime);
 
                     //Collisions
-                    itemManager.ActivateItems(SingleKeyPress(player.EquipKey, kb, prevKB));
+                    itemManager.ActivateItems(SingleKeyPress(player.EquipKey, kb, prevKB), mapManager.CurrentRoomNum,
+                        mapManager.CurrentFloor);
                     collisionManager.CheckCollisions();
 
                     // Attacks

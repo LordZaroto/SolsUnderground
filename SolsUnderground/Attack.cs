@@ -110,13 +110,5 @@ namespace SolsUnderground
             this.effect = effect;
             attackDirection = atkDir;
         }
-
-        public Attack(Rectangle hitbox, int damage, int knockback, AttackDirection atkDir)
-        {
-            this.positionRect = hitbox;
-            this.damage = damage;
-            this.knockback = knockback;
-            attackDirection = atkDir;
-        }
     }
 }

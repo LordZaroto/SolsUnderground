@@ -359,9 +359,10 @@ namespace SolsUnderground
                     {
                         knockback = a.Knockback;
                     }
-                    return new Attack(a.Hitbox, a.Damage, knockback, a.AttackDirection);
+                    return new Attack(a.Hitbox, a.Damage, knockback, a.Texture, a.AttackDirection,
+                        a.Timer, a.IsPlayerAttack, a.Effect);
                 }
-        }
+            }
             return a;
         }
     }
