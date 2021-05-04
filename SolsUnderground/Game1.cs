@@ -496,7 +496,8 @@ namespace SolsUnderground
                     enemyManager.MoveEnemies(gameTime);
 
                     //Collisions
-                    itemManager.ActivateItems(SingleKeyPress(player.EquipKey, kb, prevKB));
+                    itemManager.ActivateItems(SingleKeyPress(player.EquipKey, kb, prevKB), mapManager.CurrentRoomNum,
+                        mapManager.CurrentFloor);
                     collisionManager.CheckCollisions();
 
                     // Attacks

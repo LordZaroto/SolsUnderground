@@ -166,7 +166,7 @@ namespace SolsUnderground
         /// <summary>
         /// Activates the effects of picking up an item if its colliding with the player.
         /// </summary>
-        public void ActivateItems(bool isEKeyPressed)
+        public void ActivateItems(bool isEKeyPressed, int roomNum, int currentFloor)
         {
             List<Item> unequipped = new List<Item>();
 
@@ -191,21 +191,21 @@ namespace SolsUnderground
                             continue;
 
                         case ItemType.Weapon:
-                            if (isEKeyPressed)
-                            {
-                                unequipped.Add(player.Equip(items[i]));
-                                items.RemoveAt(i);
-                                continue;
-                            }
+                                if (isEKeyPressed)
+                                {
+                                    unequipped.Add(player.Equip(items[i], roomNum, currentFloor));
+                                    items.RemoveAt(i);
+                                    continue;
+                                }
                             break;
 
                         case ItemType.Armor:
-                            if (isEKeyPressed)
-                            {
-                                unequipped.Add(player.Equip(items[i]));
-                                items.RemoveAt(i);
-                                continue;
-                            }
+                                if (isEKeyPressed)
+                                {
+                                    unequipped.Add(player.Equip(items[i], roomNum, currentFloor));
+                                    items.RemoveAt(i);
+                                    continue;
+                                }
                             break;
                     }
                 }
@@ -367,7 +367,7 @@ namespace SolsUnderground
                     switch (i.Type)
                     {
                         case ItemType.Weapon:
-                            infoRect = new Rectangle(mouse.X, mouse.Y, 280, 140);
+                            infoRect = new Rectangle(mouse.X, mouse.Y, 280, 165);
 
                             sb.Draw(Program.drawSquare, infoRect, Color.DarkRed);
 
@@ -385,11 +385,14 @@ namespace SolsUnderground
 
                             sb.DrawString(uiText, "Special Cooldown: " + ((Weapon)i).SpecialCooldown,
                                 new Vector2(infoRect.X + 10, infoRect.Y + 105), Color.White);
+
+                            sb.DrawString(uiText, "Value: $" + i.Value,
+                                new Vector2(infoRect.X + 10, infoRect.Y + 130), Color.White);
                             break;
 
 
                         case ItemType.Armor:
-                            infoRect = new Rectangle(mouse.X, mouse.Y, 160, 115);
+                            infoRect = new Rectangle(mouse.X, mouse.Y, 160, 140);
 
                             sb.Draw(Program.drawSquare, infoRect, Color.DarkSlateGray);
 
@@ -404,6 +407,9 @@ namespace SolsUnderground
 
                             sb.DrawString(uiText, "HP: " + ((Armor)i).HP,
                                 new Vector2(infoRect.X + 10, infoRect.Y + 80), Color.White);
+
+                            sb.DrawString(uiText, "Value: $" + i.Value,
+                                new Vector2(infoRect.X + 10, infoRect.Y + 105), Color.White);
                             break;
                     }
                 }
