@@ -321,6 +321,10 @@ namespace SolsUnderground
 
             // Boss Textures
             // ADD IN ORDER: Bus, Weeb, Jan, VM, Stalk, BR, Munson
+
+            // ADD BUS HERE
+            enemyManager.AddBossData(weebTextures);
+
             weebTextures = new Texture2D[] {
                 Content.Load<Texture2D>("weeb_Forward"),
                 Content.Load<Texture2D>("weeb_Back"),
@@ -346,6 +350,9 @@ namespace SolsUnderground
                 Content.Load<Texture2D>("Cola")}; // Boss Attack Texture
             enemyManager.AddBossData(vmBossTextures);
 
+            // ADD STALKER HERE
+            enemyManager.AddBossData(weebTextures);
+
             brBossTextures = new Texture2D[]
             {
                 Content.Load<Texture2D>("brBossFront"),
@@ -354,6 +361,10 @@ namespace SolsUnderground
                 Content.Load<Texture2D>("brBossRight"),
                 Content.Load<Texture2D>("brShot") }; // Boss Attack Texture
             enemyManager.AddBossData(brBossTextures);
+
+            // ADD MUNSON HERE
+            enemyManager.AddBossData(weebTextures);
+
 
             // Status Textures
             StatusEffect.LoadEffectSprite(Content.Load<Texture2D>("fxModifier"));
@@ -573,7 +584,7 @@ namespace SolsUnderground
                         // Check if boss room
                         if (mapManager.IsBossRoom)
                         {
-                            enemyManager.SpawnBoss();
+                            enemyManager.SpawnBoss(mapManager.CurrentFloor);
                         }
                         else
                         {
@@ -1394,7 +1405,7 @@ namespace SolsUnderground
             // Check if boss room
             if (mapManager.IsBossRoom)
             {
-                enemyManager.SpawnBoss();
+                enemyManager.SpawnBoss(mapManager.CurrentFloor);
             }
             else
             {

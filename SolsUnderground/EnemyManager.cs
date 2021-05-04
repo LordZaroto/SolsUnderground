@@ -196,15 +196,6 @@ namespace SolsUnderground
                         bossTextures[floor][2].Height),
                         40, 4));
                     break;
-                case 3:
-                    enemies.Add(new JanitorBoss(bossTextures[bossChoice],
-                        new Rectangle(spawnPoint.X + (40 - bossTextures[bossChoice][0].Width) / 2,
-                        spawnPoint.Y + (40 - bossTextures[bossChoice][0].Height) / 2,
-                        bossTextures[bossChoice][0].Width,
-                        bossTextures[bossChoice][0].Height),
-                        150, 8,
-                        bossTextures[bossChoice][2]));
-                    break;
             }
         }
 
