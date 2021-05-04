@@ -183,6 +183,8 @@ namespace SolsUnderground
                 {
                     if (eAttacks[i] != null)
                     {
+                        //Adjusts knockback of each enemy attack based on positions of barriers relative to the atackee
+                        eAttacks[i] = collisionManager.AdjustAttackKnockback(eAttacks[i]);
                         activeAttacks.Add(eAttacks[i]);
                         attackIntervals.Add(0.15);
                     }
@@ -214,6 +216,8 @@ namespace SolsUnderground
                     if (activeAttacks[i].Hitbox.Intersects(player.PositionRect) && attackIntervals[i] > 0.15)
                     {
                         attackIntervals[i] -= 0.15;
+
+                        activeAttacks[i] = collisionManager.AdjustAttackKnockback(activeAttacks[i]);
 
                         player.TakeDamage(activeAttacks[i].Damage,
                             activeAttacks[i].AttackDirection, activeAttacks[i].Knockback);

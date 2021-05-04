@@ -1039,6 +1039,9 @@
 #begin Rooms/StartRooms/basicStartRoom.level
 /copy:Rooms/StartRooms/basicStartRoom.level
 
+#begin Rooms/StartRooms/shopRoom.level
+/copy:Rooms/StartRooms/shopRoom.level
+
 #begin Rooms/SubBoxRoom.level
 /copy:Rooms/SubBoxRoom.level
 

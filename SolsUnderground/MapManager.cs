@@ -28,7 +28,7 @@ namespace SolsUnderground
     class MapManager
     {
         // Fields
-        private Room startRoom;
+        private List<Room> startRooms;
         private List<Room> roomPool;
         private List<Room> bossRooms;
         private List<Room> floor;
@@ -65,6 +65,7 @@ namespace SolsUnderground
             this.roomPool = new List<Room>();
             this.bossRooms = new List<Room>();
             this.floor = new List<Room>();
+            this.startRooms = new List<Room>();
             this.windowWidth = windowWidth;
             this.windowHeight = windowHeight;
             currentRoom = 0;
@@ -84,8 +85,19 @@ namespace SolsUnderground
             DirectoryInfo d = new DirectoryInfo("Content\\Rooms");
 
             // Load starting room for each floor
-            startRoom = new Room("Content\\Rooms\\StartRooms\\basicStartRoom.level",
-                windowWidth, windowHeight, tileTextures);
+
+            //if (currentFloor > 1)
+            //{
+            //    startRooms.Add(new Room("Content\\Rooms\\StartRooms\\basicStartRoom.level",
+            //        windowWidth, windowHeight, tileTextures));
+            //}
+            //else
+            //{
+            //    startRoom = new Room("Content\\Rooms\\StartRooms\\basicStartRoom.level",
+            //        windowWidth, windowHeight, tileTextures);
+            //}
+            
+
 
             // Load in each Room from file
             foreach (FileInfo f in d.GetFiles())
@@ -102,6 +114,14 @@ namespace SolsUnderground
                 bossRooms.Add(new Room("Content\\Rooms\\BossRooms\\" + f.Name,
                     windowWidth, windowHeight, tileTextures));
             }
+
+            //Loading in start rooms
+            d = new DirectoryInfo("Content\\Rooms\\StartRooms");
+            foreach (FileInfo f in d.GetFiles())
+            {
+                startRooms.Add(new Room("Content\\Rooms\\StartRooms\\" + f.Name,
+                    windowWidth, windowHeight, tileTextures));
+            }
         }
 
         /// <summary>
@@ -116,7 +136,16 @@ namespace SolsUnderground
             floor.Clear();
 
             // Add starting room - may do floor specific rooms later
-            floor.Add(startRoom);
+            if(currentFloor == 0)
+            {
+                floor.Add(startRooms[0]);//Basic start room
+            }
+            else
+            {
+                //After the first floor, each starting room is a shop
+                floor.Add(startRooms[1]);
+            }
+            
 
             // Adds a copy of a random room from roomPool to the floor
             // Avoids repeat rooms on the same floor
