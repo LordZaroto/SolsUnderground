@@ -82,6 +82,8 @@ namespace SolsUnderground
         private Texture2D hotDogTexture;
         //private wThePrecipice thePrecipice;
         private Texture2D thePrecipiceTexture;
+        private Texture2D nerfBlasterTexture;
+        private Texture2D nerfBulletTexture;
 
         // Armor
         private aHoodie hoodie;
@@ -268,11 +270,14 @@ namespace SolsUnderground
             hockeyStickTexture = Content.Load<Texture2D>("HockeyStick");
             hotDogTexture = Content.Load<Texture2D>("HotDog");
             thePrecipiceTexture = Content.Load<Texture2D>("thePrecipice");
+            nerfBlasterTexture = Content.Load<Texture2D>("nerfBlaster");
+            nerfBulletTexture = Content.Load<Texture2D>("nerfBullet");
             itemManager.AddWeaponSprite(brickBreakerTexture);
             itemManager.AddWeaponSprite(hockeyStickTexture);
             itemManager.AddWeaponSprite(hotDogTexture);
             itemManager.AddWeaponSprite(thePrecipiceTexture);
             itemManager.AddWeaponSprite(Content.Load<Texture2D>("Cactus"));
+            itemManager.AddWeaponSprite(nerfBlasterTexture);
 
             // Armor
             winterCoatTexture = Content.Load<Texture2D>("WinterCoat");

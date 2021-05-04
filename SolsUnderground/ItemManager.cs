@@ -113,6 +113,11 @@ namespace SolsUnderground
                     if (enemy is VendingMachineBoss)
                     {
                         // Vending Machine drops here
+                        items.Add(new wNerfBlaster(itemTextures[moneySpriteCount + healthSpriteCount + 7],
+                        new Rectangle(
+                            enemy.PositionRect.Center.X - 20 + (Program.rng.Next(5) - 2),
+                            enemy.PositionRect.Center.Y - 20 + (Program.rng.Next(5) - 2),
+                            40, 40)));
                     }
                     if (enemy is BalloonRitchieBoss)
                     {
@@ -290,29 +295,32 @@ namespace SolsUnderground
                             items.Add(new wCactus(itemTextures[i + equipmentStart],
                                 new Rectangle(new Point(50 + 50 * i, 100), size)));
                             break;
-
-                        // Armor
                         case 7:
+                            items.Add(new wNerfBlaster(itemTextures[i + equipmentStart],
+                                new Rectangle(new Point(50 + 50 * i, 100), size)));
+                            break;
+                        // Armor
+                        case 8:
                             items.Add(new aHoodie(itemTextures[i + equipmentStart],
                                 new Rectangle(new Point(50 + 50 * (i - weaponSpriteCount), 800), size)));
                             break;
-                        case 8:
+                        case 9:
                             items.Add(new aWinterCoat(itemTextures[i + equipmentStart],
                                 new Rectangle(new Point(50 + 50 * (i - weaponSpriteCount), 800), size)));
                             break;
-                        case 9:
+                        case 10:
                             items.Add(new aBandana(itemTextures[i + equipmentStart],
                                 new Rectangle(new Point(50 + 50 * (i - weaponSpriteCount), 800), size)));
                             break;
-                        case 10:
+                        case 11:
                             items.Add(new aSkates(itemTextures[i + equipmentStart],
                                 new Rectangle(new Point(50 + 50 * (i - weaponSpriteCount), 800), size)));
                             break;
-                        case 11:
+                        case 12:
                             items.Add(new aMask(itemTextures[i + equipmentStart],
                                 new Rectangle(new Point(50 + 50 * (i - weaponSpriteCount), 800), size)));
                             break;
-                        case 12:
+                        case 13:
                             items.Add(new aTigerMask(itemTextures[i + equipmentStart],
                                 new Rectangle(new Point(50 + 50 * (i - weaponSpriteCount), 800), size)));
                             break;
