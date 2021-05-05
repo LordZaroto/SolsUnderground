@@ -403,8 +403,6 @@ namespace SolsUnderground
                 Content.Load<Texture2D>("shockWave3")}; // Boss Attack Texture
             enemyManager.AddBossData(munsonTextures);
 
-            enemyManager.AddBossData(weebTextures);
-
 
             
 

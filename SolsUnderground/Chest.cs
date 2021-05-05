@@ -128,7 +128,15 @@ namespace SolsUnderground
                         case 6:
                             drop = new wCactus(itemTextures[textureID], positionRect);
                             break;
-                    }
+
+                        case 7:
+                            // NerfBlaster is a boss drop from VendingMachine
+                            break;
+
+                        case 8:
+                            // CrimsonVeil is a boss drop from Stalker
+                            break;
+                        }
                     break;
 
 

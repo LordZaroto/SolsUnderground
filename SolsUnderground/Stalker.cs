@@ -32,6 +32,8 @@ namespace SolsUnderground
         private int stunMultiplyer;
         private double invisTimer;
         private double invisCD;
+        private Random rng;
+        private int teleChance;
 
         Texture2D[] textures;
         Texture2D atkTexture;
@@ -63,6 +65,8 @@ namespace SolsUnderground
             invisTimer = 0;
             invisCD = 0.7;
             stunMultiplyer = 1;
+            rng = new Random();
+            teleChance = 2;
         }
 
         //properties
@@ -227,10 +231,12 @@ namespace SolsUnderground
                 if(currentHP < maxHP * 0.7)
                 {
                     stunTime = 2;
+                    teleChance = 3;
                 }
                 else if(currentHP < maxHP * 0.3)
                 {
                     stunTime = 3;
+                    teleChance = 4;
                 }
             }
         }
@@ -308,7 +314,11 @@ namespace SolsUnderground
 
                         if(player.IsStunned == false)
                         {
-
+                            if(rng.Next(0, 1000) < teleChance)
+                            {
+                                X = rng.Next(100, 1000);
+                                Y = rng.Next(100, 1000);
+                            }
                         }
                     }
                 }
