@@ -384,11 +384,11 @@ namespace SolsUnderground
             // ADD MUNSON HERE
             munsonTextures = new Texture2D[]
             {
-                Content.Load<Texture2D>("munsonFront"),
-                Content.Load<Texture2D>("munsonBack"),
-                Content.Load<Texture2D>("munsonLeft"),
-                Content.Load<Texture2D>("munsonRight"),
-                Content.Load<Texture2D>("shockWave"),
+                Content.Load<Texture2D>("munsonFronta"),
+                Content.Load<Texture2D>("munsonBacka"),
+                Content.Load<Texture2D>("munsonLefta"),
+                Content.Load<Texture2D>("munsonRighta"),
+                Content.Load<Texture2D>("shockWavea"),
                 Content.Load<Texture2D>("shockWave2"),
                 Content.Load<Texture2D>("shockWave3")}; // Boss Attack Texture
             enemyManager.AddBossData(munsonTextures);
