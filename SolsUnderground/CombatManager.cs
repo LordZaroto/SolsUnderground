@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System.Collections.Generic;
 
 //Author: Preston Gilmore
 //Hunter Wells
@@ -66,11 +64,11 @@ namespace SolsUnderground
         /// </summary>
         public void PlayerAttack(Attack attack)
         {
-            if(attack == null)
+            if (attack == null)
             {
                 return;
             }
-            
+
             for (int i = 0; i < enemies.Count; i++)
             {
                 if (attack.Hitbox.Intersects(enemies[i].PositionRect))
@@ -333,10 +331,10 @@ namespace SolsUnderground
                             rotation = MathHelper.TwoPi;
                             break;
                     }
-                    
+
                     // Figure out how to rotate sprites for attack animations
                     //sb.Draw(a.Texture, a.Hitbox, null, Color.White, rotation, Vector2.Zero, SpriteEffects.None, 1f);
-                    
+
                     sb.Draw(a.Texture, a.Hitbox, Color.White);
                 }
             }

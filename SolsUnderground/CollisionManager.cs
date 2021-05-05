@@ -130,7 +130,6 @@ namespace SolsUnderground
                                 b.ReverseX = true;
                                 b.State = EnemyState.moveLeft;
                             }
-                        
                             if(gameObject is JanitorBoss)
                             {
                                 JanitorBoss j = (JanitorBoss)gameObject;
@@ -146,14 +145,12 @@ namespace SolsUnderground
                                 b.ReverseX = false;
                                 b.State = EnemyState.moveRight;
                             }
-                        }
-                    }
                             if (gameObject is JanitorBoss)
                             {
                                 JanitorBoss j = (JanitorBoss)gameObject;
                                 j.ReverseX = false;
                             }
-                        }
+                        }    
                     }
                     else
                     {
@@ -190,7 +187,6 @@ namespace SolsUnderground
                         }
                     }
                 }
-
                 gameObject.X = temp.X;
                 gameObject.Y = temp.Y;
             }
@@ -380,39 +376,51 @@ namespace SolsUnderground
         /// <returns></returns>
         public Attack AdjustAttackKnockback(Attack a)
         {
-            Rectangle noKnockArea = new Rectangle(a.Hitbox.X + a.Knockback, a.Hitbox.Y + a.Knockback,
+            Rectangle noKnockArea = new Rectangle(a.Hitbox.X - a.Knockback, a.Hitbox.Y - a.Knockback,
                     (2*a.Knockback) + a.Hitbox.Width, (2*a.Knockback) + a.Hitbox.Height);
+            int knockback = a.Knockback;
             for (int i = 0; i < barriers.Count; i++)
             {
+                int currentKnock = knockback;
                 //When the player is within knockback range of a barrier
                 if (noKnockArea.Intersects(barriers[i]) || noKnockArea.Contains(barriers[i]))
                 {
-                    int knockback;
                     if (a.AttackDirection == AttackDirection.left && barriers[i].X < player.X)
                     {
-                        knockback = player.PositionRect.X - (barriers[i].X + barriers[i].Width);
+                        currentKnock = player.PositionRect.X - (barriers[i].X + barriers[i].Width);
+                        if(currentKnock < knockback)
+                        {
+                            knockback = currentKnock;
+                        }
                     }
                     else if (a.AttackDirection == AttackDirection.up && barriers[i].Y < player.Y)
                     {
-                        knockback = player.PositionRect.Y - (barriers[i].Y + barriers[i].Height);
+                        currentKnock = player.PositionRect.Y - (barriers[i].Y + barriers[i].Height);
+                        if (currentKnock < knockback)
+                        {
+                            knockback = currentKnock;
+                        }
                     }
                     else if (a.AttackDirection == AttackDirection.right && barriers[i].X > player.X)
                     {
-                        knockback = barriers[i].X - (player.PositionRect.X + player.PositionRect.Width);
+                        currentKnock = barriers[i].X - (player.PositionRect.X + player.PositionRect.Width);
+                        if (currentKnock < knockback)
+                        {
+                            knockback = currentKnock;
+                        }
                     }
                     else if (a.AttackDirection == AttackDirection.down && barriers[i].Y > player.Y)
                     {
-                        knockback = barriers[i].Y - (player.PositionRect.Y + player.PositionRect.Height);
+                        currentKnock = barriers[i].Y - (player.PositionRect.Y + player.PositionRect.Height);
+                        if (currentKnock < knockback)
+                        {
+                            knockback = currentKnock;
+                        }
                     }
-                    else
-                    {
-                        knockback = a.Knockback;
-                    }
-                    return new Attack(a.Hitbox, a.Damage, knockback, a.Texture, a.AttackDirection,
-                        a.Timer, a.IsPlayerAttack, a.Effect);
                 }
             }
-            return a;
+            return new Attack(a.Hitbox, a.Damage, knockback, a.Texture, a.AttackDirection,
+                        a.Timer, a.IsPlayerAttack, a.Effect);
         }
     }
 }

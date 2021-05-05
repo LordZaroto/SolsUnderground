@@ -140,7 +140,7 @@ namespace SolsUnderground
                 player.Width * 5,
                 player.Height * 5);
 
-            return new Attack(positionRect, (int)(attack * 1.2), (int)(knockback * 1.5), texture, 
+            return new Attack(positionRect, (int)(attack * 1.2), knockback, texture, 
                 AttackDirection.allAround, timer, true, new StatusEffect(StatusType.Stun, 0, 1));
         }
 

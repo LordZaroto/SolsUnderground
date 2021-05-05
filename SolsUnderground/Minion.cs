@@ -252,27 +252,28 @@ namespace SolsUnderground
             List<Attack> attacks = new List<Attack>();
             AttackDirection direction = AttackDirection.left;
 
-            switch (enemyState)
+            Rectangle temp = player.PositionRect;
+            if (Rectangle.Intersect(temp, PositionRect).Width <= Rectangle.Intersect(temp, PositionRect).Height)
             {
-                case EnemyState.faceForward:
-                case EnemyState.moveForward:
-                    direction = AttackDirection.up;
-                    break;
-
-                case EnemyState.faceLeft:
-                case EnemyState.moveLeft:
+                if (PositionRect.X > temp.X)
+                {
                     direction = AttackDirection.left;
-                    break;
-
-                case EnemyState.faceBack:
-                case EnemyState.moveBack:
-                    direction = AttackDirection.down;
-                    break;
-
-                case EnemyState.faceRight:
-                case EnemyState.moveRight:
+                }
+                else
+                {
                     direction = AttackDirection.right;
-                    break;
+                }
+            }
+            else
+            {
+                if (PositionRect.Y > temp.Y)
+                {
+                    direction = AttackDirection.up;
+                }
+                else
+                {
+                    direction = AttackDirection.down;
+                }
             }
 
             if (!IsStunned)
