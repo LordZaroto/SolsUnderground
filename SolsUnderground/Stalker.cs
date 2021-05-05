@@ -25,10 +25,14 @@ namespace SolsUnderground
         private double sp2CD;
         private double sp1HitTimer;
         private double sp2HitTimer;
+        
+        //Stalker specific mechanics
         private bool invisible;
         private int stunTime;
+        private int stunMultiplyer;
         private double invisTimer;
         private double invisCD;
+
         Texture2D[] textures;
         Texture2D atkTexture;
         //consructor: initializes the fields
@@ -48,8 +52,8 @@ namespace SolsUnderground
             moveCounter = moveCD;
             kbCD = 0.1;
             kbCounter = kbCD;
-            sp1CD = 2;
-            sp1Counter = 1;
+            sp1CD = 10;
+            sp1Counter = 2;
             sp2CD = 10;
             sp2Counter = 2;
             sp1HitTimer = 0.1;
@@ -58,6 +62,7 @@ namespace SolsUnderground
             stunTime = 1;
             invisTimer = 0;
             invisCD = 0.7;
+            stunMultiplyer = 1;
         }
 
         //properties
@@ -221,11 +226,11 @@ namespace SolsUnderground
                 //Increase stun time at lower health
                 if(currentHP < maxHP * 0.7)
                 {
-                    stunTime++;
+                    stunTime = 2;
                 }
                 else if(currentHP < maxHP * 0.3)
                 {
-                    stunTime++;
+                    stunTime = 3;
                 }
             }
         }
@@ -300,6 +305,11 @@ namespace SolsUnderground
                                 enemyState = EnemyState.moveBack;
                             }
                         }
+
+                        if(player.IsStunned == false)
+                        {
+
+                        }
                     }
                 }
             }
@@ -321,10 +331,10 @@ namespace SolsUnderground
                 if (moveCounter >= moveCD)
                 {
                     //If close to player
-                    if ((Math.Abs(X - player.X) < 10 && (State == EnemyState.moveRight || State == EnemyState.moveLeft))
-                        || (Math.Abs(Y - player.Y) < 10 && (State == EnemyState.moveForward || State == EnemyState.moveBack)))
+                    if ((Math.Abs(X - player.X) < 40 && (State == EnemyState.moveRight || State == EnemyState.moveLeft))
+                        || (Math.Abs(Y - player.Y) < 40 && (State == EnemyState.moveForward || State == EnemyState.moveBack)))
                     {
-                        attacks.Add(BackStab());
+                        attacks.Add(BackStab(player));
                     }
                     else if((Math.Abs(X - player.X) > 100 && (State == EnemyState.moveRight || State == EnemyState.moveLeft))
                         || (Math.Abs(Y - player.Y) > 100 && (State == EnemyState.moveForward || State == EnemyState.moveBack)))
@@ -421,13 +431,24 @@ namespace SolsUnderground
         /// The stalker delivers a poison dagger to the back
         /// </summary>
         /// <returns></returns>
-        public Attack BackStab()
+        public Attack BackStab(Player player)
         {
             //If off cooldown
             if (sp1Counter >= sp1CD)
             {
-                //Reset the cooldown
-                sp1Counter = 0;
+                //Reset the cooldowns
+                //Will deal a heavier blow if player is stunned
+                if(player.IsStunned == true)
+                {
+                    sp1Counter = 0;
+                    stunMultiplyer = 3;
+                }
+                else
+                {
+                    sp1Counter = 8;
+                    stunMultiplyer = 1;
+                }
+
                 moveCounter = 0;
                 invisTimer = 0;
 
@@ -442,13 +463,13 @@ namespace SolsUnderground
                             Y - (Height + (Height / 2)),
                             Width + (Width * (3 / 4)),
                             Height + (Height / 2)),
-                        Attack * 3,
-                        knockback,
+                        Attack * stunMultiplyer,
+                        knockback * stunMultiplyer,
                         atkTexture,
                         AttackDirection.up,
                         sp1HitTimer,
                         false,
-                        new StatusEffect(StatusType.Sick, 3, 5));
+                        new StatusEffect(StatusType.Sick, stunMultiplyer, 5));
 
                     return special;
                 }
@@ -462,13 +483,13 @@ namespace SolsUnderground
                             Y - (Height * (3 / 4)),
                             Width + (Width / 2),
                             Height + (Height * (3 / 4))),
-                        Attack * 3,
-                        knockback,
+                        Attack * stunMultiplyer,
+                        knockback * stunMultiplyer,
                         atkTexture,
                         AttackDirection.left,
                         sp1HitTimer,
                         false,
-                        new StatusEffect(StatusType.Sick, 3, 5));
+                        new StatusEffect(StatusType.Sick, stunMultiplyer, 5));
 
                     return special;
                 }
@@ -482,13 +503,13 @@ namespace SolsUnderground
                             Y - (Height / 2),
                             Width + (Width * (3 / 4)),
                             Height + (Height / 2)),
-                        Attack * 3,
-                        knockback,
+                        Attack * stunMultiplyer,
+                        knockback * stunMultiplyer,
                         atkTexture,
                         AttackDirection.down,
                         sp1HitTimer,
                         false,
-                        new StatusEffect(StatusType.Sick, 3, 5));
+                        new StatusEffect(StatusType.Sick, stunMultiplyer, 5));
 
                     return special;
                 }
@@ -502,13 +523,13 @@ namespace SolsUnderground
                             Y - (Height * (3 / 4)),
                             Width + (Width / 2),
                             Height + (Height * (3 / 4))),
-                        Attack * 3,
-                        knockback,
+                        Attack * stunMultiplyer,
+                        knockback * stunMultiplyer,
                         atkTexture,
                         AttackDirection.right,
                         sp1HitTimer,
                         false,
-                        new StatusEffect(StatusType.Sick, 3, 5));
+                        new StatusEffect(StatusType.Sick, stunMultiplyer, 5));
 
                     return special;
                 }
@@ -542,7 +563,7 @@ namespace SolsUnderground
                         AttackDirection.up,
                         sp1HitTimer,
                         false,
-                        new StatusEffect(StatusType.Stun, 3, stunTime));
+                        new StatusEffect(StatusType.Stun, 1, stunTime));
 
                     Y = player.Y + 100;
                     X = player.X;
@@ -559,7 +580,7 @@ namespace SolsUnderground
                         AttackDirection.left,
                         sp1HitTimer,
                         false,
-                        new StatusEffect(StatusType.Stun, 3, stunTime));
+                        new StatusEffect(StatusType.Stun, 1, stunTime));
 
                     Y = player.Y;
                     X = player.X + 100;
@@ -576,7 +597,7 @@ namespace SolsUnderground
                         AttackDirection.down,
                         sp1HitTimer,
                         false,
-                        new StatusEffect(StatusType.Stun, 3, stunTime));
+                        new StatusEffect(StatusType.Stun, 1, stunTime));
 
                     Y = player.Y - 100;
                     X = player.X;
@@ -593,10 +614,10 @@ namespace SolsUnderground
                         AttackDirection.right,
                         sp1HitTimer,
                         false,
-                        new StatusEffect(StatusType.Stun, 3, stunTime));
+                        new StatusEffect(StatusType.Stun, 1, stunTime));
 
-                    Y -= player.Y;
-                    X -= player.X - 100;
+                    Y = player.Y;
+                    X = player.X - 100;
 
                     return special;
                 }
