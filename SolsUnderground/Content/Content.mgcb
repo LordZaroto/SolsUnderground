@@ -757,18 +757,6 @@
 /processorParam:TextureFormat=Color
 /build:janitorBossLefta.png
 
-#begin janitorBossLefta.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:janitorBossLefta.png
-
 #begin janitorBossRight.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -937,7 +925,7 @@
 /processorParam:TextureFormat=Color
 /build:mop2a.png
 
-#begin munsonBacka.png
+#begin munsonBacka2.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -947,9 +935,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:munsonBacka.png
+/build:munsonBacka2.png
 
-#begin munsonFronta.png
+#begin munsonFronta2.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -959,9 +947,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:munsonFronta.png
+/build:munsonFronta2.png
 
-#begin munsonLefta.png
+#begin munsonLefta2.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -971,9 +959,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:munsonLefta.png
+/build:munsonLefta2.png
 
-#begin munsonRighta.png
+#begin munsonRighta2.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -983,7 +971,7 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:munsonRighta.png
+/build:munsonRighta2.png
 
 #begin nerfBlaster.png
 /importer:TextureImporter
@@ -1291,7 +1279,7 @@
 /processorParam:TextureFormat=Color
 /build:SaveClicked.png
 
-#begin shockWavea.png
+#begin shockWavea2.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -1301,7 +1289,7 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:shockWavea.png
+/build:shockWavea2.png
 
 #begin ShooterBack.png
 /importer:TextureImporter
