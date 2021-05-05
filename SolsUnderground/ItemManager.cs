@@ -112,8 +112,8 @@ namespace SolsUnderground
                     }
                     if (enemy is Stalker)
                     {
-                        // Drop ThePrecipice
-                        items.Add(new wCrimsonVeil(itemTextures[moneySpriteCount + healthSpriteCount + 5],
+                        // Drop CrimsonVeil
+                        items.Add(new wCrimsonVeil(itemTextures[moneySpriteCount + healthSpriteCount + 8],
                         new Rectangle(
                             enemy.PositionRect.Center.X - 20 + (Program.rng.Next(5) - 2),
                             enemy.PositionRect.Center.Y - 20 + (Program.rng.Next(5) - 2),

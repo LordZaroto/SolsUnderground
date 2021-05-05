@@ -7,6 +7,9 @@ using Microsoft.Xna.Framework.Input;
 
 namespace SolsUnderground
 {
+    /// <summary>
+    /// A well-worn dagger glazed in blood
+    /// </summary>
     class wCrimsonVeil : Item, Weapon
     {
         //Fields
@@ -133,7 +136,7 @@ namespace SolsUnderground
         }
 
         /// <summary>
-        /// The player shoots a hockey puck.
+        /// The player deals a devastating blow leaving the opponent to bleed out, can only be used once.
         /// </summary>
         public Attack Special(Player player)
         {
@@ -182,7 +185,7 @@ namespace SolsUnderground
                                 atkdir,
                                 Timer,
                                 true,
-                                new StatusEffect(StatusType.Sick, 5, 30));
+                                new StatusEffect(StatusType.Sick, 10, 60));
             }
 
             return null;
