@@ -22,6 +22,8 @@ namespace SolsUnderground
         private Rectangle hitboxR;
         private string name;
         private double timer;
+
+        private bool specialUsed;
         //-----------------------------
 
         //---------------------------------------------------------------------
@@ -122,11 +124,12 @@ namespace SolsUnderground
         {
             name = "Crimson Veil";
             basicCooldown = 0.3;
-            specialCooldown = 1;
+            specialCooldown = 3;
             attack = 6;
             knockback = (int)(0.8 * 32);
             hitboxScale = new Vector2(2, 2);
             timer = 0.1;
+            specialUsed = false;
         }
 
         /// <summary>
@@ -134,44 +137,55 @@ namespace SolsUnderground
         /// </summary>
         public Attack Special(Player player)
         {
-            AttackDirection atkdir = AttackDirection.up;
-
-            switch (player.State)
+            //Special can only be used once
+            if(specialUsed == false)
             {
-                case PlayerState.faceForward:
-                case PlayerState.moveForward:
-                    player.State = PlayerState.attackForward;
-                    atkdir = AttackDirection.up;
-                    break;
+                specialUsed = true;
+                
+                AttackDirection atkdir = AttackDirection.up;
+                PlayerState playerState = player.State;
 
-                case PlayerState.faceLeft:
-                case PlayerState.moveLeft:
-                    player.State = PlayerState.attackLeft;
-                    atkdir = AttackDirection.left;
-                    break;
+                switch (player.State)
+                {
+                    case PlayerState.faceForward:
+                    case PlayerState.moveForward:
+                        player.State = PlayerState.attackForward;
+                        atkdir = AttackDirection.up;
+                        break;
 
-                case PlayerState.faceBack:
-                case PlayerState.moveBack:
-                    player.State = PlayerState.attackBack;
-                    atkdir = AttackDirection.down;
-                    break;
+                    case PlayerState.faceLeft:
+                    case PlayerState.moveLeft:
+                        player.State = PlayerState.attackLeft;
+                        atkdir = AttackDirection.left;
+                        break;
 
-                case PlayerState.faceRight:
-                case PlayerState.moveRight:
-                    player.State = PlayerState.attackRight;
-                    atkdir = AttackDirection.right;
-                    break;
+                    case PlayerState.faceBack:
+                    case PlayerState.moveBack:
+                        player.State = PlayerState.attackBack;
+                        atkdir = AttackDirection.down;
+                        break;
+
+                    case PlayerState.faceRight:
+                    case PlayerState.moveRight:
+                        player.State = PlayerState.attackRight;
+                        atkdir = AttackDirection.right;
+                        break;
+                }
+
+
+
+                return new Attack(
+                                GetHitbox(player.X, player.Y, player.Width, player.Height, playerState),
+                                50,
+                                Knockback,
+                                Sprite,
+                                atkdir,
+                                Timer,
+                                true,
+                                new StatusEffect(StatusType.Sick, 5, 30));
             }
 
-            return new Attack(
-                            GetHitbox(player.X, player.Y, player.Width, player.Height, player.State),
-                            50,
-                            Knockback,
-                            Sprite,
-                            atkdir,
-                            Timer,
-                            true,
-                            new StatusEffect(StatusType.Sick, 5, 30));
+            return null;
         }
 
         public override void Draw(SpriteBatch sb)
