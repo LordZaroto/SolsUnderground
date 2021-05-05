@@ -181,8 +181,15 @@ namespace SolsUnderground
                 {
                     if (eAttacks[i] != null)
                     {
-                        //Adjusts knockback of each enemy attack based on positions of barriers relative to the atackee
-                        eAttacks[i] = collisionManager.AdjustAttackKnockback(eAttacks[i]);
+                        if (!(eAttacks[i] is Projectile))
+                        {
+
+
+                            //Adjusts knockback of each enemy attack based on positions of barriers relative to the atackee
+                            eAttacks[i] = collisionManager.AdjustAttackKnockback(eAttacks[i]);
+                            
+                            
+                        }
                         activeAttacks.Add(eAttacks[i]);
                         attackIntervals.Add(0.15);
                     }
@@ -213,6 +220,12 @@ namespace SolsUnderground
                 {
                     if (activeAttacks[i].Hitbox.Intersects(player.PositionRect) && attackIntervals[i] > 0.15)
                     {
+                        if (activeAttacks[i] is Projectile)
+                        {
+                            activeAttacks.RemoveAt(i);
+                            attackIntervals.RemoveAt(i);
+                            //continue;
+                        }
                         attackIntervals[i] -= 0.15;
 
                         activeAttacks[i] = collisionManager.AdjustAttackKnockback(activeAttacks[i]);
@@ -224,12 +237,7 @@ namespace SolsUnderground
                         if (activeAttacks[i].Effect != null)
                             player.AddEffect(activeAttacks[i].Effect);
 
-                        if (activeAttacks[i] is Projectile)
-                        {
-                            activeAttacks.RemoveAt(i);
-                            attackIntervals.RemoveAt(i);
-                            continue;
-                        }
+                        
                     }
                 }
                 else // If player attack, check against all enemies
@@ -297,7 +305,9 @@ namespace SolsUnderground
                 // Move any active projectiles
                 if (activeAttacks[i] is Projectile)
                 {
-                    ((Projectile)activeAttacks[i]).Move();
+                    Projectile p = (Projectile)activeAttacks[i];
+                    p.Move();
+                    //((Projectile)activeAttacks[i]).Move();
                 }
 
                 i++;

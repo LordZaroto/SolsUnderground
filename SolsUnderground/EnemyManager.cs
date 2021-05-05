@@ -206,6 +206,15 @@ namespace SolsUnderground
                         bossTextures[floor][2].Height),
                         40, 4));
                     break;
+                case 6:
+                    enemies.Add(new MunsonBoss(bossTextures[floor],
+                        new Rectangle(475,
+                        20,
+                        200,
+                        500),
+                        40, 4));
+                    break;
+
             }
         }
 
