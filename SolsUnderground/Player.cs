@@ -625,18 +625,22 @@ namespace SolsUnderground
                 if (attackDirection == AttackDirection.up)
                 {
                     Y -= knockback;
+                    //Y += Height;
                 }
                 if (attackDirection == AttackDirection.right)
                 {
                     X += knockback;
+                   // X -= Width;
                 }
                 if (attackDirection == AttackDirection.left)
                 {
                     X -= knockback;
+                   // X += Width;
                 }
                 if (attackDirection == AttackDirection.down)
                 {
                     Y += knockback;
+                    //Y -= Height;
                 }
             }
         }
