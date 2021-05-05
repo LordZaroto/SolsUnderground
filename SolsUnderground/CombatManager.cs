@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System.Collections.Generic;
 
 //Author: Preston Gilmore
 //Hunter Wells
@@ -66,11 +64,11 @@ namespace SolsUnderground
         /// </summary>
         public void PlayerAttack(Attack attack)
         {
-            if(attack == null)
+            if (attack == null)
             {
                 return;
             }
-            
+
             for (int i = 0; i < enemies.Count; i++)
             {
                 if (attack.Hitbox.Intersects(enemies[i].PositionRect))
@@ -183,8 +181,15 @@ namespace SolsUnderground
                 {
                     if (eAttacks[i] != null)
                     {
-                        //Adjusts knockback of each enemy attack based on positions of barriers relative to the atackee
-                        eAttacks[i] = collisionManager.AdjustAttackKnockback(eAttacks[i]);
+                        if (!(eAttacks[i] is Projectile))
+                        {
+
+
+                            //Adjusts knockback of each enemy attack based on positions of barriers relative to the atackee
+                            eAttacks[i] = collisionManager.AdjustAttackKnockback(eAttacks[i]);
+                            
+                            
+                        }
                         activeAttacks.Add(eAttacks[i]);
                         attackIntervals.Add(0.15);
                     }
@@ -215,6 +220,12 @@ namespace SolsUnderground
                 {
                     if (activeAttacks[i].Hitbox.Intersects(player.PositionRect) && attackIntervals[i] > 0.15)
                     {
+                        if (activeAttacks[i] is Projectile)
+                        {
+                            activeAttacks.RemoveAt(i);
+                            attackIntervals.RemoveAt(i);
+                            //continue;
+                        }
                         attackIntervals[i] -= 0.15;
 
                         activeAttacks[i] = collisionManager.AdjustAttackKnockback(activeAttacks[i]);
@@ -226,12 +237,7 @@ namespace SolsUnderground
                         if (activeAttacks[i].Effect != null)
                             player.AddEffect(activeAttacks[i].Effect);
 
-                        if (activeAttacks[i] is Projectile)
-                        {
-                            activeAttacks.RemoveAt(i);
-                            attackIntervals.RemoveAt(i);
-                            continue;
-                        }
+                        
                     }
                 }
                 else // If player attack, check against all enemies
@@ -299,7 +305,9 @@ namespace SolsUnderground
                 // Move any active projectiles
                 if (activeAttacks[i] is Projectile)
                 {
-                    ((Projectile)activeAttacks[i]).Move();
+                    Projectile p = (Projectile)activeAttacks[i];
+                    p.Move();
+                    //((Projectile)activeAttacks[i]).Move();
                 }
 
                 i++;
@@ -333,10 +341,10 @@ namespace SolsUnderground
                             rotation = MathHelper.TwoPi;
                             break;
                     }
-                    
+
                     // Figure out how to rotate sprites for attack animations
                     //sb.Draw(a.Texture, a.Hitbox, null, Color.White, rotation, Vector2.Zero, SpriteEffects.None, 1f);
-                    
+
                     sb.Draw(a.Texture, a.Hitbox, Color.White);
                 }
             }

@@ -190,6 +190,7 @@ namespace SolsUnderground
         {
             //Update the cooldowns
             moveCounter += gameTime.ElapsedGameTime.TotalSeconds;
+            attackCounter += gameTime.ElapsedGameTime.TotalSeconds;
 
             if (moveCounter >= moveCD)
             {
@@ -265,7 +266,7 @@ namespace SolsUnderground
                 {
                     attackCounter -= attackCD;
 
-                    attacks.Add(new Projectile(positionRect, Attack, 5, knockback, textures[4], direction, false, new StatusEffect(StatusType.DefDown, 2, 4)));
+                    attacks.Add(new Projectile(positionRect, Attack, 3, knockback, textures[4], direction, false, new StatusEffect(StatusType.Sick, 1, 3)));
                 }
 
                 attacks.Add(new Attack(PositionRect, attack, knockback, null,
