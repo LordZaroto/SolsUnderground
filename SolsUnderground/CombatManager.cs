@@ -227,8 +227,12 @@ namespace SolsUnderground
                             //continue;
                         }
                         attackIntervals[i] -= 0.15;
-
-                        activeAttacks[i] = collisionManager.AdjustAttackKnockback(activeAttacks[i]);
+ 
+                        if(!(activeAttacks[i] is Projectile))
+                        {
+                            activeAttacks[i] = collisionManager.AdjustAttackKnockback(activeAttacks[i]);
+                        }
+                        
 
                         player.TakeDamage(activeAttacks[i].Damage,
                             activeAttacks[i].AttackDirection, activeAttacks[i].Knockback);
