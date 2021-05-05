@@ -157,6 +157,12 @@ namespace SolsUnderground
             switch (floor)
             {
                 case 0: // Bus
+                    enemies.Add(new BusBoss(bossTextures[bossChoice],
+                      new Rectangle(spawnPoint.X + (40 - bossTextures[bossChoice][2].Width) / 2,
+                      spawnPoint.Y + (40 - bossTextures[bossChoice][2].Height) / 2,
+                      bossTextures[bossChoice][2].Width,
+                       bossTextures[bossChoice][2].Height),
+                      40, 4));
                     break;
 
                 case 1: // Weeb
@@ -208,6 +214,7 @@ namespace SolsUnderground
                         500),
                         40, 4));
                     break;
+
             }
         }
 
@@ -226,6 +233,10 @@ namespace SolsUnderground
                 {
                     VendingMachineBoss vm = (VendingMachineBoss)enemies[i];
                     vm.UpdateTimer(gameTime);
+                }else if(enemies[i] is JanitorBoss)
+                {
+                    JanitorBoss j = (JanitorBoss)enemies[i];
+                    j.UpdateTimer(gameTime);
                 }
                 enemies[i].EnemyMove(player, gameTime);
             }

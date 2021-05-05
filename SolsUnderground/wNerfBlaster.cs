@@ -125,7 +125,7 @@ namespace SolsUnderground
         //---------------------------------------------------------------------
 
         public wNerfBlaster(Texture2D texture, Rectangle positionRect)
-            : base(ItemType.Weapon, 5, texture, positionRect)
+            : base(ItemType.Weapon, 15, texture, positionRect)
         {
             name = "Nerf Blaster";
             basicCooldown = 0.1;

@@ -117,7 +117,7 @@ namespace SolsUnderground
         //---------------------------------------------------------------------
 
         public wBrickBreaker(Texture2D texture, Rectangle positionRect)
-            : base(ItemType.Weapon, 8, texture, positionRect)
+            : base(ItemType.Weapon, 20, texture, positionRect)
         {
             name = "Brick Breaker";
             basicCooldown = 0.7;

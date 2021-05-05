@@ -173,7 +173,7 @@ namespace SolsUnderground
                     break;
 
                 case 2: // Janitor
-                    floor.Add(bossRooms[4]);
+                    floor.Add(bossRooms[3]);
                     break;
 
                 case 3: // VM

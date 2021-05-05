@@ -112,7 +112,7 @@ namespace SolsUnderground
         //---------------------------------------------------------------------
 
         public wStick(Texture2D texture, Rectangle positionRect)
-            : base(ItemType.Weapon, 3, texture, positionRect)
+            : base(ItemType.Weapon, 0, texture, positionRect)
         {
             name = "Stick";
             this.texture = texture;

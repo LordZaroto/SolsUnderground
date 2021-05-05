@@ -49,7 +49,7 @@ namespace SolsUnderground
 
         // Constructor
         public aBandana(Texture2D texture, Rectangle positionRect)
-            : base(ItemType.Armor, -1, texture, positionRect)
+            : base(ItemType.Armor, 10, texture, positionRect)
         {
             name = "Bandana";
             defense = -1;

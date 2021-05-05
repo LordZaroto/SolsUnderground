@@ -49,8 +49,8 @@ namespace SolsUnderground
             kbCD = 0.1;
             kbCounter = kbCD;
             sp1CD = 7;
-            sp1Counter = 6;
-            //sp2CD = 1;
+            sp1Counter = 3;
+            //sp2CD = 5;
             //sp2Counter = 0;
             sp1HitTimer = 0.1;
             sp2HitTimer = 0.1;
@@ -237,7 +237,7 @@ namespace SolsUnderground
         }
 
         /// <summary>
-        /// movement AI that will chase the player
+        /// bounces around the screen like the dvd logo
         /// </summary>
         public override void EnemyMove(Player player, GameTime gameTime)
         {
@@ -254,6 +254,7 @@ namespace SolsUnderground
                     {
                         if (reverseX && reverseY)
                         {
+                        enemyState = EnemyState.moveLeft;
                         texture = textures[0];
                             if (currentHP > maxHP / 3 * 2)
                             {
@@ -273,6 +274,7 @@ namespace SolsUnderground
                         }
                         else if (reverseX)
                         {
+                        enemyState = EnemyState.moveLeft;
                         texture = textures[0];
                         if (currentHP > maxHP / 3 * 2)
                             {
@@ -292,6 +294,7 @@ namespace SolsUnderground
                         }
                         else  if (reverseY)
                         {
+                        enemyState = EnemyState.moveRight;
                         texture = textures[1];
                         if (currentHP > maxHP / 3 * 2)
                             {
@@ -311,6 +314,7 @@ namespace SolsUnderground
                         }
                         else
                         {
+                        enemyState = EnemyState.moveRight;
                         texture = textures[1];
                         if (currentHP > maxHP / 3 * 2)
                             {
@@ -404,47 +408,33 @@ namespace SolsUnderground
             return attacks;
         }
 
+        //drops puddles that slow the player down and vanish over time
         public Attack PuddleDrop()
         {
             if (sp2Counter >= sp2CD)
             {
                 //Reset the cooldown
                 sp2Counter = 0;
-                moveCounter = 0;
 
                 Attack special = null;
                 if (currentHP > maxHP / 3 * 2)
                 {
-                    if(enemyState == EnemyState.faceLeft || enemyState == EnemyState.moveLeft)
-                    {
-                        special = new Attack(PositionRect, 1, 0, textures[2], AttackDirection.left, 5, false, new StatusEffect(StatusType.Sick, 1, 3));
-                    }else if(enemyState == EnemyState.faceRight || enemyState == EnemyState.moveRight)
-                    {
-                        special = new Attack(PositionRect, 1, 0, textures[2], AttackDirection.right, 5, false, new StatusEffect(StatusType.Sick, 1, 3));
-                    }
+                    //can have 5 puddles at a time
+                      special = new Attack(new Rectangle(positionRect.X, positionRect.Y, textures[2].Width, textures[2].Height), 1, 0, textures[2], AttackDirection.allAround, 5, false, new StatusEffect(StatusType.Sick, 1, 3));
+                    
                     
                 }
                 else if (currentHP > maxHP / 3 && currentHP <= maxHP / 3 * 2)
                 {
-                    if (enemyState == EnemyState.faceLeft || enemyState == EnemyState.moveLeft)
-                    {
-                        special = new Attack(PositionRect, 1, 0, textures[2], AttackDirection.left, 5, false, new StatusEffect(StatusType.Sick, 1, 3));
-                    }
-                    else if (enemyState == EnemyState.faceRight || enemyState == EnemyState.moveRight)
-                    {
-                        special = new Attack(PositionRect, 1, 0, textures[2], AttackDirection.right, 5, false, new StatusEffect(StatusType.Sick, 1, 3));
-                    }
+                    //can have 7 puddles at a time
+                      special = new Attack(new Rectangle(positionRect.X, positionRect.Y, textures[2].Width, textures[2].Height), 1, 0, textures[2], AttackDirection.allAround, 7, false, new StatusEffect(StatusType.Sick, 1, 3));
+                    
                 }
                 else
                 {
-                    if (enemyState == EnemyState.faceLeft || enemyState == EnemyState.moveLeft)
-                    {
-                        special = new Attack(PositionRect, 1, 0, textures[2], AttackDirection.left, 5, false, new StatusEffect(StatusType.Sick, 1, 3));
-                    }
-                    else if (enemyState == EnemyState.faceRight || enemyState == EnemyState.moveRight)
-                    {
-                        special = new Attack(PositionRect, 1, 0, textures[2], AttackDirection.right, 5, false, new StatusEffect(StatusType.Sick, 1, 3));
-                    }
+                    //can have 10 puddles at a time
+                      special = new Attack(new Rectangle(positionRect.X, positionRect.Y, textures[2].Width, textures[2].Height), 1, 0, textures[2], AttackDirection.allAround, 10, false, new StatusEffect(StatusType.Sick, 1, 3));
+                    
                 }
 
                 return special;
@@ -452,16 +442,17 @@ namespace SolsUnderground
             return null;
         }
 
+        //damages the player if they are in front of the janitor, making it so that he can only be attacked from behind
         public Attack MopSwing()
         {
             Attack special = null;
             if (enemyState == EnemyState.faceLeft || enemyState == EnemyState.moveLeft)
             {
-                special = new Attack(new Rectangle(positionRect.X-50, positionRect.Y-25, 50, 100), 10, 32, textures[2], AttackDirection.left, 5, false, null);
+                special = new Attack(new Rectangle(positionRect.X-50, positionRect.Y-25, 50, 100), 10, 64, textures[4], AttackDirection.left, .1, false, null);
             }
             else if (enemyState == EnemyState.faceRight || enemyState == EnemyState.moveRight)
             {
-                special = new Attack(new Rectangle(positionRect.X + texture.Width, positionRect.Y - 25, 50, 100), 10, 32, textures[2], AttackDirection.right, 5, false, null);
+                special = new Attack(new Rectangle(positionRect.X + texture.Width, positionRect.Y - 25, 50, 100), 10, 64, textures[3], AttackDirection.right, .1, false, null);
             }
             return special;
         }

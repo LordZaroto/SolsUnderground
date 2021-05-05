@@ -49,7 +49,7 @@ namespace SolsUnderground
 
         // Constructor
         public aTigerMask(Texture2D texture, Rectangle positionRect)
-            : base(ItemType.Armor, 3, texture, positionRect)
+            : base(ItemType.Armor, 100, texture, positionRect)
         {
             name = "Tiger Mask";
             defense = 3;

@@ -66,6 +66,7 @@ namespace SolsUnderground
         private Texture2D[] weebTextures;
         private Texture2D[] vmBossTextures;
         private Texture2D[] brBossTextures;
+        private Texture2D[] busBossTextures;
         private Texture2D[] jbTextures;
         private Texture2D[] munsonTextures;
 
@@ -332,8 +333,14 @@ namespace SolsUnderground
             // Boss Textures
             // ADD IN ORDER: Bus, Weeb, Jan, VM, Stalk, BR, Munson
 
-            // ADD BUS HERE
-            enemyManager.AddBossData(weebTextures);
+            busBossTextures = new Texture2D[]
+            {
+                Content.Load<Texture2D>("BusDown"),
+                Content.Load<Texture2D>("BusUp"),
+                Content.Load<Texture2D>("BusLeft"),
+                Content.Load<Texture2D>("BusRight")
+            };
+            enemyManager.AddBossData(busBossTextures);
 
             weebTextures = new Texture2D[] {
                 Content.Load<Texture2D>("weeb_Forward"),
@@ -347,7 +354,9 @@ namespace SolsUnderground
             {
                 Content.Load<Texture2D>("janitorBossLeft"),
                 Content.Load<Texture2D>("janitorBossRight"),
-                Content.Load<Texture2D>("puddle") // boss attack texture
+                Content.Load<Texture2D>("puddle"), // boss attack texture
+                Content.Load<Texture2D>("mop1"),
+                Content.Load<Texture2D>("mop2")
             };
             enemyManager.AddBossData(jbTextures);
 
@@ -384,6 +393,8 @@ namespace SolsUnderground
 
             enemyManager.AddBossData(weebTextures);
 
+
+            
 
             // Status Textures
             StatusEffect.LoadEffectSprite(Content.Load<Texture2D>("fxModifier"));

@@ -48,7 +48,7 @@ namespace SolsUnderground
 
         // Constructor
         public aSkates(Texture2D texture, Rectangle positionRect)
-            : base(ItemType.Armor, 0, texture, positionRect)
+            : base(ItemType.Armor, 20, texture, positionRect)
         {
             name = "Skates";
             defense = 1;
