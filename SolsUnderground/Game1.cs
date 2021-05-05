@@ -356,8 +356,7 @@ namespace SolsUnderground
                 Content.Load<Texture2D>("janitorBossRight"),
                 Content.Load<Texture2D>("puddle"), // boss attack texture
                 Content.Load<Texture2D>("mop1"),
-                Content.Load<Texture2D>("mop2")
-            };
+                Content.Load<Texture2D>("mop2")};
             enemyManager.AddBossData(jbTextures);
 
             vmBossTextures = new Texture2D[]
@@ -388,7 +387,9 @@ namespace SolsUnderground
                 Content.Load<Texture2D>("munsonBack"),
                 Content.Load<Texture2D>("munsonLeft"),
                 Content.Load<Texture2D>("munsonRight"),
-                Content.Load<Texture2D>("shockWave")}; // Boss Attack Texture
+                Content.Load<Texture2D>("shockWave"),
+                Content.Load<Texture2D>("shockWave2"),
+                Content.Load<Texture2D>("shockWave3")}; // Boss Attack Texture
             enemyManager.AddBossData(munsonTextures);
 
             enemyManager.AddBossData(weebTextures);
