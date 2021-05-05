@@ -157,6 +157,12 @@ namespace SolsUnderground
             switch (floor)
             {
                 case 0: // Bus
+                    enemies.Add(new BusBoss(bossTextures[floor],
+                        new Rectangle(spawnPoint.X + (40 - bossTextures[floor][2].Width) / 2,
+                        spawnPoint.Y + (40 - bossTextures[floor][2].Height) / 2,
+                        bossTextures[floor][2].Width,
+                        bossTextures[floor][2].Height),
+                        75, 8));
                     break;
 
                 case 1: // Weeb
@@ -200,14 +206,7 @@ namespace SolsUnderground
                         bossTextures[floor][2].Height),
                         40, 4));
                     break;
-                //case 3:
-                //    enemies.Add(new BusBoss(bossTextures[bossChoice],
-                //        new Rectangle(spawnPoint.X + (40 - bossTextures[bossChoice][2].Width) / 2,
-                //        spawnPoint.Y + (40 - bossTextures[bossChoice][2].Height) / 2,
-                //        bossTextures[bossChoice][2].Width,
-                //        bossTextures[bossChoice][2].Height),
-                //        40, 4));
-                //    break;
+                
             }
         }
 

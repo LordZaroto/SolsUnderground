@@ -261,10 +261,10 @@ namespace SolsUnderground
                 {
                     attackCounter -= attackCD;
                 
-                    attacks.Add(new Projectile(positionRect, Attack, 3, knockback, texture, direction, false, new StatusEffect(StatusType.Sick, 1, 3)));
+                    attacks.Add(new Projectile(positionRect, Attack, 3, 0, texture, direction, false, new StatusEffect(StatusType.Sick, 1, 3)));
                 }
                 
-                attacks.Add(new Attack(PositionRect, attack, knockback, null, 
+                attacks.Add(new Attack(PositionRect, attack, 0, null, 
                     direction, 0.15, false, null));
             }
             
