@@ -121,7 +121,7 @@ namespace SolsUnderground
             name = "Ritchie Claw";
             basicCooldown = 0.1;
             specialCooldown = 3;
-            attack = 5;
+            attack = 3;
             knockback = (int)(0.8 * 32);
             hitboxScale = new Vector2(2, 1);
             timer = 0.1;
@@ -145,7 +145,7 @@ namespace SolsUnderground
 
                 Attack special = new Attack(
                     positionRect,
-                    attack / 2 + 1,
+                    2,
                     knockback / 2,
                     texture,
                     AttackDirection.up,
@@ -171,7 +171,7 @@ namespace SolsUnderground
 
                 Attack special = new Attack(
                     positionRect,
-                    attack / 2 + 1,
+                    2,
                     knockback / 2,
                     texture,
                     AttackDirection.left,
@@ -198,7 +198,7 @@ namespace SolsUnderground
 
                 Attack special = new Attack(
                     positionRect,
-                    attack / 2 + 1,
+                    2,
                     knockback / 2,
                     texture,
                     AttackDirection.down,
@@ -224,7 +224,7 @@ namespace SolsUnderground
 
                 Attack special = new Attack(
                     positionRect,
-                    attack / 2 + 1,
+                    2,
                     knockback / 2,
                     texture,
                     AttackDirection.right,

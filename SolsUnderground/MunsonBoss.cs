@@ -197,7 +197,7 @@ namespace SolsUnderground
             {
                 if (!(enemyState == EnemyState.dead) && !IsStunned)
                 {
-                    if (Math.Abs(positionRect.X - player.X) >= Math.Abs(positionRect.Y - player.Y))
+                    if (Math.Abs(positionRect.X - player.X + (Width/2)) >= Math.Abs(positionRect.Y - player.Y ))
                     {
                         if (positionRect.X >= player.X)
                         {
@@ -210,7 +210,7 @@ namespace SolsUnderground
                             enemyState = EnemyState.moveRight;
                         }
                     }
-                    else if (Math.Abs(positionRect.X - player.X) < Math.Abs(positionRect.Y - player.Y))
+                    else if (Math.Abs(positionRect.X - player.X + (Width / 2)) < Math.Abs(positionRect.Y - player.Y))
                     {
                         if (positionRect.Y >= player.Y)
                         {
@@ -262,10 +262,12 @@ namespace SolsUnderground
                 if (attackCounter >= attackCD)
                 {
                     attackCounter -= attackCD;
-                    if(direction == AttackDirection.left || direction == AttackDirection.right)
-                        attacks.Add(new Projectile(new Rectangle( positionRect.X, rng.Next(0, positionRect.Y) + positionRect.Height, 100, 100), Attack, 3, knockback, textures[4], direction, false, new StatusEffect(StatusType.Sick, 1, 3)));
+                    if(direction == AttackDirection.left)
+                        attacks.Add(new Projectile(new Rectangle( positionRect.X, rng.Next(20, positionRect.Y + Height) , 100, 100), Attack, 3, knockback, textures[4], direction, false, new StatusEffect(StatusType.Sick, 1, 3)));
+                    else if(direction == AttackDirection.right)
+                        attacks.Add(new Projectile(new Rectangle(positionRect.X, rng.Next(20, positionRect.Y + Height), 100, 100), Attack, 3, knockback, textures[6], direction, false, new StatusEffect(StatusType.Sick, 1, 3)));
                     else
-                        attacks.Add(new Projectile(new Rectangle(rng.Next(20, 1300),  positionRect.Y + positionRect.Height, 100, 100), Attack, 3, knockback, textures[4], direction, false, new StatusEffect(StatusType.Sick, 1, 3)));
+                        attacks.Add(new Projectile(new Rectangle(rng.Next(20, 1300),  positionRect.Y + positionRect.Height, 100, 100), Attack, 3, knockback, textures[5], direction, false, new StatusEffect(StatusType.Sick, 1, 3)));
                 }
 
                 attacks.Add(new Attack(PositionRect, attack, knockback, null,

@@ -69,6 +69,7 @@ namespace SolsUnderground
         private Texture2D[] busBossTextures;
         private Texture2D[] jbTextures;
         private Texture2D[] munsonTextures;
+        private Texture2D[] stalkerTextures;
 
         // Items
         private List<Texture2D> chestTextures;
@@ -88,6 +89,7 @@ namespace SolsUnderground
         private Texture2D thePrecipiceTexture;
         private Texture2D nerfBlasterTexture;
         private Texture2D nerfBulletTexture;
+        private Texture2D crimsonVeilTexture;
 
         // Armor
         private aHoodie hoodie;
@@ -281,12 +283,14 @@ namespace SolsUnderground
             thePrecipiceTexture = Content.Load<Texture2D>("thePrecipice");
             nerfBlasterTexture = Content.Load<Texture2D>("nerfBlaster");
             nerfBulletTexture = Content.Load<Texture2D>("nerfBullet");
+            crimsonVeilTexture = Content.Load<Texture2D>("CrimsonVeil");
             itemManager.AddWeaponSprite(brickBreakerTexture);
             itemManager.AddWeaponSprite(hockeyStickTexture);
             itemManager.AddWeaponSprite(hotDogTexture);
             itemManager.AddWeaponSprite(thePrecipiceTexture);
             itemManager.AddWeaponSprite(Content.Load<Texture2D>("Cactus"));
             itemManager.AddWeaponSprite(nerfBlasterTexture);
+            itemManager.AddWeaponSprite(crimsonVeilTexture);
 
             // Armor
             winterCoatTexture = Content.Load<Texture2D>("WinterCoat");
@@ -370,7 +374,13 @@ namespace SolsUnderground
             enemyManager.AddBossData(vmBossTextures);
 
             // ADD STALKER HERE
-            enemyManager.AddBossData(weebTextures);
+            stalkerTextures = new Texture2D[] {
+                Content.Load<Texture2D>("stalkerForward"),
+                Content.Load<Texture2D>("stalkerBack"),
+                Content.Load<Texture2D>("stalkerLeft"),
+                Content.Load<Texture2D>("stalkerRight"),
+                Content.Load<Texture2D>("CrimsonVeil")}; // Boss Attack Texture
+            enemyManager.AddBossData(stalkerTextures);
 
             brBossTextures = new Texture2D[]
             {
@@ -384,11 +394,13 @@ namespace SolsUnderground
             // ADD MUNSON HERE
             munsonTextures = new Texture2D[]
             {
-                Content.Load<Texture2D>("munsonFront"),
-                Content.Load<Texture2D>("munsonBack"),
-                Content.Load<Texture2D>("munsonLeft"),
-                Content.Load<Texture2D>("munsonRight"),
-                Content.Load<Texture2D>("shockWavea")}; // Boss Attack Texture
+                Content.Load<Texture2D>("munsonFronta"),
+                Content.Load<Texture2D>("munsonBacka"),
+                Content.Load<Texture2D>("munsonLefta"),
+                Content.Load<Texture2D>("munsonRighta"),
+                Content.Load<Texture2D>("shockWavea"),
+                Content.Load<Texture2D>("shockWave2"),
+                Content.Load<Texture2D>("shockWave3")}; // Boss Attack Texture
             enemyManager.AddBossData(munsonTextures);
 
             enemyManager.AddBossData(weebTextures);
