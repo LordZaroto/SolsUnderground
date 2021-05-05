@@ -212,7 +212,7 @@ namespace SolsUnderground
                         20,
                         200,
                         500),
-                        40, 4));
+                        300, 9));
                     break;
 
             }
