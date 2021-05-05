@@ -133,7 +133,7 @@
 /processorParam:TextureFormat=Color
 /build:brShot.png
 
-#begin BusDown.png
+#begin BusDowna.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -143,9 +143,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:BusDown.png
+/build:BusDowna.png
 
-#begin BusLeft.png
+#begin BusLefta.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -155,9 +155,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:BusLeft.png
+/build:BusLefta.png
 
-#begin BusRight.png
+#begin BusRighta.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -167,9 +167,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:BusRight.png
+/build:BusRighta.png
 
-#begin BusUp.png
+#begin BusUpa.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -179,7 +179,7 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:BusUp.png
+/build:BusUpa.png
 
 #begin Cactus.png
 /importer:TextureImporter
@@ -745,6 +745,30 @@
 /processorParam:TextureFormat=Color
 /build:janitorBossLeft.png
 
+#begin janitorBossLefta.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:janitorBossLefta.png
+
+#begin janitorBossLefta.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:janitorBossLefta.png
+
 #begin janitorBossRight.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -756,6 +780,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:janitorBossRight.png
+
+#begin janitorBossRighta.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:janitorBossRighta.png
 
 #begin Load1.png
 /importer:TextureImporter
@@ -841,6 +877,18 @@
 /processorParam:TextureFormat=Color
 /build:minionRight.png
 
+#begin mop.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:mop.png
+
 #begin mop1.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -852,6 +900,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:mop1.png
+
+#begin mop1a.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:mop1a.png
 
 #begin mop2.png
 /importer:TextureImporter
@@ -865,7 +925,7 @@
 /processorParam:TextureFormat=Color
 /build:mop2.png
 
-#begin munsonBack.png
+#begin mop2a.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -875,9 +935,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:munsonBack.png
+/build:mop2a.png
 
-#begin munsonFront.png
+#begin munsonBacka.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -887,9 +947,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:munsonFront.png
+/build:munsonBacka.png
 
-#begin munsonLeft.png
+#begin munsonFronta.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -899,9 +959,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:munsonLeft.png
+/build:munsonFronta.png
 
-#begin munsonRight.png
+#begin munsonLefta.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -911,7 +971,19 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:munsonRight.png
+/build:munsonLefta.png
+
+#begin munsonRighta.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:munsonRighta.png
 
 #begin nerfBlaster.png
 /importer:TextureImporter
@@ -961,7 +1033,7 @@
 /processorParam:TextureFormat=Color
 /build:NewGameCLicked.png
 
-#begin pannini.png
+#begin panninia.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -971,7 +1043,7 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:pannini.png
+/build:panninia.png
 
 #begin playerMovingDown.png
 /importer:TextureImporter
@@ -1032,6 +1104,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:puddle.png
+
+#begin puddlea.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:puddlea.png
 
 #begin RedBrickSprite.png
 /importer:TextureImporter
@@ -1135,14 +1219,8 @@
 #begin Rooms/BossRooms/basicBossRoom.level
 /copy:Rooms/BossRooms/basicBossRoom.level
 
-#begin Rooms/BossRooms/bloodyBossRoom.level
-/copy:Rooms/BossRooms/bloodyBossRoom.level
-
 #begin Rooms/BossRooms/laneBossRoom.level
 /copy:Rooms/BossRooms/laneBossRoom.level
-
-#begin Rooms/BossRooms/openBossRoom.level
-/copy:Rooms/BossRooms/openBossRoom.level
 
 #begin Rooms/BossRooms/shootoutBossRoom.level
 /copy:Rooms/BossRooms/shootoutBossRoom.level
@@ -1213,7 +1291,7 @@
 /processorParam:TextureFormat=Color
 /build:SaveClicked.png
 
-#begin shockWave.png
+#begin shockWavea.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -1223,7 +1301,7 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:shockWave.png
+/build:shockWavea.png
 
 #begin shockWave2.png
 /importer:TextureImporter
@@ -1309,7 +1387,7 @@
 /processorParam:TextureFormat=Color
 /build:Skates.png
 
-#begin solBack.png
+#begin solBacka.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -1319,9 +1397,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:solBack.png
+/build:solBacka.png
 
-#begin solFront.png
+#begin solFronta.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -1331,9 +1409,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:solFront.png
+/build:solFronta.png
 
-#begin solLeft.png
+#begin solLefta.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -1343,9 +1421,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:solLeft.png
+/build:solLefta.png
 
-#begin solRight.png
+#begin solRighta.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -1355,7 +1433,7 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:solRight.png
+/build:solRighta.png
 
 #begin StartGame1.png
 /importer:TextureImporter

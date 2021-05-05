@@ -324,21 +324,21 @@ namespace SolsUnderground
 
             solsWorkerTextures = new Texture2D[]
 {
-                Content.Load<Texture2D>("solFront"),
-                Content.Load<Texture2D>("solBack"),
-                Content.Load<Texture2D>("solLeft"),
-                Content.Load<Texture2D>("solRight"),
-                Content.Load<Texture2D>("pannini")};
+                Content.Load<Texture2D>("solFronta"),
+                Content.Load<Texture2D>("solBacka"),
+                Content.Load<Texture2D>("solLefta"),
+                Content.Load<Texture2D>("solRighta"),
+                Content.Load<Texture2D>("panninia")};
 
             // Boss Textures
             // ADD IN ORDER: Bus, Weeb, Jan, VM, Stalk, BR, Munson
 
             busBossTextures = new Texture2D[]
             {
-                Content.Load<Texture2D>("BusDown"),
-                Content.Load<Texture2D>("BusUp"),
-                Content.Load<Texture2D>("BusLeft"),
-                Content.Load<Texture2D>("BusRight")
+                Content.Load<Texture2D>("BusDowna"),
+                Content.Load<Texture2D>("BusUpa"),
+                Content.Load<Texture2D>("BusLefta"),
+                Content.Load<Texture2D>("BusRighta")
             };
             enemyManager.AddBossData(busBossTextures);
 
@@ -352,11 +352,12 @@ namespace SolsUnderground
 
             jbTextures = new Texture2D[]
             {
-                Content.Load<Texture2D>("janitorBossLeft"),
-                Content.Load<Texture2D>("janitorBossRight"),
-                Content.Load<Texture2D>("puddle"), // boss attack texture
-                Content.Load<Texture2D>("mop1"),
-                Content.Load<Texture2D>("mop2")};
+                Content.Load<Texture2D>("janitorBossLefta"),
+                Content.Load<Texture2D>("janitorBossRighta"),
+                Content.Load<Texture2D>("puddlea"), // boss attack texture
+                Content.Load<Texture2D>("mop1a"),
+                Content.Load<Texture2D>("mop2a")
+            };
             enemyManager.AddBossData(jbTextures);
 
             vmBossTextures = new Texture2D[]
