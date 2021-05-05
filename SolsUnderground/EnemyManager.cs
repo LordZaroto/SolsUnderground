@@ -190,6 +190,13 @@ namespace SolsUnderground
                     break;
 
                 case 4: // Stalker
+                    enemies.Add(new Stalker(bossTextures[floor],
+                        new Rectangle(spawnPoint.X + (40 - bossTextures[floor][2].Width) / 2,
+                        spawnPoint.Y + (40 - bossTextures[floor][2].Height) / 2,
+                        bossTextures[floor][2].Width,
+                        bossTextures[floor][2].Height),
+                        75, 8,
+                        bossTextures[floor][4]));
                     break;
 
                 case 5: // BR

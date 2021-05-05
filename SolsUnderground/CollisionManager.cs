@@ -146,8 +146,7 @@ namespace SolsUnderground
                                 b.ReverseX = false;
                                 b.State = EnemyState.moveRight;
                             }
-                        }
-                    }
+
                             if (gameObject is JanitorBoss)
                             {
                                 JanitorBoss j = (JanitorBoss)gameObject;

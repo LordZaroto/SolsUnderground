@@ -272,7 +272,7 @@ namespace SolsUnderground
                 return speedMod;
             }
         }
-        private bool IsStunned
+        public bool IsStunned
         {
             get
             {
