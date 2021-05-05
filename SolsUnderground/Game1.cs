@@ -67,6 +67,7 @@ namespace SolsUnderground
         private Texture2D[] vmBossTextures;
         private Texture2D[] brBossTextures;
         private Texture2D[] jbTextures;
+        private Texture2D[] munsonTextures;
 
         // Items
         private List<Texture2D> chestTextures;
@@ -372,6 +373,15 @@ namespace SolsUnderground
             enemyManager.AddBossData(brBossTextures);
 
             // ADD MUNSON HERE
+            munsonTextures = new Texture2D[]
+            {
+                Content.Load<Texture2D>("munsonFront"),
+                Content.Load<Texture2D>("munsonBack"),
+                Content.Load<Texture2D>("munsonLeft"),
+                Content.Load<Texture2D>("munsonRight"),
+                Content.Load<Texture2D>("shockWave")}; // Boss Attack Texture
+            enemyManager.AddBossData(munsonTextures);
+
             enemyManager.AddBossData(weebTextures);
 
 
